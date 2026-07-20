@@ -1,20 +1,14 @@
 "use client";
 
-
-import * as yup from "yup";
 import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
 import { useForgotPasswordMutation } from "@/lib/redux/apis/auth-api";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
-
-
-const forgotPasswordSchema = yup.object().shape({
-  email_address: yup.string().email("Invalid email address").required("Email is required"),
-});
+import { forgotPasswordSchema } from "@/lib/validations/form-schemas";
 
 export default function ForgotPasswordPage() {
+  
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
-
 
   const { formData, formErrors, handleChange, handleSubmit } =
     useFormValidation(forgotPasswordSchema, { email_address: "" });
@@ -34,7 +28,7 @@ export default function ForgotPasswordPage() {
   return (
     <main className="container">
       <div className="user-form-wrapper">
-        <h3 className="flex justify-center my-6" style={{ fontSize: "30px", fontWeight: "700" }}>Reset Password</h3>
+        <h3 className="flex justify-center my-6 auth-form-title">Reset Password</h3>
 
         <form onSubmit={handleSubmit(handleForgotPasswordSubmit)} noValidate>
           <div className="form-item">
@@ -46,7 +40,7 @@ export default function ForgotPasswordPage() {
               value={formData.email_address}
               onChange={handleChange}
               disabled={isLoading}
-              style={{ borderRadius: "30px" }}
+              className="input-rounded-lg"
             />
             {formErrors.email_address && (
               <p className="error">{formErrors.email_address}</p>

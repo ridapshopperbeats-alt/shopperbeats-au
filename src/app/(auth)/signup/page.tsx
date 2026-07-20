@@ -153,7 +153,7 @@ export default function SignupPage() {
   return (
     <div className="container">
       <div className="user-form-wrapper">
-        <h3 className="flex justify-center py-6" style={{ fontSize: "30px", fontWeight: "700" }}>Create an Account</h3>
+        <h3 className="flex justify-center py-6 auth-form-title">Create an Account</h3>
 
         <form onSubmit={handleSubmit(handleSignupSubmit)} noValidate>
           <div className="flex gap-4">
@@ -277,6 +277,7 @@ export default function SignupPage() {
               checked={termsAccepted}
               onChange={(e) => setTermsAccepted(e.target.checked)}
               disabled={isLoading}
+              className="checkbox-input"
             />
             <span>
               I Agree to all the
@@ -292,6 +293,7 @@ export default function SignupPage() {
               checked={mailing_list}
               onChange={(e) => setMailing_list(e.target.checked)}
               disabled={isLoading}
+              className="checkbox-input"
             />
             <span>Add me to the mailing list</span>
           </div>
