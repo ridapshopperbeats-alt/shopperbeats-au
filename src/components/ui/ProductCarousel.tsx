@@ -1,0 +1,145 @@
+"use client";
+
+import React from "react";
+import ReusableSlider from "./ReusableSlider";
+import { Product, BundleProduct } from "@/types/product";
+import ProductCard from "./ProductCard";
+
+
+interface ProductCarouselProps {
+  title: React.ReactNode;
+  subtitle?: string;
+  products?: Product[];
+  bundleProducts?: BundleProduct[];
+  from?: string;
+  link?: string;
+  istagsVisible?: boolean;
+  isLoading?: boolean;
+  withoutContainer?: boolean;
+}
+
+export default function ProductCarousel({
+  title,
+  subtitle,
+  products,
+  bundleProducts,
+  from,
+  link,
+  isLoading = false
+}: ProductCarouselProps) {
+  const items = (bundleProducts || products || []) as (Product | BundleProduct)[];
+
+  return (
+
+    <div className={from == "details" ? "products" : "px-[10px] w-full"}>
+      <div className="">
+        <div className="flex justify-between lg:mt-5 gap-4">
+          <div className="w-full">
+            <div className="flex flex-col gap-1 w-full my-1">
+              {subtitle && (
+                <span className="font-bold text-[26px] leading-[18px] tracking-[0.78px] text-black">
+                  {subtitle}
+                </span>
+              )}
+              <h3 className="font-bold text-[26px] leading-[18px] tracking-[0.78px] text-[#F51721]">
+                {title}
+              </h3>
+            </div>
+
+          </div>
+
+          {link && (
+            <a
+              href={link}
+              className="btn btn-white min-w-[100px] h-[45px] flex items-center justify-center whitespace-nowrap"
+            >
+              See All
+            </a>
+          )}
+        </div>
+      </div>
+
+      <div className={isLoading ? "" : ""}>
+        <div className="products-slider custom-handmade">
+          {!isLoading && (
+            <ReusableSlider<Product | BundleProduct>
+              items={items}
+              slidesToScroll={3}
+              gap={20}
+              speed={600}
+              infinite={false}
+              autoplaySpeed={0}
+              arrows={true}
+              autoResponsive
+              className="pc-carousel"
+              slideClassName="pc-product-slide"
+              renderItem={(item, _index) => {
+                if (bundleProducts) {
+                  const bundleItem = item as BundleProduct;
+
+                  return (
+                    <div
+                      className="product-card-link mx-auto"
+                      key={
+                        bundleItem.product_id ||
+                        bundleItem.unique_code
+                      }
+                    >
+                      <ProductCard
+                        id={bundleItem.product_id}
+                        title={bundleItem.title}
+                        mainPrice={bundleItem.price}
+                        wasPrice={bundleItem.rrp_price}
+                        showWasPrice={
+                          bundleItem.rrp_price >
+                          bundleItem.price
+                        }
+                        image={
+                          bundleItem.images?.[0]?.image_url ||
+                          "/images/image-coming-soon.jpg"
+                        }
+                        unique_code={bundleItem.unique_code}
+                        defaultVariantId={bundleItem.variant_id}
+                        promotion_name={bundleItem.promotion_name}
+                        tags={bundleItem.tags}
+                      />
+                    </div>
+                  );
+                }
+
+                const product = item as Product;
+
+                return (
+                  <div
+                    className="product-card-link mx-auto"
+                    key={product.id || product.unique_code}
+                  >
+                    <ProductCard
+                      {...product}
+                      image={
+                        product.image ||
+                        "/images/image-coming-soon.jpg"
+                      }
+                      id={
+                        product.id ||
+                        product.product_unique_code
+                      }
+                      unique_code={
+                        product.unique_code ||
+                        product.product_unique_code
+                      }
+                      defaultVariantId={
+                        product.variants?.[0]?.id ||
+                        product.variant_id
+                      }
+                    />
+                  </div>
+                );
+              }}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,173 @@
+  /* footer  */
+  footer {
+    background: #000;
+    padding: 30px 0 30px;
+  }
+
+  .page-footer {
+    margin-top: auto;
+  }
+
+  footer h4 {
+    color: var(--white);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .footer-block {
+    width: 18%;
+  }
+
+  .footer-block.footer-newsletter input[type="text"] {
+    height: 50px;
+  }
+
+  .footer-block.footer-newsletter {
+    width: 28%;
+  }
+
+  .footer-block ul a {
+    color: var(--white);
+    font-size: 16px;
+    display: inline-block;
+    padding: 0px 0px;
+    line-height: 29px;
+    font-weight: 400;
+  }
+
+  .footer-block ul a:hover {
+    color: var(--secondary);
+  }
+
+ 
+
+  footer p {
+    color: var(--white);
+    font-size: 12px;
+  }
+
+  .footer-block.footer-newsletter form {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .footer-block.footer-newsletter form button {
+    background: var(--secondary);
+    padding: 0 20px;
+    cursor: pointer;
+  }
+
+  .footer-block.footer-newsletter form button:hover {
+    background: var(--primary);
+    
+  }
+
+  .footer-block.footer-newsletter h4 {
+    margin-bottom: 5px;
+  }
+
+  ul.social {
+    display: flex;
+    margin: 20px 10px;
+    gap: 20px;
+  }
+
+  .footer-block ul.social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .footer-block ul.social a:hover {
+    background: var(--secondary);
+    border: 1px solid var(--secondary);
+    color: white;
+  }
+
+  .footer-block ul.social a:hover svg {
+    fill: var(--white);
+  }
+
+ 
+
+  .payment {
+    display: flex;
+    gap: 8px;
+  }
+
+  .payment img {
+    background: var(--white);
+    width: 54px;
+    height: 27px;
+    border-radius: 2px;
+    padding: 2px;
+  }
+
+  /* footer  */
+
+  @media screen and (max-width: 1400px) {
+   
+    .footer-block ul a {
+      font-size: 14px;
+    }
+
+    .footer-block h5 {
+      font-size: 18px;
+    }
+
+  }
+
+
+  @media screen and (max-width: 1199px) {
+    .footer-block {
+      width: 50%;
+      margin-bottom: 30px;
+    }
+
+    .footer-block.footer-newsletter {
+      width: 50%;
+    }
+
+    .footer-copyright {
+      padding-top: 12px;
+      display: flex;
+    }
+  
+   
+
+  }
+
+  @media screen and (max-width: 991px) {
+
+
+    footer {
+      padding: 50px 0 70px 0;
+    }
+
+  }
+
+  @media screen and (max-width: 767px) {
+
+    .footer-block {
+      width: 100%;
+    }
+
+    .footer-block.footer-newsletter {
+      width: 100%;
+    }
+
+
+  }
+
+  @media screen and (max-width: 480px) {
+ 
+    .payment img {
+    background: var(--white);
+    border-radius: 2px;
+    width: 41px;
+    height: 27px;
+    padding: 2px;
+}
+  }

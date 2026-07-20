@@ -1,0 +1,48 @@
+substitutions:
+  _REGION: australia-southeast2
+  _REPO: shopper-repo
+  _IMAGE: shopperbeats-frontend
+  _NEXT_PUBLIC_API_URL_USERS: https://<users-api-domain>
+  _NEXT_PUBLIC_API_URL_PRODUCTS: https://shopper-beats-products-877627218975.australia-southeast2.run.app
+ 
+steps:
+# Debug: List files
+- name: gcr.io/cloud-builders/docker
+  entrypoint: bash
+  args:
+    - -c
+    - |
+      echo "Files in /workspace:"
+      ls -la /workspace
+ 
+# Build
+- name: gcr.io/cloud-builders/docker
+  args:
+    - build
+    - -t
+    - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA
+    - --build-arg
+    - NEXT_PUBLIC_API_URL_USERS=${_NEXT_PUBLIC_API_URL_USERS}
+    - --build-arg
+    - NEXT_PUBLIC_API_URL_PRODUCTS=${_NEXT_PUBLIC_API_URL_PRODUCTS}
+    - .
+ 
+# Push
+- name: gcr.io/cloud-builders/docker
+  args: ["push", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA"]
+ 
+# Deploy
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  args:
+    - run
+    - deploy
+    - shopperbeats-frontend
+    - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA
+    - --region=${_REGION}
+    - --platform=managed
+    - --allow-unauthenticated
+    - --memory=512Mi
+    - --concurrency=40
+ 
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA

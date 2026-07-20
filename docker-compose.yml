@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_API_URL_USERS: ${NEXT_PUBLIC_API_URL_USERS}
+        NEXT_PUBLIC_API_URL_PRODUCTS: ${NEXT_PUBLIC_API_URL_PRODUCTS}
+        NEXT_PUBLIC_API_URL_CART: ${NEXT_PUBLIC_API_URL_CART}
+        NEXT_PUBLIC_API_URL_ORDER: ${NEXT_PUBLIC_API_URL_ORDER}
+        NEXT_PUBLIC_API_URL_HELPDESK: ${NEXT_PUBLIC_API_URL_HELPDESK}
+        NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+        NEXT_PUBLIC_GOOGLE_MAPS_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_KEY}
+        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`shopperbeats.com.au`) || Host(`www.shopperbeats.com.au`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3001"
+      - "traefik.docker.network=gateway-network"
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env.production
+    environment:
+      HOSTNAME: 0.0.0.0
+      PORT: 3001
+      NODE_ENV: production
+
+      NEXT_PUBLIC_API_URL_USERS: ${NEXT_PUBLIC_API_URL_USERS}
+      NEXT_PUBLIC_API_URL_PRODUCTS: ${NEXT_PUBLIC_API_URL_PRODUCTS}
+      NEXT_PUBLIC_API_URL_CART: ${NEXT_PUBLIC_API_URL_CART}
+      NEXT_PUBLIC_API_URL_ORDER: ${NEXT_PUBLIC_API_URL_ORDER}
+      NEXT_PUBLIC_API_URL_HELPDESK: ${NEXT_PUBLIC_API_URL_HELPDESK}
+      NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+      NEXT_PUBLIC_GOOGLE_MAPS_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_KEY}
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+
+networks:
+  default:
+    name: gateway-network
+    external: true
