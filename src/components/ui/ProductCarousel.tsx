@@ -4,6 +4,7 @@ import React from "react";
 import ReusableSlider from "./ReusableSlider";
 import { Product, BundleProduct } from "@/types/product";
 import ProductCard from "./ProductCard";
+import { ChevronRight } from "lucide-react";
 
 
 interface ProductCarouselProps {
@@ -31,17 +32,16 @@ export default function ProductCarousel({
 
   return (
 
-    <div className={from == "details" ? "products" : "px-[10px] w-full"}>
-      <div className="">
+    <div className={from == "details" ? "products" : "px-2.5 w-full"}>
         <div className="flex justify-between lg:mt-5 gap-4">
           <div className="w-full">
             <div className="flex flex-col gap-1 w-full my-1">
-              {subtitle && (
+              {/* {subtitle && (
                 <span className="font-bold text-[26px] leading-[18px] tracking-[0.78px] text-black">
                   {subtitle}
                 </span>
-              )}
-              <h3 className="font-bold text-[26px] leading-[18px] tracking-[0.78px] text-[#F51721]">
+              )} */}
+              <h3 className="font-bold text-[18px] md:text-[32px] leading-4.5 tracking-[0.78px] text-black">
                 {title}
               </h3>
             </div>
@@ -51,16 +51,15 @@ export default function ProductCarousel({
           {link && (
             <a
               href={link}
-              className="btn btn-white min-w-[100px] h-[45px] flex items-center justify-center whitespace-nowrap"
+              className="text-[13px] font-bold flex items-center text-[#F51721] whitespace-nowrap"
             >
-              See All
+              View All <ChevronRight size={13} />
             </a>
           )}
         </div>
-      </div>
 
       <div className={isLoading ? "" : ""}>
-        <div className="products-slider custom-handmade">
+        <div className="pt-5 overflow-visible">
           {!isLoading && (
             <ReusableSlider<Product | BundleProduct>
               items={items}
@@ -72,14 +71,14 @@ export default function ProductCarousel({
               arrows={true}
               autoResponsive
               className="pc-carousel"
-              slideClassName="pc-product-slide"
+              slideClassName=""
               renderItem={(item, _index) => {
                 if (bundleProducts) {
                   const bundleItem = item as BundleProduct;
 
                   return (
                     <div
-                      className="product-card-link mx-auto"
+                      className="w-[270px] h-[450px]"
                       key={
                         bundleItem.product_id ||
                         bundleItem.unique_code
@@ -111,7 +110,7 @@ export default function ProductCarousel({
 
                 return (
                   <div
-                    className="product-card-link mx-auto"
+                    className="w-[270px] h-[450px]"
                     key={product.id || product.unique_code}
                   >
                     <ProductCard

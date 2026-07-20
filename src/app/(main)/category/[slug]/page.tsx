@@ -5,7 +5,6 @@ import Breadcrumb from "@/components/ui/Breadcrumb";
 import { Category, ProductsResponse } from "@/types/product";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 
-
 // ---------- Generate Metadata ----------
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
@@ -195,7 +194,6 @@ export default async function CategoryPage({
 
   return (
     <>
-      <Breadcrumb />
 
       <CategoryPageClient
         megaMenuData={megaMenuData}

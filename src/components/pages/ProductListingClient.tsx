@@ -49,10 +49,6 @@ const ProductListingClient = ({
   const [persistedFilters, setPersistedFilters] = useState<Filter[]>(filters);
   const [prevSlug, setPrevSlug] = useState(slug);
 
-  // Adjust persistedFilters during render (React's "adjusting state when a
-  // prop changes" pattern, using state instead of a ref since refs cannot be
-  // read/written during render) instead of inside a useEffect, to avoid an
-  // extra cascading render.
   if (slug !== prevSlug) {
     setPrevSlug(slug);
     setPersistedFilters(filters);
@@ -456,10 +452,6 @@ const extractedBrands = useMemo(() => {
   const currentFilterString = currentParams.toString();
   const [prevFilterString, setPrevFilterString] = useState(currentFilterString);
 
-  // Adjust page/limit state during render in response to URL changes,
-  // instead of inside a useEffect, to avoid an extra cascading render.
-  // Uses state (not a ref) to track the previous filter string since refs
-  // cannot be read/written during render.
   if (currentFilterString !== prevFilterString) {
     setPrevFilterString(currentFilterString);
     const limit = Number(searchParams.get("limit")) || 20;

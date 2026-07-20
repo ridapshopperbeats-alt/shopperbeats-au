@@ -461,7 +461,7 @@ function SliderComponent<T>(
         onDragStart={(e) => e.preventDefault()}
       >
         <div
-          className="flex slider-track"
+          className="flex "
           style={{
             height: "100%",
             flexDirection: isVertical ? "column" : "row",

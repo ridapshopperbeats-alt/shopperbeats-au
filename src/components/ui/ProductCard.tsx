@@ -2,15 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { memo } from "react";
 import { toast } from "react-toastify";
 
-import {
-  useCreateWishlistMutation,
-  useRemoveFromWishlistMutation,
-  useAddToCartMutation,
-} from "@/lib/redux/apis/cart-api";
-import { useCalculateShippingMutation } from "@/lib/redux/apis/order-api";
+import { useAddToCartMutation } from "@/lib/redux/apis/cart-api";
+import { useWishlistToggle } from "@/lib/hooks/use-wishlist-toggle";
 
 import { formatPrice } from "@/lib/utils/format-price";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
@@ -24,9 +20,9 @@ import { WishlistKey } from "@/types/wishlist";
 import { Heart } from "lucide-react";
 import StarRating from "./StarRating";
 
-
-interface ProductCardProps {
+export interface ProductCardProps {
   image: string;
+  brand_name?: string;
   title?: string;
   mainPrice?: number;
   wasPrice?: number;
@@ -47,6 +43,7 @@ interface ProductCardProps {
   vendor_id?: string;
   ships_from_location?: string;
   handling_time_days?: number;
+  shippingCharge?: number | null;
 }
 
 function limitWords(text: string | undefined, limit = 6) {
@@ -57,6 +54,7 @@ function limitWords(text: string | undefined, limit = 6) {
 
 const ProductCard: React.FC<ProductCardProps> = ({
   image,
+  brand_name,
   title,
   mainPrice,
   wasPrice,
@@ -73,17 +71,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
   stock,
   ships_from_location,
   handling_time_days,
+  shippingCharge,
 }) => {
-  const [createWishlist, { isLoading: isAddingToWishlist }] =
-    useCreateWishlistMutation();
-
-  const [removeFromWishlist, { isLoading: isRemovingFromWishlist }] =
-    useRemoveFromWishlistMutation();
-
   const [addToCart, { isLoading: isAddingToCart }] = useAddToCartMutation();
 
-  const [calculateShipping] = useCalculateShippingMutation();
-  const [shippingCharge, setShippingCharge] = useState<number | null>(null);
+  const {
+    isWishlisted,
+    isLoading: isWishlistLoading,
+    toggle: handleWishlistButtonClick,
+  } = useWishlistToggle({
+    productId: id,
+    variantId: defaultVariantId ?? null,
+    wishlistItems,
+  });
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
@@ -95,75 +95,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   const currentVariant = variants.find((v) => v.id === defaultVariantId);
 
-  const productIdentifier = currentVariant?.sku || unique_code || id;
-
-  // Mirrors ProductDetailClient's isOutOfStock: when the product has
-  // variants, stock is tracked per-variant, so the top-level `stock` field
-  // (often stale/aggregate) must not be used — check the represented
-  // variant's own stock instead, same as the PDP checks selectedVariant.
   const isOutOfStock =
     variants.length > 0
       ? currentVariant !== undefined && Number(currentVariant.stock) <= 0
       : stock !== undefined && stock !== null && Number(stock) <= 0;
 
-  // Reset shippingCharge synchronously during render when postcode/product
-  // become unavailable, instead of doing it inside the effect body (which
-  // would cause an extra render pass). This mirrors React's official
-  // "adjust state during render" pattern: a useState (not a ref, which
-  // cannot be read/written during render) tracks the previous key.
-  const shippingKey =
-    postcode && productIdentifier ? `${postcode}|${productIdentifier}` : null;
-  const [prevShippingKey, setPrevShippingKey] = useState(shippingKey);
-  if (prevShippingKey !== shippingKey) {
-    setPrevShippingKey(shippingKey);
-    if (!shippingKey) {
-      setShippingCharge(null);
-    }
-  }
-
-  useEffect(() => {
-    if (!postcode || !productIdentifier) {
-      return;
-    }
-
-    let active = true;
-
-    calculateShipping({ postcode, product_identifier: productIdentifier })
-      .unwrap()
-      .then((response) => {
-        if (!active) return;
-        if (
-          response.shipping_cost === "ns" ||
-          response.shipping_cost === null
-        ) {
-          setShippingCharge(null);
-        } else {
-          setShippingCharge(Number.parseFloat(response.shipping_cost) || 0);
-        }
-      })
-      .catch(() => {
-        if (active) setShippingCharge(null);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [postcode, productIdentifier, calculateShipping]);
-
-  const wishlistedFromProp = useMemo(() => {
-    return wishlistItems.some((item) => {
-      if (!id) return false;
-      const variantId = defaultVariantId ?? null;
-      return item.product_id === id && item.variant_id === variantId;
-    });
-  }, [wishlistItems, id, defaultVariantId]);
-
-  const [wishlistOverride, setWishlistOverride] = useState<boolean | null>(
-    null,
-  );
-  const isWishlisted = wishlistOverride ?? wishlistedFromProp;
-
-  // Dynamic Tag Renderer based on image specifications
   // const renderTag = useMemo(() => {
   //   // Check if dynamic tags exist, otherwise use fallback values based on product ID
   //   const activeTag =
@@ -200,37 +136,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   //       return null;
   //   }
   // }, [tags, id]);
-
-  const handleWishlistButtonClick = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!id || isAddingToWishlist || isRemovingFromWishlist) return;
-
-    const wasWishlisted = isWishlisted;
-    setWishlistOverride(!wasWishlisted);
-
-    try {
-      if (wasWishlisted) {
-        await removeFromWishlist({
-          product_id: id,
-          variant_id: defaultVariantId ?? undefined,
-        }).unwrap();
-        toast.success("Product removed from wishlist!");
-      } else {
-        await createWishlist({
-          product_id: id,
-          variant_id: defaultVariantId ?? undefined,
-        }).unwrap();
-        toast.success("Product added to wishlist!");
-      }
-    } catch {
-      setWishlistOverride(wasWishlisted);
-      toast.error("Failed to update wishlist.");
-    }
-  };
 
   const handleAddToCartClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -271,12 +176,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <>
-      <div className="group relative w-full h-auto md:h-[480px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
+      <div className="group relative w-full h-full max-h-[450px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
         {/* {renderTag} */}
 
         <button
           onClick={handleWishlistButtonClick}
-          disabled={isAddingToWishlist || isRemovingFromWishlist}
+          disabled={isWishlistLoading}
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
           className="absolute top-3 right-3 sm:top-[9px] sm:right-[12px] w-4 h-4 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center shadow-md z-20 transition-all hover:scale-105 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed border border-[#E0E0E0] cursor-pointer"
         >
           <Heart
@@ -289,16 +196,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         <Link
           href={`/product/${unique_code || id}`}
-          className="flex h-auto md:h-[480px] flex-col no-underline text-inherit"
+          className="flex h-full max-h-[450px] flex-col no-underline text-inherit"
         >
-          <div className="relative h-[120px] md:h-[296px] overflow-hidden flex items-center justify-center">
+          <div className="relative w-full overflow-hidden">
             <Image
               src={image}
               alt={title || "Product Image"}
               width={280}
               height={296}
               loading="lazy"
-              className="w-full h-full object-cover"
+              className="w-full h-auto"
             />
             <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" />
           </div>
@@ -306,15 +213,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {/* Content */}
           <div className="flex flex-1 flex-col justify-between w-full">
             <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
-              <h4 className="text-[14px] md:text-[16px] leading-[18px] text-[#000000] font-normal">
+              {brand_name && (
+                <h4 className="text-[14px] md:text-[16px] leading-4.5 text-[#000000] font-bold">
+                  {brand_name}
+                </h4>
+              )}
+              {/* <h4 className="text-[14px] md:text-[16px] leading-[18px] text-[#000000] font-normal">
                 {limitWords(title, 7) || "MakeupKit"}
-              </h4>
+              </h4> */}
 
-              <p className="text-[13px] md:text-[14px] leading-[18px] text-[#878787] font-normal capitalize line-clamp-1">
-                {title || "Loading description..."}
+              <p className="text-[14px] md:text-[16px] leading-4.5 text-[#878787] font-normal">
+                {limitWords(title, 7) || "MakeupKit"}
               </p>
 
-              <div className="flex items-center gap-2 h-[16px] py-3">
+              <div className="flex items-center gap-2 h-4 py-3">
                 <span className="text-[16px] md:text-[20px] font-semibold text-[#052B56]">
                   ${formatPrice(mainPrice)}
                 </span>
@@ -359,7 +271,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               </div>
             </div>
 
-            <div className="w-full px-2 lg:px-3 flex justify-center">
+            <div className="w-full px-2 lg:px-3 flex justify-center mt-2">
               <button
                 onClick={handleAddToCartClick}
                 disabled={isAddingToCart || isOutOfStock}

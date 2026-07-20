@@ -16,6 +16,8 @@ export function transformProductData(products: Product[]) {
       saveAmount: priceInfo.saveAmount,
       image: getImageUrl(product),
       promotion_name: product.promotion_name,
+      rating: product.review_stats?.average_rating ?? 0,
+      reviewCount: product.review_stats?.total_reviews ?? 0,
     };
   });
 }

@@ -1,7 +1,5 @@
-import { API_ENDPOINTS } from "@/lib/constants/api";
 import { CategoryItem } from "@/types/megamenu";
-
-const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
+import { getRawCategories } from "@/lib/utils/get-raw-categories";
 
 function sortCategories(categories: CategoryItem[]): CategoryItem[] {
   return categories
@@ -20,16 +18,7 @@ function sortCategories(categories: CategoryItem[]): CategoryItem[] {
 export async function getCategoryData(
   parentSlug?: string
 ): Promise<CategoryItem[]> {
-  const res = await fetch(`${baseUrl}${API_ENDPOINTS.CATEGORIES.LIST}`, {
-    next: { revalidate: 60 },
-  });
-
-  if (!res.ok) {
-    console.error("Failed to fetch category data");
-    return [];
-  }
-
-  const data: CategoryItem[] = await res.json();
+  const data = (await getRawCategories()) as unknown as CategoryItem[];
 
   // Sort full tree first
   const sortedData = sortCategories(data);

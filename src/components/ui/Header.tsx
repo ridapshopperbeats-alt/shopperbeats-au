@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef, useSyncExternalStore } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useSyncExternalStore,
+} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,6 +37,7 @@ import {
   Gamepad2,
   Baby,
   X,
+  ChevronDown,
 } from "lucide-react";
 
 export interface MegaMenuCategory {
@@ -53,7 +60,6 @@ export interface MegaMenuCategory {
 interface HeaderProps {
   megaMenuData: MegaMenuCategory[];
 }
-
 
 function useIsClient() {
   return useSyncExternalStore(
@@ -91,7 +97,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
         const { latitude, longitude } = position.coords;
 
         try {
-         
           const data = await triggerReverseGeocode({
             lat: latitude,
             lng: longitude,
@@ -618,7 +623,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                     src="/images/default_user_icon.jpg"
                     alt="account"
                     width={20}
-                    height={20}   
+                    height={20}
                   />
                 </Link>
               )}
@@ -634,8 +639,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
             onMouseLeave={() => setIsMegaMenuOpen(false)}
           >
             <RxHamburgerMenu size={20} />
-            Shop By Category{" "}123
-            <i className="fa fa-angle-down" aria-hidden="true"></i>
+            Shop By Category
+            <ChevronDown size={18} />
             <div
               id="megaMenu"
               data-lenis-prevent
@@ -748,27 +753,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center gap-2 hover:text-red-500"
-                  href="/product-listing/whats-on-sale"
-                >
-                  <Percent size={16} className="inline-block " />
-                  What&apos;s On Sale
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="link flex items-center gap-2 hover:text-red-500"
-                  href="/product-listing/clearance"
-                >
-                  <Sparkles size={16} className="inline-block " />
-                  Clearance
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="link flex items-center gap-2 hover:text-red-500"
                   href="/category/home-garden"
                 >
-                  <Home size={16} className="inline-block " />
                   Home & Garden
                 </Link>
               </li>
@@ -777,8 +763,15 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center gap-2 hover:text-red-500"
                   href="/category/furniture"
                 >
-                  <Armchair size={16} className="inline-block " />
                   Furniture
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="link flex items-center gap-2 hover:text-red-500"
+                  href="/product-listing/whats-on-sale"
+                >
+                  Fashion & Accessories
                 </Link>
               </li>
               <li>
@@ -786,26 +779,31 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center gap-2 hover:text-red-500"
                   href="/category/health-beauty"
                 >
-                  <HeartPulse size={16} className="inline-block " />
                   Health & Beauty
                 </Link>
               </li>
               <li>
                 <Link
                   className="link flex items-center gap-2 hover:text-red-500"
-                  href="/category/toys-games"
+                  href="/category/health-beauty"
                 >
-                  <Gamepad2 size={16} className="inline-block " />
-                  Toys & Games
+                  Outdoor & Patio
                 </Link>
               </li>
               <li>
                 <Link
                   className="link flex items-center gap-2 hover:text-red-500"
-                  href="/category/baby-kids"
+                  href="/category/health-beauty"
                 >
-                  <Baby size={16} className="inline-block " />
-                  Baby & Kids
+                  Best Sellers
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="link flex items-center gap-2 hover:text-red-500"
+                  href="/product-listing/whats-on-sale"
+                >
+                  What&apos;s On Sale
                 </Link>
               </li>
             </ul>

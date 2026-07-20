@@ -398,6 +398,8 @@ const CategoryClient = ({
       <div className="container">
         {sliderCategories.length > 0 && (
           <CategorySlider
+          title="Shop By Category"
+          titleClassName=""
             items={sliderCategories}
             onCategoryClick={(item) =>
               dispatch(

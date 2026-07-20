@@ -1490,53 +1490,6 @@ input[type="radio"] {
   }
 }
 
-/* ProductCarousel (product cards only): 2-up from the smallest screen,
-   dedicated class so it doesn't affect the brand/deal/category sliders above. */
-.pc-product-slide {
-  width: 50%;
-}
-
-@media (min-width: 1024px) {
-  .pc-product-slide {
-    width: 40%;
-  }
-}
-
-@media (min-width: 1200px) {
-  .pc-product-slide {
-    width: 33.3333%;
-  }
-}
-
-@media (min-width: 1300px) {
-  .pc-product-slide {
-    width: 28.5714%;
-  }
-}
-
-@media (min-width: 1500px) {
-  .pc-product-slide {
-    width: 25%;
-  }
-}
-
-@media (min-width: 1700px) {
-  .pc-product-slide {
-    width: 20%;
-  }
-}
-
-@media (min-width: 2000px) {
-  .pc-product-slide {
-    width: 16.6666%;
-  }
-}
-
-@media (min-width: 768px) {
-  .pc-carousel .slider-track {
-    gap: 12px !important;
-  }
-}
 
 .handlePrev {
   @apply !absolute !left-0 top-1/2 -translate-y-1/2 !z-[999] flex items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed translate-x-[-12px];

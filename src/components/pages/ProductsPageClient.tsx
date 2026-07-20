@@ -34,10 +34,6 @@ const ProductsPageClient = ({
     searchParams.toString()
   );
 
-  // Re-derive currentPage from the URL during render (instead of inside a
-  // useEffect) whenever the searchParams change, to avoid an extra
-  // cascading render. Uses state (not a ref) since refs cannot be
-  // read/written during render.
   if (searchParams.toString() !== prevPageSearchParams) {
     setPrevPageSearchParams(searchParams.toString());
     setCurrentPage(Number(searchParams.get("page")) || 1);
