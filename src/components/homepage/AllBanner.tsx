@@ -49,7 +49,7 @@ export default async function PopularCategories() {
 
             <div className="absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/80" />
 
-            <div className="absolute left-6 right-6 bottom-6">
+            <div className="absolute left-4 bottom-3 md:left-6 md:right-6 md:bottom-6">
               <div className="w-full max-w-[145px] md:max-w-[368px] flex flex-col gap-[6px]">
                 <h3 className="text-white text-[13px] md:text-[18px] font-bold leading-[100%]">
                   {item.title}
@@ -82,7 +82,7 @@ export default async function PopularCategories() {
 
             <div className="absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/80" />
 
-            <div className="absolute left-6 right-6 bottom-6">
+            <div className="absolute left-4 bottom-3 md:left-6 md:right-6 md:bottom-6">
               <div className="w-full max-w-[145px] md:max-w-[368px] flex flex-col gap-[6px]">
                 <h3 className="text-white text-[13px] md:text-[18px] font-bold leading-[100%]">
                   {item.title}

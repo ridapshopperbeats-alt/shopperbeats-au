@@ -113,7 +113,7 @@ export default function TopBrands() {
         {brands.map((brand) => (
           <div
             key={brand.id}
-            className="relative h-[220px] rounded-[8px] overflow-hidden group"
+            className="relative h-[120px] w-[180px] rounded-[8px] overflow-hidden group"
           >
             <Image
               src={brand.image}
@@ -124,12 +124,12 @@ export default function TopBrands() {
 
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,11,30,0.1)_0%,rgba(5,11,30,0.65)_100%)]" />
 
-            <div className="absolute left-6 bottom-6 w-[226px] flex flex-col gap-[6px]">
-              <h3 className="text-white text-[24px] font-extrabold">
+            <div className="absolute left-4 bottom-3 w-[226px] flex flex-col ">
+              <h3 className="text-white text-[13px] font-bold">
                 {brand.title}
               </h3>
 
-              <p className="text-white text-[14px] font-semibold">
+              <p className="text-white text-[10px] font-medium">
                 {brand.subtitle}
               </p>
             </div>

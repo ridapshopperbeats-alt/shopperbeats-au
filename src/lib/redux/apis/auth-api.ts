@@ -12,6 +12,7 @@ import { createBaseQuery } from "./base-query";
 const baseQuery = createBaseQuery(API_ENDPOINTS.AUTH.BASE_URL);
 
 export const authApi = createApi({
+  
   reducerPath: "authApi",
   baseQuery,
   tagTypes: ["User", "PersonalData"],
