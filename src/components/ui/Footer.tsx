@@ -46,7 +46,7 @@ export default function Footer({
     useSubscribeToMailingListMutation();
   const { data: socialLinks } = useGetSocialMediaLinksQuery();
   const [email, setEmail] = useState("");
-
+console.log("Footer Menu Data socialLinks:", socialLinks);
   const footerMenus = [
     { title: "Company", data: footerMenuData?.company },
     { title: "My Account", data: footerMenuData?.myAccount },

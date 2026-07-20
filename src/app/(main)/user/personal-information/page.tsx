@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import * as yup from "yup";
 import { toast } from "react-toastify";
 
 import Button from "@/components/ui/Button";
@@ -11,17 +10,12 @@ import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { useGetPersonalDataQuery, useUpdatePersonalDataMutation } from "@/lib/redux/apis/auth-api";
 import { toYYYYMMDD } from "@/lib/utils/date-utils";
 import { handleAustralianPhoneNumberChange } from "@/lib/utils/phone-validation";
+import { Input } from "@/components/ui/input";
+import { personalInfoSchema } from "@/lib/validations/form-schemas";
 
-const personalInfoSchema = yup.object().shape({
-  first_name: yup.string().required("First name is required"),
-  last_name: yup.string().required("Last name is required"),
-  email: yup.string().email("Invalid email format").required("Email is required"),
-  phonenumber: yup.string().required("Phone number is required"),
-  date_of_birth: yup.date().nullable(),
-});
 
 export default function PersonalInformationPage() {
-  const { data: personalData, isLoading, isError } = useGetPersonalDataQuery();
+  const { data: personalData } = useGetPersonalDataQuery();
   const [updatePersonalData, { isLoading: isUpdating }] =
     useUpdatePersonalDataMutation();
 
@@ -37,14 +31,6 @@ export default function PersonalInformationPage() {
   const [imagePreview, setImagePreview] = useState<string>("/images/default_user_icon.jpg");
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
-  const [originalData, setOriginalData] = useState<PersonalInfoFormData>({
-    first_name: "",
-    last_name: "",
-    email: "",
-    phonenumber: "",
-    date_of_birth: "",
-  });
-
   useEffect(() => {
     if (personalData && personalData.response) {
       setFormData({
@@ -52,17 +38,10 @@ export default function PersonalInformationPage() {
         last_name: personalData.response.last_name || "",
         email: personalData.response.email || "",
         phonenumber: personalData.response.phonenumber || "",
-        date_of_birth: personalData.response.date_of_birth || "", 
-      });
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setOriginalData({
-        first_name: personalData.response.first_name || "",
-        last_name: personalData.response.last_name || "",
-        email: personalData.response.email || "",
-        phonenumber: personalData.response.phonenumber || "",
-        date_of_birth: personalData.response.date_of_birth || "", 
+        date_of_birth: personalData.response.date_of_birth || "",
       });
       if (personalData.response.profile_image) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setImagePreview(personalData.response.profile_image);
       }
     }
@@ -85,10 +64,10 @@ export default function PersonalInformationPage() {
       }
 
       await updatePersonalData(formDataToSend as any).unwrap();
-      setOriginalData(data);
 
       toast.success("Profile updated successfully!");
     } catch (error) {
+      console.error(error);
       toast.error("Failed to update profile.");
     }
   };
@@ -101,9 +80,6 @@ export default function PersonalInformationPage() {
     }
   };
 
-  const handleFormError = () => {
-    toast.error("Please fix the errors before submitting.");
-  };
   const handlePhoneChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -125,31 +101,28 @@ export default function PersonalInformationPage() {
     <div>
       <div className="profile-page">
         <div className="">
-          <div className="profile-img mb-2" style={{
-            marginBottom: "40px"
-          }}>
+          <div className="profile-img mb-10">
             <Image src={imagePreview} alt="Profile" width={200} height={200} loading="lazy" className="avatar" />
             <label htmlFor="profile_image" className="edit-icon" style={{ cursor: "pointer" }}>
               <Image src="/images/profile/edit.svg" alt="Edit Profile" width={24} height={24} loading="lazy" />
             </label>
-            <input
-
-
+            <Input
               type="file"
               id="profile_image"
               name="profile_image"
               accept="image/*"
               onChange={handleImageChange}
-              style={{ display: "none" }}
+              className="hidden"
             />
           </div>
 
           <form onSubmit={handleSubmit(handleFormSubmit)}>
             <div className="form-fields">
               <div className="form-item">
-                <label htmlFor="first_name">First Name*</label>
-                <input
+                <Input
                   id="first_name"
+                  label="First Name*"
+                  error={formErrors.first_name}
                   type="text"
                   name="first_name"
                   placeholder="First name"
@@ -157,15 +130,13 @@ export default function PersonalInformationPage() {
                   value={formData.first_name}
                   onChange={handleChange}
                 />
-                {formErrors.first_name && (
-                  <p className="error">{formErrors.first_name}</p>
-                )}
               </div>
 
               <div className="form-item">
-                <label htmlFor="last_name">Last Name*</label>
-                <input
+                <Input
                   id="last_name"
+                  label="Last Name*"
+                  error={formErrors.last_name}
                   type="text"
                   name="last_name"
                   placeholder="Last name"
@@ -173,17 +144,16 @@ export default function PersonalInformationPage() {
                   value={formData.last_name}
                   onChange={handleChange}
                 />
-                {formErrors.last_name && (
-                  <p className="error">{formErrors.last_name}</p>
-                )}
+
               </div>
             </div>
 
             <div className="form-item">
-              <label htmlFor="email">Email*</label>
-              <input
+              <Input
                 id="email"
+                label="Email*"
                 type="email"
+                error={formErrors.email}
                 name="email"
                 placeholder="Enter Email"
                 value={formData.email}
@@ -192,37 +162,33 @@ export default function PersonalInformationPage() {
             </div>
 
             <div className="form-item">
-              <label htmlFor="phonenumber">Phone Number*</label>
-              <input
+              <Input
                 id="phonenumber"
                 type="tel"
+                label="Phone Number*"
                 name="phonenumber"
                 placeholder="e.g. 0412345678 or +61412345678"
                 value={formData.phonenumber}
                 onChange={handlePhoneChange}
                 inputMode="numeric"
                 pattern="[0-9+]*"
+                error={formErrors.phonenumber}
               />
-
-              {formErrors.phonenumber && (
-                <p className="error">{formErrors.phonenumber}</p>
-              )}
             </div>
 
             <div className="form-item">
-              <label htmlFor="date_of_birth">Date of Birth (Optional)</label>
-              <input
+              <Input
                 id="date_of_birth"
                 type="date"
+                label="Date of Birth (Optional)"
                 name="date_of_birth"
                 value={toYYYYMMDD(formData.date_of_birth)}
                 onChange={handleChange}
                 min="1900-01-01"
                 max="2025-12-31"
+                error={formErrors.date_of_birth}
               />
-              {formErrors.date_of_birth && (
-                <p className="error">{formErrors.date_of_birth}</p>
-              )}
+
             </div>
 
 
@@ -231,7 +197,7 @@ export default function PersonalInformationPage() {
                 type="submit"
                 disabled={isUpdating}
                 isLoading={isUpdating}
-                className="btn btn-red btn-filled btn-sharp w-30 mt-20"
+                className="btn btn-red btn-filled btn-sharp w-full mt-20"
                 style={{ alignItems: "center", justifyContent: "center", display: "flex", marginTop: "10px" }}
                 debounceDelay={500}
               >

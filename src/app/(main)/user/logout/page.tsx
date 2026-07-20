@@ -19,8 +19,8 @@ export default function Logout() {
 
   return (
     <div className="wishlist-content">
-      <h4 className="my-2 font-bold text-[24px]">Logout</h4>
-      <p className="my-4">Are you sure you want to logout?</p>
+      <h4 className="text-heading-lg my-2">Logout</h4>
+      <p className="my-4 font-base font-medium text-[16px] leading-[normal]">Are you sure you want to logout?</p>
       <Button
         onClick={handleLogout}
         disabled={isLoading}

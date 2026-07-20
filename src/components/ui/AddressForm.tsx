@@ -10,6 +10,7 @@ import {
 
 import AddressAutocomplete from "@/components/ui/AddressAutocomplete";
 import Button from "@/components/ui/Button";
+import { Input } from "@/components/ui/input";
 import { toYYYYMMDD } from "@/lib/utils/date-utils";
 import { Address, AddressFormValues } from "@/types/address";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
@@ -60,11 +61,7 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
       editingAddress || defaultInitialValues
     );
 
-  // Adjust state during render (React's documented pattern) instead of in an
-  // effect: whenever the `editingAddress` prop identity changes, resync the
-  // local form state synchronously in the render body. The previous value is
-  // tracked via state (not a ref, since ref reads/writes aren't allowed
-  // during render), avoiding an extra effect-triggered render pass.
+
   const [prevEditingAddress, setPrevEditingAddress] = useState<
     Address | null | undefined
   >(editingAddress);
@@ -197,39 +194,36 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
     <form className="mt-[20px]" onSubmit={handleSubmit(handleSave)}>
       <div className="form-fields">
         <div className="form-item">
-          <label htmlFor="first_name">First Name*</label>
-          <input
+          <Input
             id="first_name"
+            label="First Name*"
+            error={formErrors.first_name}
             type="text"
             name="first_name"
             placeholder="First name"
             value={formData.first_name}
             onChange={handleChange}
           />
-          {formErrors.first_name && (
-            <p className="error">{formErrors.first_name}</p>
-          )}
         </div>
         <div className="form-item">
-          <label htmlFor="last_name">Last Name*</label>
-          <input
+          <Input
             id="last_name"
+            label="Last Name*"
+            error={formErrors.last_name}
             type="text"
             name="last_name"
             placeholder="Last name"
             value={formData.last_name}
             onChange={handleChange}
           />
-          {formErrors.last_name && (
-            <p className="error">{formErrors.last_name}</p>
-          )}
         </div>
       </div>
 
       <div className="form-item">
-        <label htmlFor="phone_number">Phone Number*</label>
-        <input
+        <Input
           id="phone_number"
+          label="Phone Number*"
+          error={formErrors.phone_number}
           type="tel"
           name="phone_number"
           placeholder="e.g. 0412345678 or +61412345678"
@@ -238,15 +232,13 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
           inputMode="numeric"
           pattern="[0-9+]*"
         />
-        {formErrors.phone_number && (
-          <p className="error">{formErrors.phone_number}</p>
-        )}
       </div>
 
       {from != "refund" && <div className="form-item">
-        <label htmlFor="date_of_birth">Date of Birth (Optional)</label>
-        <input
+        <Input
           id="date_of_birth"
+          label="Date of Birth (Optional)"
+          error={formErrors.date_of_birth}
           type="date"
           name="date_of_birth"
           value={toYYYYMMDD(formData.date_of_birth)}
@@ -254,9 +246,6 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
           min="1900-01-01"
           max="2025-12-31"
         />
-        {formErrors.date_of_birth && (
-          <p className="error">{formErrors.date_of_birth}</p>
-        )}
       </div>}
 
       <div className="form-item">
@@ -288,9 +277,10 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
         />
       </div>
       <div className="form-item">
-        <label htmlFor="manual_address">Address Line 1/ Street Address</label>
-        <input
+        <Input
           id="manual_address"
+          label="Address Line 1/ Street Address"
+          error={formErrors.address}
           type="text"
           name="address"
           placeholder="Address Line 1/ Street Address"
@@ -306,50 +296,50 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
             }
           }}
         />
-        {formErrors.address && <p className="error">{formErrors.address}</p>}
       </div>
 
       <div className="form-item">
-        <label htmlFor="country">Country</label>
-        <input
+        <Input
           id="country"
+          label="Country"
+          error={formErrors.country}
           type="text"
           name="country"
           placeholder="Country"
           value={formData.country}
           onChange={(e) => { handleChange(e); setAddressValid(false); }}
         />
-        {formErrors.country && <p className="error">{formErrors.country}</p>}
       </div>
       <div className="form-fields">
         <div className="form-item">
-          <label htmlFor="city">City</label>
-          <input
+          <Input
             id="city"
+            label="City"
+            error={formErrors.city}
             type="text"
             name="city"
             placeholder="City"
             value={formData.city}
             onChange={(e) => { handleChange(e); setAddressValid(false); }}
           />
-          {formErrors.city && <p className="error">{formErrors.city}</p>}
         </div>
         <div className="form-item">
-          <label htmlFor="state">State</label>
-          <input
+          <Input
             id="state"
+            label="State"
+            error={formErrors.state}
             type="text"
             name="state"
             placeholder="State"
             value={formData.state}
             onChange={(e) => { handleChange(e); setAddressValid(false); }}
           />
-          {formErrors.state && <p className="error">{formErrors.state}</p>}
         </div>
         <div className="form-item">
-          <label htmlFor="pincode">Postcode</label>
-          <input
+          <Input
             id="pincode"
+            label="Postcode"
+            error={formErrors.pincode}
             type="number"
             onWheel={(e) => e.currentTarget.blur()}
             name="pincode"
@@ -357,25 +347,20 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
             value={formData.pincode}
             onChange={(e) => { handleChange(e); setAddressValid(false); }}
           />
-          {formErrors.pincode && (
-            <p className="error">{formErrors.pincode}</p>
-          )}
         </div>
       </div>
       {formData.title === "Others" && (
         <div className="form-item">
-          <label htmlFor="customTitle">Please Specify*</label>
-          <input
+          <Input
             id="customTitle"
+            label="Please Specify*"
+            error={formErrors.customTitle}
             name="customTitle"
             type="text"
             placeholder="Enter address type"
             value={formData.customTitle}
             onChange={handleChange}
           />
-          {formErrors.customTitle && (
-            <p className="error">{formErrors.customTitle}</p>
-          )}
         </div>
       )}
 

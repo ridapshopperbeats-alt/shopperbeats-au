@@ -40,7 +40,7 @@ export const resetPasswordSchema = yup.object().shape({
 // src/components/pages/CheckoutPage.tsx
 export const checkoutValidationSchema = yup.object({});
 
-// src/components/ui/AddressForm.tsx
+// Address form validation schema
 export const addressSchema = yup.object().shape({
   title: yup.string().trim().required("Title is required"),
   customTitle: yup.string().when("title", (titleVal, schema) => {
@@ -60,6 +60,12 @@ export const addressSchema = yup.object().shape({
   is_default: yup.boolean(),
 });
 
+// Change Password validation schema
+export const changePasswordValidationSchema = yup.object().shape({
+  current_password: yup.string().required("Old password is required"),
+  new_password: strongPassword,
+  confirm_password: confirmPassword("new_password")
+});
 // src/components/ui/ReturnOrderPopup.tsx
 export const returnMessageSchema = yup.object().shape({
   reason: yup.string().required("Return reason is required"),
@@ -106,4 +112,13 @@ export const cancelMessageSchema = yup.object().shape({
       ? schema.required("Please provide details for 'Other' reason").min(10, "Comment must be at least 10 characters long")
       : schema.notRequired();
   }),
+});
+
+// Personal Information validation schema
+export const personalInfoSchema = yup.object().shape({
+  first_name: yup.string().required("First name is required"),
+  last_name: yup.string().required("Last name is required"),
+  email: yup.string().email("Invalid email format").required("Email is required"),
+  phonenumber: yup.string().required("Phone number is required"),
+  date_of_birth: yup.date().nullable(),
 });

@@ -3,30 +3,25 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  useGetWishlistQuery,
-  useRemoveFromWishlistMutation,
-  useAddToCartMutation,
-  useGetCartQuery,
-} from "@/lib/redux/apis/cartApi";
+
 
 import { toast } from "react-toastify";
-import { formatPrice } from "@/lib/utils/formatPrice";
-import { VariantAttribute } from "@/types/product";
-import { getPriceDetails } from "@/lib/utils/getPriceDetails";
+// import { VariantAttribute } from "@/types/product";
+// import { getPriceDetails } from "@/lib/utils/getPriceDetails";
 import Button from "@/components/ui/Button";
-import { formatReadableDate } from "@/lib/utils/dateUtils";
 import { WishlistItem } from "@/types/wishlist";
 import Loader from "@/components/ui/loaders/Loader";
 
 import "../../../../styles/Cart.css";
 
-import { useGlobalPostcode } from "@/lib/hooks/useGlobalPostcode";
-import { useCalculateShippingMutation } from "@/lib/redux/apis/orderApi";
-import { useFormValidation } from "@/lib/hooks/useFormValidation";
-import { pincode as pincodeValidation } from "@/lib/hooks/useYupValidation";
 
 import * as yup from "yup";
+import { useCalculateShippingMutation } from "@/lib/redux/apis/order-api";
+import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
+import { useFormValidation } from "@/lib/hooks/use-form-validation";
+import { formatReadableDate } from "@/lib/utils/date-utils";
+import { formatPrice } from "@/lib/utils/format-price";
+import { useAddToCartMutation, useGetCartQuery, useGetWishlistQuery, useRemoveFromWishlistMutation } from "@/lib/redux/apis/cart-api";
 
 export default function WishlistPage() {
   const router = useRouter();
@@ -58,7 +53,7 @@ export default function WishlistPage() {
   const { postcode } = useGlobalPostcode();
 
   const schema = yup.object().shape({
-    pincode: pincodeValidation,
+    pincode: yup.string().required("Pincode is required"),
   });
 
   const { setFormData } = useFormValidation(schema, {

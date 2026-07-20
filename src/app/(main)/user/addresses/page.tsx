@@ -1,21 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {useRef, useState } from "react";
 import { toast } from "react-toastify";
-import {
-  useGetAddressesQuery,
-  useUpdateAddressMutation,
-  useDeleteAddressMutation,
-} from "@/lib/redux/apis/addressApi";
+
 
 import Button from "@/components/ui/Button";
 import { Address } from "@/types/address";
 import Loader from "@/components/ui/loaders/Loader";
 import AddressForm from "@/components/ui/AddressForm";
 import ConfirmAlert from "@/components/ui/ConfirmAlert";
+import { useDeleteAddressMutation, useGetAddressesQuery, useUpdateAddressMutation } from "@/lib/redux/apis/address-api";
 
 export default function AddressesPage() {
-  const { data: addresses, isLoading, isError } = useGetAddressesQuery();
+  const { data: addresses, isLoading } = useGetAddressesQuery();
   const [updateAddress] = useUpdateAddressMutation();
   const [deleteAddress] = useDeleteAddressMutation();
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
@@ -27,9 +24,8 @@ export default function AddressesPage() {
   const handleEdit = (address: Address) => {
     setEditingAddress(address);
 
-    // Small delay so DOM updates first
     setTimeout(() => {
-      const yOffset = -110; // adjust based on header height
+      const yOffset = -110; 
       const y =
         formRef.current!.getBoundingClientRect().top +
         window.pageYOffset +
@@ -81,7 +77,7 @@ export default function AddressesPage() {
   return (
     <>
       <div className="">
-        {(addresses?.length ?? 0) > 0 && <h4>Address</h4>}
+        {(addresses?.length ?? 0) > 0 && <h4 className="text-heading-lg">Address</h4>}
         {isLoading && <Loader />}
         <div className="address-block">
           {addresses?.map((address: Address) => (
@@ -95,7 +91,7 @@ export default function AddressesPage() {
                     checked={address.is_default}
                     onChange={() => address.id && handleSetDefault(address.id)}
                   />
-                  <label htmlFor={`address-${address.id}`}>
+                  <label htmlFor={`address-${address.id}`} className="text-base">
                     {address.is_default ? "Default" : "Set as Default Address"}
                   </label>
                 </div>
