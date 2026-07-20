@@ -46,6 +46,7 @@ export default function LoginPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const redirect = params.get("redirect");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRedirectUrl(redirect);
  
     if (isAuthenticated) {
@@ -237,8 +238,8 @@ export default function LoginPage() {
 
   return (
     <div className="container">
-      <div className="user-form-wrapper flex flex-col gap-[24px]">
-        <h3 style={{ fontSize: "30px", fontWeight: "bold", lineHeight: "1.2", color: "var(--black)", textAlign: "center" }}>Sign In1</h3>
+      <div className="user-form-wrapper flex flex-col gap-6">
+        <h3 className="auth-title">Sign In</h3>
 
         <form onSubmit={handleSubmit(handleLoginSubmit)} noValidate>
 
@@ -251,7 +252,7 @@ export default function LoginPage() {
               value={formData.email}
               onChange={handleChange}
               disabled={isLoading || isBlocked}
-              style={{ borderRadius: "5px" }}
+              className="input-rounded"
             />
             {formErrors.email && (
               <p className="error">{formErrors.email}</p>
@@ -268,7 +269,7 @@ export default function LoginPage() {
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading || isBlocked}
-                style={{ borderRadius: "5px" }}
+                className="input-rounded"
               />
 
               <button type="button" onClick={togglePasswordVisibility} className="eyeIcon">
@@ -301,9 +302,9 @@ export default function LoginPage() {
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
               disabled={isLoading || isBlocked}
-              className="mr-2"
+              className="mr-2 checkbox-input"
             />
-            <label htmlFor="remember_me">Remember me</label>
+            <label htmlFor="remember_me" className="remember-me">Remember me</label>
           </div>
 
           <Button
@@ -316,8 +317,8 @@ export default function LoginPage() {
           </Button>
 
           {showResendEmail && (
-            <div className="resend-email-section mt-20 p-4 border border-gray-300 rounded-lg bg-gray-50">
-              <p className="text-sm text-gray-600 mb-3">
+            <div className="resend-email-section">
+              <p className="resend-email-text">
                 Your email is not verified. Click below to resend verification email.
               </p>
               <Button
@@ -337,7 +338,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div className="flex dflex link my-6 justify-between">
+          <div className="dflex link auth-links-row">
             <Link href="/forgotpassword">Forgot Password</Link>
             <p>
               New to ShopperBeats? <Link href="/signup">Sign Up</Link>

@@ -364,7 +364,8 @@ input[type="password"]::-ms-clear {
   font-size: 16px;
   color: var(--primary);
   padding: 12.5px 20px;
-  line-height: normal;
+  line-height: 21px !important;
+  text-transform: capitalize;
 }
 
 .btn-white {
@@ -1525,9 +1526,9 @@ input[type="radio"] {
   }
 
   /* bold 30, black, centered — shared heading for login/signup/forgot-password/reset-password */
-  .auth-title {
+  /* .auth-title {
     @apply text-center text-3xl font-bold leading-tight text-black;
-  }
+  } */
   @layer utilities {
   .text-semibold-16 {
     @apply text-base font-semibold tracking-normal;

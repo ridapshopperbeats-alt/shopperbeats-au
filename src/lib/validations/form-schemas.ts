@@ -14,13 +14,12 @@ import {
   website,
 } from "@/lib/hooks/use-yup-validation";
 
-// src/app/(auth)/login/page.tsx
+// Validation schemas for the login, signup, forgot password, reset password :
 export const loginSchema = yup.object().shape({
   email: email,
   password: strongPassword,
 });
 
-// src/app/(auth)/signup/page.tsx
 export const signupSchema = yup.object().shape({
   first_name: nameField("First name"),
   last_name: nameField("Last name"),
@@ -29,12 +28,10 @@ export const signupSchema = yup.object().shape({
   password2: confirmPassword("password"),
 });
 
-// src/app/(auth)/forgotpassword/page.tsx
 export const forgotPasswordSchema = yup.object().shape({
   email_address: email,
 });
 
-// src/app/(auth)/accounts/password/reset/key/[key]/page.tsx
 export const resetPasswordSchema = yup.object().shape({
   password1: strongPassword,
   password2: confirmPassword("password1"),

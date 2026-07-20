@@ -10,49 +10,31 @@ import { toast } from "react-toastify";
 import { FooterMenuData } from "@/types/menu";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
+import { FOOTER_LINKS_STATIC, footerHighlights, paymentArr, STATIC_SOCIAL_LINKS } from "@/lib/utils/get-footer-menu-data";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube, FaPinterestP, FaSnapchatGhost } from "react-icons/fa";
+import { FaXTwitter, FaTiktok, FaThreads } from "react-icons/fa6";
 
-const FOOTER_LINKS_STATIC = [
-  {
-    title: "Company",
-    links: [
-      { label: "About Us", href: "/cms/About-us" },
-      { label: "Brands", href: "/brand" },
-    ],
-  },
-  {
-    title: "My Account",
-    links: [
-      { label: "Login", href: "/login" },
-      { label: "Sign up", href: "/signup" },
-      { label: "User Profile", href: "/user/personal-information" },
-      { label: "My Cart", href: "/cart" },
-      { label: "Track My Order", href: "/cms/track" },
-    ],
-  },
-  {
-    title: "Help & Support",
-    links: [
-      { label: "My Orders", href: "/user/orders" },
-      { label: "Shipping & Delivery", href: "/cms/shipping-delivery" },
-      { label: "Return & Warranty", href: "/cms/return-refunds" },
-      { label: "Shop With Peace Of Mind", href: "/shop-with-peace" },
-      { label: "Payment Policy", href: "/cms/payment-policy" },
-      { label: "Contact Us", href: "/contact" },
-      { label: "FAQ", href: "/cms/faq" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Privacy Policy", href: "/cms/privacy-policy" },
-      { label: "Terms & Conditions", href: "/cms/terms-condition" },
-      {
-        label: "Intellectual Property Complaints",
-        href: "/cms/intellectual-property-complaints",
-      },
-    ],
-  },
-];
+const SOCIAL_ICONS: Record<string, React.ComponentType> = {
+  facebook: FaFacebookF,
+  facebook_f: FaFacebookF,
+  "facebook-f": FaFacebookF,
+  instagram: FaInstagram,
+  linkedin: FaLinkedinIn,
+  linkedin_in: FaLinkedinIn,
+  "linkedin-in": FaLinkedinIn,
+  twitter: FaXTwitter,
+  "x-twitter": FaXTwitter,
+  x_twitter: FaXTwitter,
+  x: FaXTwitter,
+  tiktok: FaTiktok,
+  youtube: FaYoutube,
+  pinterest: FaPinterestP,
+  pinterest_p: FaPinterestP,
+  "pinterest-p": FaPinterestP,
+  snapchat: FaSnapchatGhost,
+  snapchat_ghost: FaSnapchatGhost,
+  threads: FaThreads,
+};
 
 export default function Footer({
   footerMenuData,
@@ -100,29 +82,24 @@ export default function Footer({
   return (
     <div className="page-footer">
       <div className="pt-6">
-        <div className=" bg-white p-5 md:p-[30px]">
-          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
-            {[
-              { img: "free-shipping", text: "Fast & Limited Free Shipping" },
-              { img: "customer", text: "Expert Customer Service" },
-              { img: "peace-mind", text: "Shop With Peace of Mind" },
-              { img: "incredible", text: "Incredible Value Every Day" },
-            ].map((item) => (
+        <div className="footer-highlights-wrapper">
+          <div className="footer-highlights-grid">
+            {footerHighlights.map((item) => (
               <div
                 key={item.img}
-                className="group flex items-center gap-4 cursor-pointer"
+                className="group footer-highlight-item"
               >
-                <div className="w-[105px] h-[105px] rounded-full bg-[#FFB30F] flex items-center justify-center transition-all duration-300 group-hover:bg-[#042A89]">
+                <div className="footer-highlight-icon">
                   <Image
                     src={`/images/${item.img}.svg`}
                     alt={item.text}
                     width={62}
                     height={42}
-                    className="transition-all duration-300 group-hover:brightness-0 group-hover:invert"
+                    className="footer-highlight-img"
                   />
                 </div>
 
-                <p className="text-[16px] lg:text-[18px] font-bold leading-[22px] text-black max-w-[170px]">
+                <p className="footer-highlight-text">
                   {item.text}
                 </p>
               </div>
@@ -132,8 +109,8 @@ export default function Footer({
       </div>
 
       <footer>
-        <div className="px-[30px] lg:px-[100px]">
-          <div className="flex flex-wrap">
+        <div className="footer-container">
+          <div className="footer-menu-row">
             {footerMenus.map((section) => {
               const staticFallback = FOOTER_LINKS_STATIC.find(
                 (staticSection) => staticSection.title === section.title,
@@ -197,10 +174,10 @@ export default function Footer({
 
               return (
                 <div
-                  className="footer-block flex flex-col gap-[20px]"
+                  className="footer-block footer-menu-block"
                   key={section.title}
                 >
-                  <h5 className="text-white font-bold leading-[28px] text-[20px]">
+                  <h5 className="footer-section-title">
                     {section.title}
                   </h5>
                   {items.length > 0 ? (
@@ -220,8 +197,8 @@ export default function Footer({
 
             {/* Newsletter */}
             <div className="footer-block footer-newsletter">
-              <h5 className="text-white">JOIN OUR MAILING LIST</h5>
-              <p style={{ marginTop: "10px" }}>
+              <h5 className="footer-newsletter-title">JOIN OUR MAILING LIST</h5>
+              <p className="footer-newsletter-desc">
                 Enter your email to get $10 off and free shipping
               </p>
 
@@ -249,30 +226,35 @@ export default function Footer({
               </form>
 
               <ul className="social">
-                {socialLinks?.map((item) => (
-                  <li key={item.id}>
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <i className={`fa-brands fa-${item.icon_class}`}></i>
-                    </a>
-                  </li>
-                ))}
+                {(socialLinks && socialLinks.length > 0 ? socialLinks : STATIC_SOCIAL_LINKS).map((item) => {
+                  const Icon = SOCIAL_ICONS[item.icon_class.toLowerCase()];
+                  return (
+                    <li key={item.id}>
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {Icon ? (
+                          <Icon className="text-[#FFF] text-[18.61px] font-normal leading-normal" />
+                        ) : null}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>
 
           {/* Bottom bar */}
-          <div className="flex flex-wrap md:flex-nowrap justify-between">
-            <p className="pb-4 hidden sm:block">
+          <div className="footer-bottom-bar">
+            <p className="footer-copyright-desktop">
               © 2026 Shopperbeats Pty Ltd (ABN 32 637 549 770). All Rights
               Reserved
             </p>
 
-            <div className="payment flex justify-center md:justify-start mx-auto md:mx-0">
-              {["visa", "payment", "american", "paypal", "afterpay", "zip"].map(
+            <div className="payment">
+              {paymentArr.map(
                 (item) => (
                   <Image
                     key={item}
@@ -284,7 +266,7 @@ export default function Footer({
                 ),
               )}
             </div>
-            <p className="pt-4 text-center block sm:hidden">
+            <p className="footer-copyright-mobile">
               © 2026 Shopperbeats Pty Ltd (ABN 32 637 549 770). All Rights
               Reserved
             </p>

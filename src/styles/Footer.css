@@ -1,173 +1,184 @@
-  /* footer  */
-  footer {
-    background: #000;
-    padding: 30px 0 30px;
+@reference "tailwindcss";
+
+footer {
+  @apply bg-black py-[30px] px-0;
+}
+
+.page-footer {
+  @apply mt-auto;
+}
+
+footer h4 {
+  @apply text-[var(--white)] uppercase mb-5;
+}
+
+.footer-block {
+  @apply w-[18%];
+}
+
+.footer-block.footer-newsletter input[type="email"] {
+  @apply h-[41px] flex-1 min-w-0;
+}
+
+.footer-block.footer-newsletter {
+  @apply w-[28%];
+}
+
+.footer-block ul a {
+  @apply text-[var(--white)] text-[16px] inline-block p-0 leading-[29px] font-normal;
+}
+
+.footer-block ul a:hover {
+  @apply text-[var(--secondary)];
+}
+
+footer p {
+  @apply text-[var(--white)] text-xs;
+}
+
+.footer-block.footer-newsletter form {
+  @apply flex gap-2 mt-[14px];
+}
+
+.footer-block.footer-newsletter form button {
+  @apply bg-[var(--secondary)] px-5 py-0 h-[41px] rounded-[5px] flex items-center justify-center shrink-0 cursor-pointer;
+}
+
+.footer-block.footer-newsletter form button:hover {
+  @apply bg-[var(--primary)];
+}
+
+.footer-block.footer-newsletter h4 {
+  @apply mb-[5px];
+}
+
+ul.social {
+  @apply flex mx-[10px] my-5 gap-5;
+}
+
+.footer-block ul.social a {
+  @apply flex items-center justify-center text-white w-[40px] h-[40px] rounded-full border border-white bg-[rgba(217,217,217,0.00)];
+}
+
+.footer-block ul.social a:hover {
+  @apply bg-[var(--secondary)] border border-[var(--secondary)] text-white;
+}
+
+.footer-block ul.social a:hover svg {
+  @apply fill-[var(--white)];
+}
+
+.payment {
+  @apply flex justify-center md:justify-start mx-auto md:mx-0 gap-2;
+}
+
+.footer-highlights-wrapper {
+  @apply bg-white p-5 md:p-[30px];
+}
+
+.footer-highlights-grid {
+  @apply grid md:grid-cols-2 xl:grid-cols-4 gap-6;
+}
+
+.footer-highlight-item {
+  @apply flex items-center gap-4 cursor-pointer;
+}
+
+.footer-highlight-icon {
+  @apply w-[105px] h-[105px] rounded-full bg-[#FFB30F] flex items-center justify-center transition-all duration-300 group-hover:bg-[#042A89];
+}
+
+.footer-highlight-img {
+  @apply transition-all duration-300 group-hover:brightness-0 group-hover:invert;
+}
+
+.footer-highlight-text {
+  @apply text-[16px] lg:text-[18px] font-bold leading-[22px] text-black max-w-[170px];
+}
+
+.footer-container {
+  @apply px-[30px] lg:px-[100px];
+}
+
+.footer-menu-row {
+  @apply flex flex-wrap;
+}
+
+.footer-menu-block {
+  @apply flex flex-col gap-[20px];
+}
+
+.footer-section-title {
+  @apply text-white font-bold leading-[28px] text-[20px];
+}
+
+.footer-newsletter-title {
+  @apply text-white;
+}
+
+.footer-newsletter-desc {
+  @apply mt-[10px];
+}
+
+.footer-bottom-bar {
+  @apply flex flex-wrap md:flex-nowrap justify-between;
+}
+
+.footer-copyright-desktop {
+  @apply pb-4 hidden sm:block;
+}
+
+.footer-copyright-mobile {
+  @apply pt-4 text-center block sm:hidden;
+}
+
+.payment img {
+  @apply bg-[var(--white)] w-[54px] h-[27px] rounded-[2px] p-[2px];
+}
+
+
+@media screen and (max-width: 1400px) {
+  .footer-block ul a {
+    @apply text-sm;
   }
 
-  .page-footer {
-    margin-top: auto;
+  .footer-block h5 {
+    @apply text-lg;
   }
+}
 
-  footer h4 {
-    color: var(--white);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-
+@media screen and (max-width: 1199px) {
   .footer-block {
-    width: 18%;
-  }
-
-  .footer-block.footer-newsletter input[type="text"] {
-    height: 50px;
+    @apply w-1/2 mb-[30px];
   }
 
   .footer-block.footer-newsletter {
-    width: 28%;
+    @apply w-1/2;
   }
 
-  .footer-block ul a {
-    color: var(--white);
-    font-size: 16px;
-    display: inline-block;
-    padding: 0px 0px;
-    line-height: 29px;
-    font-weight: 400;
+  .footer-copyright {
+    @apply pt-3 flex;
   }
-
-  .footer-block ul a:hover {
-    color: var(--secondary);
-  }
-
- 
-
-  footer p {
-    color: var(--white);
-    font-size: 12px;
-  }
-
-  .footer-block.footer-newsletter form {
-    display: flex;
-    gap: 8px;
-    margin-top: 14px;
-  }
-
-  .footer-block.footer-newsletter form button {
-    background: var(--secondary);
-    padding: 0 20px;
-    cursor: pointer;
-  }
-
-  .footer-block.footer-newsletter form button:hover {
-    background: var(--primary);
-    
-  }
-
-  .footer-block.footer-newsletter h4 {
-    margin-bottom: 5px;
-  }
-
-  ul.social {
-    display: flex;
-    margin: 20px 10px;
-    gap: 20px;
-  }
-
-  .footer-block ul.social a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-  }
-
-  .footer-block ul.social a:hover {
-    background: var(--secondary);
-    border: 1px solid var(--secondary);
-    color: white;
-  }
-
-  .footer-block ul.social a:hover svg {
-    fill: var(--white);
-  }
-
- 
-
-  .payment {
-    display: flex;
-    gap: 8px;
-  }
-
-  .payment img {
-    background: var(--white);
-    width: 54px;
-    height: 27px;
-    border-radius: 2px;
-    padding: 2px;
-  }
-
-  /* footer  */
-
-  @media screen and (max-width: 1400px) {
-   
-    .footer-block ul a {
-      font-size: 14px;
-    }
-
-    .footer-block h5 {
-      font-size: 18px;
-    }
-
-  }
-
-
-  @media screen and (max-width: 1199px) {
-    .footer-block {
-      width: 50%;
-      margin-bottom: 30px;
-    }
-
-    .footer-block.footer-newsletter {
-      width: 50%;
-    }
-
-    .footer-copyright {
-      padding-top: 12px;
-      display: flex;
-    }
-  
-   
-
-  }
-
-  @media screen and (max-width: 991px) {
-
-
-    footer {
-      padding: 50px 0 70px 0;
-    }
-
-  }
-
-  @media screen and (max-width: 767px) {
-
-    .footer-block {
-      width: 100%;
-    }
-
-    .footer-block.footer-newsletter {
-      width: 100%;
-    }
-
-
-  }
-
-  @media screen and (max-width: 480px) {
- 
-    .payment img {
-    background: var(--white);
-    border-radius: 2px;
-    width: 41px;
-    height: 27px;
-    padding: 2px;
 }
+
+@media screen and (max-width: 991px) {
+  footer {
+    @apply pt-[50px] px-0 pb-[70px];
   }
+}
+
+@media screen and (max-width: 767px) {
+  .footer-block {
+    @apply w-full;
+  }
+
+  .footer-block.footer-newsletter {
+    @apply w-full;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .payment img {
+    @apply bg-[var(--white)] rounded-[2px] w-[41px] h-[27px] p-[2px];
+  }
+}
