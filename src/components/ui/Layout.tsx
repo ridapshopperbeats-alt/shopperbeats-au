@@ -14,7 +14,7 @@ type LayoutProps = {
 };
 
 export default function Layout({
-  children,
+   children,
   megaMenuData,
   footerMenuData,
 }: LayoutProps) {
