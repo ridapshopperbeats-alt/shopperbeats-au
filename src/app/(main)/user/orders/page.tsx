@@ -4,23 +4,20 @@ import React, { useEffect, useState } from "react";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { APIProduct, OrderAPIResponse, OrderItem, Status, OrderReturn } from "@/types/order";
+import { OrderAPIResponse, OrderItem, Status, OrderReturn } from "@/types/order";
 import CancelOrderPopup from "@/components/ui/CancelOrderPopup";
 import ReturnOrderPopup from "@/components/ui/ReturnOrderPopup";
 import RetryPaymentPopup from "@/components/ui/RetryPaymentPopup";
 import { Elements } from "@stripe/react-stripe-js";
 import stripePromise from "@/lib/stripe";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
-import "../../../../styles/Checkout.css";
-import "../../../../styles/Cart.css";
-import "../../../../styles/Product.css";
 import Loader from "@/components/ui/loaders/Loader";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import Pagination from "@/components/ui/Pagination";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Image from "next/image";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
 import { useCancelOrderMutation, useListOrdersQuery } from "@/lib/redux/apis/order-api";
 import { useCapturePaymentMutation } from "@/lib/redux/apis/payment-api";
@@ -29,19 +26,19 @@ import { formatPrice } from "@/lib/utils/format-price";
 import { getOrderProductImage, getReviewProductId, mapOrderProducts } from "@/lib/utils/order-products";
 import { formatReadableDate } from "@/lib/utils/date-utils";
 
+import "../../../../styles/Checkout.css";
+import "../../../../styles/Cart.css";
+import "../../../../styles/Product.css";
+
 export default function MyOrdersPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [cancelOrder] = useCancelOrderMutation();
-  const [capturePayment] = useCapturePaymentMutation();
-  const [clearCart] = useClearCartMutation();
-  const { data: cart } = useGetCartQuery(undefined);
+ 
 
   const [isCancelPopupOpen, setIsCancelPopupOpen] = useState(false);
   const [isReturnPopupOpen, setIsReturnPopupOpen] = useState(false);
   const [isRetryPopupOpen, setIsRetryPopupOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
 
   const CHUNK_SIZE = 20;
@@ -71,9 +68,8 @@ export default function MyOrdersPage() {
 
   const [allOrders, setAllOrders] = useState<OrderItem[]>([]);
 
-  // Derived state for effective total (API provides total_items)
   const effectiveTotal = data?.total_items ?? 0;
-  const totalPages = Math.ceil(effectiveTotal / uiLimit); // Based on UI limit
+  const totalPages = Math.ceil(effectiveTotal / uiLimit);
 
   useEffect(() => {
     if (!data?.data) return;
@@ -102,10 +98,8 @@ export default function MyOrdersPage() {
     const startFetching = calculateStartFetchingPage(currentPage, uiLimit);
 
     if (fetchingPage === startFetching) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAllOrders(mapped);
     } else if (fetchingPage > startFetching) {
-      // Append logic
       setAllOrders(prev => {
         if (prev.length >= uiLimit) return prev;
         const newOrders = mapped.filter(o => !prev.some(existing => existing.id === o.id));
@@ -114,7 +108,6 @@ export default function MyOrdersPage() {
     }
   }, [data, fetchingPage, currentPage, uiLimit]);
 
-  // Reset pagination and clear orders when sort changes
   const handleSortChange = (value: string) => {
     setSortOrdersBy(value as "price" | "date");
     setAllOrders([]);
@@ -242,12 +235,6 @@ export default function MyOrdersPage() {
                 position="popper"
                 className=" bg-white rounded-[10px] !ring-gray-200 w-[100px] p-0 overflow-hidden "
               >
-                {/* <SelectItem
-                  value="latest"
-                  className=" px-3 py-2 cursor-pointer rounded-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-black"
-                >
-                  Price
-                </SelectItem> */}
 
                 <SelectItem
                   value="oldest"
@@ -396,22 +383,6 @@ export default function MyOrdersPage() {
           <div className="dflex order-action justify-between">
             <div className="btn-action">
 
-              {/* {order.products.map((product, index) => {
-                const reviewProductId = getReviewProductId(product);
-                if (!reviewProductId) return null;
-
-                return (
-                  <Link
-                    key={`${order.id}-${reviewProductId}-${index}`}
-                    href={`/user/orders/${order.id}/review?product_id=${encodeURIComponent(reviewProductId)}`}
-                    className="btn btn-red btn-filled btn-sharp"
-                  >
-                    {order.products.length > 1
-                      ? `Review ${product.title || product.name}`
-                      : "Add Review"}
-                  </Link>
-                );
-              })} */}
               <button
                 className="btn btn-red btn-outline btn-rounded cursor-pointer"
                 onClick={() => router.push(`/user/orders/${order.id}`)}
@@ -457,7 +428,6 @@ export default function MyOrdersPage() {
         </div>
       ))}
 
-      {/* Sentinel for Infinite Scroll */}
       {allOrders.length < uiLimit && allOrders.length < effectiveTotal && (
         <div ref={loadMoreRef} className="w-full flex justify-center py-4">
           {isFetching && (
@@ -491,7 +461,6 @@ export default function MyOrdersPage() {
       )}
       <div className="product-search bg-white mt-40">
 
-        {/* Shared Pagination Component */}
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

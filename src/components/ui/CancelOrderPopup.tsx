@@ -5,17 +5,9 @@ import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import Button from "@/components/ui/Button";
 import { useGetOrderByIdQuery } from "@/lib/redux/apis/order-api";
 import { formatPrice } from "@/lib/utils/format-price";
-import { APIProduct } from "@/types/order";
+import { APIProduct, CancelOrderPopupProps } from "@/types/order";
 import { cancelMessageSchema } from "@/lib/validations/form-schemas";
 
-interface CancelOrderPopupProps {
-  isOpen: boolean;
-  onClose: () => void;
-  orderId: string;
-  itemId?: string;
-  itemName?: string;
-  onCancelConfirm: (id: string, cancelMessage: string, isItemLevel: boolean) => void;
-}
 
 const CancelOrderPopup: React.FC<CancelOrderPopupProps> = ({
   isOpen,

@@ -276,3 +276,12 @@ export interface ReturnOrderPayload {
   landmark?: string;
   images?: string[];
 }
+
+export interface CancelOrderPopupProps {
+  isOpen: boolean;
+  onClose: () => void;
+  orderId: string;
+  itemId?: string;
+  itemName?: string;
+  onCancelConfirm: (id: string, cancelMessage: string, isItemLevel: boolean) => void;
+}

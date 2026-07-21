@@ -85,6 +85,12 @@ export const useProductFilters = (
   const [sortBy, setSortBy] = useState(searchParams.get("sort_by") || "");
 
   const isInitialMount = useRef(true);
+  // Only user-driven setters flip this to true. This tells the auto-apply
+  // effect below to distinguish "the user changed a filter" from "the URL
+  // sync effect just finished resetting isSyncingFromUrl" — without it, every
+  // sync-from-URL completion re-triggers handleApplyFilters -> router.push
+  // -> new searchParams reference -> sync-from-URL again, looping forever.
+  const userInitiatedRef = useRef(false);
 
   // Sync filter state from the URL whenever `searchParams` changes. This is
   // React's "adjust state during render" pattern (rather than a useEffect)
@@ -174,10 +180,14 @@ export const useProductFilters = (
 
     params.set("page", "1");
 
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    const nextQueryString = params.toString();
+    if (nextQueryString === searchParams.toString()) return;
+
+    router.push(`${pathname}?${nextQueryString}`, { scroll: false });
   }, [
     router,
     pathname,
+    searchParams,
     q,
     categorySlug,
     categoryId,
@@ -191,15 +201,17 @@ export const useProductFilters = (
   ]);
 
   useEffect(() => {
-    if (isInitialMount.current || isSyncingFromUrl) {
+    if (isInitialMount.current || isSyncingFromUrl || !userInitiatedRef.current) {
       isInitialMount.current = false;
       return;
     }
+    userInitiatedRef.current = false;
     handleApplyFilters();
   }, [selectedCategories, selectedPrices, selectedFilters, sortBy, minPrice, maxPrice, isSyncingFromUrl, handleApplyFilters]);
 
 
  const handlePriceChange = (price: string) => {
+  userInitiatedRef.current = true;
   let formattedPrice = price;
 
   if (price.toLowerCase().includes("under")) {
@@ -219,6 +231,7 @@ export const useProductFilters = (
 };
 
   const handleFilterChange = (attribute: string, value: string) => {
+    userInitiatedRef.current = true;
     const attrKey = attribute.toLowerCase();
     setSelectedFilters((prev) => {
       const currentValues = prev[attrKey] || [];
@@ -231,10 +244,12 @@ export const useProductFilters = (
   };
 
   const handleSortChange = (value:string) => {
+    userInitiatedRef.current = true;
     setSortBy(value);
   };
 
   const handleCategoryChange = (categoryName: string) => {
+    userInitiatedRef.current = true;
     setSelectedCategories(prev =>
       prev.includes(categoryName)
         ? prev.filter(c => c !== categoryName)
@@ -284,14 +299,23 @@ const clearFilters = useCallback(() => {
     ? flattenCategories(category.subcategories)
     : [];
 
+  const setMinPriceUserInitiated = useCallback((value: string) => {
+    userInitiatedRef.current = true;
+    setMinPrice(value);
+  }, []);
+
+  const setMaxPriceUserInitiated = useCallback((value: string) => {
+    userInitiatedRef.current = true;
+    setMaxPrice(value);
+  }, []);
 
   return {
     brandSearch,
     setBrandSearch,
     minPrice,
-    setMinPrice,
+    setMinPrice: setMinPriceUserInitiated,
     maxPrice,
-    setMaxPrice,
+    setMaxPrice: setMaxPriceUserInitiated,
     selectedCategories,
     setSelectedCategories: handleCategoryChange,
     selectedPrices,
