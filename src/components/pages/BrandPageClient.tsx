@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
@@ -11,6 +11,7 @@ import Sidebar from "../productListing/Sidebar";
 import MobileFilterSheet from "../productListing/MobileFilterSheet";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import ProductDisplay from "../productListing/ProductDisplay";
+import { buildFilterTags } from "@/lib/utils/filter-tags";
 import "../../styles/Product.css";
 import Breadcrumb from "../common/Breadcrumb";
 
@@ -63,9 +64,48 @@ const BrandPageClient = ({
     setPersistedFilters(filters);
   }
 
-  const { sortBy, handleSortChange } = useProductFilters(
-    persistedFilters,
-    brand,
+  const {
+    sortBy,
+    handleSortChange,
+    selectedFilters,
+    handleFilterChange,
+    selectedCategories,
+    setSelectedCategories: toggleSelectedCategory,
+    selectedPrices,
+    handlePriceChange,
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice,
+    clearFilters,
+  } = useProductFilters(persistedFilters, brand);
+
+  const filterTags = useMemo(
+    () =>
+      buildFilterTags({
+        selectedCategories,
+        toggleSelectedCategory,
+        selectedPrices,
+        handlePriceChange,
+        minPrice,
+        maxPrice,
+        setMinPrice,
+        setMaxPrice,
+        selectedFilters,
+        handleFilterChange,
+      }),
+    [
+      selectedCategories,
+      selectedPrices,
+      minPrice,
+      maxPrice,
+      selectedFilters,
+      toggleSelectedCategory,
+      handlePriceChange,
+      handleFilterChange,
+      setMinPrice,
+      setMaxPrice,
+    ],
   );
 
   useEffect(() => {
@@ -247,6 +287,7 @@ const BrandPageClient = ({
           <MobileFilterSheet
             open={isSidebarOpen}
             onClose={() => setIsSidebarOpen(false)}
+            onClearAll={clearFilters}
             filters={persistedFilters}
             category={brand}
           />
@@ -262,6 +303,8 @@ const BrandPageClient = ({
               sortBy={sortBy}
               onSortChange={handleSortChange}
               categoryName={brand?.name}
+              tags={filterTags}
+              onClearFilters={clearFilters}
               isLoading={isLoading && allProducts.length === 0}
               onLoadMore={handleLoadMore}
               infiniteScroll={true}

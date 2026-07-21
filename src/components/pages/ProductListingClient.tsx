@@ -17,6 +17,7 @@ import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import ProductDisplay from "../productListing/ProductDisplay";
 import NoProductsFound from "../NoProductFound";
 import { resolvePriceRange, filterProductsByPriceRange, getProductPrice } from "@/lib/utils/price-filter";
+import { buildFilterTags, formatPriceRangeLabel } from "@/lib/utils/filter-tags";
 import "../../styles/Product.css";
 interface ProductListingClientProps {
   slug: string;
@@ -71,13 +72,6 @@ const ProductListingClient = ({
     setMaxPrice,
     clearFilters,
   } = useProductFilters(persistedFilters, category);
-
-  const formatPriceRangeLabel = useCallback((value: string) => {
-    if (value === "200+") return "$200 and Above";
-    if (value === "0-50") return "Under $50";
-    const [min, max] = value.split("-");
-    return min && max ? `$${min} to $${max}` : value;
-  }, []);
 
   const handleClearAllFilters = () => {
     setSelectedCategorySlug(null);
@@ -234,14 +228,17 @@ const extractedBrands = useMemo(() => {
   const [selectedPriceRange, setSelectedPriceRange] = useState<string | null>(null);
 
   const filterTags = useMemo(() => {
-    const tags: { key: string; label: string; onRemove: () => void }[] = [];
-
-    selectedCategories.forEach((cat) => {
-      tags.push({
-        key: `category-${cat}`,
-        label: cat,
-        onRemove: () => toggleSelectedCategory(cat),
-      });
+    const tags = buildFilterTags({
+      selectedCategories,
+      toggleSelectedCategory,
+      selectedPrices,
+      handlePriceChange,
+      minPrice,
+      maxPrice,
+      setMinPrice,
+      setMaxPrice,
+      selectedFilters,
+      handleFilterChange,
     });
 
     if (selectedCategorySlug) {
@@ -256,26 +253,6 @@ const extractedBrands = useMemo(() => {
       });
     }
 
-    const customRangeKey = minPrice && maxPrice
-      ? `${minPrice}-${maxPrice}`
-      : minPrice
-        ? `${minPrice}+`
-        : maxPrice
-          ? `0-${maxPrice}`
-          : null;
-
-    selectedPrices.forEach((price) => {
-      tags.push({
-        key: `price-${price}`,
-        label: formatPriceRangeLabel(price),
-        onRemove: () => {
-          handlePriceChange(price);
-          setMinPrice("");
-          setMaxPrice("");
-        },
-      });
-    });
-
     if (selectedPriceRange) {
       tags.push({
         key: `highlight-price-${selectedPriceRange}`,
@@ -283,27 +260,6 @@ const extractedBrands = useMemo(() => {
         onRemove: () => setSelectedPriceRange(null),
       });
     }
-
-    if ((minPrice || maxPrice) && !selectedPrices.includes(customRangeKey || "")) {
-      tags.push({
-        key: "price-range",
-        label: `$${minPrice || 0} to $${maxPrice || "Any"}`,
-        onRemove: () => {
-          setMinPrice("");
-          setMaxPrice("");
-        },
-      });
-    }
-
-    Object.entries(selectedFilters).forEach(([attribute, values]) => {
-      values.forEach((value) => {
-        tags.push({
-          key: `${attribute}-${value}`,
-          label: value,
-          onRemove: () => handleFilterChange(attribute, value),
-        });
-      });
-    });
 
     return tags;
   }, [
@@ -320,7 +276,6 @@ const extractedBrands = useMemo(() => {
     handleFilterChange,
     setMinPrice,
     setMaxPrice,
-    formatPriceRangeLabel,
   ]);
 
   const activePriceRange = useMemo(

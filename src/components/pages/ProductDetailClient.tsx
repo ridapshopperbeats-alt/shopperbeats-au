@@ -1308,7 +1308,7 @@ export default function ProductDetailClient({
                   <ShieldCheck /> Guaranteed Safe & Secured Checkout
                 </div>
                 <div className="lg:hidden flex flex-wrap gap-2">
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
                     {" "}
                     <Image
                       src="/images/visa.svg"
@@ -1317,7 +1317,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
                     <Image
                       src="/images/payment.svg"
                       alt="Payment"
@@ -1325,7 +1325,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
                     <Image
                       src="/images/american.svg"
                       alt="American Express"
@@ -1333,7 +1333,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
                     <Image
                       src="/images/paypal.svg"
                       alt="PayPal"
@@ -1341,7 +1341,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
                     {" "}
                     <Image
                       src="/images/afterpay.svg"
@@ -1350,7 +1350,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
                     {" "}
                     <Image
                       src="/images/zip.svg"

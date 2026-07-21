@@ -31,6 +31,7 @@ import CategorySlider from "./CategorySlider";
 import Breadcrumb from "../common/Breadcrumb";
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
 import { resolvePriceRange, filterProductsByPriceRange } from "@/lib/utils/price-filter";
+import { buildFilterTags } from "@/lib/utils/filter-tags";
 
 
 
@@ -102,79 +103,33 @@ const CategoryClient = ({
     clearFilters,
   } = useProductFilters(persistedFilters, category);
 
-  const formatPriceRangeLabel = useCallback((value: string) => {
-    if (value === "200+") return "$200 and Above";
-    if (value === "0-50") return "Under $50";
-    const [min, max] = value.split("-");
-    return min && max ? `$${min} to $${max}` : value;
-  }, []);
-
-  const filterTags = useMemo(() => {
-    const tags: { key: string; label: string; onRemove: () => void }[] = [];
-
-    selectedCategories.forEach((cat) => {
-      tags.push({
-        key: `category-${cat}`,
-        label: cat,
-        onRemove: () => toggleSelectedCategory(cat),
-      });
-    });
-
-    const customRangeKey = minPrice && maxPrice
-      ? `${minPrice}-${maxPrice}`
-      : minPrice
-        ? `${minPrice}+`
-        : maxPrice
-          ? `0-${maxPrice}`
-          : null;
-
-    selectedPrices.forEach((price) => {
-      tags.push({
-        key: `price-${price}`,
-        label: formatPriceRangeLabel(price),
-        onRemove: () => {
-          handlePriceChange(price);
-          setMinPrice("");
-          setMaxPrice("");
-        },
-      });
-    });
-
-    if ((minPrice || maxPrice) && !selectedPrices.includes(customRangeKey || "")) {
-      tags.push({
-        key: "price-range",
-        label: `$${minPrice || 0} to $${maxPrice || "Any"}`,
-        onRemove: () => {
-          setMinPrice("");
-          setMaxPrice("");
-        },
-      });
-    }
-
-    Object.entries(selectedFilters).forEach(([attribute, values]) => {
-      values.forEach((value) => {
-        tags.push({
-          key: `${attribute}-${value}`,
-          label: value,
-          onRemove: () => handleFilterChange(attribute, value),
-        });
-      });
-    });
-
-    return tags;
-  }, [
-    selectedCategories,
-    selectedPrices,
-    minPrice,
-    maxPrice,
-    selectedFilters,
-    toggleSelectedCategory,
-    handlePriceChange,
-    handleFilterChange,
-    setMinPrice,
-    setMaxPrice,
-    formatPriceRangeLabel,
-  ]);
+  const filterTags = useMemo(
+    () =>
+      buildFilterTags({
+        selectedCategories,
+        toggleSelectedCategory,
+        selectedPrices,
+        handlePriceChange,
+        minPrice,
+        maxPrice,
+        setMinPrice,
+        setMaxPrice,
+        selectedFilters,
+        handleFilterChange,
+      }),
+    [
+      selectedCategories,
+      selectedPrices,
+      minPrice,
+      maxPrice,
+      selectedFilters,
+      toggleSelectedCategory,
+      handlePriceChange,
+      handleFilterChange,
+      setMinPrice,
+      setMaxPrice,
+    ],
+  );
 
   const handleSortChangeWithSkeleton = useCallback(
     (value: string) => {
