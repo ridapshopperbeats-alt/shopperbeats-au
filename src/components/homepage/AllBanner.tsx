@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ArrowRight, ChevronRight } from "lucide-react";
-import { getRawCategories } from "@/lib/utils/get-raw-categories";
+import { getRawCategories } from "@/lib/utils/main-utils";
 import { Category } from "@/types/product";
 
 const FALLBACK_IMAGE = "/images/image-coming-soon.jpg";

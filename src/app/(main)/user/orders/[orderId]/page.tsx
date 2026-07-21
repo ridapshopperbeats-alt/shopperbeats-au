@@ -20,7 +20,7 @@ import Loader from "@/components/ui/loaders/Loader";
 
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import Image from "next/image";
-import { formatPrice } from "@/lib/utils/format-price";
+import { formatPrice } from "@/lib/utils/main-utils";
 
 import "../../../../../styles/Checkout.css";
 import "../../../../../styles/Cart.css";

@@ -1,6 +1,6 @@
 
+import { useDebouncedFunction } from '@/lib/hooks/use-debounce';
 import React, { ButtonHTMLAttributes } from 'react';
-import { useDebouncedFunction } from '@/lib/hooks/use-debounced-function';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;

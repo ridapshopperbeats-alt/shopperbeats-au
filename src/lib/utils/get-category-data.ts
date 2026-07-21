@@ -1,5 +1,5 @@
 import { CategoryItem } from "@/types/megamenu";
-import { getRawCategories } from "@/lib/utils/get-raw-categories";
+import { getRawCategories } from "@/lib/utils/main-utils";
 
 function sortCategories(categories: CategoryItem[]): CategoryItem[] {
   return categories

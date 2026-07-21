@@ -12,12 +12,6 @@ interface UseWishlistToggleArgs {
   variantId?: string | null;
   wishlistItems?: WishlistKey[];
 }
-
-/**
- * Encapsulates the wishlist heart-toggle behaviour used by ProductCard:
- * derives the wishlisted state from the passed-in wishlist items, applies an
- * optimistic override while the mutation is in flight, and rolls back on error.
- */
 export function useWishlistToggle({
   productId,
   variantId = null,

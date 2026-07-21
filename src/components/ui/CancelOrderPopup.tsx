@@ -4,7 +4,7 @@ import React from "react";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import Button from "@/components/ui/Button";
 import { useGetOrderByIdQuery } from "@/lib/redux/apis/order-api";
-import { formatPrice } from "@/lib/utils/format-price";
+import { formatPrice } from "@/lib/utils/main-utils";
 import { APIProduct, CancelOrderPopupProps } from "@/types/order";
 import { cancelMessageSchema } from "@/lib/validations/form-schemas";
 

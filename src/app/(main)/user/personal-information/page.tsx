@@ -8,8 +8,7 @@ import { PersonalInfoFormData } from "@/types/auth";
 import Image from "next/image";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { useGetPersonalDataQuery, useUpdatePersonalDataMutation } from "@/lib/redux/apis/auth-api";
-import { toYYYYMMDD } from "@/lib/utils/date-utils";
-import { handleAustralianPhoneNumberChange } from "@/lib/utils/phone-validation";
+import { toYYYYMMDD, handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
 import { Input } from "@/components/ui/input";
 import { personalInfoSchema } from "@/lib/validations/form-schemas";
 

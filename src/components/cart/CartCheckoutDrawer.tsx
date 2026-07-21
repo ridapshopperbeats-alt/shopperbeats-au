@@ -5,9 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { CartItem } from "@/types/cart";
-import { getImageUrl } from "@/lib/utils/image-utils";
-import { formatPrice } from "@/lib/utils/format-price";
-import { getPriceDetails } from "@/lib/utils/get-price-details";
+import { getImageUrl, formatPrice, getPriceDetails } from "@/lib/utils/main-utils";
 
 interface CartCheckoutDrawerProps {
   open: boolean;

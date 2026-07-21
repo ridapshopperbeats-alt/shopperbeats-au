@@ -1,13 +1,12 @@
 import { VariantAttribute } from "./product";
- 
- export interface OrderReturn {
-   id: string;
-   order_id: string;
-   status: string;
- }
+
+export interface OrderReturn {
+  id: string;
+  order_id: string;
+  status: string;
+}
 
 export interface APIProduct {
-
   name: string;
   title?: string;
   image: string;
@@ -159,8 +158,8 @@ export interface CreateOrderResponse {
   id: string;
   order_number?: string;
   approval_url?: string;
-  client_secret:string;
-  shipping_cost:number;
+  client_secret: string;
+  shipping_cost: number;
 }
 
 export interface CancelOrderResponse {
@@ -220,7 +219,7 @@ export interface OrderItem {
   isCancelled: boolean;
   available_actions: string[];
   tracking_link?: string;
-  statusDate?:string;
+  statusDate?: string;
   returns?: OrderReturn[];
   hasRequestedReturn?: boolean;
 }
@@ -283,5 +282,9 @@ export interface CancelOrderPopupProps {
   orderId: string;
   itemId?: string;
   itemName?: string;
-  onCancelConfirm: (id: string, cancelMessage: string, isItemLevel: boolean) => void;
+  onCancelConfirm: (
+    id: string,
+    cancelMessage: string,
+    isItemLevel: boolean,
+  ) => void;
 }

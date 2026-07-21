@@ -38,9 +38,7 @@ import Breadcrumb from "@/components/ui/Breadcrumb";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
-import { findCategoryPath } from "@/lib/utils/find-category-path";
-import { getPriceDetails } from "@/lib/utils/get-price-details";
-import { getImageUrl, getVariantImage } from "@/lib/utils/image-utils";
+import { findCategoryPath, getPriceDetails, getImageUrl, getVariantImage, formatPrice } from "@/lib/utils/main-utils";
 import DeliveryDetailsPopup from "../ui/DeliveryDetailsPopup";
 import {
   renderContent,
@@ -58,9 +56,8 @@ import {
   getProductDetailsContent,
   getItemsDetailsContent,
   getStyleGuideContent,
-} from "@/lib/utils/product-tab-content";
+} from "@/components/ui/product-tab-content";
 import Link from "next/link";
-import { formatPrice } from "@/lib/utils/format-price";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 import { ChevronDownIcon, Clock, MapPin } from "lucide-react";
 import ColorPopup from "./ColorPopup";

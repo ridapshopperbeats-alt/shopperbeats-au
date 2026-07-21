@@ -20,7 +20,7 @@ import {
 
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 
-import { findCategoryPath } from "@/lib/utils/find-category-path";
+import { findCategoryPath } from "@/lib/utils/main-utils";
 
 import { Category, Filter, Product } from "@/types/product";
 

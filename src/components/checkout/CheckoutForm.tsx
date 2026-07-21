@@ -9,7 +9,7 @@ import {
   CardExpiryElement,
   CardNumberElement,
 } from "@stripe/react-stripe-js";
-import { handleAustralianPhoneNumberChange } from "@/lib/utils/phone-validation";
+import { handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import Image from "next/image";
 import { toast } from "react-toastify";

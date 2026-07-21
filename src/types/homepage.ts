@@ -39,9 +39,11 @@ export interface HomepageSection {
   title: string | null;
   position: number;
   is_active: boolean;
-  config: {
-    items?: BannerConfigItem[] | TopCategoryItem[];
-  } | PromoBannerConfig;
+  config:
+    | {
+        items?: BannerConfigItem[] | TopCategoryItem[];
+      }
+    | PromoBannerConfig;
   start_at: string | null;
   end_at: string | null;
   id: number;

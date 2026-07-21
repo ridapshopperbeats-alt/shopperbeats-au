@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Product } from "@/types/product";
-import { getImageUrl } from "@/lib/utils/image-utils";
+import { getImageUrl } from "@/lib/utils/main-utils";
 
 const TEXT_CLASS =
   "font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black";

@@ -1,6 +1,6 @@
 import { MegaMenuCategory } from "@/types/megamenu";
 import { Category } from "@/types/product";
-import { getRawCategories } from "@/lib/utils/get-raw-categories";
+import { getRawCategories } from "@/lib/utils/main-utils";
 
 const MAIN_CATEGORY_ORDER = [
   "Home & Garden",

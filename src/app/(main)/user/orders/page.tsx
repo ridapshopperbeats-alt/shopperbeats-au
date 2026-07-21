@@ -22,9 +22,8 @@ import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
 import { useCancelOrderMutation, useListOrdersQuery } from "@/lib/redux/apis/order-api";
 import { useCapturePaymentMutation } from "@/lib/redux/apis/payment-api";
 import { useClearCartMutation, useGetCartQuery } from "@/lib/redux/apis/cart-api";
-import { formatPrice } from "@/lib/utils/format-price";
 import { getOrderProductImage, getReviewProductId, mapOrderProducts } from "@/lib/utils/order-products";
-import { formatReadableDate } from "@/lib/utils/date-utils";
+import { formatPrice, formatReadableDate } from "@/lib/utils/main-utils";
 
 import "../../../../styles/Checkout.css";
 import "../../../../styles/Cart.css";

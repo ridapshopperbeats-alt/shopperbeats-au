@@ -6,7 +6,7 @@ import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { useCreateVendorRequestMutation } from "@/lib/redux/apis/vendor-api";
 import {toast} from "react-toastify";
 import Button from "./Button";
-import { handleAustralianPhoneNumberChange } from "@/lib/utils/phone-validation";
+import { handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
 import AddressAutocomplete from "./AddressAutocomplete";
 import {
   sellerSignupStep1Schema as step1Schema,

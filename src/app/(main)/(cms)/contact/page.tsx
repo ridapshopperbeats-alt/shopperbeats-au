@@ -45,9 +45,9 @@ import * as yup from "yup";
 
 import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
-import { handleAustralianPhoneNumberChange } from "@/lib/utils/phone-validation";
+import { handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
-import { email, nameField, phoneNumber, requiredMessage } from "@/lib/hooks/use-yup-validation";
+import { email, nameField, phoneNumber, requiredMessage } from "@/lib/validations/form-schemas";
 
 // Validation schema
 const schema = yup.object().shape({

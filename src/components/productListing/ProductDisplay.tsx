@@ -14,9 +14,7 @@ const EMPTY_VARIANTS: never[] = [];
 import Pagination from "@/components/ui/Pagination";
 import { Product } from "@/types/product";
 import { WishlistKey } from "@/types/wishlist";
-import { getPriceDetails } from "@/lib/utils/get-price-details";
-import { formatPriceFixed2 } from "@/lib/utils/format-price";
-import { getImageUrl } from "@/lib/utils/image-utils";
+import { getPriceDetails, formatPriceFixed2, getImageUrl } from "@/lib/utils/main-utils";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
 import {
   useCreateWishlistMutation,

@@ -9,7 +9,7 @@ import {
 import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
-import { findCategoryPath } from "@/lib/utils/find-category-path";
+import { findCategoryPath } from "@/lib/utils/main-utils";
 import { Category, Filter, Product } from "@/types/product";
 import Sidebar from "../productListing/Sidebar";
 import MobileFilterSheet from "../productListing/MobileFilterSheet";

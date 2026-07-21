@@ -5,7 +5,6 @@ import React, {
   useEffect,
   useCallback,
   useRef,
-  useSyncExternalStore,
 } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,7 +21,6 @@ import { toast } from "react-toastify";
 
 import { useSearchProductsQuery } from "../../lib/redux/apis/products-api";
 import { Product } from "@/types/product";
-import useDebounce from "@/lib/hooks/use-debounce";
 import Button from "./Button";
 import { RootState } from "@/lib/redux/store";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -33,15 +31,8 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { HeaderProps } from "@/types/form";
-
-
-function useIsClient() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
-}
+import { useDebounceValue } from "@/lib/hooks/use-debounce";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -193,7 +184,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
   };
 
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearchQuery = useDebounce(searchQuery, 1000);
+  const debouncedSearchQuery = useDebounceValue(searchQuery, 1000);
   const { data: searchResults, isLoading: isSearchLoading } =
     useSearchProductsQuery(debouncedSearchQuery, {
       skip: !debouncedSearchQuery,

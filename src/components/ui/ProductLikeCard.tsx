@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useCreateWishlistMutation } from "@/lib/redux/apis/cart-api";
 import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
-import { formatPrice } from "@/lib/utils/format-price";
+import { formatPrice } from "@/lib/utils/main-utils";
 import { ProductLikeCardProps } from "@/types/product";
 
 export default function ProductLikeCard({

@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { useAddToCartMutation } from "@/lib/redux/apis/cart-api";
 import { useWishlistToggle } from "@/lib/hooks/use-wishlist-toggle";
 
-import { formatPrice } from "@/lib/utils/format-price";
+import { formatPrice } from "@/lib/utils/main-utils";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";

@@ -11,15 +11,13 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { getPriceDetails } from "@/lib/utils/get-price-details";
 import CheckoutForm from "@/components/checkout/CheckoutForm";
-import { formatPrice } from "@/lib/utils/format-price";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 import Button from "@/components/ui/Button";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { CartItem, PromoData } from "@/types/cart";
 import { Address } from "@/types/address";
-import { getImageUrl } from "@/lib/utils/image-utils";
+import { getPriceDetails, formatPrice, getImageUrl } from "@/lib/utils/main-utils";
 import { RootState } from "@/lib/redux/store";
 import { useSelector } from "react-redux";
 import { useGetUserDetailsQuery } from "@/lib/redux/apis/auth-api";

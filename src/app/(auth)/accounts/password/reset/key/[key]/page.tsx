@@ -9,7 +9,7 @@ import ReCaptcha from "@/components/ui/ReCaptcha";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
-import { confirmPassword, strongPassword } from "@/lib/hooks/use-yup-validation";
+import { confirmPassword, strongPassword } from "@/lib/validations/form-schemas";
 
 const resetPasswordSchema = yup.object().shape({
   password1: strongPassword,

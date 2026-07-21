@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import ProductCard from "./ProductCard";
 import Button from "./Button";
 import "../../styles/BundleSection.css";
-import { formatPrice } from "@/lib/utils/format-price";
+import { formatPrice } from "@/lib/utils/main-utils";
 
 interface BundleSectionProps {
   bundleProducts: BundleProduct[];

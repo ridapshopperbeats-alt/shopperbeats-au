@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Review } from "@/types/product";
-import { getReviewImage } from "@/lib/utils/image-utils";
+import { getReviewImage } from "@/lib/utils/main-utils";
 
 interface DisplayReview {
   id: string;

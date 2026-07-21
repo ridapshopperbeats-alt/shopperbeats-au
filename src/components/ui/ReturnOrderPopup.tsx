@@ -8,7 +8,7 @@ import { Address, AddressFormValues } from "@/types/address";
 
 import { APIProduct, ReturnOption, ReturnOrderPopupProps } from "@/types/order";
 import { toast } from "react-toastify";
-import { formatPrice } from "@/lib/utils/format-price";
+import { formatPrice } from "@/lib/utils/main-utils";
 import { returnMessageSchema } from "@/lib/validations/form-schemas";
 
 const ReturnOrderPopup: React.FC<ReturnOrderPopupProps> = ({

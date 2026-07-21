@@ -1,5 +1,3 @@
-
-
 import { useState, useCallback, useEffect, useRef } from "react";
 import * as yup from "yup";
 
@@ -8,7 +6,7 @@ import { FormValidationResult } from "@/types/form";
 export function useFormValidation<T extends object>(
   schema: yup.AnyObjectSchema,
 
-  initialValues: T
+  initialValues: T,
 ): FormValidationResult<T> {
   const [formData, setFormData] = useState<T>(initialValues);
   const [formErrors, setFormErrors] = useState<{
@@ -16,7 +14,11 @@ export function useFormValidation<T extends object>(
   }>({});
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement |HTMLSelectElement>) => {
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >,
+    ) => {
       const checked =
         e.target instanceof HTMLInputElement && e.target.type === "checkbox"
           ? e.target.checked
@@ -31,7 +33,7 @@ export function useFormValidation<T extends object>(
         setFormErrors((prevErrors) => ({ ...prevErrors, [name]: null }));
       }
     },
-    [formErrors]
+    [formErrors],
   );
 
   const validateField = useCallback(
@@ -51,7 +53,7 @@ export function useFormValidation<T extends object>(
         }
       }
     },
-    [schema, formData]
+    [schema, formData],
   );
 
   const initialValuesKeyRef = useRef<string | undefined>(undefined);
@@ -83,9 +85,9 @@ export function useFormValidation<T extends object>(
 
   const handleSubmit = useCallback(
     (
-        callback: (data: T) => void,
-        onError?: (errors: { [key: string]: string | null }) => void
-      ) =>
+      callback: (data: T) => void,
+      onError?: (errors: { [key: string]: string | null }) => void,
+    ) =>
       async (e?: React.FormEvent) => {
         e?.preventDefault();
         const isValid = await validateForm();
@@ -95,7 +97,7 @@ export function useFormValidation<T extends object>(
           onError(formErrors);
         }
       },
-    [formData, validateForm, formErrors]
+    [formData, validateForm, formErrors],
   );
 
   const resetForm = useCallback(() => {
@@ -112,6 +114,6 @@ export function useFormValidation<T extends object>(
     resetForm,
     setFormData,
     validateForm,
-    setFormErrors
+    setFormErrors,
   };
 }

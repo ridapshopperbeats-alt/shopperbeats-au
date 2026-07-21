@@ -8,7 +8,7 @@ import { useUploadAnyImageMutation } from "@/lib/redux/apis/products-api";
 import { Address } from "@/types/address";
 import { APIProduct, ReplaceOrderPopupProps, ReturnOption } from "@/types/order";
 import { toast } from "react-toastify";
-import { formatPrice } from "@/lib/utils/format-price";
+import { formatPrice } from "@/lib/utils/main-utils";
 import { replaceMessageSchema as schema } from "@/lib/validations/form-schemas";
 
 const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({ isOpen, onClose, orderId, itemId, product }) => {
