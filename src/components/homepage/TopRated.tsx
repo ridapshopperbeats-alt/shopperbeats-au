@@ -113,7 +113,7 @@ export default function TopBrands() {
         {brands.map((brand) => (
           <div
             key={brand.id}
-            className="relative h-[120px] w-[180px] rounded-[8px] overflow-hidden group"
+            className="relative h-[120px] w-full rounded-[8px] overflow-hidden group"
           >
             <Image
               src={brand.image}

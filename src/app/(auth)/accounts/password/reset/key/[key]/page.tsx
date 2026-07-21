@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { useResetPasswordMutation } from "@/lib/redux/apis/authApi";
-import { useFormValidation } from "@/lib/hooks/useFormValidation";
+import { useResetPasswordMutation } from "@/lib/redux/apis/auth-api";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ReCaptcha from "@/components/ui/ReCaptcha";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
-import { confirmPassword, strongPassword } from "@/lib/hooks/useYupValidation";
+import { useFormValidation } from "@/lib/hooks/use-form-validation";
+import { confirmPassword, strongPassword } from "@/lib/hooks/use-yup-validation";
 
 const resetPasswordSchema = yup.object().shape({
   password1: strongPassword,

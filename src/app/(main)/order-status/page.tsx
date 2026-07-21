@@ -2,8 +2,8 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense, useRef } from "react";
-import { useCapturePaymentMutation } from "@/lib/redux/apis/paymentApi";
-import { useClearCartMutation, useGetCartQuery } from "@/lib/redux/apis/cartApi";
+import { useCapturePaymentMutation } from "@/lib/redux/apis/payment-api";
+import { useClearCartMutation, useGetCartQuery } from "@/lib/redux/apis/cart-api";
 import { toast } from "react-toastify";
 import Loader from "@/components/ui/loaders/Loader";
 import stripePromise from "@/lib/stripe";

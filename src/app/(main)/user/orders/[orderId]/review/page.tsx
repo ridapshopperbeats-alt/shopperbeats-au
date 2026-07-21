@@ -9,13 +9,13 @@ import Link from "next/link";
 import {
   useGetOrderByIdQuery,
   useAddReviewMutation,
-} from "@/lib/redux/apis/orderApi";
-import { useUploadAnyImageMutation } from "@/lib/redux/apis/productsApi";
+} from "@/lib/redux/apis/order-api";
+import { useUploadAnyImageMutation } from "@/lib/redux/apis/products-api";
 import {
   findOrderProduct,
   getOrderProductImage,
   getReviewProductId,
-} from "@/lib/utils/orderProducts";
+} from "@/lib/utils/order-products";
 import Loader from "@/components/ui/loaders/Loader";
 import "../../../../../../styles/Checkout.css";
 import "../../../../../../styles/Cart.css";

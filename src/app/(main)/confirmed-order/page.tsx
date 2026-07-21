@@ -4,16 +4,33 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { OrderDetails } from "@/components/ui/OrderSummaryPopup";
 import Button from "@/components/ui/Button";
+
+// Extract the order details type from OrderSummaryPopup's props
+type OrderDetailsType = {
+  orderNumber?: string;
+  orderId?: string;
+  products: Array<{
+    id: string;
+    name: string;
+    image?: string;
+    quantity: number;
+    price: string;
+  }>;
+  deliveryAddress: string;
+  deliveryCost: string;
+  couponCode?: string;
+  totalAmount: string;
+};
 
 export default function ConfirmedOrderPage() {
   const router = useRouter();
-  const [orderDetails, setOrderDetails] = useState<OrderDetails>({
+  const [orderDetails, setOrderDetails] = useState<OrderDetailsType>({
     orderId: "",
     deliveryCost: "",
     totalAmount: "",
     products: [],
+    deliveryAddress: "",
   });
   const hasLoadedRef = useRef(false);
 
@@ -29,7 +46,7 @@ export default function ConfirmedOrderPage() {
     }
 
     try {
-      setOrderDetails(JSON.parse(stored) as OrderDetails);
+      setOrderDetails(JSON.parse(stored) as OrderDetailsType);
     } catch {
       console.log("Failed to parse order confirmation data from sessionStorage.");
     }

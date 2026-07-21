@@ -5,7 +5,7 @@ import {
   useGetOrderByIdQuery,
   useCancelOrderMutation,
   useCancelOrderItemMutation,
-} from "@/lib/redux/apis/orderApi";
+} from "@/lib/redux/apis/order-api";
 import { APIProduct, OrderReturn, OrderLineItem } from "@/types/order";
 import CancelOrderPopup from "@/components/ui/CancelOrderPopup";
 import ReturnOrderPopup from "@/components/ui/ReturnOrderPopup";
@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
 import Loader from "@/components/ui/loaders/Loader";
-import { formatPrice } from "@/lib/utils/formatPrice";
+import { formatPrice } from "@/lib/utils/format-price";
 import "../../../../../styles/Checkout.css";
 import "../../../../../styles/Cart.css";
 import "../../../../../styles/Product.css";

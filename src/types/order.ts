@@ -52,6 +52,22 @@ export interface ReturnOption {
   is_active: boolean;
 }
 
+export interface ReturnOrderPopupProps {
+  isOpen: boolean;
+  onClose: () => void;
+  orderId?: string | null;
+  itemId?: string;
+  product?: APIProduct;
+}
+
+export interface ReplaceOrderPopupProps {
+  isOpen: boolean;
+  onClose: () => void;
+  orderId?: string | null;
+  itemId?: string;
+  product?: APIProduct;
+}
+
 export interface OrderShippingDetails {
   shipping_first_name: string;
   shipping_last_name: string;

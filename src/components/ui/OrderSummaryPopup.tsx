@@ -7,7 +7,28 @@ import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
 import '../../styles/Checkout.css'
 import Image from 'next/image';
-import { OrderSummaryPopupProps } from '@/types/order';
+
+type OrderSummaryPopupProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  orderDetails: {
+    orderNumber?: string;
+    orderId?: string;
+    products: Array<{
+      id: string;
+      name: string;
+      image?: string;
+      quantity: number;
+      price: string;
+    }>;
+    deliveryAddress: string;
+    deliveryCost: string;
+    couponCode?: string;
+    totalAmount: string;
+  };
+  isAuthenticated: boolean;
+  from: string;
+};
 
 const OrderSummaryPopup: React.FC<OrderSummaryPopupProps> = ({ isOpen, onClose, orderDetails, isAuthenticated, from }) => {
   const [isCancelPopupOpen, setIsCancelPopupOpen] = useState(false);

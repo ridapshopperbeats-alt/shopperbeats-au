@@ -41,7 +41,7 @@ export default function ProductCarousel({
         </div>
 
       <div className={isLoading ? "" : ""}>
-        <div className="pt-5 overflow-visible">
+        <div className="pt-3 lg:pt-5 overflow-visible">
           {!isLoading && (
             <ReusableSlider<Product | BundleProduct>
               items={items}

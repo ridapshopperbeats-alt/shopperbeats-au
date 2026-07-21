@@ -41,17 +41,13 @@ const contactData: ContactContent = {
   ],
 };
 
-import { useFormValidation } from "@/lib/hooks/useFormValidation";
 import * as yup from "yup";
-import {
-  email,
-  phoneNumber,
-  nameField,
-  requiredMessage,
-} from "@/lib/hooks/useYupValidation";
+
 import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
-import { handleAustralianPhoneNumberChange } from "@/lib/utils/phoneValidation";
+import { handleAustralianPhoneNumberChange } from "@/lib/utils/phone-validation";
+import { useFormValidation } from "@/lib/hooks/use-form-validation";
+import { email, nameField, phoneNumber, requiredMessage } from "@/lib/hooks/use-yup-validation";
 
 // Validation schema
 const schema = yup.object().shape({

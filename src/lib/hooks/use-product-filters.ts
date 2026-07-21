@@ -119,14 +119,18 @@ export const useProductFilters = (
     return () => clearTimeout(timeoutId);
   }, [isSyncingFromUrl]);
 
+  const q = searchParams.get('q');
+  const categorySlug = searchParams.get('category_slug');
+  const categoryId = searchParams.get('category_id');
+  const currentLimit = searchParams.get('limit');
+
   const handleApplyFilters = useCallback(() => {
     const params = new URLSearchParams();
-    searchParams.forEach((value, key) => {
-      const lowerKey = key.toLowerCase();
-      if (['q', 'category_slug', 'category_id'].includes(lowerKey)) {
-        params.set(key, value);
-      }
-    });
+    
+    // Only add the specific params we need
+    if (q) params.set('q', q);
+    if (categorySlug) params.set('category_slug', categorySlug);
+    if (categoryId) params.set('category_id', categoryId);
 
     if (sortBy) params.set("sort_by", sortBy);
 
@@ -134,11 +138,6 @@ export const useProductFilters = (
       params.set("categories", selectedCategories.join(","));
     }
 
-    // Set price range filters. A custom slider/input range is sent as
-    // "min-max" — the same format the predefined price_ranges checkboxes
-    // use — instead of separate min_price/max_price params, so it takes
-    // over the price_ranges slot rather than adding a second, differently
-    // shaped price param.
     const customPriceRange = minPrice && maxPrice
       ? `${minPrice}-${maxPrice}`
       : minPrice
@@ -169,7 +168,6 @@ export const useProductFilters = (
       }
     }
 
-    const currentLimit = searchParams.get('limit');
     if (currentLimit) {
       params.set('limit', currentLimit);
     }
@@ -180,7 +178,10 @@ export const useProductFilters = (
   }, [
     router,
     pathname,
-    searchParams,
+    q,
+    categorySlug,
+    categoryId,
+    currentLimit,
     sortBy,
     minPrice,
     maxPrice,
@@ -241,7 +242,7 @@ export const useProductFilters = (
     );
   };
 
-const clearFilters = () => {
+const clearFilters = useCallback(() => {
   setBrandSearch("");
   setMinPrice("");
   setMaxPrice("");
@@ -252,25 +253,21 @@ const clearFilters = () => {
 
   const params = new URLSearchParams();
 
-  const q = searchParams.get("q");
   if (q) params.set("q", q);
 
-  const categorySlug = searchParams.get("category_slug");
   if (categorySlug) params.set("category_slug", categorySlug);
 
-  const categoryId = searchParams.get("category_id");
   if (categoryId) params.set("category_id", categoryId);
 
   params.set("page", "1");
 
-  const limit = searchParams.get("limit");
-  if (limit) params.set("limit", limit);
+  if (currentLimit) params.set("limit", currentLimit);
 
   router.push(
     `${pathname}${params.toString() ? `?${params.toString()}` : ""}`,
     { scroll: false }
   );
-};
+}, [q, categorySlug, categoryId, currentLimit, router, pathname]);
 
   const brandFilter = filters.find((f) => f.attribute.toLowerCase() === "brand");
   const priceFilter = filters.find((f) => f.attribute.toLowerCase() === "price");

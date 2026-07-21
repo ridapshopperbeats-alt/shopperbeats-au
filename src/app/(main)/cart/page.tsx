@@ -8,20 +8,20 @@ import {
   useCheckDeliveryMutation,
   useUpdateCartItemQuantityMutation,
   useValidatePromoCodeMutation,
-} from "@/lib/redux/apis/cartApi";
+} from "@/lib/redux/apis/cart-api";
 
 import { toast } from "react-toastify";
-import { useFormValidation } from "@/lib/hooks/useFormValidation";
+import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import * as yup from "yup";
 import { useMemo, useRef, useState, useEffect } from "react";
-import { useGlobalPostcode } from "@/lib/hooks/useGlobalPostcode";
+import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import Button from "@/components/ui/Button";
-import { getPriceDetails } from "@/lib/utils/getPriceDetails";
-import { getImageUrl } from "@/lib/utils/imageUtils";
-import { pincode } from "@/lib/hooks/useYupValidation";
+import { getPriceDetails } from "@/lib/utils/get-price-details";
+import { getImageUrl } from "@/lib/utils/image-utils";
+import { pincode } from "@/lib/hooks/use-yup-validation";
 import Loader from "@/components/ui/loaders/Loader";
 import GooglePlacesInput from "@/components/ui/AddressAutocomplete";
-import { formatPrice } from "@/lib/utils/formatPrice";
+import { formatPrice } from "@/lib/utils/format-price";
 import NoProductsFound from "@/components/NoProductFound";
 import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
 import { Input } from "@/components/ui/input";

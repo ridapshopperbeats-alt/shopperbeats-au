@@ -62,7 +62,6 @@ import {
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils/format-price";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
-import RecommendedForYou from "../homepage/RecommendedForYou";
 import { ChevronDownIcon, Clock, MapPin } from "lucide-react";
 import ColorPopup from "./ColorPopup";
 import LocationPopup from "./LocationPopup";
@@ -97,8 +96,6 @@ const KNOWN_COMPACT_SIZE_TOKENS = new Set([
 
 const subscribeNoop = () => () => {};
 
-// Hydration-guard helper: reports `false` on the server / first render and
-// `true` once mounted on the client, without a setState-in-effect.
 function useIsClient(): boolean {
   return useSyncExternalStore(
     subscribeNoop,
@@ -245,11 +242,6 @@ export default function ProductDetailClient({
     useUpdateCartItemQuantityMutation();
   const [localQtyMap, setLocalQtyMap] = useState<Record<string, string>>({});
 
-  // Merge newly-arrived cart items into the local quantity map, preserving
-  // any local edits already made. Adjusted during render (guarded by state
-  // tracking the previous `cart` reference, since refs must not be read
-  // during render) instead of inside a useEffect, per
-  // https://react.dev/learn/you-might-not-need-an-effect.
   const [lastSyncedCart, setLastSyncedCart] = useState(cart);
   if (cart !== lastSyncedCart) {
     setLastSyncedCart(cart);
@@ -1427,13 +1419,7 @@ export default function ProductDetailClient({
                 <BundleSection bundleProducts={product.bundle_products} />
               )}
 
-            <div>
-              <RecommendedForYou
-                personalized={finalRecommendations}
-                recentlyViewed={recentlyViewed}
-                isLoading={isRecommendedForYouLoading}
-              />
-            </div>
+              
 
             <div className="xl:hidden flex flex-col gap-5 w-full min-[1440px]:max-w-[1388px] min-[1440px]:sticky min-[1440px]:self-start">
               <ProductDetailsMobileTabs

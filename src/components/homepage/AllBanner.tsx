@@ -34,7 +34,7 @@ export default async function PopularCategories() {
       </div>
 
       {/* TOP */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-[20px] ">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-3 lg:pt-5 ">
         {topCategories.map((item) => (
           <div
             key={item.id}
