@@ -111,10 +111,7 @@ export const authApi = createApi({
         try {
           await queryFulfilled;
         } catch (err) {
-          // The server call can fail (e.g. an already-expired session
-          // returns 401) but the user still asked to log out, so the
-          // local session is cleared regardless below.
-          console.error("Logout request failed; clearing local session anyway", err);
+          console.error("Logout request failed", err);
         } finally {
           dispatch(clearCart());
           dispatch(authApi.util.resetApiState());

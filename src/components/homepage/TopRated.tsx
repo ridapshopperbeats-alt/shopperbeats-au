@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 const brands = [
   {
@@ -102,10 +103,10 @@ export default function TopBrands() {
           Top Brands
         </h2>
 
-        <button className="flex items-center gap-1 text-[#FD151B] text-sm font-semibold">
+        <Link href="/brand" target="_blank"   rel="noopener noreferrer" className="flex items-center gap-1 text-[#FD151B] text-sm font-semibold">
           See All Brands
           <ChevronRight size={13} />
-        </button>
+        </Link>
       </div>
 
       {/* Mobile */}
@@ -174,14 +175,14 @@ export default function TopBrands() {
           onClick={prevSlide}
           className="hidden lg:flex absolute left-[-20] top-1/2 -translate-y-2/4 z-20 w-9 h-9 rounded-full bg-white border border-gray-200  items-center justify-center cursor-pointer"
         >
-          <ChevronLeft size={18} className="text-[#979797]" />
+          <ChevronLeft size={18}/>
         </button>
 
         <button
           onClick={nextSlide}
           className="hidden lg:flex absolute right-[-20] top-1/2 -translate-y-2/4 z-20 w-9 h-9 rounded-full bg-white border border-gray-200  items-center justify-center cursor-pointer"
         >
-          <ChevronRight size={18} className="text-[#979797]" />
+          <ChevronRight size={18}  />
         </button>
       </div>
     </section>

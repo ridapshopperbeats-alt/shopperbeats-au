@@ -38,7 +38,7 @@ export default async function PopularCategories() {
         {topCategories.map((item) => (
           <div
             key={item.id}
-           className="relative w-[177px] h-[120px] md:w-full md:h-[320px] rounded-[8px] overflow-hidden group cursor-pointer"
+            className="relative w-full h-30 md:h-80 rounded-lg overflow-hidden group cursor-pointer"
           >
             <Image
               src={item.image}
@@ -71,7 +71,7 @@ export default async function PopularCategories() {
         {bottomCategories.map((item) => (
           <div
             key={item.id}
-            className="relative w-[177px] h-[120px] md:w-full md:h-[320px] rounded-[8px] overflow-hidden group cursor-pointer"
+            className="relative w-full h-30 md:h-80 rounded-lg overflow-hidden group cursor-pointer"
           >
             <Image
               src={item.image}

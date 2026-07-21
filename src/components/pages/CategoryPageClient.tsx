@@ -77,13 +77,8 @@ const CategoryClient = ({
 
   const [persistedFilters, setPersistedFilters] = useState<Filter[]>(filters);
 
-  // Tracked in state (not a ref) so the comparison can safely happen during
-  // render — React's "adjust state while rendering" pattern.
   const [prevSlug, setPrevSlug] = useState(slug);
 
-  // Adjust state during render instead of in an effect: reset
-  // persistedFilters when slug changes, otherwise keep the longer of the
-  // two filter lists. Both branches are self-terminating.
   if (slug !== prevSlug) {
     setPrevSlug(slug);
     setPersistedFilters(filters);
@@ -201,9 +196,6 @@ const CategoryClient = ({
 
   const [allProducts, setAllProducts] = useState<Product[]>([]);
 
-  // Adjust state during render instead of in an effect: seed allProducts
-  // from the SSR-provided products once, self-terminating once it is
-  // non-empty (and re-applies if allProducts is later reset to []).
   if (products?.length > 0 && allProducts.length === 0) {
     setAllProducts(products);
   }
@@ -269,15 +261,8 @@ const CategoryClient = ({
     return params.toString();
   }, [searchParams]);
 
-  // Tracked in state (not a ref) so the comparison can safely happen during
-  // render — React's "adjust state while rendering" pattern.
   const [prevFilterString, setPrevFilterString] = useState(currentFilterString);
 
-  // Adjust state during render instead of in an effect. currentPage/uiLimit
-  // are genuinely independent state (they get force-reset to page 1 on a
-  // filter change, not just mirrored from the URL), so use prevFilterString
-  // to detect the "filters changed" transition, same as the effect this
-  // replaces.
   if (currentFilterString !== prevFilterString) {
     setPrevFilterString(currentFilterString);
 
@@ -295,9 +280,6 @@ const CategoryClient = ({
     }
   }
 
-
-  // Adjust state during render instead of in an effect: react to the query
-  // result changing by diffing against the previous value, tracked in state.
   const [prevQueryData, setPrevQueryData] = useState(data);
 
   if (data !== prevQueryData) {
@@ -398,7 +380,7 @@ const CategoryClient = ({
       <div className="container">
         {sliderCategories.length > 0 && (
           <CategorySlider
-          title="Shop By Category"
+          title="Top  Categories"
           titleClassName=""
             items={sliderCategories}
             onCategoryClick={(item) =>
@@ -416,7 +398,7 @@ const CategoryClient = ({
         )}
 
         <Breadcrumb />
-        <div className="flex flex-col mb-[100px] relative lg:gap-6 lg:flex-row lg:items-start">
+        <div className="flex flex-col  relative lg:gap-6 lg:flex-row lg:items-start">
           <div
             className="hidden lg:block shrink-0 lg:w-[300px] xl:w-[300px] filter-sidebar-sticky no-scrollbar"
             data-lenis-prevent

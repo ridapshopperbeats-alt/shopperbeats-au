@@ -74,12 +74,6 @@ const SearchPageClient = ({
   const [allProducts, setAllProducts] = useState<Product[]>(products);
   const [hasChanged, setHasChanged] = useState(false);
 
-  // NOTE: this condition compares searchParams.toString() to itself, so it
-  // is always false and setHasChanged(true) never actually runs here today.
-  // This mirrors the pre-existing (likely unintentional) behavior exactly;
-  // preserved as-is per the no-behavior-change requirement, just moved out
-  // of a useEffect body and into render (which is legal since the branch is
-  // unreachable, so there is no risk of a render loop).
   if (searchParams.toString() !== searchParams.toString()) {
     setHasChanged(true);
   }
@@ -107,10 +101,6 @@ const SearchPageClient = ({
   const currentFilterString = currentParams.toString();
   const [prevFilterString, setPrevFilterString] = useState(currentFilterString);
 
-  // Adjust page/limit state during render in response to URL changes,
-  // instead of inside a useEffect, to avoid an extra cascading render.
-  // Uses state (not a ref) to track the previous filter string since refs
-  // cannot be read/written during render.
   if (currentFilterString !== prevFilterString) {
     setPrevFilterString(currentFilterString);
     setCurrentPage(1);
@@ -130,8 +120,7 @@ const SearchPageClient = ({
 
   const [prevData, setPrevData] = useState(data);
 
-  // Adjust allProducts during render when a new query result comes in,
-  // instead of inside a useEffect, to avoid an extra cascading render.
+
   if (data !== prevData) {
     setPrevData(data);
     if (data) {
@@ -181,7 +170,7 @@ const SearchPageClient = ({
       />
 
       <div className="container" style={{ marginTop: "30px" }}>
-        <div className="flex flex-col mb-40 relative lg:gap-6 lg:flex-row lg:items-start">
+        <div className="flex flex-col  relative lg:gap-6 lg:flex-row lg:items-start">
 
           <div className="hidden lg:block w-full lg:w-[280px] xl:w-[320px] shrink-0">
             <div className="sticky top-24">

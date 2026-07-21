@@ -145,7 +145,7 @@ export default async function BrandPage({
 
   return (
     <>
-      <Breadcrumb />
+      {/* <Breadcrumb /> */}
       <BrandPageClient
         brandId={brandId}
         brand={brand}

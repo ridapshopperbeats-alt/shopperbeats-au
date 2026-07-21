@@ -26,7 +26,7 @@ const Home = async () => {
             <ProductCarousel
               title="Best Sellers"
               products={products}
-              link="View"
+              link="#"
             />
           )}
         </div>
@@ -38,7 +38,7 @@ const Home = async () => {
             <ProductCarousel
               title="Trending Products"
               products={trendingProducts}
-              link="View"
+              link="#"
             />
           )}
         </div>
@@ -50,7 +50,7 @@ const Home = async () => {
             <ProductCarousel
               title="New Arrivals"
               products={products}
-              link="View"
+              link="#"
             />
           )}
         </div>

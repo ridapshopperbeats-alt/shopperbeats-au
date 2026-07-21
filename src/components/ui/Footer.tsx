@@ -95,23 +95,25 @@ export default function Footer({
 
   return (
     <div className="page-footer">
-      <div className="footer-highlights-wrapper">
-        <div className="footer-highlights-grid">
-          {footerHighlights.map((item) => (
-            <div key={item.img} className="group footer-highlight-item">
-              <div className="footer-highlight-icon">
-                <Image
-                  src={`/images/${item.img}.svg`}
-                  alt={item.text}
-                  width={62}
-                  height={42}
-                  className="footer-highlight-img"
-                />
-              </div>
+      <div className="pt-9">
+        <div className="footer-highlights-wrapper">
+          <div className="footer-highlights-grid">
+            {footerHighlights.map((item) => (
+              <div key={item.img} className="group footer-highlight-item">
+                <div className="footer-highlight-icon">
+                  <Image
+                    src={`/images/${item.img}.svg`}
+                    alt={item.text}
+                    width={62}
+                    height={42}
+                    className="footer-highlight-img"
+                  />
+                </div>
 
-              <p className="footer-highlight-text">{item.text}</p>
-            </div>
-          ))}
+                <p className="footer-highlight-text">{item.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

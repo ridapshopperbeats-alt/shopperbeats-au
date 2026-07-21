@@ -1,5 +1,4 @@
 import { X } from "lucide-react";
-import { getSwatchColor } from "@/lib/utils/color-swatch";
 
 export interface ColorAttributeOption {
   value: string;
@@ -63,7 +62,6 @@ const ColorPopup = ({
                     ? "ring-2 ring-offset-2 ring-[#1D265F]"
                     : ""
                 }`}
-                style={{ backgroundColor: getSwatchColor(color.value) }}
               />
             ))}
           </div>

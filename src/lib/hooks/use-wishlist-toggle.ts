@@ -16,6 +16,7 @@ interface UseWishlistToggleArgs {
   hasVariants?: boolean;
   matchAnyVariant?: boolean;
 }
+
 export function useWishlistToggle({
   productId,
   variantId = null,

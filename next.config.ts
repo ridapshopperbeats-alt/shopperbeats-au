@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cdn.shopify.com",
+        hostname: "cdn.shopify.com",  
       },
       {
         protocol: "https",
@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "www.kaleidoscope.com.au",
+      },
+      {
+        protocol: "https",
+        hostname: "www.jasnor.com.au",
+      },
+      {
+        protocol: "https",
+        hostname: "www.johncoproductions.com",
       },
     ],
   },

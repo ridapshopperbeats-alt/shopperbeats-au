@@ -16,7 +16,6 @@ const breadcrumbSlice = createSlice({
       );
 
       if (existingIndex !== -1) {
-        // Keep only up to that category (avoid duplication)
         state.categoryHistory = state.categoryHistory.slice(
           0,
           existingIndex + 1

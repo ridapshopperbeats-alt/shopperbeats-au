@@ -20,8 +20,6 @@ import { ProductCardProps } from "@/types/product";
 import { Heart } from "lucide-react";
 import StarRating from "./StarRating";
 
-
-
 function limitWords(text: string | undefined, limit = 6) {
   if (!text) return "";
   const words = text.split(" ");
@@ -113,6 +111,43 @@ const ProductCard: React.FC<ProductCardProps> = ({
     }
   };
 
+  // const renderTag = useMemo(() => {
+  //   // Check if dynamic tags exist, otherwise use fallback values based on product ID
+  //   const activeTag =
+  //     tags?.[0]?.toLowerCase() ||
+  //     (Number(id) % 3 === 0
+  //       ? "hotseller"
+  //       : Number(id) % 3 === 1
+  //         ? "new"
+  //         : "bestseller");
+
+  //   switch (activeTag) {
+  //     case "hotseller":
+  //       return (
+  //         <div className="absolute bg-[#01295F] text-white w-[60px] h-[18px] md:w-[100px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px]">
+  //           <ThumbUpIcon className="!w-[13px] !h-[13px] md:!w-[12px] md:!h-[12px]" />
+  //           Bestselle
+  //         </div>
+  //       );
+  //     case "new":
+  //       return (
+  //         <div className="absolute bg-[#787FFF] text-white w-[60px] h-[18px] md:w-[100px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center   z-10 rounded-[5px] leading-[18px]">
+  //           <StarIcon className="!w-[10px] !h-[10px] md:!w-[12px] md:!h-[12px]" />
+  //           New
+  //         </div>
+  //       );
+  //     case "bestseller":
+  //       return (
+  //         <div className="absolute top-[10px] left-[10px] z-10 flex h-[18px] w-[80px] items-center justify-center gap-1 rounded-[5px] bg-[#FFB30F] text-[10px] font-medium leading-[18px] text-white md:h-[19px] md:w-[100px] md:text-[12px]">
+  //           <WhatshotIcon className="!w-[13px] !h-[13px] md:!w-[12px] md:!h-[12px]" />
+  //           Hotseller
+  //         </div>
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // }, [tags, id]);
+
   return (
     <>
       <div className="group relative w-full h-full max-h-[450px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
@@ -123,7 +158,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           disabled={isWishlistLoading}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
           title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className="absolute top-3 right-3 sm:top-[9px] sm:right-[12px] w-4 h-4 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center shadow-md z-20 transition-all hover:scale-105 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed border border-[#E0E0E0] cursor-pointer"
+          className="absolute top-3 right-3 sm:top-[9px] sm:right-3 w-4 h-4 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center shadow-md z-20 transition-all hover:scale-105 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed border border-[#E0E0E0] cursor-pointer"
         >
           <Heart
             className="h-[9px] w-[9px] md:h-4 md:w-4"
@@ -156,7 +191,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   {brand_name}
                 </h4>
               )}
-
 
               <p className="text-[14px] md:text-[16px] leading-4.5 text-[#878787] font-normal">
                 {limitWords(title, 7) || "MakeupKit"}

@@ -538,7 +538,7 @@ function SliderComponent<T>(
             disabled={!canGoNext}
             aria-label="Next slide"
           >
-            <ChevronRight size={20} color="#1D1B20" />
+            <ChevronRight size={20}  />
           </button>
         </>
       )}

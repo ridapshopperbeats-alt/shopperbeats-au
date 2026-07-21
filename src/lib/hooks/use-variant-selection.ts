@@ -30,7 +30,6 @@ export function useVariantSelection(variants: Variant[] = []) {
 
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
 
-
   const [lastDerivedAttributes, setLastDerivedAttributes] =
     useState(selectedAttributes);
   const [lastDerivedVariants, setLastDerivedVariants] = useState(variants);

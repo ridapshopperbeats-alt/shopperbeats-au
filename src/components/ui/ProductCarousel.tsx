@@ -4,6 +4,7 @@ import ReusableSlider from "./ReusableSlider";
 import { Product, BundleProduct, ProductCarouselProps } from "@/types/product";
 import ProductCard from "./ProductCard";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 export default function ProductCarousel({
   title,
@@ -18,7 +19,7 @@ export default function ProductCarousel({
 
   return (
 
-    <div className={from == "details" ? "products" : "px-2.5 w-full"}>
+    <div className={from == "details" ? "products" : "w-full"}>
         <div className="flex justify-between lg:mt-5 gap-4">
           <div className="w-full">
             <div className="flex flex-col gap-1 w-full my-1">
@@ -31,12 +32,12 @@ export default function ProductCarousel({
           </div>
 
           {link && (
-            <a
+            <Link
               href={link}
               className="text-[13px] font-bold flex items-center text-[#F51721] whitespace-nowrap"
             >
               View All <ChevronRight size={13} />
-            </a>
+            </Link>
           )}
         </div>
 
@@ -60,7 +61,7 @@ export default function ProductCarousel({
 
                   return (
                     <div
-                      className="w-[270px] h-[450px]"
+                      className="w-[180px] h-[340px] md:w-[270px] md:h-[450px]"
                       key={
                         bundleItem.product_id ||
                         bundleItem.unique_code
@@ -92,7 +93,7 @@ export default function ProductCarousel({
 
                 return (
                   <div
-                    className="w-[270px] h-[450px]"
+                    className="w-[180px] h-[340px] md:w-[270px] md:h-[450px]"
                     key={product.id || product.unique_code}
                   >
                     <ProductCard
