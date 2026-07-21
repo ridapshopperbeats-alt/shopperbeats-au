@@ -19,7 +19,7 @@ interface ProductGalleryProps {
   product: Product;
   selectedVariant: Variant | null;
   isWishlisted?: boolean;
-  onWishlistToggle?: () => void;
+  onWishlistToggle?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isWishlistLoading?: boolean;
 }
 

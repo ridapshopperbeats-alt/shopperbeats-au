@@ -12,7 +12,6 @@ import { formatReadableDate } from "@/lib/utils/date-utils";
 import { formatPrice } from "@/lib/utils/format-price";
 import { useAddToCartMutation, useGetCartQuery, useGetWishlistQuery, useRemoveFromWishlistMutation } from "@/lib/redux/apis/cart-api";
 import { wishListValidationSchema } from "@/lib/validations/form-schemas";
-import Loader from "@/components/ui/loaders/Loader";
 
 export default function WishlistPage() {
   const router = useRouter();
@@ -104,7 +103,7 @@ export default function WishlistPage() {
     }
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return null;
 
   if (isError)
     return (

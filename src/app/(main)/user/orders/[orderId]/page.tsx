@@ -16,7 +16,6 @@ import stripePromise from "@/lib/stripe";
 import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
-import Loader from "@/components/ui/loaders/Loader";
 
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import Image from "next/image";
@@ -102,7 +101,6 @@ export default function OrderDetail({ params }: OrderDetailProps) {
     }
   };
 
-  if (isLoading) return <Loader />;
   if (!data) return <p>Order not found</p>;
 
   const order = data;

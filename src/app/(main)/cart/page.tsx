@@ -19,7 +19,6 @@ import Button from "@/components/ui/Button";
 import { getPriceDetails } from "@/lib/utils/get-price-details";
 import { getImageUrl } from "@/lib/utils/image-utils";
 import { pincode } from "@/lib/hooks/use-yup-validation";
-import Loader from "@/components/ui/loaders/Loader";
 import GooglePlacesInput from "@/components/ui/AddressAutocomplete";
 import { formatPrice } from "@/lib/utils/format-price";
 import NoProductsFound from "@/components/NoProductFound";
@@ -419,12 +418,7 @@ const Cart = () => {
   };
 
   // ---------------- LOADING / EMPTY STATES ----------------
-  if (isLoading || isFetching)
-    return (
-      <div className="flex flex-col justify-center items-center text-center p-8 min-h-[40vh]">
-        <Loader />
-      </div>
-    );
+  if (isLoading || isFetching) return null;
   if (error || !cart || cart.items.length === 0)
     return (
       <div className="flex flex-col justify-center items-center text-center p-8 min-h-[40vh]">

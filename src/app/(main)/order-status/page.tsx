@@ -5,7 +5,6 @@ import { useEffect, useState, Suspense, useRef } from "react";
 import { useCapturePaymentMutation } from "@/lib/redux/apis/payment-api";
 import { useClearCartMutation, useGetCartQuery } from "@/lib/redux/apis/cart-api";
 import { toast } from "react-toastify";
-import Loader from "@/components/ui/loaders/Loader";
 import stripePromise from "@/lib/stripe";
 
 function OrderStatusContent() {
@@ -172,7 +171,7 @@ const {
   }, [status, isCartLoaded, cart?.id, clearCart]);
 
   if (isLoading) {
-    return <Loader/>;
+    return null;
   }
 
   if (status === "cancel") {
@@ -203,12 +202,12 @@ const {
     );
   }
 
-  return <Loader />;
+  return null;
 }
 
 export default function OrderStatusPage() {
   return (
-    <Suspense fallback={<><Loader/></>}>
+    <Suspense fallback={null}>
       <OrderStatusContent />
     </Suspense>
   );

@@ -12,7 +12,6 @@ import { LoginResponse } from "@/types/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
 
-import Loader from "@/components/ui/loaders/Loader";
 import Link from "next/link";
 import { useLoginMutation, useResendVerificationCodeMutation } from "@/lib/redux/apis/auth-api";
 import { useCreateWishlistMutation } from "@/lib/redux/apis/cart-api";
@@ -231,9 +230,7 @@ export default function LoginPage() {
 
 
   if (checking) {
-    return (
-      <Loader />
-    );
+    return null;
   }
 
   return (

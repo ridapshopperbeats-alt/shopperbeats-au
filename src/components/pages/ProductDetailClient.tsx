@@ -6,15 +6,12 @@ import React, {
   useMemo,
   useCallback,
   useRef,
-  useSyncExternalStore,
 } from "react";
 import {
   useAddToCartMutation,
-  useCreateWishlistMutation,
   useGetCartQuery,
   useGetWishlistQuery,
   useRemoveFromCartMutation,
-  useRemoveFromWishlistMutation,
   useUpdateCartItemQuantityMutation,
 } from "@/lib/redux/apis/cart-api";
 import CartCheckoutDrawer from "@/components/cart/CartCheckoutDrawer";
@@ -38,6 +35,7 @@ import Breadcrumb from "@/components/ui/Breadcrumb";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
+import { useWishlistToggle } from "@/lib/hooks/use-wishlist-toggle";
 import { findCategoryPath } from "@/lib/utils/find-category-path";
 import { getPriceDetails } from "@/lib/utils/get-price-details";
 import { getImageUrl, getVariantImage } from "@/lib/utils/image-utils";
@@ -50,6 +48,7 @@ import {
 import { useVariantSelection } from "@/lib/hooks/use-variant-selection";
 import { WishlistKey } from "@/types/wishlist";
 import BundleSection from "../ui/BundleSection";
+import RecommendedForYou from "../homepage/RecommendedForYou";
 import { useSEO } from "@/contexts/SEOContext";
 import {
   getFeaturesContent,
@@ -62,7 +61,7 @@ import {
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils/format-price";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
-import { ChevronDownIcon, Clock, MapPin } from "lucide-react";
+import { ChevronDownIcon, Clock, MapPin, ShieldCheck } from "lucide-react";
 import ColorPopup from "./ColorPopup";
 import LocationPopup from "./LocationPopup";
 import CustomerRatingViewPage from "./CustomerRatingViewPage";
@@ -74,7 +73,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
 
 const KNOWN_COMPACT_SIZE_TOKENS = new Set([
   "xxs",
@@ -93,16 +91,6 @@ const KNOWN_COMPACT_SIZE_TOKENS = new Set([
   "md",
   "lg",
 ]);
-
-const subscribeNoop = () => () => {};
-
-function useIsClient(): boolean {
-  return useSyncExternalStore(
-    subscribeNoop,
-    () => true,
-    () => false,
-  );
-}
 
 function isCompactAttributeValue(rawValue: string): boolean {
   const value = rawValue.trim();
@@ -123,14 +111,15 @@ export default function ProductDetailClient({
   slug,
   seo,
   recentlyViewed,
+  popularProducts: _popularProducts,
 }: {
   product: Product;
   recommendations: Product[];
-  popularProducts: Product[] | null;
   megaMenuData: Category[];
   slug: string;
   seo?: ProductSEO;
   recentlyViewed?: Product[] | null;
+  popularProducts?: Product[] | null;
 }) {
   const { data: latestProduct } = useGetProductBySlugQuery(slug, {
     skip: !slug,
@@ -195,6 +184,11 @@ export default function ProductDetailClient({
     setSelectedAttributes,
   } = useVariantSelection(product.variants || []);
 
+  const variantIdsKey = useMemo(
+    () => (product.variants || []).map((v) => v.id).join(","),
+    [product.variants],
+  );
+
   useEffect(() => {
     if (product.variants && product.variants.length > 0) {
       const variantMatch = product.variants.find((v) => v.id === slug);
@@ -218,12 +212,9 @@ export default function ProductDetailClient({
       });
       setSelectedAttributes(attrs);
     }
-  }, [slug, product.variants, setSelectedVariant, setSelectedAttributes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug, variantIdsKey, setSelectedVariant, setSelectedAttributes]);
 
-  const [createWishlist, { isLoading: isAddingToWishlist }] =
-    useCreateWishlistMutation();
-  const [removeFromWishlist, { isLoading: isRemoving }] =
-    useRemoveFromWishlistMutation();
   const [calculateShipping] = useCalculateShippingMutation();
 
   const { postcode, suburb, updatePostcode } = useGlobalPostcode();
@@ -242,23 +233,18 @@ export default function ProductDetailClient({
     useUpdateCartItemQuantityMutation();
   const [localQtyMap, setLocalQtyMap] = useState<Record<string, string>>({});
 
-  const [lastSyncedCart, setLastSyncedCart] = useState(cart);
-  if (cart !== lastSyncedCart) {
-    setLastSyncedCart(cart);
-    if (cart?.items) {
-      let changed = false;
-      const next = { ...localQtyMap };
+  useEffect(() => {
+    if (!cart?.items) return;
+    setLocalQtyMap((prev) => {
+      const next = { ...prev };
       cart.items.forEach((item) => {
         if (next[item.id] === undefined) {
           next[item.id] = String(item.quantity);
-          changed = true;
         }
       });
-      if (changed) {
-        setLocalQtyMap(next);
-      }
-    }
-  }
+      return next;
+    });
+  }, [cart]);
 
   const handleCartDrawerUpdateQuantity = (
     product_id: string,
@@ -363,7 +349,8 @@ export default function ProductDetailClient({
     "idle" | "checking" | "available" | "unavailable"
   >("idle");
 
-  const mounted = useIsClient();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const [selectedLocation, setSelectedLocation] = useState<{
     pincode: string;
@@ -375,97 +362,30 @@ export default function ProductDetailClient({
     null,
   );
 
-  // Load the fetched wishlist into local state exactly once (the
-  // `wishlistLoaded` flag guards it so subsequent renders don't overwrite
-  // local optimistic updates). Adjusted during render instead of inside a
-  // useEffect, per https://react.dev/learn/you-might-not-need-an-effect.
-  if (wishlistData?.items && !wishlistLoaded) {
-    setLocalWishlistItems(wishlistData.items);
-    setWishlistLoaded(true);
-  }
+  useEffect(() => {
+    if (wishlistData?.items && !wishlistLoaded) {
+      setLocalWishlistItems(wishlistData.items);
+      setWishlistLoaded(true);
+    }
+  }, [wishlistData, wishlistLoaded]);
 
   const router = useRouter();
 
-  const isProductInWishlist = localWishlistItems.some((item) => {
-    const isSameProduct = item.product_id === product.id;
-    if (!selectedVariant) {
-      return isSameProduct;
-    }
-    return isSameProduct && item.variant_id === selectedVariant.id;
+  const hasVariants = (product?.variants?.length ?? 0) > 0;
+
+  const {
+    isWishlisted: isProductInWishlist,
+    isLoading: isWishlistLoading,
+    toggle: handleWishlistButtonClick,
+  } = useWishlistToggle({
+    productId: product.id,
+    variantId: selectedVariant?.id ?? null,
+    wishlistItems: localWishlistItems,
+    syncWishlistItems: setLocalWishlistItems,
+    requireVariant: true,
+    hasVariants,
+    matchAnyVariant: true,
   });
-
-  const handleWishlistButtonClick = useCallback(async () => {
-    const hasVariants = product?.variants && product.variants.length > 0;
-
-    if (hasVariants && !selectedVariant?.id) {
-      toast.error("Choose your preferred option before adding to wishlist!");
-      return;
-    }
-    if (!product?.id || isAddingToWishlist || isRemoving) return;
-    const variantId = selectedVariant?.id ?? null;
-    const productId = product.id;
-    const wasInWishlist = isProductInWishlist;
-
-    if (wasInWishlist) {
-      setLocalWishlistItems((prev) =>
-        prev.filter(
-          (item) =>
-            !(item.product_id === product.id && item.variant_id === variantId),
-        ),
-      );
-    } else {
-      setLocalWishlistItems((prev) => [
-        ...prev,
-        { product_id: productId, variant_id: variantId },
-      ]);
-    }
-
-    try {
-      if (wasInWishlist) {
-        await removeFromWishlist({
-          product_id: product.id,
-          variant_id: selectedVariant?.id,
-        }).unwrap();
-        toast.success("Product removed from wishlist!");
-      } else {
-        await createWishlist({
-          product_id: product.id,
-          variant_id: selectedVariant?.id,
-        }).unwrap();
-        toast.success("Product added to wishlist!");
-      }
-    } catch {
-      toast.error("Failed to update wishlist.");
-      if (!product?.id) return;
-      const revertProductId: string = product.id;
-      const revertVariantId: string | null = selectedVariant?.id ?? null;
-      if (wasInWishlist) {
-        setLocalWishlistItems((prev) => [
-          ...prev,
-          { product_id: revertProductId, variant_id: revertVariantId },
-        ]);
-      } else {
-        setLocalWishlistItems((prev) =>
-          prev.filter(
-            (item) =>
-              !(
-                item.product_id === product.id &&
-                item.variant_id === selectedVariant?.id
-              ),
-          ),
-        );
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    product?.id,
-    selectedVariant?.id,
-    isProductInWishlist,
-    createWishlist,
-    removeFromWishlist,
-    isAddingToWishlist,
-    isRemoving,
-  ]);
 
   const [quantity, setQuantity] = useState(1);
 
@@ -474,9 +394,10 @@ export default function ProductDetailClient({
   const colorAttrName = attributeNames.find(
     (name) => name === "color" || name === "colour",
   );
-  const realColorOptions = colorAttrName
-    ? filteredAttributes[colorAttrName] || []
-    : [];
+  const realColorOptions = useMemo(
+    () => (colorAttrName ? filteredAttributes[colorAttrName] || [] : []),
+    [colorAttrName, filteredAttributes],
+  );
   const hasRealColors = realColorOptions.length > 0;
 
   const styleAttrName = attributeNames.find((name) => name === "style");
@@ -503,11 +424,53 @@ export default function ProductDetailClient({
     [product.variants, selectedAttributes],
   );
 
+  const colorSwatchOptions = useMemo(
+    () =>
+      realColorOptions.map((c) => {
+        const variant = findVariantForAttrValue(colorAttrName!, c.value);
+        return {
+          ...c,
+          image: variant
+            ? getVariantImage(variant)
+            : "/images/image-coming-soon.jpg",
+        };
+      }),
+    [realColorOptions, colorAttrName, findVariantForAttrValue],
+  );
+
   const [activeTab, setActiveTab] = useState("description");
   const [showDeliveryPopup, setShowDeliveryPopup] = useState(false);
+  const tabRefs = useRef<(HTMLLIElement | null)[]>([]);
 
-  const handleTabClick = (tab: string) => {
+  const handleTabClick = (tab: string, index: number) => {
     setActiveTab(tab);
+    tabRefs.current[index]?.focus();
+  };
+
+  const handleTabKeyDown = (
+    e: React.KeyboardEvent, index: number) => {
+    const tabCount = productTabItems.length;
+    let newIndex = index;
+
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      newIndex = (index + 1) % tabCount;
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      newIndex = (index - 1 + tabCount) % tabCount;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      newIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      newIndex = tabCount - 1;
+    }
+
+    if (newIndex !== index) {
+      const newTab = productTabItems[newIndex];
+      setActiveTab(newTab.key);
+      tabRefs.current[newIndex]?.focus();
+    }
   };
 
   const productTabItems = [
@@ -523,7 +486,7 @@ export default function ProductDetailClient({
         item.product_id === product.id &&
         item.variant_id === selectedVariant.id,
     );
-  }, [cart?.items, product.id, selectedVariant]);
+  }, [cart?.items, product.id, selectedVariant?.id]);
 
   const handleBuyNow = async () => {
     const hasVariants = product?.variants && product.variants.length > 0;
@@ -668,83 +631,89 @@ export default function ProductDetailClient({
       .features;
   }, [keyFeatures, product?.description]);
 
-  const accordionItems = [
-    ...(length || width || weight || height
-      ? [
-        {
-          title: "Specifications",
-          id: "specifications",
-          content: (
-            <ul>
-              {length && (
-                <li>
-                  <b>Length :-</b> {length} cm
-                </li>
-              )}
-              {width && (
-                <li>
-                  <b>Width :-</b> {width} cm
-                </li>
-              )}
-              {weight && (
-                <li>
-                  <b>Weight :-</b> {weight} Kg
-                </li>
-              )}
-              {height && (
-                <li>
-                  <b>Height :-</b> {height} cm
-                </li>
-              )}
-            </ul>
-          ),
-        },
-      ]
-      : []),
+  const accordionItems = useMemo(
+    () => [
+      ...(length || width || weight || height
+        ? [
+            {
+              title: "Specifications",
+              id: "specifications",
+              content: (
+                <ul>
+                  {length && (
+                    <li>
+                      <b>Length :-</b> {length} cm
+                    </li>
+                  )}
+                  {width && (
+                    <li>
+                      <b>Width :-</b> {width} cm
+                    </li>
+                  )}
+                  {weight && (
+                    <li>
+                      <b>Weight :-</b> {weight} Kg
+                    </li>
+                  )}
+                  {height && (
+                    <li>
+                      <b>Height :-</b> {height} cm
+                    </li>
+                  )}
+                </ul>
+              ),
+            },
+          ]
+        : []),
 
-    ...(precautionaryNote || careInstructions
-      ? [
-        {
-          title: "Precautionary & Care Instructions",
-          id: "care",
-          content: (
-            <ul>
-              {precautionaryNote && (
-                <li>
-                  <b>Precautionary Note :-</b> {precautionaryNote}
-                </li>
-              )}
-              {careInstructions && (
-                <li>
-                  <b>Care Instructions :-</b> {careInstructions}
-                </li>
-              )}
-            </ul>
-          ),
-        },
-      ]
-      : []),
+      ...(precautionaryNote || careInstructions
+        ? [
+            {
+              title: "Precautionary & Care Instructions",
+              id: "care",
+              content: (
+                <ul>
+                  {precautionaryNote && (
+                    <li>
+                      <b>Precautionary Note :-</b> {precautionaryNote}
+                    </li>
+                  )}
+                  {careInstructions && (
+                    <li>
+                      <b>Care Instructions :-</b> {careInstructions}
+                    </li>
+                  )}
+                </ul>
+              ),
+            },
+          ]
+        : []),
 
-    //  Show Warranty only if exists
-    ...(warranty
-      ? [
-        {
-          title: "Warranty",
-          id: "warranty",
-          content: (
-            <ul>
-              <li>{warranty}</li>
-            </ul>
-          ),
-        },
-      ]
-      : []),
-  ];
-  const mergedAccordions = [...accordionItems];
-  const middleIndex = Math.ceil(mergedAccordions.length / 2);
+      //  Show Warranty only if exists
+      ...(warranty
+        ? [
+            {
+              title: "Warranty",
+              id: "warranty",
+              content: (
+                <ul>
+                  <li>{warranty}</li>
+                </ul>
+              ),
+            },
+          ]
+        : []),
+    ],
+    [length, width, weight, height, precautionaryNote, careInstructions, warranty],
+  );
 
-  const firstHalf = mergedAccordions.slice(0, middleIndex);
-  const secondHalf = mergedAccordions.slice(middleIndex);
+  const { firstHalf, secondHalf } = useMemo(() => {
+    const middleIndex = Math.ceil(accordionItems.length / 2);
+    return {
+      firstHalf: accordionItems.slice(0, middleIndex),
+      secondHalf: accordionItems.slice(middleIndex),
+    };
+  }, [accordionItems]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -817,11 +786,10 @@ export default function ProductDetailClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postcode, selectedVariant?.id, product?.id]);
 
-  const { mainPrice, wasPrice, saveAmount, discountPercentage } =
-    useMemo(
-      () => getPriceDetails(product, selectedVariant),
-      [product, selectedVariant],
-    );
+  const { mainPrice, wasPrice, saveAmount, discountPercentage } = useMemo(
+    () => getPriceDetails(product, selectedVariant),
+    [product, selectedVariant],
+  );
 
   const handleDisabledAddToCart = () => {
     if (isAddingToCart) return;
@@ -864,10 +832,11 @@ export default function ProductDetailClient({
                     onClick={() => handleAttributeChange(attrName, item.value)}
                     disabled={isOutOfStockOption}
                     title={item.value}
-                    className={`min-w-[30px] h-[30px] lg:min-w-10 lg:h-10 px-2 flex items-center justify-center border rounded-[8px] text-[14px] font-bold cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${isSelected
-                      ? "border-[#FD151B] text-[#FD151B]"
-                      : "border-[#CCCCCC] text-[#1D265F]/50"
-                      }`}
+                    className={`min-w-[30px] h-[30px] lg:min-w-10 lg:h-10 px-2 flex items-center justify-center border rounded-[8px] text-[14px] font-bold cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                      isSelected
+                        ? "border-[#FD151B] text-[#FD151B]"
+                        : "border-[#CCCCCC] text-[#1D265F]/50"
+                    }`}
                   >
                     {item.value}
                   </button>
@@ -923,7 +892,7 @@ export default function ProductDetailClient({
                   selectedVariant={selectedVariant}
                   isWishlisted={isProductInWishlist}
                   onWishlistToggle={handleWishlistButtonClick}
-                  isWishlistLoading={isAddingToWishlist || isRemoving}
+                  isWishlistLoading={isWishlistLoading}
                 />
               </div>
 
@@ -1027,7 +996,7 @@ export default function ProductDetailClient({
                       </div>
 
                       <div className="flex items-center gap-[4px] flex-wrap">
-                        {realColorOptions.slice(0, 4).map((c) => (
+                        {colorSwatchOptions.slice(0, 4).map((c) => (
                           <button
                             type="button"
                             key={c.value}
@@ -1037,19 +1006,23 @@ export default function ProductDetailClient({
                             disabled={(c.stock ?? 0) <= 0}
                             aria-label={c.value}
                             title={c.value}
-                            className={`m-1 w-8 h-8 rounded-full cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed ${selectedAttributes[colorAttrName!] === c.value
-                              ? "shadow-[0_0_12px_rgba(0,0,0,0.5)]"
-                              : ""
-                              }`}
-                            style={{
-                              backgroundColor: c.value
-                                .toLowerCase()
-                                .replace(/\s+/g, ""),
-                            }}
-                          />
+                            className={`m-1 w-8 h-8 rounded-full border border-[#6B6B6B]/30 overflow-hidden cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                              selectedAttributes[colorAttrName!] === c.value
+                                ? "border-2 shadow-[0_0_12px_rgba(0,0,0,0.5)]"
+                                : ""
+                            }`}
+                          >
+                            <Image
+                              src={c.image}
+                              alt={c.value}
+                              width={32}
+                              height={32}
+                              className="w-full h-full object-cover"
+                            />
+                          </button>
                         ))}
 
-                        {realColorOptions.length > 4 && (
+                        {colorSwatchOptions.length > 4 && (
                           <>
                             <Button
                               onClick={() => setShowPopup(true)}
@@ -1063,7 +1036,7 @@ export default function ProductDetailClient({
                             <ColorPopup
                               open={showPopup}
                               onClose={() => setShowPopup(false)}
-                              colors={realColorOptions}
+                              colors={colorSwatchOptions}
                               selectedColor={selectedAttributes[colorAttrName!]}
                               onSelectColor={(color) => {
                                 handleAttributeChange(colorAttrName!, color);
@@ -1119,10 +1092,11 @@ export default function ProductDetailClient({
                             className="flex flex-col items-center gap-1 rounded-[8px] cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             <div
-                              className={`w-[47px] h-[48px] rounded-full border-[#6B6B6B] overflow-hidden flex items-center justify-center shrink-0 transition-all ${isSelected
-                                ? "border-2 shadow-[0_0_8px_rgba(107,107,107,0.5)]"
-                                : "border"
-                                }`}
+                              className={`w-[47px] h-[48px] rounded-full border-[#6B6B6B] overflow-hidden flex items-center justify-center shrink-0 transition-all ${
+                                isSelected
+                                  ? "border-2 shadow-[0_0_8px_rgba(107,107,107,0.5)]"
+                                  : "border"
+                              }`}
                             >
                               <Image
                                 src={
@@ -1184,11 +1158,11 @@ export default function ProductDetailClient({
                           {mounted
                             ? selectedLocation
                               ? [
-                                selectedLocation.suburb,
-                                selectedLocation.pincode,
-                              ]
-                                .filter(Boolean)
-                                .join(" ")
+                                  selectedLocation.suburb,
+                                  selectedLocation.pincode,
+                                ]
+                                  .filter(Boolean)
+                                  .join(" ")
                               : postcode
                                 ? [suburb, postcode].filter(Boolean).join(" ")
                                 : "Melbourne 3000"
@@ -1333,7 +1307,7 @@ export default function ProductDetailClient({
                   })()}
                 </div>
                 <div className="lg:hidden flex mx-auto text-[12px] text-center font-medium text-[#657689] leading-[20px] ">
-                  <GppGoodOutlinedIcon /> Guaranteed Safe & Secured Checkout
+                  <ShieldCheck /> Guaranteed Safe & Secured Checkout
                 </div>
                 <div className="lg:hidden flex flex-wrap gap-2">
                   <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
@@ -1403,15 +1377,17 @@ export default function ProductDetailClient({
               </div>
             </div>
 
-            <div className="lg:hidden flex w-full">
-              <Image
-                src="/images/shop-with-confidence.svg"
-                alt="Shop with Confidence"
-                width={381}
-                height={270}
-                className="w-full h-auto block"
-              />
-            </div>
+            <Link href="/shop-with-peace">
+              <div className="lg:hidden flex w-full">
+                <Image
+                  src="/images/shop-with-confidence.svg"
+                  alt="Shop with Confidence"
+                  width={381}
+                  height={270}
+                  className="w-full h-auto block"
+                />
+              </div>
+            </Link>
 
             {product.bundle_group_code &&
               product.bundle_products &&
@@ -1419,7 +1395,6 @@ export default function ProductDetailClient({
                 <BundleSection bundleProducts={product.bundle_products} />
               )}
 
-              
 
             <div className="xl:hidden flex flex-col gap-5 w-full min-[1440px]:max-w-[1388px] min-[1440px]:sticky min-[1440px]:self-start">
               <ProductDetailsMobileTabs
@@ -1470,15 +1445,23 @@ export default function ProductDetailClient({
             </div>
             <div className="hidden xl:flex w-full min-[1440px]:min-h-[489px] border border-[#ECECEC] rounded-[7px] p-5 flex-col gap-4">
               <div className="product-tabs">
-                <ul className="flex items-center gap-1">
-                  {productTabItems.map(({ key, label }) => (
+                <ul className="flex items-center gap-1" role="tablist">
+                  {productTabItems.map(({ key, label }, index) => (
                     <li
                       key={key}
-                      className={`flex items-center justify-center h-[45px] px-6 rounded-[30px] border border-[#ECECEC] cursor-pointer whitespace-nowrap transition-colors font-bold text-[14px] leading-[17px] tracking-[0px] text-center align-middle ${activeTab === key
-                        ? "bg-[#FD151B] text-white shadow-[5px_5px_15px_0px_rgba(0,0,0,0.05)]"
-                        : "bg-white text-[#000000]"
-                        }`}
-                      onClick={() => handleTabClick(key)}
+                      ref={(el) => {
+                        tabRefs.current[index] = el;
+                      }}
+                      role="tab"
+                      aria-selected={activeTab === key}
+                      tabIndex={activeTab === key ? 0 : -1}
+                      className={`flex items-center justify-center h-[45px] px-6 rounded-[30px] border border-[#ECECEC] cursor-pointer whitespace-nowrap transition-colors font-bold text-[14px] leading-[17px] tracking-[0px] text-center align-middle ${
+                        activeTab === key
+                          ? "bg-[#FD151B] text-white shadow-[5px_5px_15px_0px_rgba(0,0,0,0.05)]"
+                          : "bg-white text-[#000000]"
+                      }`}
+                      onClick={() => handleTabClick(key, index)}
+                      onKeyDown={(e) => handleTabKeyDown(e, index)}
                     >
                       {label}
                     </li>
@@ -1586,11 +1569,11 @@ export default function ProductDetailClient({
                         {mounted
                           ? selectedLocation
                             ? [
-                              selectedLocation.suburb,
-                              selectedLocation.pincode,
-                            ]
-                              .filter(Boolean)
-                              .join(" ")
+                                selectedLocation.suburb,
+                                selectedLocation.pincode,
+                              ]
+                                .filter(Boolean)
+                                .join(" ")
                             : postcode
                               ? [suburb, postcode].filter(Boolean).join(" ")
                               : "Melbourne 3000"
@@ -1747,7 +1730,7 @@ export default function ProductDetailClient({
               </div>
 
               <div className="text-[12px] text-center font-medium text-[#657689] leading-[20px] ">
-                <GppGoodOutlinedIcon /> Guaranteed Safe & Secured Checkout
+                <ShieldCheck /> Guaranteed Safe & Secured Checkout
               </div>
 
               <div>
