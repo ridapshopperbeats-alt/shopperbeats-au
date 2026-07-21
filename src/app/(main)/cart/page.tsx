@@ -16,8 +16,9 @@ import * as yup from "yup";
 import { useMemo, useRef, useState, useEffect } from "react";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import Button from "@/components/ui/Button";
-import { pincode } from "@/lib/validations/form-schemas";
-import Loader from "@/components/ui/loaders/Loader";
+import { getPriceDetails } from "@/lib/utils/get-price-details";
+import { getImageUrl } from "@/lib/utils/image-utils";
+import { pincode } from "@/lib/hooks/use-yup-validation";
 import GooglePlacesInput from "@/components/ui/AddressAutocomplete";
 import { getPriceDetails, getImageUrl, formatPrice } from "@/lib/utils/main-utils";
 import NoProductsFound from "@/components/NoProductFound";
@@ -417,12 +418,7 @@ const Cart = () => {
   };
 
   // ---------------- LOADING / EMPTY STATES ----------------
-  if (isLoading || isFetching)
-    return (
-      <div className="flex flex-col justify-center items-center text-center p-8 min-h-[40vh]">
-        <Loader />
-      </div>
-    );
+  if (isLoading || isFetching) return null;
   if (error || !cart || cart.items.length === 0)
     return (
       <div className="flex flex-col justify-center items-center text-center p-8 min-h-[40vh]">

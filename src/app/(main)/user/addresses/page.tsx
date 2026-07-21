@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
 import { Address } from "@/types/address";
-import Loader from "@/components/ui/loaders/Loader";
 import AddressForm from "@/components/ui/AddressForm";
 import ConfirmAlert from "@/components/ui/ConfirmAlert";
 import { useDeleteAddressMutation, useGetAddressesQuery, useUpdateAddressMutation } from "@/lib/redux/apis/address-api";
@@ -76,7 +75,6 @@ export default function AddressesPage() {
     <>
       <div className="">
         {(addresses?.length ?? 0) > 0 && <h4 className="text-heading-lg">Address</h4>}
-        {isLoading && <Loader />}
         <div className="address-block">
           {addresses?.map((address: Address) => (
             <div key={address.id} className="address-content">

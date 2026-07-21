@@ -10,8 +10,20 @@ import { toast } from "react-toastify";
 import { FooterMenuData } from "@/types/menu";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
-import { FOOTER_LINKS_STATIC, footerHighlights, paymentArr, STATIC_SOCIAL_LINKS } from "@/lib/utils/get-footer-menu-data";
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube, FaPinterestP, FaSnapchatGhost } from "react-icons/fa";
+import {
+  FOOTER_LINKS_STATIC,
+  footerHighlights,
+  paymentArr,
+  STATIC_SOCIAL_LINKS,
+} from "@/lib/utils/get-footer-menu-data";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaYoutube,
+  FaPinterestP,
+  FaSnapchatGhost,
+} from "react-icons/fa";
 import { FaXTwitter, FaTiktok, FaThreads } from "react-icons/fa6";
 
 const SOCIAL_ICONS: Record<string, React.ComponentType> = {
@@ -83,30 +95,23 @@ export default function Footer({
 
   return (
     <div className="page-footer">
-      <div className="pt-6">
-        <div className="footer-highlights-wrapper">
-          <div className="footer-highlights-grid">
-            {footerHighlights.map((item) => (
-              <div
-                key={item.img}
-                className="group footer-highlight-item"
-              >
-                <div className="footer-highlight-icon">
-                  <Image
-                    src={`/images/${item.img}.svg`}
-                    alt={item.text}
-                    width={62}
-                    height={42}
-                    className="footer-highlight-img"
-                  />
-                </div>
-
-                <p className="footer-highlight-text">
-                  {item.text}
-                </p>
+      <div className="footer-highlights-wrapper">
+        <div className="footer-highlights-grid">
+          {footerHighlights.map((item) => (
+            <div key={item.img} className="group footer-highlight-item">
+              <div className="footer-highlight-icon">
+                <Image
+                  src={`/images/${item.img}.svg`}
+                  alt={item.text}
+                  width={62}
+                  height={42}
+                  className="footer-highlight-img"
+                />
               </div>
-            ))}
-          </div>
+
+              <p className="footer-highlight-text">{item.text}</p>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -179,9 +184,7 @@ export default function Footer({
                   className="footer-block footer-menu-block"
                   key={section.title}
                 >
-                  <h5 className="footer-section-title">
-                    {section.title}
-                  </h5>
+                  <h5 className="footer-section-title">{section.title}</h5>
                   {items.length > 0 ? (
                     <ul>
                       {items.map((link) => (
@@ -228,9 +231,14 @@ export default function Footer({
               </form>
 
               <ul className="social">
-                {(socialLinks && socialLinks.length > 0 ? socialLinks : STATIC_SOCIAL_LINKS).map((item) => {
+                {(socialLinks && socialLinks.length > 0
+                  ? socialLinks
+                  : STATIC_SOCIAL_LINKS
+                ).map((item) => {
                   // cast to any to allow passing className prop to icon components
-                  const Icon = SOCIAL_ICONS[item.icon_class.toLowerCase()] as any;
+                  const Icon = SOCIAL_ICONS[
+                    item.icon_class.toLowerCase()
+                  ] as any;
                   return (
                     <li key={item.id}>
                       <a
@@ -257,17 +265,15 @@ export default function Footer({
             </p>
 
             <div className="payment">
-              {paymentArr.map(
-                (item) => (
-                  <Image
-                    key={item}
-                    src={`/images/${item}.svg`}
-                    alt={item}
-                    width={40}
-                    height={25}
-                  />
-                ),
-              )}
+              {paymentArr.map((item) => (
+                <Image
+                  key={item}
+                  src={`/images/${item}.svg`}
+                  alt={item}
+                  width={40}
+                  height={25}
+                />
+              ))}
             </div>
             <p className="footer-copyright-mobile">
               © 2026 Shopperbeats Pty Ltd (ABN 32 637 549 770). All Rights

@@ -12,6 +12,7 @@ const API_REDUCER_PATHS = [
   "paymentApi",
   "vendorApi",
   "faqApi",
+  "geocodeApi",
 ] as const;
 
 interface RTKQueryEntry {

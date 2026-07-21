@@ -144,7 +144,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
     }
   };
   return (
-    <div className="w-full  flex-1 pb-16 lg:pb-0">
+    <div className="w-full  flex-1">
       {!hideSortAndPagination && (
         <div className="hidden lg:block mb-[20px] sticky top-0 z-[2]">
           <div className="flex justify-end">

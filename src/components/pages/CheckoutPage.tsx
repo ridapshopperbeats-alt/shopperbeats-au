@@ -24,7 +24,6 @@ import { useGetUserDetailsQuery } from "@/lib/redux/apis/auth-api";
 import { CardNumberElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useIsClient } from "@/lib/hooks/use-is-client";
-import Loader from "../ui/loaders/Loader";
 import Image from "next/image";
 
 export default function SecureCheckout() {
@@ -735,7 +734,7 @@ export default function SecureCheckout() {
   }, [effectivePostcode]);
 
   if (!mounted) {
-    return <Loader />;
+    return null;
   }
 
   return (
@@ -773,14 +772,9 @@ export default function SecureCheckout() {
             {isLoading ? (
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
                   minHeight: "400px",
                 }}
-              >
-                <Loader />
-              </div>
+              />
             ) : (
               <>
                 {/* Desktop (lg and up) — mirrors the mobile/md layout's spacing & structure */}

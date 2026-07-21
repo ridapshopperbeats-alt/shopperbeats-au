@@ -13,7 +13,6 @@ import stripePromise from "@/lib/stripe";
 import { toast } from "react-toastify";
 import Image from "next/image";
 
-import Loader from "@/components/ui/loaders/Loader";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import Pagination from "@/components/ui/Pagination";
 
@@ -211,7 +210,7 @@ export default function MyOrdersPage() {
   });
 
 
-  if (isLoading && allOrders.length === 0) return <div><Loader /></div>;
+  if (isLoading && allOrders.length === 0) return null;
 
   return (
     <div>

@@ -11,7 +11,6 @@ import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { formatReadableDate, formatPrice } from "@/lib/utils/main-utils";
 import { useAddToCartMutation, useGetCartQuery, useGetWishlistQuery, useRemoveFromWishlistMutation } from "@/lib/redux/apis/cart-api";
 import { wishListValidationSchema } from "@/lib/validations/form-schemas";
-import Loader from "@/components/ui/loaders/Loader";
 
 export default function WishlistPage() {
   const router = useRouter();
@@ -103,7 +102,7 @@ export default function WishlistPage() {
     }
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return null;
 
   if (isError)
     return (

@@ -16,7 +16,6 @@ import {
   getOrderProductImage,
   getReviewProductId,
 } from "@/lib/utils/order-products";
-import Loader from "@/components/ui/loaders/Loader";
 
 import "../../../../../../styles/Checkout.css";
 import "../../../../../../styles/Cart.css";
@@ -122,13 +121,15 @@ export default function ReviewForm({ params }: ReviewPageProps) {
     }
   };
 
-  if (isLoading) return <Loader />;
 
   if (isError || !order) {
     return (
       <div>
         <p>Order not found.</p>
-        <Link href="/user/orders" className="btn btn-red btn-filled btn-sharp mt-20">
+        <Link
+          href="/user/orders"
+          className="btn btn-red btn-filled btn-sharp mt-20"
+        >
           Back to Orders
         </Link>
       </div>
@@ -201,9 +202,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
       </table>
 
       <div className="form-item mt-30">
-        <div className="label-text review-label-bold">
-          Add Image (Optional)
-        </div>
+        <div className="label-text review-label-bold">Add Image (Optional)</div>
 
         <label htmlFor="image-upload" className="upload-box">
           <input

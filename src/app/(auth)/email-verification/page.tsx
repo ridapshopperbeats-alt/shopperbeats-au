@@ -7,7 +7,6 @@ import { useSearchParams } from "next/navigation";
 import { useResendVerificationCodeMutation } from "@/lib/redux/apis/auth-api";
 import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
-import Loader from "@/components/ui/loaders/Loader";
 
 function VerifyEmailInner() {
   const [resendVerificationCode, { isLoading: isResending }] = useResendVerificationCodeMutation();
@@ -115,7 +114,7 @@ function VerifyEmailInner() {
 
 export default function EmailVerificationPage() {
   return (
-    <Suspense fallback={<><Loader/></>}>
+    <Suspense fallback={null}>
       <VerifyEmailInner />
     </Suspense>
   );

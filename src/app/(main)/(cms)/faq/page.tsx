@@ -6,7 +6,6 @@ import Accordion from "@/components/ui/Accordion";
 import Banner from "@/components/ui/Banner";
 import ContactBanner from "@/components/ui/ContactBanner";
 import { useGetFaqsQuery, FAQItem } from "@/lib/redux/apis/faq-api";
-import Loader from "@/components/ui/loaders/Loader";
 
 // Predefined grid section metadata mapping
 const faqGridMeta: Record<string, { title: string; description: string; icon: string }> = {
@@ -100,11 +99,7 @@ export default function FAQPage() {
   }, [dynamicTabs, activeTab]);
 
   if (isLoading) {
-    return (
-      <div className="text-center py-10">
-        <Loader />
-      </div>
-    );
+    return null;
   }
   return (
     <div className="faq-page">

@@ -5,9 +5,9 @@ import { useGlobalLoading } from "@/lib/hooks/use-global-loading";
 import animationData from "./ShopperbeatsLoder.json";
 
 export default function GlobalLoader() {
-  // const visible = useGlobalLoading();
+  const visible = useGlobalLoading();
 
-  // if (!visible) return null;
+  if (!visible) return null;
 
   return (
     <div
