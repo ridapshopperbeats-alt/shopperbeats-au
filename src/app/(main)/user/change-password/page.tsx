@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import { useChangePasswordMutation, useLogoutMutation } from "@/lib/redux/apis/auth-api";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { changePasswordValidationSchema } from "@/lib/validations/form-schemas";

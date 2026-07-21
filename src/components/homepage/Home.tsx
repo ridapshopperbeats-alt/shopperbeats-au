@@ -1,6 +1,6 @@
 import SingleBanner from "./Banner";
 import TopCategories from "./TopCategories";
-import ProductCarousel from "../ui/ProductCarousel";
+import ProductCarousel from "../common/ProductCarousel";
 import { getBestSellers, getTrendingProducts, transformProductData } from "@/lib/utils/main-utils";
 import PopularCategories from "./AllBanner";
 import TopBrands from "./TopRated";

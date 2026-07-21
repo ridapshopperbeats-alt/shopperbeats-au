@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import Accordion from "@/components/ui/Accordion";
+import Accordion from "@/components/common/Accordion";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import { Category, Filter } from "@/types/product";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import { useParams } from "next/navigation";
 import { Search, ChevronDown } from "lucide-react";
-import { Input } from "../ui/input";
-import { Slider } from "../ui/slider";
+import { Input } from "../common/input";
+import { Slider } from "../common/slider";
 
 export interface SidebarProps {
   filters: Filter[];

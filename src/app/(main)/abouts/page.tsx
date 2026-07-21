@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Sidebar from "@/components/ui/Sidebar";
-import Banner from "@/components/ui/Banner";
-import ContactBanner from "@/components/ui/ContactBanner";
+import Sidebar from "@/components/common/Sidebar";
+import Banner from "@/components/common/Banner";
+import ContactBanner from "@/components/common/ContactBanner";
 import "../../../styles/about.css";
 
 // Types

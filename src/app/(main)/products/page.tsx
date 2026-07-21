@@ -1,7 +1,7 @@
 import ProductsPageClient from "@/components/pages/ProductsPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
-import Breadcrumb from "@/components/ui/Breadcrumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import { Product } from "@/types/product";
 
 // ---------- Generate Metadata ----------

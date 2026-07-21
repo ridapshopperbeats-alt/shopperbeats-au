@@ -6,7 +6,7 @@ import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useResendVerificationCodeMutation } from "@/lib/redux/apis/auth-api";
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 
 function VerifyEmailInner() {
   const [resendVerificationCode, { isLoading: isResending }] = useResendVerificationCodeMutation();

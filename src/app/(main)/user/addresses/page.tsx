@@ -2,9 +2,9 @@
 
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import { Address } from "@/types/address";
-import AddressForm from "@/components/ui/AddressForm";
+import AddressForm from "@/components/common/AddressForm";
 import ConfirmAlert from "@/components/ui/ConfirmAlert";
 import { useDeleteAddressMutation, useGetAddressesQuery, useUpdateAddressMutation } from "@/lib/redux/apis/address-api";
 

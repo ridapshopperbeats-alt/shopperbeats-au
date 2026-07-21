@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { BundleProduct } from "@/types/product";
 import { useAddToCartMutation } from "@/lib/redux/apis/cart-api";
 import { toast } from "react-toastify";
-import ProductCard from "./ProductCard";
-import Button from "./Button";
+import ProductCard from "../common/ProductCard";
+import Button from "../common/Button";
 import "../../styles/BundleSection.css";
 import { formatPrice } from "@/lib/utils/main-utils";
 

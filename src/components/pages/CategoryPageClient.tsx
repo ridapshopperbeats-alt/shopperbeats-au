@@ -28,7 +28,7 @@ import { useProductFilters } from "@/lib/hooks/use-product-filters";
 
 import "../../styles/Product.css";
 import CategorySlider from "./CategorySlider";
-import Breadcrumb from "../ui/Breadcrumb";
+import Breadcrumb from "../common/Breadcrumb";
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
 import { resolvePriceRange, filterProductsByPriceRange } from "@/lib/utils/price-filter";
 

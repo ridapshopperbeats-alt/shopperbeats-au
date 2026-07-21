@@ -15,15 +15,13 @@ import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import * as yup from "yup";
 import { useMemo, useRef, useState, useEffect } from "react";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
-import Button from "@/components/ui/Button";
-import { getPriceDetails } from "@/lib/utils/get-price-details";
-import { getImageUrl } from "@/lib/utils/image-utils";
-import { pincode } from "@/lib/hooks/use-yup-validation";
-import GooglePlacesInput from "@/components/ui/AddressAutocomplete";
+import Button from "@/components/common/Button";
+import { pincode } from "@/lib/validations/form-schemas";
+import GooglePlacesInput from "@/components/common/AddressAutocomplete";
 import { getPriceDetails, getImageUrl, formatPrice } from "@/lib/utils/main-utils";
 import NoProductsFound from "@/components/NoProductFound";
 import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/common/input";
 
 // ---------------- SCHEMAS ----------------
 const pincodeSchema = yup.object().shape({

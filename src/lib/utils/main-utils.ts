@@ -1,4 +1,4 @@
-import { Product, Variant,Category } from "@/types/product";
+import { Product, Variant, Category } from "@/types/product";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 
 const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
@@ -6,12 +6,11 @@ const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
 import { cache } from "react";
 // Price formatting utilities
 export const formatPrice = (
-  price: number | string | undefined | null
+  price: number | string | undefined | null,
 ): string => {
   if (price === undefined || price === null || price === "") return "0";
 
-  const numPrice =
-    typeof price === "string" ? Number.parseFloat(price) : price;
+  const numPrice = typeof price === "string" ? Number.parseFloat(price) : price;
 
   if (Number.isNaN(numPrice)) return "0";
 
@@ -23,7 +22,7 @@ export const formatPrice = (
 
 // Format price with fixed 2 decimal places
 export const formatPriceFixed2 = (
-  price: number | string | undefined | null
+  price: number | string | undefined | null,
 ): string => {
   return Number(price).toFixed(2);
 };
@@ -44,7 +43,7 @@ export const toYYYYMMDD = (date: Date | string | null | undefined): string => {
 // Format a date to a more readable format, e.g., "January 1, 2024"
 export const formatReadableDate = (
   date: Date | string | null | undefined,
-  locale: string = "en-US"
+  locale: string = "en-US",
 ): string => {
   if (!date) return "";
 
@@ -62,7 +61,7 @@ export const formatReadableDate = (
 // Validate Australian phone numbers with specific rules for local and international formats
 export const handleAustralianPhoneNumberChange = (
   event: React.ChangeEvent<HTMLInputElement>,
-  previousValue: string
+  previousValue: string,
 ): { value: string; error: string | null } => {
   const value = event.target.value;
 
@@ -85,7 +84,10 @@ export const handleAustralianPhoneNumberChange = (
   if (value.startsWith("0")) {
     // Allow typing 0 → 04 progressively
     if (value.length >= 2 && value[1] !== "4") {
-      return { value: previousValue, error: "Australian mobile must start with 04" };
+      return {
+        value: previousValue,
+        error: "Australian mobile must start with 04",
+      };
     }
 
     if (value.length > 10) {
@@ -124,7 +126,6 @@ export const handleAustralianPhoneNumberChange = (
   return { value, error: null };
 };
 
-
 // Get the main image URL for a product, with a fallback if no images are available
 export function getImageUrl(product: Product): string {
   const fallback = "/images/image-coming-soon.jpg";
@@ -139,7 +140,7 @@ export function getImageUrl(product: Product): string {
 
   if (Array.isArray(product.images) && product.images.length > 0) {
     const sortedImages = [...product.images]
-      .filter(img => !!img.image_url)
+      .filter((img) => !!img.image_url)
       .sort((a, b) => (a.image_order ?? 9999) - (b.image_order ?? 9999));
 
     if (sortedImages.length > 0) {
@@ -152,7 +153,6 @@ export function getImageUrl(product: Product): string {
   return fallback;
 }
 
-
 // Get the main image URL for a product variant, with a fallback if no images are available
 export function getVariantImage(variant: Variant): string {
   const fallback = "/images/image-coming-soon.jpg";
@@ -164,7 +164,7 @@ export function getVariantImage(variant: Variant): string {
 
   if (Array.isArray(variant.images) && variant.images.length > 0) {
     const sortedImages = [...variant.images]
-      .filter(img => !!img.image_url)
+      .filter((img) => !!img.image_url)
       .sort((a, b) => (a.image_order ?? 9999) - (b.image_order ?? 9999));
 
     if (sortedImages.length > 0) {
@@ -191,12 +191,15 @@ export function getReviewImage(review: { images?: string[] | null }): string {
 export function findCategoryPath(
   categories: Category[],
   targetId: string,
-  path: { name: string; path: string }[] = []
+  path: { name: string; path: string }[] = [],
 ): { name: string; path: string }[] | null {
   for (const category of categories) {
     const currentPath = [
       ...path,
-      { name: category.name, path: `/category/${category.slug ?? category.id}` },
+      {
+        name: category.name,
+        path: `/category/${category.slug ?? category.id}`,
+      },
     ];
 
     // Match by slug (URL param) OR by id (legacy)
@@ -209,7 +212,7 @@ export function findCategoryPath(
       const found = findCategoryPath(
         category.subcategories,
         targetId,
-        currentPath
+        currentPath,
       );
       if (found) return found;
     }
@@ -218,13 +221,11 @@ export function findCategoryPath(
   return null;
 }
 
-
-
 // Fetch best-selling products from the API, with a default limit of 10
 export async function getBestSellers(limit = 10): Promise<Product[]> {
   const res = await fetch(
     `${baseUrl}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?limit=${limit}`,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 60 } },
   );
 
   if (!res.ok) return [];
@@ -233,7 +234,6 @@ export async function getBestSellers(limit = 10): Promise<Product[]> {
 
   return data?.data ?? [];
 }
-
 
 // Fetch raw categories from the API, with caching for 1 hour
 export const getRawCategories = cache(async (): Promise<Category[]> => {
@@ -246,12 +246,11 @@ export const getRawCategories = cache(async (): Promise<Category[]> => {
   return res.json();
 });
 
-
 // Fetch trending products from the API, with a fallback to list-products if trending is empty
 async function fetchTrending(limit: number): Promise<Product[]> {
   const res = await fetch(
     `${baseUrl}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.TRENDING_PRODUCTS}?limit=${limit}`,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 60 } },
   );
 
   if (!res.ok) return [];
@@ -275,7 +274,7 @@ export async function getTrendingProducts(limit = 10): Promise<Product[]> {
 
   const res = await fetch(
     `${baseUrl}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?limit=${limit}&page=2`,
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 60 } },
   );
 
   if (!res.ok) return [];
@@ -284,7 +283,6 @@ export async function getTrendingProducts(limit = 10): Promise<Product[]> {
 
   return data?.data ?? [];
 }
-
 
 // Get product details utilities
 export const getPriceDetails = (product: Product, variant?: Variant | null) => {
@@ -355,7 +353,6 @@ export function transformProductData(products: Product[]) {
   });
 }
 
-
 // Sidebar links for user account navigation
 export const sidebarLinks = [
   { href: "/user/personal-information", label: "Personal Information" },
@@ -382,6 +379,27 @@ export const product = {
     { name: "Colour", value: "Black" },
     { name: "Fabric", value: "Cotton" },
   ],
+};
+
+export const fieldLabels: Record<string, string> = {
+  email: "Email",
+  firstName: "First name",
+  lastName: "Last name",
+  phone: "Phone",
+  country: "Country",
+  address: "Address",
+  city: "City",
+  state: "State",
+  postcode: "Postcode",
+  billingCountry: "Billing country",
+  billingFirstName: "Billing first name",
+  billingLastName: "Billing last name",
+  billingAddress: "Billing address",
+  billingCity: "Billing city",
+  billingState: "Billing state",
+  billingPostcode: "Billing postcode",
+  billingPhone: "Billing phone",
+  paymentMethod: "Payment method",
 };
 
 // Falls back to the production domain when NEXT_PUBLIC_SITE_URL isn't set,

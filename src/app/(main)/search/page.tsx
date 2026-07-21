@@ -1,6 +1,6 @@
 
 import SearchPageClient from "@/components/pages/SearchPageClient";
-import Breadcrumb from "@/components/ui/Breadcrumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import { Product, ProductsResponse } from "@/types/product";
 import type { Metadata } from "next";

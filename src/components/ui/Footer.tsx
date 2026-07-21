@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Button from "./Button";
+import Button from "../common/Button";
 import ScrollToTopLink from "./ScrollToTopLink";
 import { useSubscribeToMailingListMutation } from "@/lib/redux/apis/marketing-api";
 import { useGetSocialMediaLinksQuery } from "@/lib/redux/apis/auth-api";

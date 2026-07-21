@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import ProductCarousel from "../ui/ProductCarousel";
+import ProductCarousel from "../common/ProductCarousel";
 import { Product } from "@/types/product";
-import { getPriceDetails } from "@/lib/utils/get-price-details";
-import { getImageUrl } from "@/lib/utils/image-utils";
+import { getPriceDetails, getImageUrl } from "@/lib/utils/main-utils";
 
 export default function RecommendedForYou({
   personalized,

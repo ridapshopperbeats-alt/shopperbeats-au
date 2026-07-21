@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import { PersonalInfoFormData } from "@/types/auth";
 import Image from "next/image";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { useGetPersonalDataQuery, useUpdatePersonalDataMutation } from "@/lib/redux/apis/auth-api";
 import { toYYYYMMDD, handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/common/input";
 import { personalInfoSchema } from "@/lib/validations/form-schemas";
 
 

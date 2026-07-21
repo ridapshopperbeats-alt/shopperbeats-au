@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCreateWishlistMutation } from "@/lib/redux/apis/cart-api";
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import { formatPrice } from "@/lib/utils/main-utils";
 import { ProductLikeCardProps } from "@/types/product";
 

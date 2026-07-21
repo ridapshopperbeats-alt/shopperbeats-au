@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 
 // Extract the order details type from OrderSummaryPopup's props
 type OrderDetailsType = {

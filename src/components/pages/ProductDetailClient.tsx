@@ -25,19 +25,18 @@ import Image from "next/image";
 import ProductGallery from "../productListing/ProductGallery";
 import { toast } from "react-toastify";
 
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 import { Product, Category } from "@/types/product";
 import { ProductSEO } from "@/types/seo";
-import Accordion from "../ui/Accordion";
+import Accordion from "../common/Accordion";
 import ProductDetailsMobileTabs from "./ProductDetailsMobileTabs";
-import Breadcrumb from "@/components/ui/Breadcrumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useWishlistToggle } from "@/lib/hooks/use-wishlist-toggle";
 
-import { getImageUrl, getVariantImage } from "@/lib/utils/image-utils";
 import DeliveryDetailsPopup from "../ui/DeliveryDetailsPopup";
 import {
   renderContent,
@@ -63,15 +62,15 @@ import { ChevronDownIcon, Clock, MapPin, ShieldCheck } from "lucide-react";
 import ColorPopup from "./ColorPopup";
 import LocationPopup from "./LocationPopup";
 import CustomerRatingViewPage from "./CustomerRatingViewPage";
-import StarRating from "../ui/StarRating";
+import StarRating from "../common/StarRating";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { findCategoryPath, formatPrice, getPriceDetails } from "@/lib/utils/main-utils";
+} from "../common/select";
+import { findCategoryPath, formatPrice, getPriceDetails, getImageUrl, getVariantImage } from "@/lib/utils/main-utils";
 
 const KNOWN_COMPACT_SIZE_TOKENS = new Set([
   "xxs",

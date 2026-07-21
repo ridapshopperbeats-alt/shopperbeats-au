@@ -7,14 +7,14 @@ import {
   useCancelOrderItemMutation,
 } from "@/lib/redux/apis/order-api";
 import { APIProduct, OrderReturn, OrderLineItem } from "@/types/order";
-import CancelOrderPopup from "@/components/ui/CancelOrderPopup";
-import ReturnOrderPopup from "@/components/ui/ReturnOrderPopup";
+import CancelOrderPopup from "@/components/common/CancelOrderPopup";
+import ReturnOrderPopup from "@/components/common/ReturnOrderPopup";
 import ReplaceOrderPopup from "@/components/ui/ReplaceOrderPopup";
-import RetryPaymentPopup from "@/components/ui/RetryPaymentPopup";
+import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
 import { Elements } from "@stripe/react-stripe-js";
 import stripePromise from "@/lib/stripe";
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import Link from "next/link";
 
 import { API_ENDPOINTS } from "@/lib/constants/api";

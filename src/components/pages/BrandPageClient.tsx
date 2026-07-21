@@ -12,7 +12,7 @@ import MobileFilterSheet from "../productListing/MobileFilterSheet";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import ProductDisplay from "../productListing/ProductDisplay";
 import "../../styles/Product.css";
-import Breadcrumb from "../ui/Breadcrumb";
+import Breadcrumb from "../common/Breadcrumb";
 
 interface Brand {
   id: string;

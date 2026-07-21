@@ -5,18 +5,18 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { OrderAPIResponse, OrderItem, Status, OrderReturn } from "@/types/order";
-import CancelOrderPopup from "@/components/ui/CancelOrderPopup";
-import ReturnOrderPopup from "@/components/ui/ReturnOrderPopup";
-import RetryPaymentPopup from "@/components/ui/RetryPaymentPopup";
+import CancelOrderPopup from "@/components/common/CancelOrderPopup";
+import ReturnOrderPopup from "@/components/common/ReturnOrderPopup";
+import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
 import { Elements } from "@stripe/react-stripe-js";
 import stripePromise from "@/lib/stripe";
 import { toast } from "react-toastify";
 import Image from "next/image";
 
 import { API_ENDPOINTS } from "@/lib/constants/api";
-import Pagination from "@/components/ui/Pagination";
+import Pagination from "@/components/common/Pagination";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/common/select";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
 import { useCancelOrderMutation, useListOrdersQuery } from "@/lib/redux/apis/order-api";
 import { useCapturePaymentMutation } from "@/lib/redux/apis/payment-api";

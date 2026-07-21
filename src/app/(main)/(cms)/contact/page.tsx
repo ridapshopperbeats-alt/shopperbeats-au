@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import "../../../../styles/contact.css";
-import Banner from "@/components/ui/Banner";
+import Banner from "@/components/common/Banner";
 
 // Types
 interface ContactInfoItem {
@@ -44,7 +44,7 @@ const contactData: ContactContent = {
 import * as yup from "yup";
 
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import { handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { email, nameField, phoneNumber, requiredMessage } from "@/lib/validations/form-schemas";

@@ -2,9 +2,9 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useCancelOrderMutation } from "@/lib/redux/apis/order-api";
-import CancelOrderPopup from "@/components/ui/CancelOrderPopup";
+import CancelOrderPopup from "@/components/common/CancelOrderPopup";
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import '../../styles/Checkout.css'
 import Image from 'next/image';
 

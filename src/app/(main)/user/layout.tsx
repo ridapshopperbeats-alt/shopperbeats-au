@@ -1,7 +1,7 @@
 "use client";
 import React, { Suspense } from "react";
-import Banner from "@/components/ui/Banner";
-import Sidebar from "@/components/ui/Sidebar";
+import Banner from "@/components/common/Banner";
+import Sidebar from "@/components/common/Sidebar";
 import { usePathname } from "next/navigation";
 import "../../../styles/account.css";
 import Image from "next/image";

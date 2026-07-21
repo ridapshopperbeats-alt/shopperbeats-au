@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 import "../../../../styles/sell.css";
-import Sidebar from "@/components/ui/Sidebar";
+import Sidebar from "@/components/common/Sidebar";
 import SellerSignupModal from "@/components/ui/SellerSignupModal";
 import Link from "next/link";
 

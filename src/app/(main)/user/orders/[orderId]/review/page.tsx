@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, ChangeEvent, use } from "react";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import Image from "next/image";

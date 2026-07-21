@@ -3,10 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import ReCaptcha from "@/components/ui/ReCaptcha";
+import ReCaptcha from "@/components/common/ReCaptcha";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 
 import { LoginResponse } from "@/types/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,7 @@ import { useCreateWishlistMutation } from "@/lib/redux/apis/cart-api";
 import { loginSchema } from "@/lib/validations/form-schemas";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { setAccessToken } from "@/lib/redux/slices/auth-slice";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/common/input";
 
 
 export default function LoginPage() {

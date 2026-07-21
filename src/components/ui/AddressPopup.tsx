@@ -2,7 +2,7 @@
 
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { AddressPopupProps } from "@/types/address";
-import AddressForm from "./AddressForm";
+import AddressForm from "../common/AddressForm";
 import { RootState } from "@/lib/redux/store";
 import { useSelector } from "react-redux";
 

@@ -2,9 +2,9 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
-import Accordion from "@/components/ui/Accordion";
-import Banner from "@/components/ui/Banner";
-import ContactBanner from "@/components/ui/ContactBanner";
+import Accordion from "@/components/common/Accordion";
+import Banner from "@/components/common/Banner";
+import ContactBanner from "@/components/common/ContactBanner";
 import { useGetFaqsQuery, FAQItem } from "@/lib/redux/apis/faq-api";
 
 // Predefined grid section metadata mapping

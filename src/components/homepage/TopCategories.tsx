@@ -1,4 +1,4 @@
-import Layout from "@/components/ui/Layout";
+import Layout from "@/components/common/Layout";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { getFooterMenuData } from "@/lib/utils/get-footer-menu-data";
 import { getCategoryData } from "@/lib/utils/get-category-data";

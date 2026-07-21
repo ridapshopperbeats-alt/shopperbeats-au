@@ -5,13 +5,13 @@ import React, { useRef, useState } from "react";
 import DOMPurify from "isomorphic-dompurify";
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
 
-const ProductCard = dynamic(() => import("@/components/ui/ProductCard"), {
+const ProductCard = dynamic(() => import("@/components/common/ProductCard"), {
   loading: DynamicImportLoader,
 });
 
 const EMPTY_VARIANTS: never[] = [];
 
-import Pagination from "@/components/ui/Pagination";
+import Pagination from "@/components/common/Pagination";
 import { Product } from "@/types/product";
 import { WishlistKey } from "@/types/wishlist";
 import { getPriceDetails, formatPriceFixed2, getImageUrl } from "@/lib/utils/main-utils";
@@ -28,13 +28,13 @@ import {
   SelectContent,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../common/select";
 
 import { Filter, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import NoProductsFound from "../NoProductFound";
-import Button from "../ui/Button";
+import Button from "../common/Button";
 import MobileSortSheet from "./MobileSortSheet";
 
 interface ProductDisplayProps {

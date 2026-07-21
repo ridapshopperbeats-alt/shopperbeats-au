@@ -16,12 +16,12 @@ import HeaderIcon from "./HeaderIcon";
 import CartPopup from "./CartPopup";
 import { useRouter, usePathname } from "next/navigation";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
-import GooglePlacesInput from "./AddressAutocomplete";
+import GooglePlacesInput from "../common/AddressAutocomplete";
 import { toast } from "react-toastify";
 
 import { useSearchProductsQuery } from "../../lib/redux/apis/products-api";
 import { Product } from "@/types/product";
-import Button from "./Button";
+import Button from "../common/Button";
 import { RootState } from "@/lib/redux/store";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useGetPersonalDataQuery } from "@/lib/redux/apis/auth-api";

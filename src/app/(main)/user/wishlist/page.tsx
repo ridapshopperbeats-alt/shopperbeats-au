@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import "../../../../styles/Cart.css";
 import { useCalculateShippingMutation } from "@/lib/redux/apis/order-api";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";

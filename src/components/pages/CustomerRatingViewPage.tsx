@@ -2,14 +2,14 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import StarRating from "../ui/StarRating";
+import StarRating from "../common/StarRating";
 import {
   Select,
   SelectItem,
   SelectContent,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../common/select";
 import { Review } from "@/types/product";
 import { getReviewImage } from "@/lib/utils/main-utils";
 
