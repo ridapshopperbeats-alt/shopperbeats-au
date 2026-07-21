@@ -36,8 +36,7 @@ import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useWishlistToggle } from "@/lib/hooks/use-wishlist-toggle";
-import { findCategoryPath } from "@/lib/utils/find-category-path";
-import { getPriceDetails } from "@/lib/utils/get-price-details";
+
 import { getImageUrl, getVariantImage } from "@/lib/utils/image-utils";
 import DeliveryDetailsPopup from "../ui/DeliveryDetailsPopup";
 import {
@@ -72,6 +71,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { findCategoryPath, formatPrice, getPriceDetails } from "@/lib/utils/main-utils";
 
 const KNOWN_COMPACT_SIZE_TOKENS = new Set([
   "xxs",

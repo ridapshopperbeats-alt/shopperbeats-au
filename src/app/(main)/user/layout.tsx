@@ -43,7 +43,8 @@ export default function UserLayout({
             alt="Profile Banner"
             width={1920}
             height={218}
-            loading="lazy"
+            priority
+            fetchPriority="high"
           />
         }
       />
