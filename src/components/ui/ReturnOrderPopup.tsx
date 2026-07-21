@@ -6,18 +6,10 @@ import { useGetOrderByIdQuery, useGetReturnOptionsQuery, useReturnOrderMutation,
 import AddressForm from "@/components/ui/AddressForm";
 import { Address, AddressFormValues } from "@/types/address";
 
-import { APIProduct, ReturnOption } from "@/types/order";
+import { APIProduct, ReturnOption, ReturnOrderPopupProps } from "@/types/order";
 import { toast } from "react-toastify";
 import { formatPrice } from "@/lib/utils/format-price";
 import { returnMessageSchema } from "@/lib/validations/form-schemas";
-
-interface ReturnOrderPopupProps {
-  isOpen: boolean;
-  onClose: () => void;
-  orderId: string | null;
-  itemId?: string;
-  product?: APIProduct | null;
-}
 
 const ReturnOrderPopup: React.FC<ReturnOrderPopupProps> = ({
   isOpen,
@@ -42,14 +34,6 @@ const ReturnOrderPopup: React.FC<ReturnOrderPopupProps> = ({
       customer_comment: "",
     });
 
-// Initialize the editable pickup-address form from the fetched order as
-// soon as it becomes available, without an extra render pass. This uses
-// React's official "adjust state during render" pattern: a useState (not a
-// ref, which cannot be read/written during render) tracks the previous
-// `order` reference, and the setState is called directly in the render
-// body (guarded so it only runs once per new order), so it is not inside a
-// useEffect and does not trigger the set-state-in-effect rule. Afterward
-// selectedAddress remains independently editable by the user.
 const [prevOrderForAddress, setPrevOrderForAddress] = useState(order);
 if (prevOrderForAddress !== order) {
   setPrevOrderForAddress(order);

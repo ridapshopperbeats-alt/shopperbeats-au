@@ -1,5 +1,4 @@
 
-import React from "react";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { Review } from "@/types/product";
 

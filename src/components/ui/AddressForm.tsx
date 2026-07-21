@@ -7,32 +7,27 @@ import {
   useCreateAddressMutation,
   useUpdateAddressMutation,
 } from "@/lib/redux/apis/address-api";
-
 import AddressAutocomplete from "@/components/ui/AddressAutocomplete";
 import Button from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { toYYYYMMDD } from "@/lib/utils/date-utils";
-import { Address, AddressFormValues } from "@/types/address";
+import { Address, AddressFormProps, AddressFormValues } from "@/types/address";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { handleAustralianPhoneNumberChange } from "@/lib/utils/phone-validation";
 import { addressSchema } from "@/lib/validations/form-schemas";
 
-interface AddressFormProps {
-  editingAddress?: Address | null;
-  addresses?: Address[] | undefined;
-  onSave: (data: AddressFormValues) => void;
-  onCancel?: () => void;
-  isTemporaryInput?: boolean;
-  from?: string;
-}
-
 export default function AddressForm({ editingAddress, addresses, onSave, isTemporaryInput, from }: AddressFormProps) {
+  
   const [createAddress, { isLoading: isCreating }] = useCreateAddressMutation();
+
   const [updateAddress, { isLoading: isUpdating }] = useUpdateAddressMutation();
 
   const [autoAddress, setAutoAddress] = useState("");
+
   const [manualAddress, setManualAddress] = useState("");
+
   const [resetKey, setResetKey] = useState(0);
+
   const [addressValid, setAddressValid] = useState(false);
 
 

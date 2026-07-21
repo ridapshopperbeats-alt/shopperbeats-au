@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -7,14 +8,7 @@ import Button from "@/components/ui/Button";
 import { useChangePasswordMutation, useLogoutMutation } from "@/lib/redux/apis/auth-api";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { changePasswordValidationSchema } from "@/lib/validations/form-schemas";
-
-
-
-interface ChangePasswordFormData {
-  current_password: string;
-  new_password: string;
-  confirm_password: string;
-}
+import { ChangePasswordFormData } from "@/types/auth";
 
 export default function ChangePasswordPage() {
   const [changePassword, { isLoading }] = useChangePasswordMutation();
@@ -52,7 +46,6 @@ export default function ChangePasswordPage() {
     <div className="wishlist-content">
       <h4 className="text-heading-lg my-2">Change Password</h4>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/* Old Password */}
         <div className="form-item text-[14px] font-montserrat">
           <label htmlFor="current_password">Current Password</label>
           <div className="password-input">
@@ -77,7 +70,6 @@ export default function ChangePasswordPage() {
           )}
         </div>
 
-        {/* New Password */}
         <div className="form-item text-[14px] font-montserrat">
           <label htmlFor="new_password">New Password</label>
           <div className="password-input">
@@ -109,7 +101,6 @@ export default function ChangePasswordPage() {
           </div>
         </div>
 
-        {/* Confirm Password */}
         <div className="form-item text-[14px] font-montserrat">
           <label htmlFor="confirm_password">Confirm New Password</label>
           <div className="password-input">
@@ -134,7 +125,6 @@ export default function ChangePasswordPage() {
           )}
         </div>
 
-        {/* Submit */}
         <div className="flex justify-center w-full">
           <Button type="submit" className="btn btn-red btn-filled btn-sharp w-30" style={{ alignItems: "center", justifyContent: "center", display: "flex", marginTop: "10px" }} disabled={isLoading} isLoading={isLoading}>
             {isLoading ? "Changing Password..." : "Save"}

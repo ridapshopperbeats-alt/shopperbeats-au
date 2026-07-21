@@ -66,6 +66,11 @@ export const changePasswordValidationSchema = yup.object().shape({
   new_password: strongPassword,
   confirm_password: confirmPassword("new_password")
 });
+
+// Wishlist validation schema
+export const wishListValidationSchema = yup.object().shape({
+    pincode: yup.string().required("Pincode is required"),
+  });
 // src/components/ui/ReturnOrderPopup.tsx
 export const returnMessageSchema = yup.object().shape({
   reason: yup.string().required("Return reason is required"),

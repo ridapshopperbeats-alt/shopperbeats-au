@@ -7,20 +7,7 @@ import { useCreateWishlistMutation } from "@/lib/redux/apis/cart-api";
 import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
 import { formatPrice } from "@/lib/utils/format-price";
-
-interface ProductLikeCardProps {
-  image: string;
-  title: string;
-  price: string;
-  oldPrice?: string;
-  rating: number;
-  reviewCount: number;
-  linkHref: string;
-  discountPercentage?: number;
-  saveAmount?: number;
-  productId: string;
-  variantId?: string;
-}
+import { ProductLikeCardProps } from "@/types/product";
 
 export default function ProductLikeCard({
   image,
@@ -95,7 +82,6 @@ export default function ProductLikeCard({
           )}
         </div>
 
-        {/* Wishlist button, revealed on hover */}
         <div className="absolute top-2 right-2 opacity-0 hover:opacity-100 group-hover:opacity-100 transition">
           <Button
             className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 text-white"

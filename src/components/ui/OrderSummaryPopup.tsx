@@ -7,54 +7,7 @@ import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
 import '../../styles/Checkout.css'
 import Image from 'next/image';
-
-
-export interface PopupProduct {
-  id: string;
-  name: string;
-  price: string;
-  quantity: number;
-  image?: string;
-  variant?: string;
-  sku?: string;
-  unitPrice?: string;
-  discount?: string;
-  finalPrice?: string;
-}
-
-export interface OrderDetails {
-  orderId?: string;
-  orderNumber?: string;
-  deliveryCost: string;
-  totalAmount: string;
-  deliveryAddress?: string;
-  couponCode?: string;
-  products: PopupProduct[];
-  orderDate?: string;
-  paymentMethod?: string;
-  paymentStatus?: string;
-  estimatedDelivery?: string;
-  customerName?: string;
-  phone?: string;
-  email?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-  country?: string;
-  subtotal?: string;
-  discountAmount?: string;
-  shippingCost?: string;
-  taxAmount?: string;
-}
-
-interface OrderSummaryPopupProps {
-  isOpen: boolean;
-  onClose: () => void;
-  orderDetails: OrderDetails;
-  isAuthenticated: boolean;
-  from?: string;
-}
+import { OrderSummaryPopupProps } from '@/types/order';
 
 const OrderSummaryPopup: React.FC<OrderSummaryPopupProps> = ({ isOpen, onClose, orderDetails, isAuthenticated, from }) => {
   const [isCancelPopupOpen, setIsCancelPopupOpen] = useState(false);

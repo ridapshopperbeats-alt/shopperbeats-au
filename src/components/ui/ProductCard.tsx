@@ -15,36 +15,12 @@ import { RootState } from "@/lib/redux/store";
 import { useRouter, usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 
-import { Variant } from "@/types/product";
-import { WishlistKey } from "@/types/wishlist";
+import { ProductCardProps } from "@/types/product";
+
 import { Heart } from "lucide-react";
 import StarRating from "./StarRating";
 
-export interface ProductCardProps {
-  image: string;
-  brand_name?: string;
-  title?: string;
-  mainPrice?: number;
-  wasPrice?: number;
-  discountPercentage?: number;
-  saveAmount?: number;
-  freeShipping?: boolean;
-  rating?: number;
-  reviewCount?: number;
-  id?: string;
-  showWasPrice?: boolean;
-  defaultVariantId?: string;
-  variants?: Variant[];
-  unique_code?: string;
-  promotion_name?: string | null;
-  stock?: number;
-  tags?: string[];
-  wishlistItems?: WishlistKey[];
-  vendor_id?: string;
-  ships_from_location?: string;
-  handling_time_days?: number;
-  shippingCharge?: number | null;
-}
+
 
 function limitWords(text: string | undefined, limit = 6) {
   if (!text) return "";
@@ -99,43 +75,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
     variants.length > 0
       ? currentVariant !== undefined && Number(currentVariant.stock) <= 0
       : stock !== undefined && stock !== null && Number(stock) <= 0;
-
-  // const renderTag = useMemo(() => {
-  //   // Check if dynamic tags exist, otherwise use fallback values based on product ID
-  //   const activeTag =
-  //     tags?.[0]?.toLowerCase() ||
-  //     (Number(id) % 3 === 0
-  //       ? "hotseller"
-  //       : Number(id) % 3 === 1
-  //         ? "new"
-  //         : "bestseller");
-
-  //   switch (activeTag) {
-  //     case "hotseller":
-  //       return (
-  //         <div className="absolute bg-[#01295F] text-white w-[60px] h-[18px] md:w-[100px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px]">
-  //           <ThumbUpIcon className="!w-[13px] !h-[13px] md:!w-[12px] md:!h-[12px]" />
-  //           Bestselle
-  //         </div>
-  //       );
-  //     case "new":
-  //       return (
-  //         <div className="absolute bg-[#787FFF] text-white w-[60px] h-[18px] md:w-[100px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center   z-10 rounded-[5px] leading-[18px]">
-  //           <StarIcon className="!w-[10px] !h-[10px] md:!w-[12px] md:!h-[12px]" />
-  //           New
-  //         </div>
-  //       );
-  //     case "bestseller":
-  //       return (
-  //         <div className="absolute top-[10px] left-[10px] z-10 flex h-[18px] w-[80px] items-center justify-center gap-1 rounded-[5px] bg-[#FFB30F] text-[10px] font-medium leading-[18px] text-white md:h-[19px] md:w-[100px] md:text-[12px]">
-  //           <WhatshotIcon className="!w-[13px] !h-[13px] md:!w-[12px] md:!h-[12px]" />
-  //           Hotseller
-  //         </div>
-  //       );
-  //     default:
-  //       return null;
-  //   }
-  // }, [tags, id]);
 
   const handleAddToCartClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -210,7 +149,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
             <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" />
           </div>
 
-          {/* Content */}
           <div className="flex flex-1 flex-col justify-between w-full">
             <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
               {brand_name && (
@@ -218,9 +156,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   {brand_name}
                 </h4>
               )}
-              {/* <h4 className="text-[14px] md:text-[16px] leading-[18px] text-[#000000] font-normal">
-                {limitWords(title, 7) || "MakeupKit"}
-              </h4> */}
+
 
               <p className="text-[14px] md:text-[16px] leading-4.5 text-[#878787] font-normal">
                 {limitWords(title, 7) || "MakeupKit"}

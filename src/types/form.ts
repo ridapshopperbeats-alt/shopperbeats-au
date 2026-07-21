@@ -15,3 +15,25 @@ interface FormValidationResult<T> {
   setFormData: React.Dispatch<React.SetStateAction<T>>;
    validateForm: () => Promise<boolean>;
 }
+
+
+export interface MegaMenuCategory {
+  name: string;
+  id: string;
+  slug?: string;
+  subcategories: {
+    name: string;
+    id: string;
+    slug?: string;
+    links: {
+      name: string;
+      href: string;
+      children?: { name: string; href: string }[];
+    }[];
+    viewAll?: string;
+  }[];
+}
+
+export interface HeaderProps {
+  megaMenuData: MegaMenuCategory[];
+}

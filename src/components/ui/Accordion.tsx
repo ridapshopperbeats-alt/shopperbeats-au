@@ -43,10 +43,7 @@ const Accordion = ({
     );
   }, [items]);
 
-  // Adjust state during render (React's documented pattern) instead of in an
-  // effect: apply the initial forceOpenCount exactly once, tracked via state
-  // (not a ref, since ref reads/writes aren't allowed during render), without
-  // an extra effect-triggered render pass.
+
   if (!hasAppliedForceOpen && forceOpenCount !== undefined) {
     setHasAppliedForceOpen(true);
     if (forceOpenCount > 0) {

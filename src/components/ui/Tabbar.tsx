@@ -1,46 +1,6 @@
+import { DeliveryContent, DescriptionContent, ReviewsContent, TabItem, TabsProps, WarrantyContent } from "@/types/tabbar";
 import React, { useState } from "react";
 
-type DescriptionContent = {
-    image: string;
-    description: string;
-    additionalInfo: string;
-    note: string;
-};
-
-type DeliveryContent = {
-    text: string;
-};
-
-type WarrantyContent = {
-    text: string;
-};
-
-type ReviewItem = {
-    user: string;
-    comment: string;
-    rating: number;
-};
-
-type ReviewsContent = {
-    rating: number;
-    totalReviews: number;
-    items: ReviewItem[];
-};
-
-type TabItem = {
-    label: string;
-    key: string;
-    content:
-    | DescriptionContent
-    | DeliveryContent
-    | WarrantyContent
-    | ReviewsContent;
-};
-
-type TabsProps = {
-    tabs: TabItem[];
-    defaultIndex?: number;
-};
 
 const Tabs: React.FC<TabsProps> = ({ tabs, defaultIndex = 0 }) => {
     const [activeTab, setActiveTab] = useState<number>(defaultIndex);
@@ -55,19 +15,13 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultIndex = 0 }) => {
                 return (
                     <div>
                         <div
-                            style={{
-                                width: "100%",
-                                height: "400px",
-                                backgroundImage: `url(${data.image})`,
-                                backgroundSize: "cover",
-                                backgroundPosition: "center",
-                                borderRadius: "8px",
-                            }}
+                            className="w-full h-[400px] bg-cover bg-center rounded-lg"
+                            style={{ backgroundImage: `url(${data.image})` }}
                         />
 
-                        <p style={{ marginTop: "16px" }}>{data.description}</p>
-                        <p style={{ marginTop: "10px" }}>{data.additionalInfo}</p>
-                        <p style={{ marginTop: "10px", fontSize: "12px", color: "gray" }}>
+                        <p className="mt-4">{data.description}</p>
+                        <p className="mt-[10px]">{data.additionalInfo}</p>
+                        <p className="mt-[10px] text-xs text-gray-500">
                             {data.note}
                         </p>
                     </div>
@@ -90,7 +44,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultIndex = 0 }) => {
                         </h4>
 
                         {data.items.map((item, index) => (
-                            <div key={index} style={{ marginTop: "10px" }}>
+                            <div key={index} className="mt-[10px]">
                                 <strong>{item.user}</strong>
                                 <p>{item.comment}</p>
                                 <span>{item.rating} ⭐</span>
@@ -106,7 +60,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultIndex = 0 }) => {
     };
 
     return (
-        <div style={{ width: "100%", fontFamily: "Arial" }}>
+        <div className="w-full font-['Arial']">
             <div className="tab-container flex gap-[80px]">
                 {tabs.map((tab, index) => {
                     const isActive = activeTab === index;
@@ -124,7 +78,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultIndex = 0 }) => {
                 })}
             </div>
 
-            <div style={{ padding: "20px 0px" }}>
+            <div className="py-5 px-0">
                 {renderContent(tabs[activeTab])}
             </div>
         </div>

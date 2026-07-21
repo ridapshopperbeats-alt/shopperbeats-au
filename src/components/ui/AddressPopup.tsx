@@ -1,16 +1,10 @@
 "use client";
 
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
-import { Address } from "@/types/address";
+import { AddressPopupProps } from "@/types/address";
 import AddressForm from "./AddressForm";
 import { RootState } from "@/lib/redux/store";
 import { useSelector } from "react-redux";
-
-interface AddressPopupProps {
-  show: boolean;
-  onClose: () => void;
-  editingAddress: Address | null;
-}
 
 export default function AddressPopup({
   show,

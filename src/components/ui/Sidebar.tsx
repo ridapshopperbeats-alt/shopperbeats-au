@@ -60,11 +60,10 @@ export default function Sidebar({
             leading-[20px]
             transition-colors
             duration-200 
-            ${
-              isActive
-                ? "bg-[#FD151B] text-white"
-                : "text-[rgba(0,0,0,0.56)] hover:text-black"
-            }
+            ${isActive
+                    ? "bg-[#FD151B] text-white"
+                    : "text-[rgba(0,0,0,0.56)] hover:text-black"
+                  }
           `}
                 onClick={() => onChange?.(link.label)}
               >

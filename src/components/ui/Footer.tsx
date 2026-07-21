@@ -42,11 +42,13 @@ export default function Footer({
   footerMenuData: FooterMenuData;
 }) {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+
   const [subscribeToMailingList, { isLoading: isSubscribing }] =
     useSubscribeToMailingListMutation();
+
   const { data: socialLinks } = useGetSocialMediaLinksQuery();
   const [email, setEmail] = useState("");
-console.log("Footer Menu Data socialLinks:", socialLinks);
+
   const footerMenus = [
     { title: "Company", data: footerMenuData?.company },
     { title: "My Account", data: footerMenuData?.myAccount },
@@ -227,7 +229,8 @@ console.log("Footer Menu Data socialLinks:", socialLinks);
 
               <ul className="social">
                 {(socialLinks && socialLinks.length > 0 ? socialLinks : STATIC_SOCIAL_LINKS).map((item) => {
-                  const Icon = SOCIAL_ICONS[item.icon_class.toLowerCase()];
+                  // cast to any to allow passing className prop to icon components
+                  const Icon = SOCIAL_ICONS[item.icon_class.toLowerCase()] as any;
                   return (
                     <li key={item.id}>
                       <a

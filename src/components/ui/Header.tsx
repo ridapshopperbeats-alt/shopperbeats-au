@@ -29,37 +29,11 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { useGetPersonalDataQuery } from "@/lib/redux/apis/auth-api";
 import { useLazyReverseGeocodeQuery } from "@/lib/redux/apis/geocode-api";
 import {
-  Percent,
-  Sparkles,
-  Home,
-  Armchair,
-  HeartPulse,
-  Gamepad2,
-  Baby,
   X,
   ChevronDown,
 } from "lucide-react";
+import { HeaderProps } from "@/types/form";
 
-export interface MegaMenuCategory {
-  name: string;
-  id: string;
-  slug?: string;
-  subcategories: {
-    name: string;
-    id: string;
-    slug?: string;
-    links: {
-      name: string;
-      href: string;
-      children?: { name: string; href: string }[];
-    }[];
-    viewAll?: string;
-  }[];
-}
-
-interface HeaderProps {
-  megaMenuData: MegaMenuCategory[];
-}
 
 function useIsClient() {
   return useSyncExternalStore(
@@ -161,7 +135,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
           requestLocation();
         })
         .catch(() => {
-          // Permissions API not supported here, fall back to requesting directly
           requestLocation();
         });
     } else {
@@ -173,10 +146,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
     dispatch(syncAuthState());
   }, [dispatch]);
 
-  // Adjust state during render (React's documented pattern) instead of in an
-  // effect: reset the search-loading indicator synchronously when the route
-  // changes. The previous pathname is tracked via state (not a ref, since ref
-  // reads/writes aren't allowed during render).
   if (prevPathname !== pathname) {
     setPrevPathname(pathname);
     setIsSearching(false);

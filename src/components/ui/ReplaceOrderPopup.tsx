@@ -6,18 +6,10 @@ import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { useGetOrderByIdQuery, useGetReturnOptionsQuery, useReplaceOrderMutation, useReplaceOrderItemMutation } from "@/lib/redux/apis/order-api";
 import { useUploadAnyImageMutation } from "@/lib/redux/apis/products-api";
 import { Address } from "@/types/address";
-import { APIProduct, ReturnOption } from "@/types/order";
+import { APIProduct, ReplaceOrderPopupProps, ReturnOption } from "@/types/order";
 import { toast } from "react-toastify";
 import { formatPrice } from "@/lib/utils/format-price";
 import { replaceMessageSchema as schema } from "@/lib/validations/form-schemas";
-
-interface ReplaceOrderPopupProps {
-  isOpen: boolean;
-  onClose: () => void;
-  orderId: string | null;
-  itemId?: string;
-  product?: APIProduct | null;
-}
 
 const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({ isOpen, onClose, orderId, itemId, product }) => {
   const { data: order, isLoading: isLoadingOrder } = useGetOrderByIdQuery(orderId || "", { skip: !orderId });
@@ -38,14 +30,6 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({ isOpen, onClose, 
     customer_comment: "",
   });
 
-  // Initialize the editable shipping-address form from the fetched order
-  // as soon as it becomes available, without an extra render pass. This
-  // uses React's official "adjust state during render" pattern: a useState
-  // (not a ref, which cannot be read/written during render) tracks the
-  // previous `order` reference, and the setState is called directly in the
-  // render body (guarded so it only runs once per new order), so it is not
-  // inside a useEffect and does not trigger the set-state-in-effect rule.
-  // Afterward selectedAddress remains independently editable by the user.
   const [prevOrderForAddress, setPrevOrderForAddress] = useState(order);
   if (prevOrderForAddress !== order) {
     setPrevOrderForAddress(order);

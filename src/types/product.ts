@@ -1,3 +1,5 @@
+import { WishlistKey } from "./wishlist";
+
 export interface Variant {
   id: string;
   status?: string;
@@ -226,4 +228,56 @@ export interface ProductApiResponse {
     canonical_url?: string;
     url_handle?: string;
   };
+}
+
+export interface ProductCardProps {
+  image: string;
+  brand_name?: string;
+  title?: string;
+  mainPrice?: number;
+  wasPrice?: number;
+  discountPercentage?: number;
+  saveAmount?: number;
+  freeShipping?: boolean;
+  rating?: number;
+  reviewCount?: number;
+  id?: string;
+  showWasPrice?: boolean;
+  defaultVariantId?: string;
+  variants?: Variant[];
+  unique_code?: string;
+  promotion_name?: string | null;
+  stock?: number;
+  tags?: string[];
+  wishlistItems?: WishlistKey[];
+  vendor_id?: string;
+  ships_from_location?: string;
+  handling_time_days?: number;
+  shippingCharge?: number | null;
+}
+
+export interface ProductCarouselProps {
+  title: React.ReactNode;
+  subtitle?: string;
+  products?: Product[];
+  bundleProducts?: BundleProduct[];
+  from?: string;
+  link?: string;
+  istagsVisible?: boolean;
+  isLoading?: boolean;
+  withoutContainer?: boolean;
+}
+
+export interface ProductLikeCardProps {
+  image: string;
+  title: string;
+  price: string;
+  oldPrice?: string;
+  rating: number;
+  reviewCount: number;
+  linkHref: string;
+  discountPercentage?: number;
+  saveAmount?: number;
+  productId: string;
+  variantId?: string;
 }

@@ -1,23 +1,9 @@
 "use client";
 
-import React from "react";
 import ReusableSlider from "./ReusableSlider";
-import { Product, BundleProduct } from "@/types/product";
+import { Product, BundleProduct, ProductCarouselProps } from "@/types/product";
 import ProductCard from "./ProductCard";
 import { ChevronRight } from "lucide-react";
-
-
-interface ProductCarouselProps {
-  title: React.ReactNode;
-  subtitle?: string;
-  products?: Product[];
-  bundleProducts?: BundleProduct[];
-  from?: string;
-  link?: string;
-  istagsVisible?: boolean;
-  isLoading?: boolean;
-  withoutContainer?: boolean;
-}
 
 export default function ProductCarousel({
   title,
@@ -36,11 +22,7 @@ export default function ProductCarousel({
         <div className="flex justify-between lg:mt-5 gap-4">
           <div className="w-full">
             <div className="flex flex-col gap-1 w-full my-1">
-              {/* {subtitle && (
-                <span className="font-bold text-[26px] leading-[18px] tracking-[0.78px] text-black">
-                  {subtitle}
-                </span>
-              )} */}
+              
               <h3 className="font-bold text-[18px] md:text-[32px] leading-4.5 tracking-[0.78px] text-black">
                 {title}
               </h3>

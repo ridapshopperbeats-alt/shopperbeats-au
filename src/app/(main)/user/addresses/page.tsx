@@ -1,9 +1,7 @@
 "use client";
 
-import {useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
-
-
 import Button from "@/components/ui/Button";
 import { Address } from "@/types/address";
 import Loader from "@/components/ui/loaders/Loader";
@@ -25,7 +23,7 @@ export default function AddressesPage() {
     setEditingAddress(address);
 
     setTimeout(() => {
-      const yOffset = -110; 
+      const yOffset = -110;
       const y =
         formRef.current!.getBoundingClientRect().top +
         window.pageYOffset +

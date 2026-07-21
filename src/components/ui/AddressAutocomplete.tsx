@@ -1,28 +1,7 @@
 "use client";
 
+import { GooglePlacesInputProps } from "@/types/address";
 import { useEffect, useRef, useState } from "react";
-
-interface AddressDetails {
-  address: string;
-  city: string;
-  state: string;
-  pincode: string;
-  country: string;
-}
-
-type AutocompleteMode = "address" | "pincode";
-
-interface GooglePlacesInputProps {
-  onPlaceSelect: (details: AddressDetails) => void;
-  placeholder?: string;
-  mode?: AutocompleteMode;
-  onClear?: () => void;
-  onChange?: (val: string) => void;
-  value?: string;
-  onValidPlace?: (valid: boolean) => void;
-  id?: string;
-  inputClassName?: string;
-}
 
 export default function GooglePlacesInput({
   onPlaceSelect,
