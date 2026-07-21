@@ -1,4 +1,4 @@
-import Layout from '@/components/ui/Layout';
+import Layout from '@/components/common/Layout';
 import '../../styles/auth.css';
 import AuthGuard from './AuthGuard';
 import { getMegaMenuData } from '@/lib/utils/get-mega-menu-data';

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
@@ -11,8 +11,9 @@ import Sidebar from "../productListing/Sidebar";
 import MobileFilterSheet from "../productListing/MobileFilterSheet";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import ProductDisplay from "../productListing/ProductDisplay";
+import { buildFilterTags } from "@/lib/utils/filter-tags";
 import "../../styles/Product.css";
-import Breadcrumb from "../ui/Breadcrumb";
+import Breadcrumb from "../common/Breadcrumb";
 
 interface Brand {
   id: string;
@@ -54,14 +55,8 @@ const BrandPageClient = ({
   }, []);
 
   const [persistedFilters, setPersistedFilters] = useState<Filter[]>(filters);
-  // Tracked in state (not a ref) so the comparison can safely happen during
-  // render — React's "adjust state while rendering" pattern.
   const [prevBrandId, setPrevBrandId] = useState(brandId);
 
-  // Adjust state during render (React's recommended pattern) instead of an
-  // effect: reset persistedFilters when brandId changes, otherwise keep the
-  // longer of the two filter lists. Both branches are self-terminating
-  // (they stop matching once state reflects the latest props).
   if (brandId !== prevBrandId) {
     setPrevBrandId(brandId);
     setPersistedFilters(filters);
@@ -69,9 +64,48 @@ const BrandPageClient = ({
     setPersistedFilters(filters);
   }
 
-  const { sortBy, handleSortChange } = useProductFilters(
-    persistedFilters,
-    brand,
+  const {
+    sortBy,
+    handleSortChange,
+    selectedFilters,
+    handleFilterChange,
+    selectedCategories,
+    setSelectedCategories: toggleSelectedCategory,
+    selectedPrices,
+    handlePriceChange,
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice,
+    clearFilters,
+  } = useProductFilters(persistedFilters, brand);
+
+  const filterTags = useMemo(
+    () =>
+      buildFilterTags({
+        selectedCategories,
+        toggleSelectedCategory,
+        selectedPrices,
+        handlePriceChange,
+        minPrice,
+        maxPrice,
+        setMinPrice,
+        setMaxPrice,
+        selectedFilters,
+        handleFilterChange,
+      }),
+    [
+      selectedCategories,
+      selectedPrices,
+      minPrice,
+      maxPrice,
+      selectedFilters,
+      toggleSelectedCategory,
+      handlePriceChange,
+      handleFilterChange,
+      setMinPrice,
+      setMaxPrice,
+    ],
   );
 
   useEffect(() => {
@@ -84,9 +118,6 @@ const BrandPageClient = ({
 
   const CHUNK_SIZE = 20;
 
-  // Derived directly from the URL on every render — nothing else in this
-  // component sets these independently, so there is no need to mirror them
-  // in separate state (avoids a setState-in-effect sync entirely).
   const currentPage = Number(searchParams.get("page")) || 1;
 
   const uiLimit = Number(searchParams.get("limit") || 100);
@@ -103,11 +134,6 @@ const BrandPageClient = ({
     ),
   );
 
-  // fetchingPage still needs real state (it accumulates across "load more"
-  // calls), so adjust it during render when the URL-derived page/limit
-  // change, tracking the previous values in state (not refs, so the
-  // comparison is safe during render) — mirrors the old effect's branching
-  // exactly, just without calling setState inside a useEffect body.
   const [prevPage, setPrevPage] = useState(currentPage);
   const [prevUiLimitTracked, setPrevUiLimitTracked] = useState(uiLimit);
 
@@ -158,15 +184,8 @@ const BrandPageClient = ({
 
   const effectiveTotal = data?.total ?? totalItems;
 
-  useEffect(() => {
-    // keeping old products while fetching new data
-  }, [isFetching, data]);
+  useEffect(() => {}, [isFetching, data]);
 
-  // This used to be a useEffect keyed on [data, fetchingPage, currentPage,
-  // uiLimit]. Reproduce the same "run when any of these change" semantics
-  // during render by diffing against the previous values, tracked in state
-  // (not a ref, so the comparison is safe during render), so the setState
-  // calls happen in the render body instead of an effect body.
   const [prevProductSyncDeps, setPrevProductSyncDeps] = useState({
     data,
     fetchingPage,
@@ -186,7 +205,6 @@ const BrandPageClient = ({
       const currentProducts = data.data || [];
       const startFetching = calculateStartFetchingPage(currentPage, uiLimit);
 
-      // If API returned fewer than a full chunk, we've exhausted available products
       setHasMoreFromApi(currentProducts.length >= CHUNK_SIZE);
 
       if (fetchingPage === startFetching) {
@@ -256,9 +274,9 @@ const BrandPageClient = ({
         </div>
       </div>
       <div className="container">
-        <div className="flex flex-col mb-40 relative lg:gap-6 lg:flex-row lg:items-start">
-          <div className="hidden lg:block shrink-0 lg:w-[300px] xl:w-[320px]">
-          <Breadcrumb />
+        <Breadcrumb />
+        <div className="flex flex-col relative lg:gap-6 lg:flex-row lg:items-start">
+          <div className="hidden lg:block filter-sidebar-sticky shrink-0 lg:w-[300px] xl:w-[320px] no-scrollbar">
             <Sidebar
               filters={persistedFilters}
               category={brand}
@@ -269,6 +287,7 @@ const BrandPageClient = ({
           <MobileFilterSheet
             open={isSidebarOpen}
             onClose={() => setIsSidebarOpen(false)}
+            onClearAll={clearFilters}
             filters={persistedFilters}
             category={brand}
           />
@@ -284,6 +303,8 @@ const BrandPageClient = ({
               sortBy={sortBy}
               onSortChange={handleSortChange}
               categoryName={brand?.name}
+              tags={filterTags}
+              onClearFilters={clearFilters}
               isLoading={isLoading && allProducts.length === 0}
               onLoadMore={handleLoadMore}
               infiniteScroll={true}

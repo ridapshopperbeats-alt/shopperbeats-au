@@ -85,6 +85,12 @@ export const useProductFilters = (
   const [sortBy, setSortBy] = useState(searchParams.get("sort_by") || "");
 
   const isInitialMount = useRef(true);
+  // Only user-driven setters flip this to true. This tells the auto-apply
+  // effect below to distinguish "the user changed a filter" from "the URL
+  // sync effect just finished resetting isSyncingFromUrl" — without it, every
+  // sync-from-URL completion re-triggers handleApplyFilters -> router.push
+  // -> new searchParams reference -> sync-from-URL again, looping forever.
+  const userInitiatedRef = useRef(false);
 
   // Sync filter state from the URL whenever `searchParams` changes. This is
   // React's "adjust state during render" pattern (rather than a useEffect)
@@ -119,14 +125,18 @@ export const useProductFilters = (
     return () => clearTimeout(timeoutId);
   }, [isSyncingFromUrl]);
 
+  const q = searchParams.get('q');
+  const categorySlug = searchParams.get('category_slug');
+  const categoryId = searchParams.get('category_id');
+  const currentLimit = searchParams.get('limit');
+
   const handleApplyFilters = useCallback(() => {
     const params = new URLSearchParams();
-    searchParams.forEach((value, key) => {
-      const lowerKey = key.toLowerCase();
-      if (['q', 'category_slug', 'category_id'].includes(lowerKey)) {
-        params.set(key, value);
-      }
-    });
+    
+    // Only add the specific params we need
+    if (q) params.set('q', q);
+    if (categorySlug) params.set('category_slug', categorySlug);
+    if (categoryId) params.set('category_id', categoryId);
 
     if (sortBy) params.set("sort_by", sortBy);
 
@@ -134,11 +144,6 @@ export const useProductFilters = (
       params.set("categories", selectedCategories.join(","));
     }
 
-    // Set price range filters. A custom slider/input range is sent as
-    // "min-max" — the same format the predefined price_ranges checkboxes
-    // use — instead of separate min_price/max_price params, so it takes
-    // over the price_ranges slot rather than adding a second, differently
-    // shaped price param.
     const customPriceRange = minPrice && maxPrice
       ? `${minPrice}-${maxPrice}`
       : minPrice
@@ -169,18 +174,24 @@ export const useProductFilters = (
       }
     }
 
-    const currentLimit = searchParams.get('limit');
     if (currentLimit) {
       params.set('limit', currentLimit);
     }
 
     params.set("page", "1");
 
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    const nextQueryString = params.toString();
+    if (nextQueryString === searchParams.toString()) return;
+
+    router.push(`${pathname}?${nextQueryString}`, { scroll: false });
   }, [
     router,
     pathname,
     searchParams,
+    q,
+    categorySlug,
+    categoryId,
+    currentLimit,
     sortBy,
     minPrice,
     maxPrice,
@@ -190,15 +201,17 @@ export const useProductFilters = (
   ]);
 
   useEffect(() => {
-    if (isInitialMount.current || isSyncingFromUrl) {
+    if (isInitialMount.current || isSyncingFromUrl || !userInitiatedRef.current) {
       isInitialMount.current = false;
       return;
     }
+    userInitiatedRef.current = false;
     handleApplyFilters();
   }, [selectedCategories, selectedPrices, selectedFilters, sortBy, minPrice, maxPrice, isSyncingFromUrl, handleApplyFilters]);
 
 
  const handlePriceChange = (price: string) => {
+  userInitiatedRef.current = true;
   let formattedPrice = price;
 
   if (price.toLowerCase().includes("under")) {
@@ -218,6 +231,7 @@ export const useProductFilters = (
 };
 
   const handleFilterChange = (attribute: string, value: string) => {
+    userInitiatedRef.current = true;
     const attrKey = attribute.toLowerCase();
     setSelectedFilters((prev) => {
       const currentValues = prev[attrKey] || [];
@@ -230,10 +244,12 @@ export const useProductFilters = (
   };
 
   const handleSortChange = (value:string) => {
+    userInitiatedRef.current = true;
     setSortBy(value);
   };
 
   const handleCategoryChange = (categoryName: string) => {
+    userInitiatedRef.current = true;
     setSelectedCategories(prev =>
       prev.includes(categoryName)
         ? prev.filter(c => c !== categoryName)
@@ -241,7 +257,7 @@ export const useProductFilters = (
     );
   };
 
-const clearFilters = () => {
+const clearFilters = useCallback(() => {
   setBrandSearch("");
   setMinPrice("");
   setMaxPrice("");
@@ -252,25 +268,21 @@ const clearFilters = () => {
 
   const params = new URLSearchParams();
 
-  const q = searchParams.get("q");
   if (q) params.set("q", q);
 
-  const categorySlug = searchParams.get("category_slug");
   if (categorySlug) params.set("category_slug", categorySlug);
 
-  const categoryId = searchParams.get("category_id");
   if (categoryId) params.set("category_id", categoryId);
 
   params.set("page", "1");
 
-  const limit = searchParams.get("limit");
-  if (limit) params.set("limit", limit);
+  if (currentLimit) params.set("limit", currentLimit);
 
   router.push(
     `${pathname}${params.toString() ? `?${params.toString()}` : ""}`,
     { scroll: false }
   );
-};
+}, [q, categorySlug, categoryId, currentLimit, router, pathname]);
 
   const brandFilter = filters.find((f) => f.attribute.toLowerCase() === "brand");
   const priceFilter = filters.find((f) => f.attribute.toLowerCase() === "price");
@@ -287,14 +299,23 @@ const clearFilters = () => {
     ? flattenCategories(category.subcategories)
     : [];
 
+  const setMinPriceUserInitiated = useCallback((value: string) => {
+    userInitiatedRef.current = true;
+    setMinPrice(value);
+  }, []);
+
+  const setMaxPriceUserInitiated = useCallback((value: string) => {
+    userInitiatedRef.current = true;
+    setMaxPrice(value);
+  }, []);
 
   return {
     brandSearch,
     setBrandSearch,
     minPrice,
-    setMinPrice,
+    setMinPrice: setMinPriceUserInitiated,
     maxPrice,
-    setMaxPrice,
+    setMaxPrice: setMaxPriceUserInitiated,
     selectedCategories,
     setSelectedCategories: handleCategoryChange,
     selectedPrices,

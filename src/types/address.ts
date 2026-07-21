@@ -29,3 +29,50 @@ export interface AddressFormValues {
   date_of_birth?: string  | null;
   is_default?: boolean;
 }
+
+export interface AddressFormProps {
+  editingAddress?: Address | null;
+  addresses?: Address[];
+  onSave: (data: AddressFormValues) => void;
+  onCancel?: () => void;
+  isTemporaryInput?: boolean;
+  from?: string;
+}
+
+export interface ConfirmAlertProps {
+  isOpen: boolean;
+  title?: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+export interface AddressDetails {
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+  country: string;
+}
+
+export type AutocompleteMode = "address" | "pincode";
+
+export interface GooglePlacesInputProps {
+  onPlaceSelect: (details: AddressDetails) => void;
+  placeholder?: string;
+  mode?: AutocompleteMode;
+  onClear?: () => void;
+  onChange?: (val: string) => void;
+  value?: string;
+  onValidPlace?: (valid: boolean) => void;
+  id?: string;
+  inputClassName?: string;
+}
+
+export interface AddressPopupProps {
+  show: boolean;
+  onClose: () => void;
+  editingAddress: Address | null;
+}

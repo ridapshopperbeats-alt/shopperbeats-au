@@ -221,13 +221,11 @@
 .bottom-head ul.menu {
   display: flex;
   align-items: center;
-  /* flex-wrap: wrap; */
-  /* padding-right: 28px; */
   justify-content: center;
   position: relative;
-  gap: 40px;
   margin-left: auto;
   margin-right: auto;
+  gap: 90px;
 }
 
 .bottom-head ul.menu a.link {
@@ -710,7 +708,7 @@ nav.navbar {
   }
 
   .bottom-head ul.menu {
-    gap: 15px;
+    gap: 70px;
   }
 
 
@@ -932,6 +930,4 @@ nav.navbar {
   .cart-popup:before {
     right: 15px;
   }
-
-
 }

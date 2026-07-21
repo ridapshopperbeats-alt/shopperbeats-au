@@ -1,10 +1,11 @@
 "use client";
 import React, { Suspense } from "react";
-import Banner from "@/components/ui/Banner";
-import Sidebar from "@/components/ui/Sidebar";
+import Banner from "@/components/common/Banner";
+import Sidebar from "@/components/common/Sidebar";
 import { usePathname } from "next/navigation";
 import "../../../styles/account.css";
 import Image from "next/image";
+import { sidebarLinks } from "@/lib/utils/main-utils";
 
 export default function UserLayout({
   children,
@@ -12,15 +13,6 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-
-  const sidebarLinks = [
-    { href: "/user/personal-information", label: "Personal Information" },
-    { href: "/user/orders", label: "My Orders" },
-    { href: "/user/addresses", label: "Manage Address" },
-    { href: "/user/wishlist", label: "Wishlist" },
-    { href: "/user/change-password", label: "Change Password" },
-    { href: "/user/logout", label: "Logout" },
-  ];
 
   const getPageTitle = () => {
     switch (pathname) {
@@ -51,16 +43,16 @@ export default function UserLayout({
             alt="Profile Banner"
             width={1920}
             height={218}
-            loading="lazy"
+            priority
+            fetchPriority="high"
           />
         }
       />
       <div className="py-7">
         <div className="container">
           <div className="flex flex-col md:flex-row gap-6">
-            <Sidebar links={sidebarLinks} extraClass="w-full max-w-[400px]"  textStyle={{fontSize: "clamp(16px, 2vw, 18px)", fontWeight: "700", color:"#000000", }}/>
+            <Sidebar links={sidebarLinks} extraClass="w-full max-w-[400px]" textStyle={{ fontSize: "clamp(16px, 2vw, 18px)", fontWeight: "700", color: "#000000", }} />
 
-            {/* ✅ FIX HERE */}
             <div className="content shadow-[0px_0px_14px_rgba(0,0,0,0.08)] w-full lg:w-85-imp" style={{ marginTop: "0" }}>
               <Suspense fallback={<div>Loading...</div>}>
                 {children}

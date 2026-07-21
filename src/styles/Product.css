@@ -1,3 +1,5 @@
+@reference "tailwindcss";
+
 /* category  product list */
 .banner-bg {
   /* background: url(/images/product-banner.png); */
@@ -538,3 +540,29 @@ button.apply-btn.cursor-pointer {
     overscroll-behavior: contain;
   }
 }
+
+/* Review form (add review page) */
+.review-label-bold {
+  @apply font-semibold mb-2;
+}
+
+.review-preview-list {
+  @apply flex flex-wrap gap-[15px] mt-[15px];
+}
+
+.review-preview-item {
+  @apply relative;
+}
+
+.review-preview-img {
+  @apply !rounded-[8px] !border !border-[#ddd] !object-contain;
+}
+
+.review-remove-btn {
+  @apply absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-6 h-6 !border-none cursor-pointer;
+}
+
+.review-star {
+  @apply cursor-pointer mr-[5px];
+}
+/* Review form (add review page) */

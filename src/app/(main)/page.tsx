@@ -1,6 +1,6 @@
 import Home from "@/components/homepage/Home";
 import type { Metadata } from "next";
-import { getHomepageData } from "@/lib/utils/getHomepageData";
+import { getHomepageData } from "@/lib/utils/get-homepage-data";
 
 export const metadata: Metadata = {
   title: "Shopperbeats - Your One-Stop Online Shop",
@@ -12,7 +12,7 @@ export default async function Page() {
 
   return (
     <div>
-      <Home {...homepageData} />
+      <Home/>
     </div>
   );
 }

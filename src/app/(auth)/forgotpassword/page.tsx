@@ -1,7 +1,7 @@
 "use client";
 
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import { useForgotPasswordMutation } from "@/lib/redux/apis/auth-api";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { forgotPasswordSchema } from "@/lib/validations/form-schemas";

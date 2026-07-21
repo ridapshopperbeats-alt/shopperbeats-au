@@ -15,8 +15,8 @@ export function useGlobalLoading(): boolean {
   const hasPrimaryQueryLoading = useSelector(selectHasPrimaryQueryLoading);
   const isActive = routeLoaderCount > 0 || hasPrimaryQueryLoading;
 
-  const [visible, setVisible] = useState(true);
-  const visibleRef = useRef(true);
+  const [visible, setVisible] = useState(isActive);
+  const visibleRef = useRef(isActive);
   const shownAtRef = useRef<number>(0);
   const hasMountedRef = useRef(false);
 

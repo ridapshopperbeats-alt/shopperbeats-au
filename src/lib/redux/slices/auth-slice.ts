@@ -3,9 +3,6 @@ import { AuthState } from "@/types/auth";
 
 const ACCESS_TOKEN_KEY = "accessToken";
 
-// Always start unauthenticated so the initial client render matches the
-// server-rendered HTML; the real value is applied via syncAuthState()
-// after mount (see StoreProvider), avoiding a hydration mismatch.
 const initialState: AuthState = {
   isAuthenticated: false,
   accessToken: null,

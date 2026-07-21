@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Montserrat } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "../lib/redux/store-provider";
+import { SEOProvider } from "@/contexts/SEOContext";
+import GlobalLoader from "@/components/ui/loaders/GlobalLoader";
+import RouteChangeLoader from "@/components/ui/loaders/RouteChangeLoader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +37,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} font-sans antialiased`}
       >
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider>
+          <SEOProvider>
+            {children}
+          </SEOProvider>
+          <RouteChangeLoader />
+          <GlobalLoader />
+        </StoreProvider>
       </body>
     </html>
   );

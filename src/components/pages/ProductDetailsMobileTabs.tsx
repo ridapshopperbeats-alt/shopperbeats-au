@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Accordion from "../ui/Accordion";
+import Accordion from "../common/Accordion";
 import ReviewCard from "../ui/ReviewCard";
 import { Review } from "@/types/product";
 

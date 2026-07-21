@@ -30,12 +30,6 @@ export function useVariantSelection(variants: Variant[] = []) {
 
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
 
-  // Keep `selectedVariant` derived from `selectedAttributes` (and `variants`).
-  // This mirrors React's "adjust state during render" pattern instead of a
-  // useEffect, so the derivation runs synchronously in the same render pass
-  // rather than triggering an extra render via a setState-in-effect. `useState`
-  // (rather than a ref) tracks the last-seen inputs, since refs may not be
-  // read or written during render.
   const [lastDerivedAttributes, setLastDerivedAttributes] =
     useState(selectedAttributes);
   const [lastDerivedVariants, setLastDerivedVariants] = useState(variants);

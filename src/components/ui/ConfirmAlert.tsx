@@ -1,16 +1,6 @@
 "use client";
 
-import React from "react";
-
-interface ConfirmAlertProps {
-  isOpen: boolean;
-  title?: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+import { ConfirmAlertProps } from "@/types/address";
 
 export default function ConfirmAlert({
   isOpen,

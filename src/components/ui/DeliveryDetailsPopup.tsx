@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice } from "@/lib/utils/format-price";
+import { formatPrice } from "@/lib/utils/main-utils";
 
 interface DeliveryDetailsPopupProps {
   onClose: () => void;

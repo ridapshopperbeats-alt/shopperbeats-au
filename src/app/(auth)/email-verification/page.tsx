@@ -4,10 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { useResendVerificationCodeMutation } from "@/lib/redux/apis/authApi";
+import { useResendVerificationCodeMutation } from "@/lib/redux/apis/auth-api";
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
-import Loader from "@/components/ui/loaders/Loader";
+import Button from "@/components/common/Button";
 
 function VerifyEmailInner() {
   const [resendVerificationCode, { isLoading: isResending }] = useResendVerificationCodeMutation();
@@ -115,7 +114,7 @@ function VerifyEmailInner() {
 
 export default function EmailVerificationPage() {
   return (
-    <Suspense fallback={<><Loader/></>}>
+    <Suspense fallback={null}>
       <VerifyEmailInner />
     </Suspense>
   );

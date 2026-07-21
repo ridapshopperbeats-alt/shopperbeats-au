@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import ProductDetailClient from "@/components/pages/ProductDetailClient";
 import { useSEO } from "@/contexts/SEOContext";
-import { getImageUrl } from "@/lib/utils/image-utils";
+import { getImageUrl } from "@/lib/utils/main-utils";
 import { Product, Category } from "@/types/product";
 
 export interface SeoData {

@@ -2,9 +2,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS } from "../../constants/api";
 import { Cart, PromoValidationResponse } from "@/types/cart";
 import { WishlistItem, Wishlist } from "@/types/wishlist";
-// The cart is identified by the cart_session cookie, not user identity.
-// Sending the auth JWT makes the backend reject with "superadmin access
-// required", so this query must stay cookie-only.
 const baseCartQuery = fetchBaseQuery({
   baseUrl: API_ENDPOINTS.CART.BASE_URL_CLIENT,
   credentials: "include",

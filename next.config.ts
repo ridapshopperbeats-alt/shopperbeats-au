@@ -5,19 +5,39 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
         hostname: "imagedelivery.net",
       },
       {
         protocol: "https",
-        hostname: "cdn.shopperbeats.com.au",
+        hostname: "cdn.shopify.com",  
       },
       {
         protocol: "https",
-        hostname: "**.shopperbeats.com.au",
+        hostname: "cdn.dropshipzone.com.au",
+      },
+      {
+        protocol: "https",
+        hostname: "bambury.com.au",
+      },
+      {
+        protocol: "https",
+        hostname: "www.uhp.com.au",
+      },
+      {
+        protocol: "https",
+        hostname: "www.kaleidoscope.com.au",
       },
       {
         protocol: "https",
         hostname: "www.jasnor.com.au",
+      },
+      {
+        protocol: "https",
+        hostname: "www.johncoproductions.com",
       },
     ],
   },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, ChangeEvent, use } from "react";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -9,14 +9,14 @@ import Link from "next/link";
 import {
   useGetOrderByIdQuery,
   useAddReviewMutation,
-} from "@/lib/redux/apis/orderApi";
-import { useUploadAnyImageMutation } from "@/lib/redux/apis/productsApi";
+} from "@/lib/redux/apis/order-api";
+import { useUploadAnyImageMutation } from "@/lib/redux/apis/products-api";
 import {
   findOrderProduct,
   getOrderProductImage,
   getReviewProductId,
-} from "@/lib/utils/orderProducts";
-import Loader from "@/components/ui/loaders/Loader";
+} from "@/lib/utils/order-products";
+
 import "../../../../../../styles/Checkout.css";
 import "../../../../../../styles/Cart.css";
 import "../../../../../../styles/Product.css";
@@ -121,13 +121,15 @@ export default function ReviewForm({ params }: ReviewPageProps) {
     }
   };
 
-  if (isLoading) return <Loader />;
 
   if (isError || !order) {
     return (
       <div>
         <p>Order not found.</p>
-        <Link href="/user/orders" className="btn btn-red btn-filled btn-sharp mt-20">
+        <Link
+          href="/user/orders"
+          className="btn btn-red btn-filled btn-sharp mt-20"
+        >
           Back to Orders
         </Link>
       </div>
@@ -200,12 +202,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
       </table>
 
       <div className="form-item mt-30">
-        <div
-          className="label-text"
-          style={{ fontWeight: 600, marginBottom: "8px" }}
-        >
-          Add Image (Optional)
-        </div>
+        <div className="label-text review-label-bold">Add Image (Optional)</div>
 
         <label htmlFor="image-upload" className="upload-box">
           <input
@@ -225,43 +222,21 @@ export default function ReviewForm({ params }: ReviewPageProps) {
         </label>
 
         {images.length > 0 && (
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "15px",
-              marginTop: "15px",
-            }}
-          >
+          <div className="review-preview-list">
             {images.map((img, idx) => (
-              <div key={idx} style={{ position: "relative" }}>
+              <div key={idx} className="review-preview-item">
                 <Image
                   src={URL.createObjectURL(img)}
                   alt="preview"
                   width={80}
                   height={80}
                   loading="lazy"
-                  style={{
-                    borderRadius: "8px",
-                    border: "1px solid #ddd",
-                    objectFit: "contain",
-                  }}
+                  className="review-preview-img"
                 />
                 <button
                   type="button"
                   onClick={() => removeImage(idx)}
-                  style={{
-                    position: "absolute",
-                    top: "-8px",
-                    right: "-8px",
-                    background: "red",
-                    color: "white",
-                    borderRadius: "50%",
-                    width: "24px",
-                    height: "24px",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
+                  className="review-remove-btn"
                 >
                   &times;
                 </button>
@@ -279,9 +254,8 @@ export default function ReviewForm({ params }: ReviewPageProps) {
           {[1, 2, 3, 4, 5].map((val) => (
             <i
               key={val}
-              className={`fa-star ${rating >= val ? "fa-solid" : "fa-regular"}`}
+              className={`fa-star review-star ${rating >= val ? "fa-solid" : "fa-regular"}`}
               onClick={() => handleStarClick(val)}
-              style={{ cursor: "pointer", marginRight: "5px" }}
             />
           ))}
         </div>
@@ -331,7 +305,6 @@ export default function ReviewForm({ params }: ReviewPageProps) {
           <label
             key={item.id}
             className="flex items-center gap-2 cursor-pointer"
-            style={{ display: "flex" }}
           >
             <input type="radio" name="recommend" value={item.value} />
             <span className="text-sm text-gray-800">{item.label}</span>

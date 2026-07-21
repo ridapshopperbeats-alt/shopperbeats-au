@@ -5,24 +5,25 @@ import {
   useGetOrderByIdQuery,
   useCancelOrderMutation,
   useCancelOrderItemMutation,
-} from "@/lib/redux/apis/orderApi";
+} from "@/lib/redux/apis/order-api";
 import { APIProduct, OrderReturn, OrderLineItem } from "@/types/order";
-import CancelOrderPopup from "@/components/ui/CancelOrderPopup";
-import ReturnOrderPopup from "@/components/ui/ReturnOrderPopup";
+import CancelOrderPopup from "@/components/common/CancelOrderPopup";
+import ReturnOrderPopup from "@/components/common/ReturnOrderPopup";
 import ReplaceOrderPopup from "@/components/ui/ReplaceOrderPopup";
-import RetryPaymentPopup from "@/components/ui/RetryPaymentPopup";
+import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
 import { Elements } from "@stripe/react-stripe-js";
 import stripePromise from "@/lib/stripe";
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import Link from "next/link";
-import Loader from "@/components/ui/loaders/Loader";
-import { formatPrice } from "@/lib/utils/formatPrice";
+
+import { API_ENDPOINTS } from "@/lib/constants/api";
+import Image from "next/image";
+import { formatPrice } from "@/lib/utils/main-utils";
+
 import "../../../../../styles/Checkout.css";
 import "../../../../../styles/Cart.css";
 import "../../../../../styles/Product.css";
-import { API_ENDPOINTS } from "@/lib/constants/api";
-import Image from "next/image";
 
 interface OrderDetailProps {
   params: Promise<{ orderId: string }>;
@@ -87,7 +88,6 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
       const blob = await response.blob();
       const downloadUrl = URL.createObjectURL(blob);
-      // const downloadUrl = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = downloadUrl;
       a.download = `Invoice-${order?.order_number || orderId}.pdf`;
@@ -101,7 +101,6 @@ export default function OrderDetail({ params }: OrderDetailProps) {
     }
   };
 
-  if (isLoading) return <Loader />;
   if (!data) return <p>Order not found</p>;
 
   const order = data;
@@ -119,12 +118,10 @@ export default function OrderDetail({ params }: OrderDetailProps) {
     (Number(order.total_saving) || 0) +
     (Number(order.discount_amount) || 0);
 
-  // FINAL TOTAL = subtotal - discount + shipping
   const finalTotal = subtotal - totalSavings + shipping;
 
   return (
     <div>
-      {/* Header */}
       <div className="dflex order-action justify-between">
         <h4>Order Detail</h4>
         <div className="btn-action btn-track">
@@ -310,32 +307,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                         </div>
                       )}
 
-                      {/* {(matchingItem?.available_actions?.includes("return") || matchingItem?.available_options?.includes("return")) && (
-                      <div className="mt-2 w-full">
-                        <Button
-                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
-                          onClick={() => {
-                            setSelectedItemForReturn({ id: String(trueItemId), product });
-                            setIsReturnPopupOpen(true);
-                          }}
-                        >
-                          Return Item
-                        </Button>
-                      </div>
-                    )} */}
 
-                      {/* {matchingItem?.status?.toLowerCase() === "delivered" &&
-                      matchingItem?.available_actions?.includes("return") && (
-                        <Button
-                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
-                          onClick={() => {
-                            setSelectedItemForReturn({ id: String(trueItemId), product });
-                            setIsReturnPopupOpen(true);
-                          }}
-                        >
-                          Return Item
-                        </Button>
-                      )} */}
 
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
                         <Button
@@ -352,47 +324,21 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                         </Button>
                       )}
 
-                      {/* {(matchingItem?.available_actions?.includes("replace") || matchingItem?.available_options?.includes("replace")) && (
-                      <div className="mt-2 w-full">
+
+                      {matchingItem?.status?.toLowerCase() === "delivered" && (
                         <Button
                           className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
                           onClick={() => {
-                            setSelectedItemForReplace({ id: String(trueItemId), product });
+                            setSelectedItemForReplace({
+                              id: String(trueItemId),
+                              product,
+                            });
                             setIsReplacePopupOpen(true);
                           }}
                         >
                           Replace Item
                         </Button>
-                      </div>
-                    )} */}
-
-                      {/* {matchingItem?.status?.toLowerCase() === "delivered" &&
-                        matchingItem?.available_actions?.includes("replace") && (
-                          <Button
-                            className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
-                            onClick={() => {
-                              setSelectedItemForReplace({ id: String(trueItemId), product });
-                              setIsReplacePopupOpen(true);
-                            }}
-                          >
-                            Replace Item
-                          </Button>
-                        )} */}
-
-                        {matchingItem?.status?.toLowerCase() === "delivered" && (
-  <Button
-    className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
-    onClick={() => {
-      setSelectedItemForReplace({
-        id: String(trueItemId),
-        product,
-      });
-      setIsReplacePopupOpen(true);
-    }}
-  >
-    Replace Item
-  </Button>
-)}
+                      )}
                     </div>
 
                     {(matchingItem?.available_actions?.includes("review") || matchingItem?.available_actions?.includes("add_review") || matchingItem?.available_options?.includes("review") || matchingItem?.available_options?.includes("add_review")) && (
@@ -461,7 +407,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
       </div>
 
       <CancelOrderPopup
-        isOpen={isCancelPopupOpen || isCancelItemPopupOpen} // handle legacy state if needed, but we unified above 
+        isOpen={isCancelPopupOpen || isCancelItemPopupOpen}
         onClose={() => {
           setIsCancelPopupOpen(false);
           setIsCancelItemPopupOpen(false);

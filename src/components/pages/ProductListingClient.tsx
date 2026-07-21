@@ -9,7 +9,7 @@ import {
 import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
-import { findCategoryPath } from "@/lib/utils/find-category-path";
+import { findCategoryPath } from "@/lib/utils/main-utils";
 import { Category, Filter, Product } from "@/types/product";
 import Sidebar from "../productListing/Sidebar";
 import MobileFilterSheet from "../productListing/MobileFilterSheet";
@@ -17,6 +17,7 @@ import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import ProductDisplay from "../productListing/ProductDisplay";
 import NoProductsFound from "../NoProductFound";
 import { resolvePriceRange, filterProductsByPriceRange, getProductPrice } from "@/lib/utils/price-filter";
+import { buildFilterTags, formatPriceRangeLabel } from "@/lib/utils/filter-tags";
 import "../../styles/Product.css";
 interface ProductListingClientProps {
   slug: string;
@@ -49,10 +50,6 @@ const ProductListingClient = ({
   const [persistedFilters, setPersistedFilters] = useState<Filter[]>(filters);
   const [prevSlug, setPrevSlug] = useState(slug);
 
-  // Adjust persistedFilters during render (React's "adjusting state when a
-  // prop changes" pattern, using state instead of a ref since refs cannot be
-  // read/written during render) instead of inside a useEffect, to avoid an
-  // extra cascading render.
   if (slug !== prevSlug) {
     setPrevSlug(slug);
     setPersistedFilters(filters);
@@ -75,13 +72,6 @@ const ProductListingClient = ({
     setMaxPrice,
     clearFilters,
   } = useProductFilters(persistedFilters, category);
-
-  const formatPriceRangeLabel = useCallback((value: string) => {
-    if (value === "200+") return "$200 and Above";
-    if (value === "0-50") return "Under $50";
-    const [min, max] = value.split("-");
-    return min && max ? `$${min} to $${max}` : value;
-  }, []);
 
   const handleClearAllFilters = () => {
     setSelectedCategorySlug(null);
@@ -238,14 +228,17 @@ const extractedBrands = useMemo(() => {
   const [selectedPriceRange, setSelectedPriceRange] = useState<string | null>(null);
 
   const filterTags = useMemo(() => {
-    const tags: { key: string; label: string; onRemove: () => void }[] = [];
-
-    selectedCategories.forEach((cat) => {
-      tags.push({
-        key: `category-${cat}`,
-        label: cat,
-        onRemove: () => toggleSelectedCategory(cat),
-      });
+    const tags = buildFilterTags({
+      selectedCategories,
+      toggleSelectedCategory,
+      selectedPrices,
+      handlePriceChange,
+      minPrice,
+      maxPrice,
+      setMinPrice,
+      setMaxPrice,
+      selectedFilters,
+      handleFilterChange,
     });
 
     if (selectedCategorySlug) {
@@ -260,26 +253,6 @@ const extractedBrands = useMemo(() => {
       });
     }
 
-    const customRangeKey = minPrice && maxPrice
-      ? `${minPrice}-${maxPrice}`
-      : minPrice
-        ? `${minPrice}+`
-        : maxPrice
-          ? `0-${maxPrice}`
-          : null;
-
-    selectedPrices.forEach((price) => {
-      tags.push({
-        key: `price-${price}`,
-        label: formatPriceRangeLabel(price),
-        onRemove: () => {
-          handlePriceChange(price);
-          setMinPrice("");
-          setMaxPrice("");
-        },
-      });
-    });
-
     if (selectedPriceRange) {
       tags.push({
         key: `highlight-price-${selectedPriceRange}`,
@@ -287,27 +260,6 @@ const extractedBrands = useMemo(() => {
         onRemove: () => setSelectedPriceRange(null),
       });
     }
-
-    if ((minPrice || maxPrice) && !selectedPrices.includes(customRangeKey || "")) {
-      tags.push({
-        key: "price-range",
-        label: `$${minPrice || 0} to $${maxPrice || "Any"}`,
-        onRemove: () => {
-          setMinPrice("");
-          setMaxPrice("");
-        },
-      });
-    }
-
-    Object.entries(selectedFilters).forEach(([attribute, values]) => {
-      values.forEach((value) => {
-        tags.push({
-          key: `${attribute}-${value}`,
-          label: value,
-          onRemove: () => handleFilterChange(attribute, value),
-        });
-      });
-    });
 
     return tags;
   }, [
@@ -324,7 +276,6 @@ const extractedBrands = useMemo(() => {
     handleFilterChange,
     setMinPrice,
     setMaxPrice,
-    formatPriceRangeLabel,
   ]);
 
   const activePriceRange = useMemo(
@@ -456,10 +407,6 @@ const extractedBrands = useMemo(() => {
   const currentFilterString = currentParams.toString();
   const [prevFilterString, setPrevFilterString] = useState(currentFilterString);
 
-  // Adjust page/limit state during render in response to URL changes,
-  // instead of inside a useEffect, to avoid an extra cascading render.
-  // Uses state (not a ref) to track the previous filter string since refs
-  // cannot be read/written during render.
   if (currentFilterString !== prevFilterString) {
     setPrevFilterString(currentFilterString);
     const limit = Number(searchParams.get("limit")) || 20;

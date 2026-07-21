@@ -6,7 +6,6 @@ interface PostcodeState {
 }
 
 const initialState: PostcodeState = {
-  // Guard localStorage so this doesn't crash during Next.js SSR/prerendering
   postcode: (typeof window !== 'undefined' ? localStorage.getItem('globalPostcode') : null) || '3000',
   suburb: (typeof window !== 'undefined' ? localStorage.getItem('globalSuburb') : null) || 'Melbourne',
 };
@@ -31,12 +30,10 @@ const postcodeSlice = createSlice({
           state.postcode = stored;
           state.suburb = storedSuburb || 'Melbourne';
         } else {
-          // Set default Australian postcode if nothing is stored
           state.postcode = '3000';
           state.suburb = 'Melbourne';
         }
       } else {
-        // Server-side: always use default to match initial render
         state.postcode = '3000';
         state.suburb = 'Melbourne';
       }

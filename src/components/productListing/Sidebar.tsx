@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import Accordion from "@/components/ui/Accordion";
+import Accordion from "@/components/common/Accordion";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import { Category, Filter } from "@/types/product";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import { useParams } from "next/navigation";
 import { Search, ChevronDown } from "lucide-react";
-import { Input } from "../ui/input";
-import { Slider } from "../ui/slider";
+import { Input } from "../common/input";
+import { Slider } from "../common/slider";
 
 export interface SidebarProps {
   filters: Filter[];
@@ -174,25 +174,38 @@ const Sidebar: React.FC<SidebarProps> = ({
             <div key={categoryKey} className="w-full flex flex-col">
               <div className="flex items-center justify-between gap-2 w-full">
                 <div className="flex items-center gap-2 min-w-0">
-                  {!hasSubs && (
-                    <input
-                      type="checkbox"
-                      checked={selectedCategories.includes(cat.name)}
-                      onChange={() => setSelectedCategories(cat.name)}
-                      className={`h-[14px] w-[14px] shrink-0 ${checkboxAccentClass}`}
-                    />
-                  )}
+                  {!hasSubs ? (
+                    <label
+                      htmlFor={`category-${categoryKey}`}
+                      className="flex items-center gap-2 min-w-0 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        id={`category-${categoryKey}`}
+                        checked={selectedCategories.includes(cat.name)}
+                        onChange={() => setSelectedCategories(cat.name)}
+                        className={`h-[14px] w-[14px] shrink-0 ${checkboxAccentClass}`}
+                      />
 
-                  <Link
-                    href={`/category/${cat.slug}`}
-                    onClick={() => onClose?.()}
-                    className={`block w-full leading-[25px] text-left transition-colors duration-200
-                      ${hasSubs ? "!text-[16px]" : "!text-[14px]"}
-                      ${isActive ? "text-[#333333] font-semibold" : hasSubs ? "" : "font-normal text-[#575757]"}
-                    `}
-                  >
-                    {cat?.name}
-                  </Link>
+                      <span
+                        className={`block w-full !text-[14px] leading-[25px] text-left transition-colors duration-200
+                          ${isActive ? "text-[#333333] font-semibold" : "font-normal text-[#575757]"}
+                        `}
+                      >
+                        {cat?.name}
+                      </span>
+                    </label>
+                  ) : (
+                    <Link
+                      href={`/category/${cat.slug}`}
+                      onClick={() => onClose?.()}
+                      className={`block w-full !text-[16px] leading-[25px] text-left transition-colors duration-200
+                        ${isActive ? "text-[#333333] font-semibold" : ""}
+                      `}
+                    >
+                      {cat?.name}
+                    </Link>
+                  )}
                 </div>
 
                 {hasSubs && (

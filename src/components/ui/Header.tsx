@@ -1,6 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef, useSyncExternalStore } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,57 +16,23 @@ import HeaderIcon from "./HeaderIcon";
 import CartPopup from "./CartPopup";
 import { useRouter, usePathname } from "next/navigation";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
-import GooglePlacesInput from "./AddressAutocomplete";
+import GooglePlacesInput from "../common/AddressAutocomplete";
 import { toast } from "react-toastify";
 
 import { useSearchProductsQuery } from "../../lib/redux/apis/products-api";
 import { Product } from "@/types/product";
-import useDebounce from "@/lib/hooks/use-debounce";
-import Button from "./Button";
+import Button from "../common/Button";
 import { RootState } from "@/lib/redux/store";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useGetPersonalDataQuery } from "@/lib/redux/apis/auth-api";
 import { useLazyReverseGeocodeQuery } from "@/lib/redux/apis/geocode-api";
 import {
-  Percent,
-  Sparkles,
-  Home,
-  Armchair,
-  HeartPulse,
-  Gamepad2,
-  Baby,
   X,
+  ChevronDown,
 } from "lucide-react";
-
-export interface MegaMenuCategory {
-  name: string;
-  id: string;
-  slug?: string;
-  subcategories: {
-    name: string;
-    id: string;
-    slug?: string;
-    links: {
-      name: string;
-      href: string;
-      children?: { name: string; href: string }[];
-    }[];
-    viewAll?: string;
-  }[];
-}
-
-interface HeaderProps {
-  megaMenuData: MegaMenuCategory[];
-}
-
-
-function useIsClient() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
-}
+import { HeaderProps } from "@/types/form";
+import { useDebounceValue } from "@/lib/hooks/use-debounce";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -91,7 +62,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
         const { latitude, longitude } = position.coords;
 
         try {
-         
           const data = await triggerReverseGeocode({
             lat: latitude,
             lng: longitude,
@@ -156,7 +126,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
           requestLocation();
         })
         .catch(() => {
-          // Permissions API not supported here, fall back to requesting directly
           requestLocation();
         });
     } else {
@@ -168,10 +137,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
     dispatch(syncAuthState());
   }, [dispatch]);
 
-  // Adjust state during render (React's documented pattern) instead of in an
-  // effect: reset the search-loading indicator synchronously when the route
-  // changes. The previous pathname is tracked via state (not a ref, since ref
-  // reads/writes aren't allowed during render).
   if (prevPathname !== pathname) {
     setPrevPathname(pathname);
     setIsSearching(false);
@@ -219,7 +184,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
   };
 
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearchQuery = useDebounce(searchQuery, 1000);
+  const debouncedSearchQuery = useDebounceValue(searchQuery, 1000);
   const { data: searchResults, isLoading: isSearchLoading } =
     useSearchProductsQuery(debouncedSearchQuery, {
       skip: !debouncedSearchQuery,
@@ -618,7 +583,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                     src="/images/default_user_icon.jpg"
                     alt="account"
                     width={20}
-                    height={20}   
+                    height={20}
                   />
                 </Link>
               )}
@@ -634,8 +599,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
             onMouseLeave={() => setIsMegaMenuOpen(false)}
           >
             <RxHamburgerMenu size={20} />
-            Shop By Category{" "}123
-            <i className="fa fa-angle-down" aria-hidden="true"></i>
+            Shop By Category
+            <ChevronDown size={18} />
             <div
               id="megaMenu"
               data-lenis-prevent
@@ -748,27 +713,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center gap-2 hover:text-red-500"
-                  href="/product-listing/whats-on-sale"
-                >
-                  <Percent size={16} className="inline-block " />
-                  What&apos;s On Sale
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="link flex items-center gap-2 hover:text-red-500"
-                  href="/product-listing/clearance"
-                >
-                  <Sparkles size={16} className="inline-block " />
-                  Clearance
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="link flex items-center gap-2 hover:text-red-500"
                   href="/category/home-garden"
                 >
-                  <Home size={16} className="inline-block " />
                   Home & Garden
                 </Link>
               </li>
@@ -777,8 +723,15 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center gap-2 hover:text-red-500"
                   href="/category/furniture"
                 >
-                  <Armchair size={16} className="inline-block " />
                   Furniture
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="link flex items-center gap-2 hover:text-red-500"
+                  href="/product-listing/whats-on-sale"
+                >
+                  Fashion & Accessories
                 </Link>
               </li>
               <li>
@@ -786,26 +739,31 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center gap-2 hover:text-red-500"
                   href="/category/health-beauty"
                 >
-                  <HeartPulse size={16} className="inline-block " />
                   Health & Beauty
                 </Link>
               </li>
               <li>
                 <Link
                   className="link flex items-center gap-2 hover:text-red-500"
-                  href="/category/toys-games"
+                  href="/category/health-beauty"
                 >
-                  <Gamepad2 size={16} className="inline-block " />
-                  Toys & Games
+                  Outdoor & Patio
                 </Link>
               </li>
               <li>
                 <Link
                   className="link flex items-center gap-2 hover:text-red-500"
-                  href="/category/baby-kids"
+                  href="/category/health-beauty"
                 >
-                  <Baby size={16} className="inline-block " />
-                  Baby & Kids
+                  Best Sellers
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="link flex items-center gap-2 hover:text-red-500"
+                  href="/product-listing/whats-on-sale"
+                >
+                  What&apos;s On Sale
                 </Link>
               </li>
             </ul>

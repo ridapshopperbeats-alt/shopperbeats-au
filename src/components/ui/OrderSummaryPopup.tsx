@@ -2,59 +2,33 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useCancelOrderMutation } from "@/lib/redux/apis/order-api";
-import CancelOrderPopup from "@/components/ui/CancelOrderPopup";
+import CancelOrderPopup from "@/components/common/CancelOrderPopup";
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
+import Button from "@/components/common/Button";
 import '../../styles/Checkout.css'
 import Image from 'next/image';
 
-
-export interface PopupProduct {
-  id: string;
-  name: string;
-  price: string;
-  quantity: number;
-  image?: string;
-  variant?: string;
-  sku?: string;
-  unitPrice?: string;
-  discount?: string;
-  finalPrice?: string;
-}
-
-export interface OrderDetails {
-  orderId?: string;
-  orderNumber?: string;
-  deliveryCost: string;
-  totalAmount: string;
-  deliveryAddress?: string;
-  couponCode?: string;
-  products: PopupProduct[];
-  orderDate?: string;
-  paymentMethod?: string;
-  paymentStatus?: string;
-  estimatedDelivery?: string;
-  customerName?: string;
-  phone?: string;
-  email?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-  country?: string;
-  subtotal?: string;
-  discountAmount?: string;
-  shippingCost?: string;
-  taxAmount?: string;
-}
-
-interface OrderSummaryPopupProps {
+type OrderSummaryPopupProps = {
   isOpen: boolean;
   onClose: () => void;
-  orderDetails: OrderDetails;
+  orderDetails: {
+    orderNumber?: string;
+    orderId?: string;
+    products: Array<{
+      id: string;
+      name: string;
+      image?: string;
+      quantity: number;
+      price: string;
+    }>;
+    deliveryAddress: string;
+    deliveryCost: string;
+    couponCode?: string;
+    totalAmount: string;
+  };
   isAuthenticated: boolean;
-  from?: string;
-}
+  from: string;
+};
 
 const OrderSummaryPopup: React.FC<OrderSummaryPopupProps> = ({ isOpen, onClose, orderDetails, isAuthenticated, from }) => {
   const [isCancelPopupOpen, setIsCancelPopupOpen] = useState(false);

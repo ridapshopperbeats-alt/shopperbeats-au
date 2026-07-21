@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import "../../../../styles/contact.css";
-import Banner from "@/components/ui/Banner";
+import Banner from "@/components/common/Banner";
 
 // Types
 interface ContactInfoItem {
@@ -41,17 +41,13 @@ const contactData: ContactContent = {
   ],
 };
 
-import { useFormValidation } from "@/lib/hooks/useFormValidation";
 import * as yup from "yup";
-import {
-  email,
-  phoneNumber,
-  nameField,
-  requiredMessage,
-} from "@/lib/hooks/useYupValidation";
+
 import { toast } from "react-toastify";
-import Button from "@/components/ui/Button";
-import { handleAustralianPhoneNumberChange } from "@/lib/utils/phoneValidation";
+import Button from "@/components/common/Button";
+import { handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
+import { useFormValidation } from "@/lib/hooks/use-form-validation";
+import { email, nameField, phoneNumber, requiredMessage } from "@/lib/validations/form-schemas";
 
 // Validation schema
 const schema = yup.object().shape({

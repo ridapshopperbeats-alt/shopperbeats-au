@@ -1,23 +1,9 @@
 import Image from "next/image";
+import "@/styles/auth.css";
+import { product } from "@/lib/utils/main-utils";
 
 export default function ReturnForm() {
-    const product = {
-        product_id: "123",
-        name: "Premium Cotton T-Shirt",
-        title: "Premium Cotton T-Shirt",
-        image:
-            "https://img.magnific.com/free-photo/white-pillow_1203-3025.jpg?t=st=1778047813~exp=1778051413~hmac=2150a9c02752a2cf913690bf042debd24effff5b618cb9651d74f89e071c3c6a&w=1480",
-        quantity: 1,
-        size: "M",
-        color: "Black",
 
-        // ✅ Add variants here
-        variant_attributes: [
-            { name: "Size", value: "M" },
-            { name: "Colour", value: "Black" },
-            { name: "Fabric", value: "Cotton" },
-        ],
-    };
     return (
         <div>
             <h1 className="text-2xl font-semibold mb-4">Choose Item To Return </h1>
@@ -26,10 +12,7 @@ export default function ReturnForm() {
                 <div className="card w-[70%]"><table className="cart-table">
                     <tbody>
                         <tr>
-                            <td className="item-info" style={{
-                                borderBottom: "none",
-                                padding: "20px 0px"
-                            }}>
+                            <td className="item-info return-cell">
                                 <Image src={product.image} alt={product.name} width={150} height={200} loading="lazy" />
                                 <div>
                                     <h3>{product.title}</h3>
@@ -59,32 +42,32 @@ export default function ReturnForm() {
                         </tr>
                     </tbody>
                 </table> </div>
-                <div className="card grid gap-2 w-[30%]">
+                <div className="refund-card">
                     <div>
-                        <div className="flex  justify-between  w-full">
+                        <div className="refund-top">
                             <div>
                                 <h1 className="text-2xl font-semibold ">Refund Summary</h1>
                                 <div>
-                                    <p className="text-[#726969] ">Refund Subtotal</p>
+                                    <p className="refund-label">Refund Subtotal</p>
                                 </div>
                             </div>
-                            <div className="text-[#fd151b]">$38.99</div>
+                            <div className="refund-value">$38.99</div>
                         </div>
 
                     </div>
-                    <div className="flex justify-between">
-                        <p className="text-[#726969] ">Shipping</p>
-                        <p className="text-[#fd151b]">$5.99</p>
+                    <div className="refund-row">
+                        <p className="refund-label">Shipping</p>
+                        <p className="refund-value">$5.99</p>
                     </div>
-                    <div className="flex justify-between">
-                        <p className="font-semibold">Total Estimated Refund</p>
-                        <p className="text-[#fd151b] font-bold">$44.98</p>
+                    <div className="refund-row">
+                        <p className="refund-total">Total Estimated Refund</p>
+                        <p className="refund-total-val">$44.98</p>
                     </div>
-                    <div className="flex justify-end mt-[18px]">
+                    <div className="refund-action">
                         <button className="btn btn-red btn-filled btn-sharp cursor-pointer ">Confirm Your Return</button>
                     </div>
-                    <div className="flex justify-end  font-[500] text-[16px] text-[#726969]">
-                        Return By <span className="font-[700] text-[#726969] ml-2">Dec,10,2026</span>
+                    <div className="refund-date">
+                        Return By <span className="refund-date-val">Dec,10,2026</span>
                     </div>
                 </div>
             </div>

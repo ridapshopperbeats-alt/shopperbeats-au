@@ -1,8 +1,6 @@
-import { API_ENDPOINTS } from "@/lib/constants/api";
 import { MegaMenuCategory } from "@/types/megamenu";
 import { Category } from "@/types/product";
-
-const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
+import { getRawCategories } from "@/lib/utils/main-utils";
 
 const MAIN_CATEGORY_ORDER = [
   "Home & Garden",
@@ -51,13 +49,9 @@ function transformCategory(category: Category, level = 1): MegaMenuCategory {
 
 
 export async function getMegaMenuData() {
-  const res = await fetch(`${baseUrl}${API_ENDPOINTS.CATEGORIES.LIST}`, {
-    next: { revalidate: 3600 }, // categories rarely change — cache 1 hour
-  });
+  const data: Category[] = await getRawCategories();
 
-  if (!res.ok) return [];
-
-  const data: Category[] = await res.json();
+  if (!data.length) return [];
 
   const orderedMainCategories = [
     ...MAIN_CATEGORY_ORDER

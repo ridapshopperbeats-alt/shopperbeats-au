@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { Address } from "@/types/address";
 import { RootState } from "@/lib/redux/store";
-import GooglePlacesInput from "@/components/ui/AddressAutocomplete";
+import GooglePlacesInput from "@/components/common/AddressAutocomplete";
 
 interface LocationPopupProps {
   open: boolean;

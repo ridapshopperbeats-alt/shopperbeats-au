@@ -1,3 +1,5 @@
+import { WishlistKey } from "./wishlist";
+
 export interface Variant {
   id: string;
   status?: string;
@@ -6,7 +8,9 @@ export interface Variant {
   stock: number;
   sku?: string;
   image_url?: string | null;
-  images?: { image_url: string; is_main?: boolean, image_order?: number }[] | string;
+  images?:
+    | { image_url: string; is_main?: boolean; image_order?: number }[]
+    | string;
   attributes: { name: string; value: string }[];
   key_features?: string;
   length?: number;
@@ -23,7 +27,6 @@ export interface VariantAttribute {
   value: string;
 }
 
-
 export interface Review {
   id: string;
   user: string;
@@ -36,7 +39,6 @@ export interface Review {
   updated_at?: string;
 }
 
-
 export interface Brand {
   id: string;
   name: string;
@@ -45,7 +47,6 @@ export interface Brand {
   is_active?: boolean;
   slug?: string;
 }
-
 
 export interface BundleProduct {
   product_id: string;
@@ -69,7 +70,7 @@ export interface Product {
   category_id?: string;
   description?: string;
   slug?: string;
-  sale_price?: string,
+  sale_price?: string;
   price?: string;
   length?: string;
   width?: string;
@@ -80,7 +81,9 @@ export interface Product {
   category_name?: string;
   category_slug?: string;
   brand_name?: string;
-  images?: string | { image_url: string, is_main: boolean, image_order?: number }[];
+  images?:
+    | string
+    | { image_url: string; is_main: boolean; image_order?: number }[];
   image?: string;
   discount_percentage?: number;
   discounted_price?: number;
@@ -122,12 +125,10 @@ export interface Product {
   product_unique_code?: string;
 }
 
-
 interface CategoryLink {
   name: string;
   href: string;
 }
-
 
 export interface Category {
   name: string;
@@ -140,7 +141,6 @@ export interface Category {
   image_url?: string | null;
   icon_url?: string;
 }
-
 
 export interface Filter {
   attribute: string;
@@ -160,13 +160,11 @@ export interface ProductImage {
   updated_at?: string | null;
 }
 
-
 export interface ProductsResponse {
-  data: (Product & { attributes: { name: string; value: string; }[]; })[];
+  data: (Product & { attributes: { name: string; value: string }[] })[];
   filters: Filter[];
   totalItems: number;
 }
-
 
 export interface ProductApiResponse {
   id: string;
@@ -211,7 +209,6 @@ export interface ProductApiResponse {
   };
   tags?: string[];
 
-
   variants: Variant[];
   reviews: Review[];
   return_policy?: string | null;
@@ -226,4 +223,56 @@ export interface ProductApiResponse {
     canonical_url?: string;
     url_handle?: string;
   };
+}
+
+export interface ProductCardProps {
+  image: string;
+  brand_name?: string;
+  title?: string;
+  mainPrice?: number;
+  wasPrice?: number;
+  discountPercentage?: number;
+  saveAmount?: number;
+  freeShipping?: boolean;
+  rating?: number;
+  reviewCount?: number;
+  id?: string;
+  showWasPrice?: boolean;
+  defaultVariantId?: string;
+  variants?: Variant[];
+  unique_code?: string;
+  promotion_name?: string | null;
+  stock?: number;
+  tags?: string[];
+  wishlistItems?: WishlistKey[];
+  vendor_id?: string;
+  ships_from_location?: string;
+  handling_time_days?: number;
+  shippingCharge?: number | null;
+}
+
+export interface ProductCarouselProps {
+  title: React.ReactNode;
+  subtitle?: string;
+  products?: Product[];
+  bundleProducts?: BundleProduct[];
+  from?: string;
+  link?: string;
+  istagsVisible?: boolean;
+  isLoading?: boolean;
+  withoutContainer?: boolean;
+}
+
+export interface ProductLikeCardProps {
+  image: string;
+  title: string;
+  price: string;
+  oldPrice?: string;
+  rating: number;
+  reviewCount: number;
+  linkHref: string;
+  discountPercentage?: number;
+  saveAmount?: number;
+  productId: string;
+  variantId?: string;
 }

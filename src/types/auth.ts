@@ -72,3 +72,9 @@ export interface SocialMediaLink {
   created_at: string;
   updated_at: string;
 }
+
+export interface ChangePasswordFormData {
+  current_password: string;
+  new_password: string;
+  confirm_password: string;
+}

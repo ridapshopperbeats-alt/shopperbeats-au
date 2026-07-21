@@ -1,25 +1,14 @@
 "use client";
+
 import { useState } from "react";
-import { useFormValidation } from "../../../../lib/hooks/useFormValidation";
-import * as yup from "yup";
-import { useChangePasswordMutation, useLogoutMutation } from "../../../../lib/redux/apis/authApi";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Button";
-import { confirmPassword, strongPassword } from "@/lib/hooks/useYupValidation";
-
-const schema = yup.object().shape({
-  current_password: yup.string().required("Old password is required"),
-  new_password: strongPassword,
-  confirm_password: confirmPassword("new_password")
-});
-
-interface ChangePasswordFormData {
-  current_password: string;
-  new_password: string;
-  confirm_password: string;
-}
+import Button from "@/components/common/Button";
+import { useChangePasswordMutation, useLogoutMutation } from "@/lib/redux/apis/auth-api";
+import { useFormValidation } from "@/lib/hooks/use-form-validation";
+import { changePasswordValidationSchema } from "@/lib/validations/form-schemas";
+import { ChangePasswordFormData } from "@/types/auth";
 
 export default function ChangePasswordPage() {
   const [changePassword, { isLoading }] = useChangePasswordMutation();
@@ -29,7 +18,7 @@ export default function ChangePasswordPage() {
   const [logout] = useLogoutMutation();
 
   const { formData, formErrors, handleChange, handleSubmit } =
-    useFormValidation(schema, {
+    useFormValidation(changePasswordValidationSchema, {
       current_password: "",
       new_password: "",
       confirm_password: "",
@@ -49,14 +38,14 @@ export default function ChangePasswordPage() {
       }
       router.push("/login");
     } catch (error) {
+      console.error(error);
       toast.error("Failed to change password. Please check your current password.");
     }
   };
   return (
     <div className="wishlist-content">
-      <h4 className="text-lg text-[24px] font-bold py-2">Change Password</h4>
+      <h4 className="text-heading-lg my-2">Change Password</h4>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/* Old Password */}
         <div className="form-item text-[14px] font-montserrat">
           <label htmlFor="current_password">Current Password</label>
           <div className="password-input">
@@ -81,7 +70,6 @@ export default function ChangePasswordPage() {
           )}
         </div>
 
-        {/* New Password */}
         <div className="form-item text-[14px] font-montserrat">
           <label htmlFor="new_password">New Password</label>
           <div className="password-input">
@@ -113,7 +101,6 @@ export default function ChangePasswordPage() {
           </div>
         </div>
 
-        {/* Confirm Password */}
         <div className="form-item text-[14px] font-montserrat">
           <label htmlFor="confirm_password">Confirm New Password</label>
           <div className="password-input">
@@ -138,7 +125,6 @@ export default function ChangePasswordPage() {
           )}
         </div>
 
-        {/* Submit */}
         <div className="flex justify-center w-full">
           <Button type="submit" className="btn btn-red btn-filled btn-sharp w-30" style={{ alignItems: "center", justifyContent: "center", display: "flex", marginTop: "10px" }} disabled={isLoading} isLoading={isLoading}>
             {isLoading ? "Changing Password..." : "Save"}

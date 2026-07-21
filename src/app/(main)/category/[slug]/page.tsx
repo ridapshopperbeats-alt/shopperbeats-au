@@ -1,10 +1,9 @@
 import CategoryPageClient from "@/components/pages/CategoryPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
-import Breadcrumb from "@/components/ui/Breadcrumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import { Category, ProductsResponse } from "@/types/product";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
-
 
 // ---------- Generate Metadata ----------
 export async function generateMetadata(
@@ -195,7 +194,6 @@ export default async function CategoryPage({
 
   return (
     <>
-      <Breadcrumb />
 
       <CategoryPageClient
         megaMenuData={megaMenuData}

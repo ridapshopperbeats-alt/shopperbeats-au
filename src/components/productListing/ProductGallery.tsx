@@ -8,7 +8,7 @@ import React, {
 import Image from "next/image";
 import ReusableSlider, {
   ReusableSliderRef,
-} from "@/components/ui/ReusableSlider";
+} from "@/components/common/ReusableSlider";
 import { Product, ProductImage, Variant } from "@/types/product";
 import { Heart } from "lucide-react";
 import ImagePreviewModal from "./ImagePreviewModal";
@@ -19,7 +19,7 @@ interface ProductGalleryProps {
   product: Product;
   selectedVariant: Variant | null;
   isWishlisted?: boolean;
-  onWishlistToggle?: () => void;
+  onWishlistToggle?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isWishlistLoading?: boolean;
 }
 

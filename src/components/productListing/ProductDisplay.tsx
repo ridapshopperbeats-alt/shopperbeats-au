@@ -5,18 +5,16 @@ import React, { useRef, useState } from "react";
 import DOMPurify from "isomorphic-dompurify";
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
 
-const ProductCard = dynamic(() => import("@/components/ui/ProductCard"), {
+const ProductCard = dynamic(() => import("@/components/common/ProductCard"), {
   loading: DynamicImportLoader,
 });
 
 const EMPTY_VARIANTS: never[] = [];
 
-import Pagination from "@/components/ui/Pagination";
+import Pagination from "@/components/common/Pagination";
 import { Product } from "@/types/product";
 import { WishlistKey } from "@/types/wishlist";
-import { getPriceDetails } from "@/lib/utils/get-price-details";
-import { formatPriceFixed2 } from "@/lib/utils/format-price";
-import { getImageUrl } from "@/lib/utils/image-utils";
+import { getPriceDetails, formatPriceFixed2, getImageUrl } from "@/lib/utils/main-utils";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
 import {
   useCreateWishlistMutation,
@@ -30,13 +28,13 @@ import {
   SelectContent,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../common/select";
 
 import { Filter, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import NoProductsFound from "../NoProductFound";
-import Button from "../ui/Button";
+import Button from "../common/Button";
 import MobileSortSheet from "./MobileSortSheet";
 
 interface ProductDisplayProps {
@@ -146,7 +144,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
     }
   };
   return (
-    <div className="w-full  flex-1 pb-16 lg:pb-0">
+    <div className="w-full  flex-1">
       {!hideSortAndPagination && (
         <div className="hidden lg:block mb-[20px] sticky top-0 z-[2]">
           <div className="flex justify-end">
@@ -247,8 +245,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
         </div>
       ) : (
         <>
-          {viewMode === "grid" && (
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-3 lg:gap-5  ">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-5  ">
               {products.map((product) => {
                 const priceInfo = getPriceDetails(product);
 
@@ -279,126 +276,6 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
                 );
               })}
             </div>
-          )}
-
-          {viewMode === "list" && (
-            <div className="flex flex-col gap-4 mt-6">
-              {products.map((product) => {
-                const priceInfo = getPriceDetails(product);
-
-                return (
-                  <Link
-                    href={`/product/${product.unique_code}`}
-                    key={product.id}
-                    className="relative w-full bg-white flex flex-col md:flex-row gap-[25px] rounded-[8px]"
-                  >
-                    <div className="absolute top-4 right-4 z-10">
-                      <button
-                        onClick={(e) => handleWishlist(e, product)}
-                        className="bg-white rounded-full p-2 shadow-md hover:scale-110 transition"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="22"
-                          height="22"
-                          viewBox="0 0 24 24"
-                          fill={
-                            wishlistItems.some(
-                              (item) =>
-                                item.product_id === product.id &&
-                                item.variant_id ===
-                                  (product.variants?.[0]?.id ?? null),
-                            )
-                              ? "red"
-                              : "none"
-                          }
-                          stroke="red"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                        </svg>
-                      </button>
-                    </div>
-
-                    <div className="w-[350px] shrink-0">
-                      <div className="relative w-[350px] h-full max-h-[371px] !rounded-[8px] overflow-hidden">
-                        <Image
-                          src={getImageUrl(product)}
-                          alt={product?.title || ""}
-                          height={371}
-                          width={263}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col justify-center flex-1 xl:max-w-[55%] 2xl:max-w-full">
-                      <div className="flex items-center gap-2 mb-3 px-4 md:px-0">
-                        <span className="h-[34px] w-[120px] inline-flex items-center justify-center rounded-[50px] border border-[#FD151B] text-[#FD151B] leading-[13px] text-[13px] font-semibold">
-                          Free Shipping
-                        </span>
-
-                        {priceInfo.saveAmount && (
-                          <span className="bg-red-500 text-white text-[13px] font-semibold  px-2 py-[4px]">
-                            Save ${formatPriceFixed2(priceInfo.saveAmount)}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="px-4 md:px-0 text-[1.2rem]  leading-[31px] font-semibold text-black">
-                        {product?.title || ""}
-                      </div>
-
-                      <div className="mt-4">
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(
-                              product?.description
-                                ?.match(/<ul>([\s\S]*?)<\/ul>/)?.[0]
-                                ?.replace(/<\/?strong>/g, "")
-                                ?.replace(
-                                  /<ul>([\s\S]*?)<\/ul>/,
-                                  (_, content) =>
-                                    `<ul class="list-wrapper">${
-                                      content
-                                        .match(/<li>[\s\S]*?<\/li>/g)
-                                        ?.slice(0, 4)
-                                        .join("") || ""
-                                    }</ul>`,
-                                )
-                                ?.replace(/<li>/g, `<li class="list-disc">`) ||
-                              "",
-                            ),
-                          }}
-                        />
-                      </div>
-
-                      <div className="flex items-center gap-2 text-center xl:pt-4 px-4 md:px-0">
-                        <span className="text-[20px] lg:text-[32px] font-bold text-[#FD151B]">
-                          ${priceInfo.mainPrice}
-                        </span>
-
-                        {priceInfo.showWasPrice && (
-                          <span className="text-[16px] lg:text-[20px] font-semibold text-[#726969] line-through">
-                            ${priceInfo.wasPrice}
-                          </span>
-                        )}
-
-                        {priceInfo.saveAmount && (
-                          <span className="bg-red-500 text-white text-[13px] font-semibold  px-2 py-[4px]">
-                            Save ${formatPriceFixed2(priceInfo.saveAmount)}
-                          </span>
-                        )}
-                      </div>
-
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
         </>
       )}
 
