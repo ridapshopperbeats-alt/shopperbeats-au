@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
@@ -12,6 +12,7 @@ import Sidebar from "../productListing/Sidebar";
 import MobileFilterSheet from "../productListing/MobileFilterSheet";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import ProductDisplay from "../productListing/ProductDisplay";
+import { buildFilterTags } from "@/lib/utils/filter-tags";
 
 
 interface SearchPageClientProps {
@@ -52,11 +53,53 @@ const SearchPageClient = ({
     );
   }, [query, dispatch]);
 
-  const { sortBy, handleSortChange } = useProductFilters(persistedFilters);
+  const {
+    sortBy,
+    handleSortChange,
+    selectedFilters,
+    handleFilterChange,
+    selectedCategories,
+    setSelectedCategories: toggleSelectedCategory,
+    selectedPrices,
+    handlePriceChange,
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice,
+    clearFilters,
+  } = useProductFilters(persistedFilters);
 
   const handleSortChangeWithSkeleton = useCallback((value: string) => {
     handleSortChange(value);
   }, [handleSortChange]);
+
+  const filterTags = useMemo(
+    () =>
+      buildFilterTags({
+        selectedCategories,
+        toggleSelectedCategory,
+        selectedPrices,
+        handlePriceChange,
+        minPrice,
+        maxPrice,
+        setMinPrice,
+        setMaxPrice,
+        selectedFilters,
+        handleFilterChange,
+      }),
+    [
+      selectedCategories,
+      selectedPrices,
+      minPrice,
+      maxPrice,
+      selectedFilters,
+      toggleSelectedCategory,
+      handlePriceChange,
+      handleFilterChange,
+      setMinPrice,
+      setMaxPrice,
+    ],
+  );
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = useCallback(() => {
@@ -184,6 +227,7 @@ const SearchPageClient = ({
           <MobileFilterSheet
             open={isSidebarOpen}
             onClose={() => setIsSidebarOpen(false)}
+            onClearAll={clearFilters}
             filters={persistedFilters}
           />
 
@@ -198,6 +242,8 @@ const SearchPageClient = ({
               onItemsPerPageChange={handleItemsPerPageChange}
               sortBy={sortBy}
               onSortChange={handleSortChangeWithSkeleton}
+              tags={filterTags}
+              onClearFilters={clearFilters}
               isLoading={
                 isLoading || (isFetching && allProducts.length === 0)
               }

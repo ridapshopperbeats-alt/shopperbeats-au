@@ -9,16 +9,16 @@ export default async function TopCategories({
 }: {
   children?: React.ReactNode;
 }) {
-  const megaMenuData = await getMegaMenuData().catch(() => []);
-
-  const footerMenuData = await getFooterMenuData().catch(() => ({
-    company: null,
-    myAccount: null,
-    helpSupport: null,
-    legal: null,
-  }));
-
-  const categories = await getCategoryData().catch(() => []);
+  const [megaMenuData, footerMenuData, categories] = await Promise.all([
+    getMegaMenuData().catch(() => []),
+    getFooterMenuData().catch(() => ({
+      company: null,
+      myAccount: null,
+      helpSupport: null,
+      legal: null,
+    })),
+    getCategoryData().catch(() => []),
+  ]);
 
   const sliderCategories = categories.map((cat) => ({
     id: cat.id,

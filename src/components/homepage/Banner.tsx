@@ -24,19 +24,21 @@ export default function SingleBanner() {
 
   return (
     <div className="container">
-      <div className="relative">
+      <div className="relative hidden lg:flex">
         <Image
           src={banners[currentBanner].image}
           alt={`Banner ${currentBanner + 1}`}
           width={1694}
           height={540}
-          priority
+          loading="lazy"
+          sizes="100vw"
+          quality={70}
           className="w-full h-auto object-cover rounded-lg transition-all duration-500"
         />
       </div>
 
       {/* Dots */}
-      <div className="flex justify-center items-center gap-2 mt-5 ">
+      <div className="hidden lg:flex justify-center items-center gap-2 mt-5 ">
         {banners.map((_, index) => (
           <button
             key={index}
