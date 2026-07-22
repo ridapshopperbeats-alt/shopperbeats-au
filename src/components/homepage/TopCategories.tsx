@@ -35,6 +35,7 @@ export default async function TopCategories({
           title="Top Categories"
           items={sliderCategories}
           titleClassName="text-[24px] leading-6 mx-auto text-center"
+          className="container"
         />
       )}
 

@@ -20,7 +20,7 @@ export default function ProductCarousel({
   return (
 
     <div className={from == "details" ? "products" : "w-full"}>
-        <div className="flex justify-between lg:mt-5 gap-4">
+        <div className="flex justify-between  gap-4">
           <div className="w-full">
             <div className="flex flex-col gap-1 w-full my-1">
               
