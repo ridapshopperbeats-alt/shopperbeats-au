@@ -4,58 +4,14 @@ import Image from "next/image";
 import "../../../../styles/contact.css";
 import Banner from "@/components/common/Banner";
 
-// Types
-interface ContactInfoItem {
-  icon: string;
-  label: string;
-  value: string | { weekdays: string; weekends: string };
-}
-
-interface ContactContent {
-  title: string;
-  description: string[];
-  contactBlocks: ContactInfoItem[];
-}
-
-// JSON-like data
-const contactData: ContactContent = {
-  title: "Have a question, or want an update on your order?",
-  description: [
-    "Our team of happily helpful Experts is readily available to assist you, no matter how you choose to get in touch with us.",
-    "We strive to respond promptly within 24-48 hours. During peak times, there may be a slight delay. Rest assured, we are committed to addressing your inquiries quickly.",
-  ],
-  contactBlocks: [
-    {
-      icon: "/images/cms/location.svg",
-      label: "Address",
-      value: "Truganina 3029, Victoria, Australia",
-    },
-    {
-      icon: "/images/cms/clock.svg",
-      label: "Working Hours",
-      value: {
-        weekdays: "9:00am - 5:00pm",
-        weekends: "Closed",
-      },
-    },
-  ],
-};
-
-import * as yup from "yup";
-
 import { toast } from "react-toastify";
 import Button from "@/components/common/Button";
-import { handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
+import { contactData, handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
-import { email, nameField, phoneNumber, requiredMessage } from "@/lib/validations/form-schemas";
+import { contactInfoSchema } from "@/lib/validations/form-schemas";
+import { Input } from "@/components/common/input";
 
-// Validation schema
-const schema = yup.object().shape({
-  name: nameField("Name"),
-  email: email,
-  phone: phoneNumber,
-  message: requiredMessage("Message", 5),
-});
+
 
 export default function ContactPage() {
   const {
@@ -65,7 +21,7 @@ export default function ContactPage() {
     handleChange,
     handleSubmit,
     resetForm,
-  } = useFormValidation(schema, {
+  } = useFormValidation(contactInfoSchema, {
     name: "",
     email: "",
     phone: "",
@@ -195,12 +151,11 @@ export default function ContactPage() {
 
                 {/* Name */}
                 <div className="form-item">
-                  <label htmlFor="name">Name*</label>
-
-                  <input
+                  <Input
                     id="name"
                     type="text"
                     name="name"
+                    label="Name*"
                     placeholder="Enter Your Name"
                     value={formData.name}
                     onChange={handleChange}
@@ -213,12 +168,11 @@ export default function ContactPage() {
 
                 {/* Email */}
                 <div className="form-item">
-                  <label htmlFor="email">Email*</label>
-
-                  <input
+                  <Input
                     id="email"
                     type="email"
                     name="email"
+                    label="Email*"
                     placeholder="Enter Your Email"
                     value={formData.email}
                     onChange={handleChange}
@@ -232,9 +186,7 @@ export default function ContactPage() {
 
               {/* Phone */}
               <div className="form-item">
-                <label htmlFor="phone">Phone Number*</label>
-
-                <input
+                <Input
                   id="phone"
                   type="tel"
                   name="phone"
@@ -243,6 +195,7 @@ export default function ContactPage() {
                   onChange={handlePhoneChange}
                   inputMode="numeric"
                   pattern="[0-9+]*"
+                  label="Phone Number*"
                 />
 
                 {formErrors.phone && (

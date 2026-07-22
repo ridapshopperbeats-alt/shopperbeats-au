@@ -227,7 +227,7 @@ input[type="password"]::-ms-clear {
 
 .left-sidebar-style {
   @apply !font-medium mb-[5px] block text-sm cursor-pointer;
-  color: "rgba(0, 0, 0, 0.56) !important", ;
+  color: rgba(0, 0, 0, 0.56) !important;
 }
 
 .form-fields {

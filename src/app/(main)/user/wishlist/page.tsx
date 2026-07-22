@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Button from "@/components/common/Button";
 import "../../../../styles/Cart.css";
+import "../../../../styles/auth.css";
 import { useCalculateShippingMutation } from "@/lib/redux/apis/order-api";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
@@ -122,13 +123,13 @@ export default function WishlistPage() {
 
   return (
     <div className="wishlist-content">
-      <h4 className="mb-30">Wishlist</h4>
-      <div className="hidden md:grid md:grid-cols-12 items-center gap-4 bg-gray-100 p-4 font-semibold text-sm rounded-md mb-3">
-        <div className="md:col-span-4">Product</div>
-        <div className="md:col-span-2">Price</div>
-        <div className="md:col-span-2">Date Added</div>
-        <div className="md:col-span-2">Stock</div>
-        <div className="md:col-span-2">Action</div>
+      <h4 className="wishlist-title">Wishlist</h4>
+      <div className="wishlist-table-header">
+        <div className="wishlist-col-product">Product</div>
+        <div className="wishlist-col-span-2">Price</div>
+        <div className="wishlist-col-span-2">Date Added</div>
+        <div className="wishlist-col-span-2">Stock Status</div>
+        <div className="wishlist-col-span-2">Action</div>
       </div>
 
       <div className="wishlist-container">
@@ -141,62 +142,62 @@ export default function WishlistPage() {
           return (
             <div
               key={item.product_id}
-              className="wishlist-card grid grid-cols-1 md:grid-cols-12 gap-4 border-b border-gray-300 p-4 mb-4 rounded-lg bg-white"
+              className="wishlist-card"
             >
-              <div className="flex items-center gap-3 md:col-span-4">
+              <div className="wishlist-item-media">
                 <div
-                  className="w-[80px] h-[80px] bg-cover bg-center rounded shrink-0"
+                  className="wishlist-item-image"
                   style={{
                     backgroundImage: `url(${item.images?.[0]?.image_url || "/images/image-coming-soon.jpg"
                       })`,
                   }}
                 />
 
-                <span className="font-bold text-[14px] leading-[20px]">
+                <span className="wishlist-item-name">
                   {item.product_name}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 md:block md:col-span-2 items-center">
-                <span className="font-semibold md:hidden">Price</span>
+              <div className="wishlist-cell">
+                <span className="wishlist-mobile-label">Price</span>
 
-                <p className="font-bold text-right md:text-left">
+                <p className="wishlist-price">
                   ${formatPrice(item.price)}
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 md:block md:col-span-2 items-center font-bold text-sm text-black">
-                <span className="font-semibold md:hidden">
+              <div className="wishlist-date-cell">
+                <span className="wishlist-mobile-label">
                   Date Added
                 </span>
 
-                <span className="text-right md:text-left">
+                <span className="wishlist-align-cell">
                   {formatReadableDate(item.created_at)}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 md:block md:col-span-2 items-center">
-                <span className="font-semibold md:hidden">Stock</span>
+              <div className="wishlist-cell">
+                <span className="wishlist-mobile-label">Stock</span>
 
-                <div className="text-right md:text-left">
+                <div className="wishlist-align-cell">
                   {outOfStock ? (
-                    <span className="text-red-500 font-bold">
+                    <span className="wishlist-out-of-stock">
                       Out of Stock
                     </span>
                   ) : (
-                    <span className="text-green-600 font-bold">
+                    <span className="wishlist-in-stock">
                       In Stock
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:flex md:flex-col gap-2 md:col-span-2 items-start">
-                <span className="font-semibold md:hidden pt-3">
+              <div className="wishlist-action-cell">
+                <span className="wishlist-action-mobile-label">
                   Action
                 </span>
 
-                <div className="flex flex-col gap-2 w-full">
+                <div className="wishlist-action-buttons">
                   <Button
                     disabled={isCalculatingShipping}
                     onClick={() =>
@@ -204,12 +205,7 @@ export default function WishlistPage() {
                         ? router.push("/cart")
                         : handleAddToCart(item)
                     }
-                    className="bg-red-500 text-white rounded-2xl font-bold p-4 cursor-pointer w-full"
-                    style={{
-                      color: "white",
-                      padding: "10px",
-                      borderRadius: "20px",
-                    }}
+                    className="wishlist-add-to-cart-btn"
                   >
                     {isInCart(item.product_id, item.variant_id)
                       ? "Go to Cart"
@@ -217,12 +213,7 @@ export default function WishlistPage() {
                   </Button>
 
                   <Button
-                    className="border border-red-500 p-4 rounded-2xl font-bold cursor-pointer w-full"
-                    style={{
-                      border: "1px solid red",
-                      borderRadius: "50px",
-                      padding: "10px",
-                    }}
+                    className="wishlist-remove-btn"
                     disabled={isRemoving}
                     isLoading={isRemoving}
                     onClick={() =>

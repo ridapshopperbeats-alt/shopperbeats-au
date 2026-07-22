@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { OrderAPIResponse, OrderItem, Status, OrderReturn } from "@/types/order";
 import CancelOrderPopup from "@/components/common/CancelOrderPopup";
@@ -19,14 +19,14 @@ import Pagination from "@/components/common/Pagination";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/common/select";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
 import { useCancelOrderMutation, useListOrdersQuery } from "@/lib/redux/apis/order-api";
-import { useCapturePaymentMutation } from "@/lib/redux/apis/payment-api";
-import { useClearCartMutation, useGetCartQuery } from "@/lib/redux/apis/cart-api";
+
 import { getOrderProductImage, getReviewProductId, mapOrderProducts } from "@/lib/utils/order-products";
 import { formatPrice, formatReadableDate } from "@/lib/utils/main-utils";
 
 import "../../../../styles/Checkout.css";
 import "../../../../styles/Cart.css";
 import "../../../../styles/Product.css";
+import "../../../../styles/auth.css";
 
 export default function MyOrdersPage() {
   const router = useRouter();
@@ -215,7 +215,7 @@ export default function MyOrdersPage() {
   return (
     <div>
       {allOrders.length > 0 ? (
-        <div className="dflex justify-between">
+        <div className="dflex order-detail-header">
           <h4>Orders ({effectiveTotal})</h4>
 
           <div className="product-sort">
@@ -225,18 +225,18 @@ export default function MyOrdersPage() {
               value={sortOrdersBy}
               onValueChange={handleSortChange}
             >
-              <SelectTrigger className="!border !border-gray-500 focus:ring-0 focus:ring-offset-0 shadow-none w-[140px] rounded-[14px]">
-                <SelectValue placeholder="Select" className="text-black" />
+              <SelectTrigger className="orders-sort-trigger">
+                <SelectValue placeholder="Select" className="orders-sort-value" />
               </SelectTrigger>
 
               <SelectContent
                 position="popper"
-                className=" bg-white rounded-[10px] !ring-gray-200 w-[100px] p-0 overflow-hidden "
+                className="orders-sort-content"
               >
 
                 <SelectItem
                   value="oldest"
-                  className="px-3 py-2 not-visited:cursor-pointer rounded-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-black  "
+                  className="orders-sort-item"
                 >
                   Date
                 </SelectItem>
@@ -245,37 +245,37 @@ export default function MyOrdersPage() {
           </div>
         </div>
       ) : (
-        <div className="w-full flex justify-center py-20">
+        <div className="orders-empty-state">
           <p>No orders yet</p>
         </div>
       )}
 
 
       {allOrders.map((order) => (
-        <div key={order.id} className="order-block mt-30">
+        <div key={order.id} className="order-block orders-block-spacing">
           <div className="dflex order-detail">
             <div className="order-item">
-              <h5 style={{ fontSize: "clamp(16px, 1.5vw, 18px)", fontWeight: "800" }}>Order Number</h5>
-              <p style={{ fontSize: "clamp(12px, 1.5vw, 16px)" }}>{order.order_number || order.id}</p>
+              <h5 className="orders-item-label">Order Number</h5>
+              <p className="orders-item-value">{order.order_number || order.id}</p>
             </div>
             <div className="order-item">
-              <h5 style={{ fontSize: "clamp(16px, 1.5vw, 18px)", fontWeight: "800" }}>Order Date</h5>
-              <p style={{ fontSize: "clamp(12px, 1.5vw, 16px)" }}>{formatReadableDate(order.created_at)}</p>
+              <h5 className="orders-item-label">Order Date</h5>
+              <p className="orders-item-value">{formatReadableDate(order.created_at)}</p>
             </div>
             <div className="order-item">
-              <h5 style={{ fontSize: "clamp(16px, 1.5vw, 18px)", fontWeight: "800" }}>Total Payment</h5>
-              <p style={{ fontSize: "clamp(12px, 1.5vw, 16px)" }}>{formatPrice(order.totalPayment)}</p>
-            </div>
-
-            <div className="order-item">
-              <h5 style={{ fontSize: "clamp(16px, 1.5vw, 18px)", fontWeight: "800" }}>Payment Method</h5>
-              <p style={{ fontSize: "clamp(12px, 1.5vw, 16px)" }}>{order.paymentMethod}</p>
+              <h5 className="orders-item-label">Total Payment</h5>
+              <p className="orders-item-value">{formatPrice(order.totalPayment)}</p>
             </div>
 
             <div className="order-item">
-              <h5 style={{ fontSize: "clamp(16px, 1.5vw, 18px)", fontWeight: "800" }}>Order Status</h5>
+              <h5 className="orders-item-label">Payment Method</h5>
+              <p className="orders-item-value">{order.paymentMethod}</p>
+            </div>
 
-              <div style={{ textTransform: "capitalize" }}>
+            <div className="order-item">
+              <h5 className="orders-item-label">Order Status</h5>
+
+              <div className="order-status-value">
                 {order?.returns?.some((r: OrderReturn) => r?.status?.toLowerCase() === "requested")
                   ? "Return Requested"
                   : (order?.status || "N/A")}
@@ -301,7 +301,7 @@ export default function MyOrdersPage() {
               if (!reviewProductId) return null;
 
               return (
-                <div key={idx} className="grid sm:grid-cols-3 grid-cols-1 gap-4 items-center mb-4 border-b border-gray-200 py-2">
+                <div key={idx} className="orders-product-row">
 
                   {/* Product Image */}
                   <Link href={`/product/${product.unique_code || product.product_id || product.id}`}>
@@ -310,14 +310,14 @@ export default function MyOrdersPage() {
                       height={137}
                       src={getOrderProductImage(product)}
                       alt={product.title || product.name}
-                      className="cursor-pointer object-contain"
+                      className="order-item-image"
                     />
                   </Link>
 
                   {/* Product Details */}
                   <div>
                     <Link href={`/product/${product.unique_code || product.product_id || product.id}`}>
-                      <p className="cursor-pointer hover:text-red-600 transition-colors font-bold">
+                      <p className="orders-product-title">
                         {product.title}
                       </p>
                     </Link>
@@ -326,21 +326,17 @@ export default function MyOrdersPage() {
                       {product.variant_attributes?.map((attr, i) => (
                         <p
                           key={i}
-                          style={{
-                            fontSize: "14px",
-                            fontWeight: "500",
-                            color: "#000000",
-                          }}
+                          className="orders-product-meta"
                         >
-                          <strong style={{ fontWeight: "600" }}>
+                          <strong className="orders-product-meta-label">
                             {attr.name}:
                           </strong>{" "}
                           {attr.value}
                         </p>
                       ))}
 
-                      <p style={{ fontSize: "14px", fontWeight: "500", color: "#000000" }}>
-                        <strong style={{ fontWeight: "600" }}>Quantity:</strong>{" "}
+                      <p className="orders-product-meta">
+                        <strong className="orders-product-meta-label">Quantity:</strong>{" "}
                         {product.quantity}
                       </p>
                     </div>
@@ -348,7 +344,7 @@ export default function MyOrdersPage() {
 
                   {/* Review Button */}
                   {/* Review Button - Show only when delivered */}
-                  <div className="flex justify-end">
+                  <div className="orders-product-actions">
                     {order.status?.toLowerCase() === "delivered" && (
                       <div>
                         <Link
@@ -378,7 +374,7 @@ export default function MyOrdersPage() {
               );
             })}
           </div>
-          <div className="dflex order-action justify-between">
+          <div className="dflex order-action order-detail-header">
             <div className="btn-action">
 
               <button
@@ -396,7 +392,7 @@ export default function MyOrdersPage() {
                 </button>
               )}
             </div>
-            <div className="flex items-center gap-4">
+            <div className="orders-action-right">
               {(order.available_actions.includes("retry") || order.available_actions.includes("retry_payment")) && (
                 <button
                   className="btn btn-red btn-filled btn-sharp"
@@ -407,7 +403,7 @@ export default function MyOrdersPage() {
               )}
               {order.available_actions.includes("cancel") && (
                 <button
-                  className={`cursor-pointer ${isCancelling ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`orders-cancel-btn ${isCancelling ? 'opacity-50 cursor-not-allowed' : ''}`}
                   onClick={() => !isCancelling && handleCancelClick(order.id)}
                 >
                   Cancel Order
@@ -415,7 +411,7 @@ export default function MyOrdersPage() {
               )}
               {order.available_actions.includes("return") && (
                 <button
-                  className="cursor-pointer"
+                  className="orders-return-btn"
                   onClick={() => handleReturnClick(order.id)}
                 >
                   Return
@@ -427,10 +423,10 @@ export default function MyOrdersPage() {
       ))}
 
       {allOrders.length < uiLimit && allOrders.length < effectiveTotal && (
-        <div ref={loadMoreRef} className="w-full flex justify-center py-4">
+        <div ref={loadMoreRef} className="orders-load-more">
           {isFetching && (
             <div className="dflex align-center">
-              <span className="loader-spinner" style={{ marginRight: "10px", border: "2px solid #f3f3f3", borderTop: "2px solid #333", borderRadius: "50%", width: "16px", height: "16px", animation: "spin 1s linear infinite" }}></span>
+              <span className="orders-loader-spinner"></span>
               Loading more orders...
             </div>
           )}
@@ -457,7 +453,7 @@ export default function MyOrdersPage() {
           />
         </Elements>
       )}
-      <div className="product-search bg-white mt-40">
+      <div className="product-search orders-pagination-wrapper">
 
         <Pagination
           currentPage={currentPage}

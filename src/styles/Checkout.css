@@ -91,7 +91,7 @@ button.zip {
 }
 
 .checkout-form .payment-option-group .payment-option {
-  @apply bg-transparent border-none rounded-none mb-0 border-b border-[#d9d2d2];
+  @apply bg-transparent border-t-0 border-x-0 rounded-none mb-0 border-b border-[#d9d2d2];
 }
 
 .checkout-form .payment-option-group .payment-option:last-child {

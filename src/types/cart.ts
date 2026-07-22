@@ -115,3 +115,19 @@ export interface VendorRequestResponse {
   status: string;
   message?: string;
 }
+
+export interface CartCheckoutDrawerProps {
+  open: boolean;
+  onClose: () => void;
+  items: CartItem[];
+  subtotal: number;
+  shippingCost: number;
+  hasShippableItem: boolean;
+  localQtyMap: Record<string, string>;
+  isUpdating: boolean;
+  isRemoving: boolean;
+  onIncrement: (item: CartItem) => void;
+  onDecrement: (item: CartItem) => void;
+  onRemove: (id: string, variant_id?: string) => void;
+  onCheckout: () => void;
+}
