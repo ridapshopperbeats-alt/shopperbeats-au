@@ -261,13 +261,6 @@ async function fetchTrending(limit: number): Promise<Product[]> {
   return data?.items ?? data?.data ?? [];
 }
 
-/**
- * Fetches products for the homepage "Trending Products" section.
- *
- * NOTE: `trending-products` currently returns 0 items in preprod, so we fall
- * back to `list-products` (page 2, to differ from Best Sellers) so the section
- * still renders. Remove the fallback once trending is populated.
- */
 export async function getTrendingProducts(limit = 10): Promise<Product[]> {
   const trending = await fetchTrending(limit);
   if (trending.length > 0) return trending;
@@ -402,8 +395,5 @@ export const fieldLabels: Record<string, string> = {
   paymentMethod: "Payment method",
 };
 
-// Falls back to the production domain when NEXT_PUBLIC_SITE_URL isn't set,
-// so behavior is unchanged for existing deployments that haven't added it
-// yet — but staging/preprod can now emit correct canonicals by setting it.
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://shopperbeats.com";

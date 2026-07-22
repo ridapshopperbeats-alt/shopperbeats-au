@@ -1,8 +1,10 @@
 import { X } from "lucide-react";
+import Image from "next/image";
 
 export interface ColorAttributeOption {
   value: string;
   stock?: number;
+  image: string;
 }
 
 interface ColorPopupProps {
@@ -57,12 +59,20 @@ const ColorPopup = ({
                 disabled={(color.stock ?? 0) <= 0}
                 aria-label={color.value}
                 title={color.value}
-                className={`w-[48px] h-[47px] rounded-full border border-black/10 cursor-pointer transition-shadow disabled:opacity-40 disabled:cursor-not-allowed ${
+                className={`w-[48px] h-[47px] rounded-full border border-black/10 overflow-hidden cursor-pointer transition-shadow disabled:opacity-40 disabled:cursor-not-allowed ${
                   selectedColor === color.value
                     ? "ring-2 ring-offset-2 ring-[#1D265F]"
                     : ""
                 }`}
-              />
+              >
+                <Image
+                  src={color.image}
+                  alt={color.value}
+                  width={48}
+                  height={47}
+                  className="w-full h-full object-cover"
+                />
+              </button>
             ))}
           </div>
         </div>
@@ -72,3 +82,4 @@ const ColorPopup = ({
 };
 
 export default ColorPopup;
+
