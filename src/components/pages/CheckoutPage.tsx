@@ -847,8 +847,7 @@ export default function SecureCheckout() {
                         return (
                           <div
                             key={item.id}
-                            className="flex items-start gap-3 px-4 py-4 border-b border-[#E5E5E5] last:border-b-0"
-                            style={{ opacity: isUnavailable ? 0.5 : 1 }}
+                            className={`flex items-start gap-3 px-4 py-4 border-b border-[#E5E5E5] last:border-b-0 ${isUnavailable ? "opacity-50" : "opacity-100"}`}
                           >
                             {item.images && (
                               <Image
@@ -982,7 +981,7 @@ export default function SecureCheckout() {
                         return (
                           <div
                             key={item.id}
-                            className="flex items-start gap-3 px-4 py-4 border-b border-[#E5E5E5] last:border-b-0"
+                            className={`flex items-start gap-3 px-4 py-4 border-b border-[#E5E5E5] last:border-b-0 ${isUnavailable ? "opacity-50" : "opacity-100"}`}
                           >
                             {item.images && (
                               <Image
