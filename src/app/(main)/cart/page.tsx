@@ -441,7 +441,7 @@ const Cart = () => {
 
       <div className="flex flex-col xl:flex-row items-start gap-5 pb-14">
         {/* CART LIST */}
-        <div className="w-full xl:w-[1226px] lg:rounded-[8px] lg:overflow-visible lg:shadow-[0_0_20px_rgba(0,0,0,0.18)]">
+        <div className="w-full xl:w-[1300px] lg:rounded-[8px] lg:overflow-visible lg:shadow-[0_0_20px_rgba(0,0,0,0.18)]">
           <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#D9D2D2] text-[16px] leading-[100%] font-medium">
             <div className="col-span-6 text-base">Item</div>
             <div className="col-span-2 text-base text-center">Qty.</div>
@@ -450,7 +450,7 @@ const Cart = () => {
           </div>
 
           <div
-            className="flex flex-col items-center gap-[14px] py-4 lg:block lg:gap-0 lg:py-0 lg:max-h-[490px] lg:overflow-y-auto lg:overscroll-contain gray-scrollbar no-scrollbar"
+            className="flex flex-col items-center gap-[14px] py-4 lg:block lg:gap-0 lg:py-0 lg:max-h-[490px] lg:overflow-y-auto lg:overscroll-contain gray-scrollbar "
             data-lenis-prevent
             onWheel={(e) => e.stopPropagation()}
           >
@@ -707,7 +707,7 @@ const Cart = () => {
                   className={`md:w-full lg:border-b lg:border-[#e4e3e3] lg:last:border-b-0 lg:px-6 lg:py-5 ${!item.is_active ? "opacity-60" : ""}`}
                 >
                   {/* MOBILE / TABLET CARD  */}
-                  <div className="lg:hidden w-[358px] mx-auto rounded-[8px] bg-white shadow-[0px_0px_14px_0px_#00000014] p-4 overflow-hidden">
+                  <div className="lg:hidden w-full mx-auto rounded-[8px] bg-white shadow-[0px_0px_14px_0px_#00000014] p-4 overflow-hidden">
                     <div className="flex flex-row gap-3">
                       <div className="shrink-0 w-[84px] h-[84px]">
                         {item.is_active &&
@@ -852,7 +852,7 @@ const Cart = () => {
         </div>
 
         {/* ORDER SUMMARY */}
-        <div className="w-[358px] mx-auto lg:w-full xl:w-[488px] xl:min-h-[522px] bg-white rounded-[8px] shadow-[0px_0px_14px_rgba(0,0,0,0.08)] p-6 flex flex-col xl:sticky xl:top-24 xl:self-start">
+        <div className="w-full lg:w-full xl:max-w-[500px] xl:min-h-[522px] bg-white rounded-[8px] shadow-[0px_0px_14px_rgba(0,0,0,0.08)] p-6 flex flex-col xl:sticky xl:top-24 xl:self-start">
           <div className="flex items-center justify-between mb-5">
             <h5 className="text-[18px] font-bold leading-[100%] text-black">
               Order Summary

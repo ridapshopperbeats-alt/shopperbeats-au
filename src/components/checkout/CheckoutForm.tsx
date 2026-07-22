@@ -10,7 +10,10 @@ import {
   CardExpiryElement,
   CardNumberElement,
 } from "@stripe/react-stripe-js";
-import { fieldLabels, handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
+import {
+  fieldLabels,
+  handleAustralianPhoneNumberChange,
+} from "@/lib/utils/main-utils";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import Image from "next/image";
 import { toast } from "react-toastify";
@@ -128,9 +131,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       <div className="contact-section">
         <div className="contact-card-box">
           <div className="contact-details">
-            <h5 className="contact-heading">
-              Contact
-            </h5>
+            <h5 className="contact-heading">Contact</h5>
             <div className="mb-5">
               <Input
                 id="email"
@@ -169,18 +170,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       <div className="payment-section">
         <div className="payment-card-box">
           <div className="payment-details">
-            <h5 className="payment-heading">
-              Payment
-            </h5>
+            <h5 className="payment-heading">Payment</h5>
             <p className="payment-subtext">
               All transactions are secure and encrypted.
             </p>
 
             <div className="payment-method-box">
-              <label
-                htmlFor="CreditCard"
-                className="payment-method-toggle"
-              >
+              <label htmlFor="CreditCard" className="payment-method-toggle">
                 <span className="payment-method-name">
                   <input
                     type="radio"
@@ -194,13 +190,28 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                 </span>
                 <span className="payment-logos dflex">
                   <span className="payment-img">
-                    <Image src="/images/visa.svg" alt="Visa" width={30} height={20} />
+                    <Image
+                      src="/images/visa.svg"
+                      alt="Visa"
+                      width={30}
+                      height={20}
+                    />
                   </span>
                   <span className="payment-img">
-                    <Image src="/images/payment.svg" alt="Mastercard" width={30} height={20} />
+                    <Image
+                      src="/images/payment.svg"
+                      alt="Mastercard"
+                      width={30}
+                      height={20}
+                    />
                   </span>
                   <span className="payment-img">
-                    <Image src="/images/american.svg" alt="Amex" width={30} height={20} />
+                    <Image
+                      src="/images/american.svg"
+                      alt="Amex"
+                      width={30}
+                      height={20}
+                    />
                   </span>
                 </span>
               </label>

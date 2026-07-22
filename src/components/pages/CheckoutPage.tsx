@@ -17,11 +17,19 @@ import Button from "@/components/common/Button";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { CartItem, PromoData } from "@/types/cart";
 import { Address } from "@/types/address";
-import { getPriceDetails, formatPrice, getImageUrl } from "@/lib/utils/main-utils";
+import {
+  getPriceDetails,
+  formatPrice,
+  getImageUrl,
+} from "@/lib/utils/main-utils";
 import { RootState } from "@/lib/redux/store";
 import { useSelector } from "react-redux";
 import { useGetUserDetailsQuery } from "@/lib/redux/apis/auth-api";
-import { CardNumberElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import {
+  CardNumberElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import Image from "next/image";
@@ -509,12 +517,17 @@ export default function SecureCheckout() {
             variant,
             sku: item.sku || undefined,
             unitPrice: `$${formatPrice(mainPrice)}`,
-            discount: saveAmount > 0 ? `$${formatPrice(saveAmount)}` : undefined,
+            discount:
+              saveAmount > 0 ? `$${formatPrice(saveAmount)}` : undefined,
             finalPrice: `$${formatPrice(mainPrice * item.quantity)}`,
           };
         });
 
-      const buildOrderConfirmation = (productsForConfirmation: ReturnType<typeof buildProductsForConfirmation>) => ({
+      const buildOrderConfirmation = (
+        productsForConfirmation: ReturnType<
+          typeof buildProductsForConfirmation
+        >,
+      ) => ({
         orderId: orderResult.order_id,
         orderNumber: orderResult.order_number,
         deliveryCost: `$${formatPrice(orderResult.shipping_cost || 0)}`,
@@ -651,8 +664,16 @@ export default function SecureCheckout() {
 
         router.replace("/confirmed-order");
       }
-    } catch {
-      toast.error("Failed to place order");
+    } catch (err) {
+      const detail = (err as { data?: { detail?: string } })?.data?.detail;
+
+      if (typeof detail === "string" && /insufficient.*stock/i.test(detail)) {
+        toast.error(
+          "Sorry, one or more items in your cart are out of stock. Please update your cart and try again.",
+        );
+      } else {
+        toast.error("Failed to place order");
+      }
     } finally {
       setIsProcessingPayment(false);
     }
@@ -689,7 +710,6 @@ export default function SecureCheckout() {
       try {
         return JSON.parse(storedPromoData) as PromoData;
       } catch {
-        // ignore malformed promo data
         return null;
       }
     }
@@ -700,14 +720,9 @@ export default function SecureCheckout() {
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const effectivePostcode = formData.postcode || postcode;
-  const [prevEffectivePostcode, setPrevEffectivePostcode] = useState(
-    effectivePostcode,
-  );
+  const [prevEffectivePostcode, setPrevEffectivePostcode] =
+    useState(effectivePostcode);
 
-  // Reset the debounced postcode immediately (during render) once the
-  // effective postcode stops being a valid 4-digit value, instead of doing
-  // it synchronously inside the effect below. This mirrors React's
-  // recommended "adjusting state during render" pattern.
   if (prevEffectivePostcode !== effectivePostcode) {
     setPrevEffectivePostcode(effectivePostcode);
     if (!(effectivePostcode && effectivePostcode.length === 4)) {
@@ -796,9 +811,9 @@ export default function SecureCheckout() {
                       Order Summary
                     </h6>
                     <Link href="/cart" className="">
-                    <button className="text-sm font-semibold text-black underline">
-                      Edit Cart
-                    </button>
+                      <button className="text-sm font-semibold text-black underline">
+                        Edit Cart
+                      </button>
                     </Link>
                   </div>
 
@@ -955,6 +970,15 @@ export default function SecureCheckout() {
                           discount: item.discount,
                         });
 
+                        const isInactive = !item.is_active;
+                        const isOutOfStock =
+                          item.available_stock !== undefined &&
+                          item.available_stock <= 0;
+                        const isNotShippable = item.is_shippable === false;
+
+                        const isUnavailable =
+                          isInactive || isOutOfStock || isNotShippable;
+
                         return (
                           <div
                             key={item.id}
@@ -973,6 +997,14 @@ export default function SecureCheckout() {
                               <p className="text-sm font-semibold text-black line-clamp-2">
                                 {item.product_name}
                               </p>
+                              {isUnavailable && (
+                                <span className="block text-xs text-red-600 mt-1">
+                                  {isInactive && "Not Available Currently"}
+                                  {isOutOfStock && "Out of Stock"}
+                                  {isNotShippable &&
+                                    "Not available for this location"}
+                                </span>
+                              )}
                               <p className="text-right text-sm font-semibold text-black mt-1">
                                 {item.quantity} ×{" "}
                                 <span className="price">
