@@ -52,9 +52,6 @@ import {
   getFeaturesContent,
   getDeliveryTabContent,
   warrantyAndReturnContent,
-  getProductDetailsContent,
-  getItemsDetailsContent,
-  getStyleGuideContent,
 } from "@/components/ui/product-tab-content";
 import Link from "next/link";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
@@ -70,34 +67,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../common/select";
-import { findCategoryPath, formatPrice, getPriceDetails, getImageUrl, getVariantImage } from "@/lib/utils/main-utils";
-
-const KNOWN_COMPACT_SIZE_TOKENS = new Set([
-  "xxs",
-  "xs",
-  "s",
-  "m",
-  "l",
-  "xl",
-  "xxl",
-  "xxxl",
-  "2xl",
-  "3xl",
-  "4xl",
-  "5xl",
-  "sm",
-  "md",
-  "lg",
-]);
+import {
+  findCategoryPath,
+  formatPrice,
+  getImageUrl,
+  getPriceDetails,
+  getVariantImage,
+} from "@/lib/utils/main-utils";
 
 function isCompactAttributeValue(rawValue: string): boolean {
   const value = rawValue.trim();
   if (!value) return false;
-
-  const normalized = value.toLowerCase().replace(/\s+/g, "");
-  if (KNOWN_COMPACT_SIZE_TOKENS.has(normalized)) return true;
-
-  if (/^\d+(\.\d+)?\s*[a-z]{0,4}$/i.test(value)) return true;
 
   return false;
 }
@@ -445,21 +425,20 @@ export default function ProductDetailClient({
     tabRefs.current[index]?.focus();
   };
 
-  const handleTabKeyDown = (
-    e: React.KeyboardEvent, index: number) => {
+  const handleTabKeyDown = (e: React.KeyboardEvent, index: number) => {
     const tabCount = productTabItems.length;
     let newIndex = index;
 
-    if (e.key === 'ArrowRight') {
+    if (e.key === "ArrowRight") {
       e.preventDefault();
       newIndex = (index + 1) % tabCount;
-    } else if (e.key === 'ArrowLeft') {
+    } else if (e.key === "ArrowLeft") {
       e.preventDefault();
       newIndex = (index - 1 + tabCount) % tabCount;
-    } else if (e.key === 'Home') {
+    } else if (e.key === "Home") {
       e.preventDefault();
       newIndex = 0;
-    } else if (e.key === 'End') {
+    } else if (e.key === "End") {
       e.preventDefault();
       newIndex = tabCount - 1;
     }
@@ -702,7 +681,15 @@ export default function ProductDetailClient({
           ]
         : []),
     ],
-    [length, width, weight, height, precautionaryNote, careInstructions, warranty],
+    [
+      length,
+      width,
+      weight,
+      height,
+      precautionaryNote,
+      careInstructions,
+      warranty,
+    ],
   );
 
   const { firstHalf, secondHalf } = useMemo(() => {
@@ -1392,7 +1379,13 @@ export default function ProductDetailClient({
               product.bundle_products.length > 0 && (
                 <BundleSection bundleProducts={product.bundle_products} />
               )}
-
+            <div>
+              <RecommendedForYou
+                personalized={finalRecommendations}
+                recentlyViewed={recentlyViewed}
+                isLoading={isRecommendedForYouLoading}
+              />
+            </div>
 
             <div className="xl:hidden flex flex-col gap-5 w-full min-[1440px]:max-w-[1388px] min-[1440px]:sticky min-[1440px]:self-start">
               <ProductDetailsMobileTabs
@@ -1435,9 +1428,7 @@ export default function ProductDetailClient({
                     </div>
                   </div>
                 }
-                productDetailsContent={getProductDetailsContent(product)}
-                styleContent={getStyleGuideContent(product)}
-                itemsDetailsContent={getItemsDetailsContent(product)}
+                deliveryContent={getDeliveryTabContent(product)}
                 reviews={product.reviews || []}
               />
             </div>

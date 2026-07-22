@@ -111,9 +111,9 @@ export const getFeaturesContent = (
     <div className="py-4">
       {!options?.hideHeading && <b>Features:</b>}
       <ul className="list-disc pl-5 space-y-1 marker:text-black">
-        <li className={TEXT_CLASS}>
+        {/* <li className={TEXT_CLASS}>
           Static Data
-        </li>
+        </li> */}
       </ul>
 
       <div className="mt-4">
@@ -135,9 +135,9 @@ export const getProductDetailsContent = (product: Product) => (
     <div className="py-4">
       <b>Product Details: Statistic Data</b>
       <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}>
-        <li className={TEXT_CLASS}>
+        {/* <li className={TEXT_CLASS}>
           Static Data
-        </li>
+        </li> */}
       </ul>
 
       <div className="mt-4">
@@ -153,48 +153,48 @@ export const getProductDetailsContent = (product: Product) => (
   </>
 );
 
-export const getStyleGuideContent = (product: Product) => (
-  <>
-    <div className="py-4">
-      <b>Style Guide</b>
-      <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}>
-        <li className={TEXT_CLASS}>
-          Static Data
-        </li>
-      </ul>
+// export const getStyleGuideContent = (product: Product) => (
+//   <>
+//     <div className="py-4">
+//       <b>Style Guide</b>
+//       <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}>
+//         {/* <li className={TEXT_CLASS}>
+//           Static Data
+//         </li> */}
+//       </ul>
 
-      <div className="mt-4">
-        <Image
-          src={getImageUrl(product)}
-          alt={product.title || "Product image"}
-          width={1300}
-          height={260}
-          className="w-full max-w-[1300px] h-[260px] object-cover"
-        />
-      </div>
-    </div>
-  </>
-);
+//       <div className="mt-4">
+//         <Image
+//           src={getImageUrl(product)}
+//           alt={product.title || "Product image"}
+//           width={1300}
+//           height={260}
+//           className="w-full max-w-[1300px] h-[260px] object-cover"
+//         />
+//       </div>
+//     </div>
+//   </>
+// );
 
-export const getItemsDetailsContent = (product: Product) => (
-  <>
-    <div className="py-4">
-      <b>Item Details: Statistic Data</b>
-      <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}>
-        <li className={TEXT_CLASS}>
-          Static Data
-        </li>
-      </ul>
+// export const getItemsDetailsContent = (product: Product) => (
+//   <>
+//     <div className="py-4">
+//       <b>Item Details: Statistic Data</b>
+//       <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}>
+//         {/* <li className={TEXT_CLASS}>
+//           Static Data
+//         </li> */}
+//       </ul>
 
-      <div className="mt-4">
-        <Image
-          src={getImageUrl(product)}
-          alt={product.title || "Product image"}
-          width={1300}
-          height={260}
-          className="w-full max-w-[1300px] h-[260px] object-cover"
-        />
-      </div>
-    </div>
-  </>
-);
+//       <div className="mt-4">
+//         <Image
+//           src={getImageUrl(product)}
+//           alt={product.title || "Product image"}
+//           width={1300}
+//           height={260}
+//           className="w-full max-w-[1300px] h-[260px] object-cover"
+//         />
+//       </div>
+//     </div>
+//   </>
+// );

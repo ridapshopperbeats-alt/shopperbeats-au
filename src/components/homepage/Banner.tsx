@@ -23,7 +23,7 @@ export default function SingleBanner() {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container lg:pt-6">
       <div className="relative hidden lg:flex">
         <Image
           src={banners[currentBanner].image}

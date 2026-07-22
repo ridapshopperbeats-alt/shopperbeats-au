@@ -255,6 +255,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
                     wishlistItems={wishlistItems}
                     image={getImageUrl(product)}
                     title={product.title}
+                    brand_name={product.brand_name}
                     mainPrice={priceInfo.mainPrice}
                     wasPrice={priceInfo.wasPrice}
                     showWasPrice={priceInfo.showWasPrice}

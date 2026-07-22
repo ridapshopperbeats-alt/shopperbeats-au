@@ -729,7 +729,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center gap-2 hover:text-red-500"
-                  href="/product-listing/whats-on-sale"
+                  href="#"
                 >
                   Fashion & Accessories
                 </Link>
@@ -745,7 +745,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center gap-2 hover:text-red-500"
-                  href="/category/health-beauty"
+                  href="#"
                 >
                   Outdoor & Patio
                 </Link>
@@ -753,7 +753,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center gap-2 hover:text-red-500"
-                  href="/category/health-beauty"
+                  href="/category/best-seller"
                 >
                   Best Sellers
                 </Link>

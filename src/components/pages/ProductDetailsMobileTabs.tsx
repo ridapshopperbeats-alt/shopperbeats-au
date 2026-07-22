@@ -4,41 +4,26 @@ import { useState } from "react";
 import Accordion from "../common/Accordion";
 import ReviewCard from "../ui/ReviewCard";
 import { Review } from "@/types/product";
+import { warrantyAndReturnContent } from "../ui/product-tab-content";
 
 interface ProductDetailsMobileTabsProps {
   featuresContent: React.ReactNode;
   descriptionContent: React.ReactNode;
-  productDetailsContent: React.ReactNode;
-  styleContent: React.ReactNode;
-  itemsDetailsContent: React.ReactNode;
+  deliveryContent: React.ReactNode;
   reviews: Review[];
 }
 
 export default function ProductDetailsMobileTabs({
-  featuresContent,
   descriptionContent,
-  productDetailsContent,
-  styleContent,
-  itemsDetailsContent,
+  deliveryContent,
   reviews,
 }: ProductDetailsMobileTabsProps) {
   const [activeTab, setActiveTab] = useState<"details" | "reviews">("details");
 
   const accordionItems = [
-    {
-      id: "features",
-      title: "Features",
-      defaultOpen: true,
-      content: featuresContent,
-    },
-    { id: "description", title: "Description", content: descriptionContent },
-    {
-      id: "product-details",
-      title: "Product Details",
-      content: productDetailsContent,
-    },
-    { id: "style", title: "Style", content: styleContent },
-    { id: "items-details", title: "Item Details", content: itemsDetailsContent },
+   { id: "description", title: "Description", content: descriptionContent },
+    { id: "delivery", title: "Delivery", content: deliveryContent },
+    { id: "Warranty and return ", title: "Warranty And Return", content: warrantyAndReturnContent },
   ];
 
   const tabButtonClass = (tab: "details" | "reviews") =>
