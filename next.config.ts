@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/api/v1/:path*",
+        destination: "https://preprod.shopperbeats.com.au/api/v1/:path*",
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

@@ -24,6 +24,7 @@ import { formatPrice } from "@/lib/utils/main-utils";
 import "../../../../../styles/Checkout.css";
 import "../../../../../styles/Cart.css";
 import "../../../../../styles/Product.css";
+import "../../../../../styles/auth.css";
 
 interface OrderDetailProps {
   params: Promise<{ orderId: string }>;
@@ -122,7 +123,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
   return (
     <div>
-      <div className="dflex order-action justify-between">
+      <div className="dflex order-action order-detail-header">
         <h4>Order Detail</h4>
         <div className="btn-action btn-track">
           {(order.available_actions?.includes("retry") || order.available_actions?.includes("retry_payment")) && (
@@ -138,8 +139,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
               href={order.tracking_link}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-red btn-filled btn-sharp"
-              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+              className="btn btn-red btn-filled btn-sharp order-track-link"
             >
               Track Order
             </Link>
@@ -189,7 +189,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
       </div>
 
       {/* Order Info */}
-      <div className="dflex order-detail mt-30">
+      <div className="dflex order-detail order-detail-info">
         <div className="order-item">
           <h5>Order Number</h5>
           <p>{order.order_number || order.id}</p>
@@ -210,7 +210,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         <div className="order-item">
           <h5>Order Status</h5>
 
-          <div style={{ textTransform: "capitalize" }}>
+          <div className="order-status-value">
             {order.returns?.some((r: OrderReturn) => r?.status?.toLowerCase() === "requested") ? (
               "Return Requested"
             ) : (
@@ -258,12 +258,12 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                       width={136}
                       src={product.image}
                       alt={product.name}
-                      className="cursor-pointer object-contain"
+                      className="order-item-image"
                     />
                   </Link>
                   <div>
                     <Link href={`/product/${product.unique_code || product.product_id}`}>
-                      <h3 className="cursor-pointer hover:text-red-600 transition-colors">{product.name}</h3>
+                      <h3 className="order-item-title">{product.name}</h3>
                     </Link>
 
                     {product?.variant_attributes?.length > 0 ? (
@@ -291,12 +291,12 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                       <strong>Quantity:</strong> {product.quantity}
                     </p>
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="order-item-actions">
                       {/* Cancel & Return Item Buttons */}
                       {(matchingItem?.available_actions?.includes("cancel") || matchingItem?.available_options?.includes("cancel")) && (
-                        <div className="mt-2 w-full">
+                        <div className="order-item-action-wrapper">
                           <Button
-                            className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
+                            className="order-item-action-btn"
                             onClick={() => {
                               setSelectedItemForCancel({ id: String(trueItemId), name: product.name });
                               setIsCancelItemPopupOpen(true);
@@ -311,7 +311,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
                         <Button
-                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
+                          className="order-item-action-btn"
                           onClick={() => {
                             setSelectedItemForReturn({
                               id: String(trueItemId),
@@ -327,7 +327,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
                         <Button
-                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
+                          className="order-item-action-btn"
                           onClick={() => {
                             setSelectedItemForReplace({
                               id: String(trueItemId),
@@ -342,10 +342,10 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                     </div>
 
                     {(matchingItem?.available_actions?.includes("review") || matchingItem?.available_actions?.includes("add_review") || matchingItem?.available_options?.includes("review") || matchingItem?.available_options?.includes("add_review")) && (
-                      <div className="mt-2 w-full">
+                      <div className="order-item-action-wrapper">
                         <Link href={`/user/orders/${order.id}/review?product_id=${product.product_id}`}>
                           <Button
-                            className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
+                            className="order-item-action-btn"
                           >
                             Add Review
                           </Button>
@@ -354,7 +354,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                     )}
 
                     {product.status === "cancelled" && (
-                      <p className="mt-2 text-red-600 text-sm font-medium">Cancelled</p>
+                      <p className="order-item-cancelled-label">Cancelled</p>
                     )}
                   </div>
                 </td>
@@ -366,15 +366,15 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
       {/* Order Summary */}
       <div className="order-summery mt-5">
-        <div className="summary-row border-b border-gray-200 pb-2">
-          <p style={{ fontSize: "16px", fontWeight: "600", }}>Subtotal ({products.length} Items)</p>
+        <div className="summary-row order-summary-row">
+          <p className="order-summary-label">Subtotal ({products.length} Items)</p>
           <p className="price">
             {order.currency} {formatPrice(order.subtotal)}
           </p>
         </div>
 
-        <div className="summary-row  border-b border-gray-200 pb-2">
-          <p style={{ fontSize: "16px", fontWeight: "600", }}>Total Savings</p>
+        <div className="summary-row order-summary-row">
+          <p className="order-summary-label">Total Savings</p>
           <p className="savings">
             -{order.currency}{" "}
             {formatPrice(
@@ -384,11 +384,11 @@ export default function OrderDetail({ params }: OrderDetailProps) {
           </p>
         </div>
 
-        <div className="flex-wrap justify-between flex  border-b border-gray-200 pb-2">
-          <p style={{ fontSize: "16px", fontWeight: "600" }}>
+        <div className="order-delivery-row">
+          <p className="order-summary-label">
             Delivery Details
             <br />
-            <span style={{ fontSize: "14px", fontWeight: "500", color: "#726969", display: "flex" }}>
+            <span className="order-delivery-address">
               Address: {snapshot.shipping_address.address},{" "}
               {snapshot.shipping_address.city}
             </span>
@@ -398,8 +398,8 @@ export default function OrderDetail({ params }: OrderDetailProps) {
           </p>
         </div>
 
-        <div className="justify-between py-[16px] flex bg-[#f5f5f5] pl-4">
-          <strong style={{ fontSize: "18px", fontWeight: "600" }}>Total (Incl. GST)</strong>
+        <div className="order-total-row">
+          <strong className="order-total-label">Total (Incl. GST)</strong>
           <p className="price">
             {order.currency} {formatPrice(finalTotal)}
           </p>

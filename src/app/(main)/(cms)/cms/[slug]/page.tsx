@@ -1,14 +1,7 @@
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import { notFound } from "next/navigation";
 import CmsIframe from "@/components/CmsIframe";
-
-interface CmsPage {
-  id: number;
-  title: string;
-  slug: string;
-  content: string;
-  is_published: boolean;
-}
+import type { CmsPage } from "@/types/cms";
 
 async function getCmsPage(slug: string): Promise<CmsPage | null> {
   const res = await fetch(

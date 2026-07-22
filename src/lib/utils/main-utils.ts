@@ -4,6 +4,7 @@ import { API_ENDPOINTS } from "@/lib/constants/api";
 const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
 
 import { cache } from "react";
+import { ContactContent } from "@/types/cms";
 // Price formatting utilities
 export const formatPrice = (
   price: number | string | undefined | null,
@@ -400,6 +401,31 @@ export const fieldLabels: Record<string, string> = {
   billingPostcode: "Billing postcode",
   billingPhone: "Billing phone",
   paymentMethod: "Payment method",
+};
+
+
+// JSON-like data
+export const contactData: ContactContent = {
+  title: "Have a question, or want an update on your order?",
+  description: [
+    "Our team of happily helpful Experts is readily available to assist you, no matter how you choose to get in touch with us.",
+    "We strive to respond promptly within 24-48 hours. During peak times, there may be a slight delay. Rest assured, we are committed to addressing your inquiries quickly.",
+  ],
+  contactBlocks: [
+    {
+      icon: "/images/cms/location.svg",
+      label: "Address",
+      value: "Truganina 3029, Victoria, Australia",
+    },
+    {
+      icon: "/images/cms/clock.svg",
+      label: "Working Hours",
+      value: {
+        weekdays: "9:00am - 5:00pm",
+        weekends: "Closed",
+      },
+    },
+  ],
 };
 
 // Falls back to the production domain when NEXT_PUBLIC_SITE_URL isn't set,

@@ -251,3 +251,12 @@ export const personalInfoSchema = yup.object().shape({
   phonenumber: yup.string().required("Phone number is required"),
   date_of_birth: yup.date().nullable(),
 });
+
+
+// Validation schema
+export const contactInfoSchema = yup.object().shape({
+  name: nameField("Name"),
+  email: email,
+  phone: phoneNumber,
+  message: requiredMessage("Message", 5),
+});

@@ -36,7 +36,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 }) => {
   const mounted = useIsClient();
 
-  // Load saved checkout details from localStorage on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedCheckoutData = localStorage.getItem("checkoutFormData");
@@ -62,7 +61,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     }
   }, [setFormData]);
 
-  // Save checkout details to localStorage when form data changes
   useEffect(() => {
     if (typeof window !== "undefined" && mounted) {
       const dataToSave = {
@@ -82,7 +80,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     }
   }, [formData, mounted]);
 
-  // Show toast notifications for validation errors
   useEffect(() => {
     if (mounted) {
       Object.entries(formErrors).forEach(([field, error]) => {
@@ -365,9 +362,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     )}
                   </div>
                   <div className="form-item">
-                    {/* <label htmlFor="billingApartment">
-                      Apartment, suite, etc. (optional)
-                    </label> */}
                     <Input
                       id="billingApartment"
                       type="text"
@@ -380,7 +374,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                   </div>
                   <div className="form-fields dflex">
                     <div className="form-item">
-                      {/* <label htmlFor="billingCity">City*</label> */}
                       <Input
                         id="billingCity"
                         type="text"
@@ -396,7 +389,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                       />
                     </div>
                     <div className="form-item select-field">
-                      {/* <label htmlFor="billingState">State*</label> */}
                       <Input
                         id="billingState"
                         type="text"
@@ -411,8 +403,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                         error={formErrors.billingState}
                       />
                     </div>
-                    <div className="form-item">
-                      {/* <label htmlFor="billingPostcode">Postcode*</label> */}
+                    <div className="form-item my-6">
                       <Input
                         id="billingPostcode"
                         onWheel={(e) => e.currentTarget.blur()}
@@ -429,7 +420,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     </div>
                   </div>
                   <div className="form-item">
-                    {/* <label htmlFor="billingPhone">Phone*</label> */}
                     <Input
                       id="billingPhone"
                       type="tel"
@@ -446,12 +436,12 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
               )}
             </div>
 
-            {/* OTHER PAYMENT OPTIONS */}
-            <div className="payment-option-group">
+           {/* OTHER PAYMENT OPTIONS */}
+            <div className="payment-option-group xl:-mx-4 py-1">
               <div
                 className={`payment-option ${formData.paymentMethod === "paypal" ? "active" : ""}`}
               >
-                <div className="payment-item">
+                <div className="payment-item flex items-center gap-2">
                   <input
                     type="radio"
                     name="paymentMethod"
@@ -459,15 +449,15 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     value="paypal"
                     checked={formData.paymentMethod === "paypal"}
                     onChange={handleChange}
-                    className="payment-option-radio"
+                    className="w-[12px] h-[12px] accent-[#01295F] text-[#B7BAB4]"
                   />
                   <label
                     htmlFor="paypal"
-                    className="payment-option-label"
+                    className="font-semibold text-[14px] leading-[100%] text-black"
                   >
                     PayPal
                   </label>
-                  <span className="payment-option-logo">
+                  <span style={{ marginLeft: "auto" }}>
                     <Image
                       src="/images/paypal.svg"
                       alt="Paypal"
@@ -480,7 +470,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
               <div
                 className={`payment-option ${formData.paymentMethod === "afterpay" ? "active" : ""}`}
               >
-                <div className="payment-item">
+                <div className="payment-item flex items-center gap-2">
                   <input
                     type="radio"
                     name="paymentMethod"
@@ -488,15 +478,15 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     value="afterpay"
                     checked={formData.paymentMethod === "afterpay"}
                     onChange={handleChange}
-                    className="payment-option-radio"
+                    className="w-[12px] h-[12px] accent-[#01295F] text-[#B7BAB4]"
                   />
                   <label
                     htmlFor="afterpay"
-                    className="payment-option-label"
+                    className="font-semibold text-[14px] leading-[100%] text-black"
                   >
                     Afterpay
                   </label>
-                  <span className="payment-option-logo">
+                  <span style={{ marginLeft: "auto" }}>
                     <Image
                       src="/images/afterpay.svg"
                       alt="Afterpay"
@@ -509,7 +499,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
               <div
                 className={`payment-option ${formData.paymentMethod === "zip" ? "active" : ""}`}
               >
-                <div className="payment-item">
+                <div className="payment-item flex items-center gap-2">
                   <input
                     type="radio"
                     name="paymentMethod"
@@ -517,15 +507,15 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     value="zip"
                     checked={formData.paymentMethod === "zip"}
                     onChange={handleChange}
-                    className="payment-option-radio"
+                    className="w-[12px] h-[12px] accent-[#01295F] text-[#B7BAB4]"
                   />
                   <label
                     htmlFor="zip"
-                    className="payment-option-label"
+                    className="font-semibold text-[14px] leading-[100%] text-black"
                   >
                     Zippy
                   </label>
-                  <span className="payment-option-logo">
+                  <span style={{ marginLeft: "auto" }}>
                     <Image
                       src="/images/zip.svg"
                       alt="Zippay"
