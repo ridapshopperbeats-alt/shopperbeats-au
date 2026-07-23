@@ -24,7 +24,7 @@ import {
   FaPinterestP,
   FaSnapchatGhost,
 } from "react-icons/fa";
-import { FaXTwitter, FaTiktok, FaThreads } from "react-icons/fa6";
+import { FaXTwitter, FaTiktok, FaThreads, FaChevronDown } from "react-icons/fa6";
 
 const SOCIAL_ICONS: Record<string, React.ComponentType> = {
   facebook: FaFacebookF,
@@ -60,6 +60,32 @@ export default function Footer({
 
   const { data: socialLinks } = useGetSocialMediaLinksQuery();
   const [email, setEmail] = useState("");
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+
+  const toggleSection = (title: string) => {
+    setOpenSections((prev) => ({ ...prev, [title]: !prev[title] }));
+  };
+
+  const socialItems =
+    socialLinks && socialLinks.length > 0 ? socialLinks : STATIC_SOCIAL_LINKS;
+
+  const renderSocialIcons = () => (
+    <ul className="social">
+      {socialItems.map((item) => {
+        // cast to any to allow passing className prop to icon components
+        const Icon = SOCIAL_ICONS[item.icon_class.toLowerCase()] as any;
+        return (
+          <li key={item.id}>
+            <a href={item.url} target="_blank" rel="noopener noreferrer">
+              {Icon ? (
+                <Icon className="text-[#FFF] text-[18.61px] font-normal leading-normal" />
+              ) : null}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  );
 
   const footerMenus = [
     { title: "Company", data: footerMenuData?.company },
@@ -104,8 +130,8 @@ export default function Footer({
                   <Image
                     src={`/images/${item.img}.svg`}
                     alt={item.text}
-                    width={62}
-                    height={42}
+                    width={item.width}
+                    height={item.height}
                     className="footer-highlight-img"
                   />
                 </div>
@@ -186,17 +212,33 @@ export default function Footer({
                   className="footer-block footer-menu-block"
                   key={section.title}
                 >
-                  <h5 className="footer-section-title">{section.title}</h5>
+                  <h5
+                    className="footer-section-title footer-accordion-toggle"
+                    onClick={() => toggleSection(section.title)}
+                  >
+                    {section.title}
+                    <FaChevronDown
+                      className={`footer-accordion-chevron ${
+                        openSections[section.title] ? "is-open" : ""
+                      }`}
+                    />
+                  </h5>
                   {items.length > 0 ? (
-                    <ul>
-                      {items.map((link) => (
-                        <li key={link.href}>
-                          <ScrollToTopLink href={link.href}>
-                            {link.label}
-                          </ScrollToTopLink>
-                        </li>
-                      ))}
-                    </ul>
+                    <div
+                      className={`footer-accordion-panel ${
+                        openSections[section.title] ? "is-open" : ""
+                      }`}
+                    >
+                      <ul>
+                        {items.map((link) => (
+                          <li key={link.href}>
+                            <ScrollToTopLink href={link.href}>
+                              {link.label}
+                            </ScrollToTopLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ) : null}
                 </div>
               );
@@ -226,36 +268,18 @@ export default function Footer({
                   <Image
                     src="/images/arrow-right.svg"
                     alt="Subscribe"
-                    width={20}
-                    height={20}
+                    width={21}
+                    height={14}
                   />
                 </Button>
               </form>
 
-              <ul className="social">
-                {(socialLinks && socialLinks.length > 0
-                  ? socialLinks
-                  : STATIC_SOCIAL_LINKS
-                ).map((item) => {
-                  // cast to any to allow passing className prop to icon components
-                  const Icon = SOCIAL_ICONS[
-                    item.icon_class.toLowerCase()
-                  ] as any;
-                  return (
-                    <li key={item.id}>
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {Icon ? (
-                          <Icon className="text-[#FFF] text-[18.61px] font-normal leading-normal" />
-                        ) : null}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
+              {renderSocialIcons()}
+            </div>
+
+            {/* Standalone social row, shown only on mobile below the accordion menus */}
+            <div className="footer-block footer-social-mobile">
+              {renderSocialIcons()}
             </div>
           </div>
 

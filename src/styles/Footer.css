@@ -25,7 +25,7 @@ footer h4 {
 }
 
 .footer-block ul a {
-  @apply text-[var(--white)] text-[16px] inline-block p-0 leading-[29px] font-normal;
+  @apply text-[var(--white)] text-[16px] inline-block p-0 leading-[29px] font-normal no-underline;
 }
 
 .footer-block ul a:hover {
@@ -93,7 +93,7 @@ ul.social {
 }
 
 .footer-highlight-text {
-  @apply text-[16px] lg:text-[18px] font-bold leading-[22px] text-black max-w-[170px];
+  @apply text-[16px] lg:text-[18px] font-bold leading-[22px] text-black;
 }
 
 .footer-container {
@@ -129,7 +129,15 @@ ul.social {
 }
 
 .footer-copyright-mobile {
-  @apply pt-4 text-center block sm:hidden;
+  @apply pt-4 block sm:hidden;
+  color: #FFF;
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  opacity: 0.5;
 }
 
 .payment img {
@@ -175,10 +183,134 @@ ul.social {
   .footer-block.footer-newsletter {
     @apply w-full;
   }
+
+  .footer-highlight-item {
+    flex: 1 0 0;
+    min-width: 0;
+  }
+
+  .footer-highlight-icon {
+    width: 46.911px;
+    height: 46.911px;
+    border-radius: 46.911px;
+    background: var(--yellow, #FFB30F);
+    flex-shrink: 0;
+  }
+
+  .footer-highlight-img {
+    width: 27.698px;
+    height: 18.885px;
+  }
+
+  .footer-highlight-text {
+    flex: 1 0 0;
+    min-width: 0;
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  .footer-block.footer-newsletter input[type="email"] {
+    display: flex;
+    height: 38px;
+    padding: 0 16px;
+    align-items: center;
+    flex: 1 0 0;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #1A1A1A;
+  }
+
+  .footer-newsletter-title {
+    color: #FFF;
+    font-family: Montserrat, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  .footer-newsletter-desc {
+    align-self: stretch;
+    color: #FFF;
+    font-family: Montserrat, sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    opacity: 0.7;
+  }
 }
 
 @media screen and (max-width: 480px) {
   .payment img {
     @apply bg-[var(--white)] rounded-[2px] w-[41px] h-[27px] p-[2px];
+  }
+}
+
+.footer-accordion-chevron {
+  @apply hidden text-white text-sm transition-transform duration-200;
+}
+
+.footer-social-mobile {
+  @apply hidden;
+}
+
+@media screen and (max-width: 767px) {
+  .footer-menu-row {
+    @apply flex-col;
+  }
+
+  .footer-newsletter {
+    order: -1;
+  }
+
+  .footer-newsletter .social {
+    @apply hidden;
+  }
+
+  .footer-menu-block {
+    @apply mb-0 border-b border-white/15 pb-0;
+  }
+
+  .footer-menu-block .footer-section-title {
+    @apply mb-0 text-base font-semibold cursor-pointer;
+    display: flex;
+    padding: 16px 0;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+  }
+
+  .footer-accordion-chevron {
+    @apply inline-block;
+  }
+
+  .footer-accordion-chevron.is-open {
+    @apply rotate-180;
+  }
+
+  .footer-accordion-panel {
+    @apply grid grid-rows-[0fr] transition-all duration-300 ease-in-out;
+  }
+
+  .footer-accordion-panel ul {
+    @apply min-h-0 overflow-hidden;
+  }
+
+  .footer-accordion-panel.is-open {
+    @apply grid-rows-[1fr];
+  }
+
+  .footer-accordion-panel.is-open ul {
+    @apply pb-4;
+  }
+
+  .footer-social-mobile {
+    @apply flex justify-center my-2;
+    order: 2;
   }
 }

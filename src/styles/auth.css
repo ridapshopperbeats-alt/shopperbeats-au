@@ -31,7 +31,7 @@
   background-size: 11px 11px;
 }
 .user-form-wrapper {
-    @apply bg-[var(--white)] border-2 border-[rgba(255,255,255,0.9)] max-w-[714px] mx-auto mt-[38px] mb-[70px] px-[34px] py-6 w-full rounded-lg;
+    @apply bg-[var(--white)] border-2 border-[rgba(255,255,255,0.9)] max-w-[714px] mx-auto  px-[34px] py-6 w-full rounded-lg;
 }
 
 .link {
@@ -378,10 +378,24 @@
     .user-form-wrapper {
         @apply px-[10px] py-6;
     }
-    .user-form-wrapper .link {
+    .user-form-wrapper .link:not(.form-item-radio) {
         @apply flex-col gap-[5px] mt-3;
+    }
+
+    .user-form-wrapper .form-item-radio.link {
+        @apply flex-row items-start gap-[10px];
     }
     .signup-account .btn-action {
         @apply gap-4;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .recaptcha-wrapper {
+        @apply overflow-hidden w-[261px] h-[67px];
+    }
+    .recaptcha-wrapper > div {
+        transform: scale(0.86);
+        transform-origin: 0 0;
     }
 }

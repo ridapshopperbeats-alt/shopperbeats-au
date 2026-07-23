@@ -754,6 +754,7 @@ nav.navbar {
 @media screen and (max-width: 1200px) {
   .logo img {
     max-width: 195px;
+    height: auto;
   }
 
   .search-block {
@@ -901,6 +902,7 @@ nav.navbar {
 @media screen and (max-width: 480px) {
   .logo img {
     max-width: 155px;
+    height: auto;
   }
 
   .header-link a,

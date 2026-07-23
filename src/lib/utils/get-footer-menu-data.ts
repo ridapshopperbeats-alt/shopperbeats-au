@@ -66,10 +66,10 @@ export const FOOTER_LINKS_STATIC = [
 export const paymentArr = ["visa", "payment", "american", "paypal", "afterpay", "zip"];
 
 export const footerHighlights = [
-  { img: "free-shipping", text: "Fast & Limited Free Shipping" },
-  { img: "customer", text: "Expert Customer Service" },
-  { img: "peace-mind", text: "Shop With Peace of Mind" },
-  { img: "incredible", text: "Incredible Value Every Day" },
+  { img: "free-shipping", text: "Fast & Limited Free Shipping", width: 62, height: 44 },
+  { img: "customer", text: "Expert Customer Service", width: 47, height: 45 },
+  { img: "peace-mind", text: "Shop With Peace of Mind", width: 47, height: 49 },
+  { img: "incredible", text: "Incredible Value Every Day", width: 53, height: 56 },
 ];
 
 

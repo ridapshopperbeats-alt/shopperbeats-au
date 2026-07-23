@@ -265,37 +265,36 @@ export default function SignupPage() {
           </div>
 
 
-          <div className="form-item">
+          <div className="form-item recaptcha-wrapper">
             <ReCaptcha onCaptchaChange={setRecaptcha_token} />
           </div>
 
-          <div className="my-6 link">
-            <Input
+          
+           <div className="form-item form-item-radio link">
+            <input
               type="checkbox"
               id="terms"
               name="terms"
               checked={termsAccepted}
               onChange={(e) => setTermsAccepted(e.target.checked)}
               disabled={isLoading}
-              className="checkbox-input"
             />
-            <span>
+            <label htmlFor="terms">
               I Agree to all the
               <Link href="/cms/terms-condition" target="_blank"> Terms & Conditions</Link>
-            </span>
+            </label>
           </div>
 
-          <div className="my-7 link">
-            <Input
+           <div className="form-item form-item-radio link">
+            <input
               type="checkbox"
               id="mailing_list"
               name="mailing_list"
               checked={mailing_list}
               onChange={(e) => setMailing_list(e.target.checked)}
               disabled={isLoading}
-              className="checkbox-input"
             />
-            <span>Add me to the mailing list</span>
+            <label htmlFor="mailing_list">Add me to the mailing list</label>
           </div>
 
           <Button

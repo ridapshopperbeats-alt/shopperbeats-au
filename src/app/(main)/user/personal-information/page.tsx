@@ -196,8 +196,7 @@ export default function PersonalInformationPage() {
                 type="submit"
                 disabled={isUpdating}
                 isLoading={isUpdating}
-                className="btn btn-red btn-filled btn-sharp w-full mt-20"
-                style={{ alignItems: "center", justifyContent: "center", display: "flex", marginTop: "10px" }}
+                className="btn btn-red btn-filled btn-sharp mt-20 w-30 flex items-center justify-center mt-[10px]"
                 debounceDelay={500}
               >
                 {isUpdating ? "Saving..." : "Update"}
