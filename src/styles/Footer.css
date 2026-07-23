@@ -85,7 +85,7 @@ ul.social {
 }
 
 .footer-highlight-icon {
-  @apply w-[105px] h-[105px] rounded-full bg-[#FFB30F] flex items-center justify-center transition-all duration-300 group-hover:bg-[#042A89];
+  @apply w-[50px] h-[50px] md:w-[105px] md:h-[105px] rounded-full bg-[#FFB30F] flex items-center justify-center transition-all duration-300 group-hover:bg-[#042A89];
 }
 
 .footer-highlight-img {
@@ -93,7 +93,7 @@ ul.social {
 }
 
 .footer-highlight-text {
-  @apply text-[16px] lg:text-[18px] font-bold leading-[22px] text-black max-w-[170px];
+  @apply text-[16px] lg:text-[18px] font-bold leading-[22px] text-black lg:max-w-[170px];
 }
 
 .footer-container {

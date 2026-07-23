@@ -18,6 +18,7 @@ import ProductDisplay from "../productListing/ProductDisplay";
 import NoProductsFound from "../NoProductFound";
 import { resolvePriceRange, filterProductsByPriceRange, getProductPrice } from "@/lib/utils/price-filter";
 import { buildFilterTags, formatPriceRangeLabel } from "@/lib/utils/filter-tags";
+import { toSafeJsonLd } from "@/lib/utils/main-utils";
 import "../../styles/Product.css";
 interface ProductListingClientProps {
   slug: string;
@@ -164,10 +165,6 @@ const ProductListingClient = ({
   }, []);
 
   const apiProducts = rtkData?.data || products;
-
-  const effectiveTotal =
-    rtkData?.total ??
-    totalItems;
 
   const extractedCategories = useMemo(() => {
     if (!products || products.length === 0) return [];
@@ -317,6 +314,10 @@ const extractedBrands = useMemo(() => {
     return filterProductsByPriceRange(result, activePriceRange);
   }, [apiProducts, selectedCategorySlug, selectedPriceRange, activePriceRange]);
 
+  const effectiveTotal = isHighlight
+    ? filteredProducts.length
+    : (rtkData?.total ?? totalItems);
+
   const priceFilteredApiProducts = useMemo(
     () => filterProductsByPriceRange(apiProducts, activePriceRange),
     [apiProducts, activePriceRange],
@@ -446,7 +447,7 @@ const extractedBrands = useMemo(() => {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: toSafeJsonLd({
             "@context": "https://schema.org",
             "@type": "ItemList",
             name: category?.name || slug,

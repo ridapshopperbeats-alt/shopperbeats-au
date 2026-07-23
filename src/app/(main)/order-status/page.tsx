@@ -64,8 +64,6 @@ const {
     // Do not process payment capture if status is cancel or failed
     if (status === "cancel" || actualRedirectStatus === "failed") return;
 
-    console.log("Payment params:", { token, payerId, paymentIntent, redirectStatus });
-    
     // Handle PayPal payment
     if (token && payerId && !isProcessingPayment && !hasProcessedPayment.current) {
       const handleCapture = async () => {
@@ -82,7 +80,8 @@ const {
               isLoading: false,
               autoClose: 3000,
             });
-                      
+            localStorage.removeItem("checkoutFormData");
+
           // Wait for cart to be available
           if (isCartLoaded && cart?.id) {
             await clearCart({ cartId: cart.id }).unwrap();
@@ -144,7 +143,8 @@ const {
             isLoading: false,
             autoClose: 3000,
           });
-          
+          localStorage.removeItem("checkoutFormData");
+
           // Wait for cart to be available
           if (isCartLoaded && cart?.id) {
             await clearCart({ cartId: cart.id }).unwrap();

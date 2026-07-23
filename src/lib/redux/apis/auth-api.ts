@@ -7,6 +7,11 @@ import { UserDetails, PersonalData, LoginResponse, UpdatePersonalDataRequest, So
 import { addressApi } from "./address-api";
 import { cartApi } from "./cart-api";
 import { orderApi } from "./order-api";
+import { vendorApi } from "./vendor-api";
+import { marketingApi } from "./marketing-api";
+import { helpdeskApi } from "./helpdesk-api";
+import { faqApi } from "./faq-api";
+import { geocodeApi } from "./geocode-api";
 import { createBaseQuery } from "./base-query";
 
 const baseQuery = createBaseQuery(API_ENDPOINTS.AUTH.BASE_URL);
@@ -118,6 +123,11 @@ export const authApi = createApi({
           dispatch(addressApi.util.resetApiState());
           dispatch(cartApi.util.resetApiState());
           dispatch(orderApi.util.resetApiState());
+          dispatch(vendorApi.util.resetApiState());
+          dispatch(marketingApi.util.resetApiState());
+          dispatch(helpdeskApi.util.resetApiState());
+          dispatch(faqApi.util.resetApiState());
+          dispatch(geocodeApi.util.resetApiState());
           dispatch(logout());
         }
       },

@@ -6,6 +6,15 @@ const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
 import { cache } from "react";
 import { ContactContent } from "@/types/cms";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
+
+// Safely serialize data for a `<script type="application/ld+json">` block.
+// JSON.stringify leaves `<` unescaped, so a value containing `</script>`
+// (e.g. a scraped/malicious product title) can break out of the script tag
+// and inject arbitrary markup — escape it to a JSON-safe unicode sequence.
+export function toSafeJsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
 // Price formatting utilities
 export const formatPrice = (
   price: number | string | undefined | null,
@@ -16,7 +25,7 @@ export const formatPrice = (
 
   if (Number.isNaN(numPrice)) return "0";
 
-  return numPrice.toLocaleString("en-IN", {
+  return numPrice.toLocaleString("en-US", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   });
@@ -158,12 +167,12 @@ export function getImageUrl(product: Product, variant?: string): string {
 }
 
 // Get the main image URL for a product variant, with a fallback if no images are available
-export function getVariantImage(variant: Variant): string {
+export function getVariantImage(variant: Variant, imageVariant?: string): string {
   const fallback = "/images/image-coming-soon.jpg";
 
   if (!variant.images) return fallback;
   if (typeof variant.images === "string" && variant.images) {
-    return variant.images;
+    return applyImageVariant(variant.images, imageVariant);
   }
 
   if (Array.isArray(variant.images) && variant.images.length > 0) {
@@ -172,7 +181,7 @@ export function getVariantImage(variant: Variant): string {
       .sort((a, b) => (a.image_order ?? 9999) - (b.image_order ?? 9999));
 
     if (sortedImages.length > 0) {
-      return sortedImages[0].image_url;
+      return applyImageVariant(sortedImages[0].image_url, imageVariant);
     }
 
     return fallback;

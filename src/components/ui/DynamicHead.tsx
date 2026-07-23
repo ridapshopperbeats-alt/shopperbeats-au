@@ -19,13 +19,13 @@ const DynamicHead = ({ metadata, cookie_logo }: { metadata: MetaInfo, cookie_log
     code_container
   } = metadata;
 
-  const extractScripts = (head: string | undefined) => {
-    if (!head) return [];
-    const scriptRegex = /<script([^>]*)>(.*?)<\/script>/gi;
+  const extractScripts = (html: string | undefined) => {
+    if (!html) return [];
+    const scriptRegex = /<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi;
     const matches = [];
     let match;
-    while ((match = scriptRegex.exec(head)) !== null) {
-      const attributes = match[1]?.trim();
+    while ((match = scriptRegex.exec(html)) !== null) {
+      const attributes = match[1]?.trim() || "";
       const content = match[2]?.trim() || null;
       const srcMatch = attributes.match(/src="([^"]*)"/);
       const typeMatch = attributes.match(/type="([^"]*)"/);
@@ -40,7 +40,25 @@ const DynamicHead = ({ metadata, cookie_logo }: { metadata: MetaInfo, cookie_log
     return matches;
   };
 
+  const sanitizeCssUrl = (url: string | null | undefined) => {
+    if (!url) return null;
+    const trimmed = url.trim();
+    if (!/^(https?:\/\/|\/)[^\s"'()<>\\]*$/i.test(trimmed)) return null;
+    return trimmed;
+  };
+
+  const sanitizeTrackingId = (id: string | null | undefined) => {
+    if (!id) return null;
+    const trimmed = id.trim();
+    if (!/^[A-Za-z0-9_-]+$/.test(trimmed)) return null;
+    return trimmed;
+  };
+
   const headScripts = extractScripts(code_container?.head);
+  const bodyScripts = extractScripts(code_container?.body);
+  const safeCookieLogo = sanitizeCssUrl(cookie_logo);
+  const safeGa4 = sanitizeTrackingId(ga4);
+  const safeGtm = sanitizeTrackingId(gtm);
 
   return (
     <>
@@ -72,27 +90,27 @@ const DynamicHead = ({ metadata, cookie_logo }: { metadata: MetaInfo, cookie_log
           return null;
         })}
 
-        {ga4 && (
+        {safeGa4 && (
           <>
-            <script async src={`https://www.googletagmanager.com/gtag/js?id=${ga4}`}></script>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${safeGa4}`}></script>
             <script
               dangerouslySetInnerHTML={{
                 __html: `
                   window.dataLayer = window.dataLayer || [];
                   function gtag(){dataLayer.push(arguments);}
                   gtag('js', new Date());
-                  gtag('config', '${ga4}');
+                  gtag('config', '${safeGa4}');
                 `,
               }}
             />
           </>
         )}
 
-        {cookie_logo && (
+        {safeCookieLogo && (
           <style dangerouslySetInnerHTML={{
             __html: `
               .osano-cm-widget {
-                background-image: url(${cookie_logo});
+                background-image: url("${safeCookieLogo}");
                 background-size: contain;
                 border-radius: 100%;
                 width: 40px;
@@ -106,7 +124,7 @@ const DynamicHead = ({ metadata, cookie_logo }: { metadata: MetaInfo, cookie_log
           }} />
         )}
 
-        {gtm && (
+        {safeGtm && (
           <Script
             id="gtm-script"
             strategy="afterInteractive"
@@ -116,19 +134,32 @@ const DynamicHead = ({ metadata, cookie_logo }: { metadata: MetaInfo, cookie_log
                 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','${gtm}');
+                })(window,document,'script','dataLayer','${safeGtm}');
               `,
             }}
           />
         )}
       </Head>
-      {code_container?.body && (
-        <script
-          dangerouslySetInnerHTML={{
-            __html: code_container.body.replace(/<script[^>]*>/g, '').replace(/<\/script>/g, ''),
-          }}
-        />
-      )}
+      {bodyScripts.map((script, index) => {
+        if (script.src) {
+          return (
+            <script
+              key={`body-script-src-${index}`}
+              src={script.src}
+              async
+            ></script>
+          );
+        } else if (script.content) {
+          return (
+            <script
+              type={script.type || "text/javascript"}
+              key={`body-script-content-${index}`}
+              dangerouslySetInnerHTML={{ __html: script.content }}
+            />
+          );
+        }
+        return null;
+      })}
     </>
   );
 };

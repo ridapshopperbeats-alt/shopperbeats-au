@@ -106,7 +106,7 @@ export default function Footer({
                     alt={item.text}
                     width={62}
                     height={42}
-                    className="footer-highlight-img"
+                    className="footer-highlight-img w-[35px] h-[35px] md:h-[62px] md:w-[62px]"
                   />
                 </div>
 
