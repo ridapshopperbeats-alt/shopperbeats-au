@@ -288,3 +288,25 @@ export interface CancelOrderPopupProps {
     isItemLevel: boolean,
   ) => void;
 }
+
+export type OrderSummaryPopupProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  orderDetails: {
+    orderNumber?: string;
+    orderId?: string;
+    products: Array<{
+      id: string;
+      name: string;
+      image?: string;
+      quantity: number;
+      price: string;
+    }>;
+    deliveryAddress: string;
+    deliveryCost: string;
+    couponCode?: string;
+    totalAmount: string;
+  };
+  isAuthenticated: boolean;
+  from: string;
+};

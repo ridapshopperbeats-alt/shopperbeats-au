@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cdn.shopify.com",  
+        hostname: "cdn.shopify.com",
       },
       {
         protocol: "https",
