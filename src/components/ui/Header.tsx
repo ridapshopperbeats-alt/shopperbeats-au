@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-} from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,13 +21,20 @@ import { RootState } from "@/lib/redux/store";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useGetPersonalDataQuery } from "@/lib/redux/apis/auth-api";
 import { useLazyReverseGeocodeQuery } from "@/lib/redux/apis/geocode-api";
-import {
-  X,
-  ChevronDown,
-} from "lucide-react";
 import { HeaderProps } from "@/types/form";
 import { useDebounceValue } from "@/lib/hooks/use-debounce";
 import { useIsClient } from "@/lib/hooks/use-is-client";
+import {
+  Percent,
+  Home,
+  Armchair,
+  HeartPulse,
+  ChevronDown,
+  X,
+  Handbag,
+  Sofa,
+  Trophy,
+} from "lucide-react";
 
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -715,6 +717,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center gap-2 hover:text-red-500"
                   href="/category/home-garden"
                 >
+                  <Home size={16} className="inline-block " />
                   Home & Garden
                 </Link>
               </li>
@@ -723,6 +726,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center gap-2 hover:text-red-500"
                   href="/category/furniture"
                 >
+                  <Armchair size={16} className="inline-block " />
                   Furniture
                 </Link>
               </li>
@@ -731,6 +735,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center gap-2 hover:text-red-500"
                   href="#"
                 >
+                  <Handbag size={16} className="inline-block " />
                   Fashion & Accessories
                 </Link>
               </li>
@@ -739,6 +744,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center gap-2 hover:text-red-500"
                   href="/category/health-beauty"
                 >
+                  <HeartPulse size={16} className="inline-block " />
                   Health & Beauty
                 </Link>
               </li>
@@ -747,6 +753,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center gap-2 hover:text-red-500"
                   href="#"
                 >
+                  <Sofa size={16} className="inline-block " />
                   Outdoor & Patio
                 </Link>
               </li>
@@ -755,6 +762,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center gap-2 hover:text-red-500"
                   href="/category/best-seller"
                 >
+                  <Trophy size={16} className="inline-block " />
                   Best Sellers
                 </Link>
               </li>
@@ -763,6 +771,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center gap-2 hover:text-red-500"
                   href="/product-listing/whats-on-sale"
                 >
+                  <Percent size={16} className="inline-block " />
                   What&apos;s On Sale
                 </Link>
               </li>

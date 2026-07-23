@@ -5,6 +5,7 @@ const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
 
 import { cache } from "react";
 import { ContactContent } from "@/types/cms";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 // Price formatting utilities
 export const formatPrice = (
   price: number | string | undefined | null,
@@ -127,16 +128,18 @@ export const handleAustralianPhoneNumberChange = (
   return { value, error: null };
 };
 
-// Get the main image URL for a product, with a fallback if no images are available
-export function getImageUrl(product: Product): string {
+// Get the main image URL for a product, with a fallback if no images are available.
+// `variant` is an optional Cloudflare Images variant name (e.g. "plpcard") applied
+// via `applyImageVariant` to request an appropriately sized/cropped rendition.
+export function getImageUrl(product: Product, variant?: string): string {
   const fallback = "/images/image-coming-soon.jpg";
 
   if (typeof product.images === "string" && product.images) {
-    return product.images;
+    return applyImageVariant(product.images, variant);
   }
 
   if (typeof product.thumbnail === "string" && product.thumbnail) {
-    return product.thumbnail;
+    return applyImageVariant(product.thumbnail, variant);
   }
 
   if (Array.isArray(product.images) && product.images.length > 0) {
@@ -145,7 +148,7 @@ export function getImageUrl(product: Product): string {
       .sort((a, b) => (a.image_order ?? 9999) - (b.image_order ?? 9999));
 
     if (sortedImages.length > 0) {
-      return sortedImages[0].image_url;
+      return applyImageVariant(sortedImages[0].image_url, variant);
     }
 
     return fallback;
@@ -339,7 +342,7 @@ export function transformProductData(products: Product[]) {
       showWasPrice: priceInfo.showWasPrice,
       discountPercentage: priceInfo.discountPercentage,
       saveAmount: priceInfo.saveAmount,
-      image: getImageUrl(product),
+      image: getImageUrl(product, "plpcard"),
       promotion_name: product.promotion_name,
       rating: product.review_stats?.average_rating ?? 0,
       reviewCount: product.review_stats?.total_reviews ?? 0,
