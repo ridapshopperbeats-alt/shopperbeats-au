@@ -18,10 +18,15 @@ import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import Button from "@/components/common/Button";
 import { pincode } from "@/lib/validations/form-schemas";
 import GooglePlacesInput from "@/components/common/AddressAutocomplete";
-import { getPriceDetails, getImageUrl, formatPrice } from "@/lib/utils/main-utils";
+import {
+  getPriceDetails,
+  getImageUrl,
+  formatPrice,
+} from "@/lib/utils/main-utils";
 import NoProductsFound from "@/components/NoProductFound";
 import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
 import { Input } from "@/components/common/input";
+import { ShieldCheck } from "lucide-react";
 
 // ---------------- SCHEMAS ----------------
 const pincodeSchema = yup.object().shape({
@@ -59,6 +64,17 @@ const Cart = () => {
 
   const [discountAmount, setDiscountAmount] = useState(0);
   const [newTotalPrice, setNewTotalPrice] = useState<number | null>(null);
+
+  const [isXlUp, setIsXlUp] = useState(true);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 1280px)");
+    setIsXlUp(mql.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => setIsXlUp(e.matches);
+    mql.addEventListener("change", handleChange);
+    return () => mql.removeEventListener("change", handleChange);
+  }, []);
 
   // Update form when global postcode changes
   useEffect(() => {
@@ -351,6 +367,7 @@ const Cart = () => {
 
   // ---------------- QUANTITY DEBOUNCED UPDATE ----------------
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [updatingItemId, setUpdatingItemId] = useState<string | null>(null);
 
   const handleUpdateQuantity = (
     product_id: string,
@@ -432,6 +449,34 @@ const Cart = () => {
     (item) => item.is_shippable === true,
   );
 
+  const secureCheckoutSection = (
+    <div className="order-3">
+      <div className="flex items-center justify-center gap-1.5 text-xs text-[#657689] mt-4 text-[12px] font-medium leading-5">
+        <ShieldCheck /> Guaranteed Safe &amp; Secured Checkout
+      </div>
+
+      <div className="grid grid-cols-6 w-[328px] gap-2 mx-auto mt-3">
+        {["visa", "payment", "american", "paypal", "afterpay", "zip"].map(
+          (img) => (
+            <div
+              key={img}
+              className=" rounded h-[15px] flex items-center justify-center bg-white"
+            >
+              <Image
+                src={`/images/${img}.svg`}
+                alt={img}
+                width={38}
+                height={15}
+                loading="lazy"
+                className="object-contain"
+              />
+            </div>
+          ),
+        )}
+      </div>
+    </div>
+  );
+
   // ---------------- RENDER ----------------
   return (
     <div className="container">
@@ -439,9 +484,8 @@ const Cart = () => {
         Your Shopping Cart
       </h4>
 
-      <div className="flex flex-col xl:flex-row items-start gap-5 pb-14">
-        {/* CART LIST */}
-        <div className="w-full xl:w-[1300px] lg:rounded-[8px] lg:overflow-visible lg:shadow-[0_0_20px_rgba(0,0,0,0.18)]">
+      <div className="flex flex-col xl:flex-row items-start gap-5 xl:pb-10">
+        <div className="w-full xl:w-[1226px] lg:rounded-[8px] lg:overflow-visible lg:shadow-[0_0_14px_rgba(0,0,0,0.08)]">
           <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#D9D2D2] text-[16px] leading-[100%] font-medium">
             <div className="col-span-6 text-base">Item</div>
             <div className="col-span-2 text-base text-center">Qty.</div>
@@ -450,7 +494,7 @@ const Cart = () => {
           </div>
 
           <div
-            className="flex flex-col items-center gap-[14px] py-4 lg:block lg:gap-0 lg:py-0 lg:max-h-[490px] lg:overflow-y-auto lg:overscroll-contain gray-scrollbar "
+            className="flex flex-col items-center gap-[14px]  lg:block lg:gap-0 lg:py-0 lg:max-h-[490px] lg:overflow-y-auto lg:overscroll-contain gray-scrollbar"
             data-lenis-prevent
             onWheel={(e) => e.stopPropagation()}
           >
@@ -467,7 +511,6 @@ const Cart = () => {
                 productForPriceDetails,
               );
 
-              // const itemSubtotal = mainPrice * Number(item.quantity);
               const itemSubtotal =
                 item.subtotal ?? mainPrice * Number(item.quantity);
 
@@ -497,10 +540,10 @@ const Cart = () => {
                       Out of Stock
                     </p>
                   ) : (
-                    <p className="text-[11px] lg:text-[12px] leading-tight lg:leading-[100%] font-bold text-[#01295F] mb-0.5 lg:mb-1.5">
-                      In Stock{" "}
+                    <p className="text-[11px] lg:text-[12px]  lg:leading-[100%] font-bold text-[#01295F] mb-0.5 lg:mb-1.5">
+                      {/* In Stock{" "} */}
                       <span className="text-[#049950]">
-                        Code Applied - (GET500) 50% OFF
+                        {/* Code Applied - (GET500) 50% OFF */}
                         {item.promotion_discount != null &&
                           item.promotion_discount > 0 && (
                             <span className="ml-1 font-medium">
@@ -511,16 +554,16 @@ const Cart = () => {
                     </p>
                   )}
                   {item.shipping_cost === 0 && (
-                    <p className="text-[12px] lg:text-[14px] leading-[100%] text-[#726969] mb-0.5 lg:mb-1.5">
+                    <p className="text-[12px] lg:text-[14px] leading-[12px] text-[#726969] mb-0.5 lg:mb-1.5">
                       Eligible For FREE Shipping
                     </p>
                   )}
                   {item.handling_time_days === 1 ? (
-                    <p className="text-[12px] lg:text-[14px] leading-[100%] text-[#726969] mb-0.5 lg:mb-1.5">
+                    <p className="text-[12px] lg:text-[14px] leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5">
                       Leaves warehouse in Next business day
                     </p>
                   ) : (
-                    <p className="text-[12px] lg:text-[14px] leading-[100%] text-[#726969] mb-0.5 lg:mb-1.5">{`Leaves warehouse in 1 – ${item.handling_time_days} business days`}</p>
+                    <p className="text-[12px] lg:text-[14px] leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5">{`Leaves warehouse in 1 – ${item.handling_time_days} business days`}</p>
                   )}
 
                   {item.variant_attributes &&
@@ -529,7 +572,7 @@ const Cart = () => {
                         {item.variant_attributes.map((attr) => (
                           <p
                             key={attr.name}
-                            className="text-[12px] lg:text-[14px] leading-[100%] text-black"
+                            className="text-[12px] lg:text-[14px] leading-[100%] text-black mb-1"
                           >
                             <strong className="font-medium">
                               {attr.name}:{" "}
@@ -546,7 +589,7 @@ const Cart = () => {
                 <div className="inline-flex items-center justify-between border border-[#d9d2d2] rounded-full h-[34px] lg:h-9 w-[76px] lg:w-[104px] px-1 overflow-hidden">
                   <Button
                     disabled={
-                      isUpdating ||
+                      updatingItemId === item.id ||
                       isRemoving ||
                       clickLockRef.current ||
                       !item.is_active ||
@@ -557,7 +600,7 @@ const Cart = () => {
                     onClick={() => {
                       if (
                         clickLockRef.current ||
-                        isUpdating ||
+                        updatingItemId === item.id ||
                         isRemoving ||
                         !item.is_active ||
                         (item.available_stock !== undefined &&
@@ -584,70 +627,77 @@ const Cart = () => {
                   >
                     -
                   </Button>
-                  <Input
-                    type="number"
-                    onWheel={(e) => e.currentTarget.blur()}
-                    min="1"
-                    value={localQtyMap[item.id] ?? item.quantity}
-                    onChange={(e) => {
-                      const raw = e.target.value;
-                      setLocalQtyMap((prev) => ({
-                        ...prev,
-                        [item.id]: raw,
-                      }));
-
-                      const value = Number.parseInt(raw);
-                      if (Number.isNaN(value) || value < 1) return;
-
-                      const stockLimit = item.available_stock ?? item.stock;
-                      if (
-                        stockLimit !== undefined &&
-                        stockLimit !== null &&
-                        value > stockLimit
-                      ) {
-                        toast.error("No more stock available", {
-                          toastId: "stock-warning",
-                        });
-                        const capped = Math.max(stockLimit, 0);
+                  <div className="relative flex items-center justify-center w-8 h-full shrink-0">
+                    <Input
+                      type="number"
+                      onWheel={(e) => e.currentTarget.blur()}
+                      min="1"
+                      value={localQtyMap[item.id] ?? item.quantity}
+                      onChange={(e) => {
+                        const raw = e.target.value;
                         setLocalQtyMap((prev) => ({
                           ...prev,
-                          [item.id]: String(capped),
+                          [item.id]: raw,
                         }));
-                        if (capped >= 1) {
-                          handleUpdateQuantity(
-                            item.product_id,
-                            capped,
-                            item.variant_id,
-                            item.id,
-                          );
+
+                        const value = Number.parseInt(raw);
+                        if (Number.isNaN(value) || value < 1) return;
+
+                        const stockLimit = item.available_stock ?? item.stock;
+                        if (
+                          stockLimit !== undefined &&
+                          stockLimit !== null &&
+                          value > stockLimit
+                        ) {
+                          toast.error("No more stock available", {
+                            toastId: "stock-warning",
+                          });
+                          const capped = Math.max(stockLimit, 0);
+                          setLocalQtyMap((prev) => ({
+                            ...prev,
+                            [item.id]: String(capped),
+                          }));
+                          if (capped >= 1) {
+                            handleUpdateQuantity(
+                              item.product_id,
+                              capped,
+                              item.variant_id,
+                              item.id,
+                            );
+                          }
+                          return;
                         }
-                        return;
-                      }
 
-                      handleUpdateQuantity(
-                        item.product_id,
-                        value,
-                        item.variant_id,
-                        item.id,
-                      );
-                    }}
-                    onBlur={() => {
-                      const raw = localQtyMap[item.id] ?? "";
-                      const value = Number.parseInt(raw);
-                      if (Number.isNaN(value) || value < 1) {
-                        setLocalQtyMap((prev) => ({
-                          ...prev,
-                          [item.id]: String(item.quantity),
-                        }));
-                      }
-                    }}
-                    disabled={isUpdating}
-                    className="!w-8 !h-auto !min-w-0 !p-0 !py-0 !bg-transparent !border-0 !rounded-none !shadow-none !ring-0 text-center text-sm outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  />
+                        handleUpdateQuantity(
+                          item.product_id,
+                          value,
+                          item.variant_id,
+                          item.id,
+                        );
+                      }}
+                      onBlur={() => {
+                        const raw = localQtyMap[item.id] ?? "";
+                        const value = Number.parseInt(raw);
+                        if (Number.isNaN(value) || value < 1) {
+                          setLocalQtyMap((prev) => ({
+                            ...prev,
+                            [item.id]: String(item.quantity),
+                          }));
+                        }
+                      }}
+                      disabled={updatingItemId === item.id}
+                      className="w-8! h-auto! min-w-0! p-0! py-0! bg-transparent! border-0! rounded-none! shadow-none! ring-0! text-center text-sm outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                    {updatingItemId === item.id && (
+                      <span className="absolute inset-0 flex items-center justify-center bg-white/80">
+                        <span className="mt-2 h-3 w-3 rounded-full border-2 border-[#012961] border-t-transparent animate-spin" />
+                      </span>
+                    )}
+                  </div>
 
                   <Button
                     disabled={
-                      isUpdating ||
+                      updatingItemId === item.id ||
                       !item.is_active ||
                       (item.available_stock !== undefined &&
                         item.available_stock <= 0)
@@ -706,8 +756,7 @@ const Cart = () => {
                   key={item.id}
                   className={`md:w-full lg:border-b lg:border-[#e4e3e3] lg:last:border-b-0 lg:px-6 lg:py-5 ${!item.is_active ? "opacity-60" : ""}`}
                 >
-                  {/* MOBILE / TABLET CARD  */}
-                  <div className="lg:hidden w-full mx-auto rounded-[8px] bg-white shadow-[0px_0px_14px_0px_#00000014] p-4 overflow-hidden">
+                  <div className="lg:hidden w-[358px] mx-auto md:w-full rounded-[8px] bg-white shadow-[0px_0px_14px_0px_#00000014] p-4 overflow-hidden">
                     <div className="flex flex-row gap-3">
                       <div className="shrink-0 w-[84px] h-[84px]">
                         {item.is_active &&
@@ -757,22 +806,12 @@ const Cart = () => {
                       </div>
                     </div>
 
-                    {/* {item.promotion_discount != null &&
-                      item.promotion_discount > 0 && (
-                        <span className="inline-block mt-1 bg-[#fff4f4] text-[#e53e3e] border border-[#fed7d7] rounded px-2 py-0.5 text-xs font-semibold whitespace-nowrap">
-                          🏷 Item Discount: $
-                          {formatPrice(item.promotion_discount)}
-                        </span>
-                      )} */}
-
                     <span className="inline-flex mt-1.5 bg-[#01295F] text-white text-[10px] leading-[100%] font-semibold w-[88px] h-[20px] rounded-[4px] text-center items-center  justify-center">
                       SALE 20% OFF
                     </span>
                   </div>
 
-                  {/* DESKTOP GRID (lg / 1024px and up) */}
                   <div className="hidden lg:grid lg:grid-cols-12 lg:items-center lg:gap-4">
-                    {/* ITEM */}
                     <div className="col-span-6 flex flex-row gap-[20px]">
                       <div className="shrink-0 w-[137px] h-[136px]">
                         {item.is_active &&
@@ -806,12 +845,10 @@ const Cart = () => {
                       <div className="flex-1 min-w-0">{itemInfo}</div>
                     </div>
 
-                    {/* QUANTITY */}
                     <div className="col-span-2 flex justify-center items-center">
                       {qtySelector}
                     </div>
 
-                    {/* PRICE */}
                     <div className="col-span-2 flex justify-start items-center">
                       <div className="flex flex-col items-start">
                         <div className="flex flex-row lg:flex-col xl:flex-row items-start xl:items-center gap-2 lg:gap-0 xl:gap-2">
@@ -835,7 +872,6 @@ const Cart = () => {
                       </div>
                     </div>
 
-                    {/* SUBTOTAL */}
                     <div className="col-span-2 flex justify-start items-center">
                       <div className="flex flex-col items-start">
                         <span className="text-[#fd151b] font-semibold text-[16px]">
@@ -851,226 +887,204 @@ const Cart = () => {
           </div>
         </div>
 
-        {/* ORDER SUMMARY */}
-        <div className="w-full lg:w-full xl:max-w-[500px] xl:min-h-[522px] bg-white rounded-[8px] shadow-[0px_0px_14px_rgba(0,0,0,0.08)] p-6 flex flex-col xl:sticky xl:top-24 xl:self-start">
-          <div className="flex items-center justify-between mb-5">
-            <h5 className="text-[18px] font-bold leading-[100%] text-black">
-              Order Summary
-            </h5>
-            <Link
-              href="/login"
-              className="text-[12px] lg:text-[16px] font-semibold text-black underline"
-            >
-              Sign in
-            </Link>
-          </div>
-
-          <div className="flex flex-col gap-3 pb-4 border-b border-[#e5e5e5]">
-            <div className="flex items-center justify-between">
-              <span className="text-[14px] lg:text-[16px] leading-[100%] text-[#726969] font-medium">
-                Subtotal (
-                {cart.items
-                  .filter(
-                    (i) =>
-                      i.is_active &&
-                      (i.available_stock === undefined ||
-                        i.available_stock > 0),
-                  )
-                  .reduce((a, i) => a + i.quantity, 0)}{" "}
-                Items)
-              </span>
-              <p className="text-[14px] lg:text-[16px] font-semibold text-[#FD151B]">
-                ${formatPrice(cart.subtotal ?? cart.items_total)}
-              </p>
+        <div className="w-[358px] mx-auto md:mx-0 md:w-full xl:w-[488px] xl:min-h-[522px] flex flex-col xl:sticky xl:top-24 xl:self-start">
+          <div className="bg-white rounded-[8px] shadow-[0px_0px_14px_rgba(0,0,0,0.08)] p-6 flex flex-col">
+            <div className="flex items-center justify-between mb-5">
+              <h5 className="text-[18px] font-bold leading-[100%] text-black">
+                Order Summary
+              </h5>
+              <Link
+                href="/login"
+                className="text-[12px] lg:text-[16px] font-semibold text-black underline"
+              >
+                Sign in
+              </Link>
             </div>
 
-            {totalSaveAmount > 0 && (
+            <div className="flex flex-col gap-3 pb-4 border-b border-[#e5e5e5]">
               <div className="flex items-center justify-between">
                 <span className="text-[14px] lg:text-[16px] leading-[100%] text-[#726969] font-medium">
-                  Total Savings
+                  Subtotal (
+                  {cart.items
+                    .filter(
+                      (i) =>
+                        i.is_active &&
+                        (i.available_stock === undefined ||
+                          i.available_stock > 0),
+                    )
+                    .reduce((a, i) => a + i.quantity, 0)}{" "}
+                  Items)
                 </span>
-                <p className="text-[14px] lg:text-[16px] font-semibold text-[#16a249]">
-                  -${formatPrice(totalSaveAmount)}
+                <p className="text-[14px] lg:text-[16px] font-semibold text-[#FD151B]">
+                  ${formatPrice(cart.subtotal ?? cart.items_total)}
                 </p>
               </div>
-            )}
 
-            {hasShippableItem && (
-              <div className="flex items-center justify-between">
-                <span className="text-[14px] lg:text-[16px] leading-[100%] text-[#726969] font-medium">
-                  Shipping
-                </span>
-                <p className="text-[14px] lg:text-[16px] font-semibold text-black">
-                  ${formatPrice(cart.shipping || 0)}
-                </p>
-              </div>
-            )}
-
-            {cart.taxes &&
-              cart.taxes.length > 0 &&
-              cart.taxes.map((tax) => (
-                <div
-                  key={tax.name}
-                  className="flex items-center justify-between"
-                >
-                  <span className="text-base text-[#726969]">
-                    {tax.name} ({tax.rate}%)
+              {totalSaveAmount > 0 && (
+                <div className="flex items-center justify-between">
+                  <span className="text-[14px] lg:text-[16px] leading-[100%] text-[#726969] font-medium">
+                    Total Savings
                   </span>
-                  <p className="text-base font-semibold text-black">
-                    ${formatPrice(Number.parseFloat(tax.amount))}
+                  <p className="text-[14px] lg:text-[16px] font-semibold text-[#16a249]">
+                    -${formatPrice(totalSaveAmount)}
                   </p>
                 </div>
-              ))}
+              )}
 
-            {/* COUPON DISCOUNT */}
-            {appliedPromoCode && discountAmount > 0 && (
-              <div className="flex items-center justify-between">
-                <span className="text-[14px] lg:text-[16px] leading-[100%] text-[#726969]">
-                  Coupon Discount ({appliedPromoCode})
-                  <button
-                    onClick={handleRemovePromo}
-                    className="ml-4 text-[#fd151b] text-[12px] lg:text-[16px] hover:underline"
+              {hasShippableItem && (
+                <div className="flex items-center justify-between">
+                  <span className="text-[14px] lg:text-[16px] leading-[100%] text-[#726969] font-medium">
+                    Shipping
+                  </span>
+                  <p className="text-[14px] lg:text-[16px] font-semibold text-black">
+                    ${formatPrice(cart.shipping || 0)}
+                  </p>
+                </div>
+              )}
+
+              {cart.taxes &&
+                cart.taxes.length > 0 &&
+                cart.taxes.map((tax) => (
+                  <div
+                    key={tax.name}
+                    className="flex items-center justify-between"
                   >
-                    Remove
-                  </button>
-                </span>
-                <p className="text-[14px] lg:text-[16px] font-semibold text-[#16a249]">
-                  -${formatPrice(discountAmount)}
-                </p>
-              </div>
-            )}
-          </div>
+                    <span className="text-base text-[#726969]">
+                      {tax.name} ({tax.rate}%)
+                    </span>
+                    <p className="text-base font-semibold text-black">
+                      ${formatPrice(Number.parseFloat(tax.amount))}
+                    </p>
+                  </div>
+                ))}
 
-          {/* PROMO */}
-          <div className="pt-4">
-            <div className="flex items-center border border-[#15112b2b] rounded-[5px] pl-5 pr-1.5 h-11 w-[430px] md:w-auto max-w-full overflow-hidden">
-              <Input
-                type="text"
-                placeholder="Promo Code"
-                value={promoCodeInput}
-                onChange={(e) => setPromoCodeInput(e.target.value)}
-                className="flex-1 min-w-0 !h-auto !p-0 !bg-transparent !border-0 !rounded-none !shadow-none !ring-0 outline-none text-sm placeholder:text-[#726969] font-medium"
-              />
-              <button
-                className="text-[#01295f] text-[12px] font-medium  cursor-pointer disabled:opacity-50"
-                onClick={handleApplyPromoCode}
-                disabled={isApplyingPromo}
-              >
-                {isApplyingPromo ? "Applying..." : "Apply"}
-              </button>
+              {appliedPromoCode && discountAmount > 0 && (
+                <div className="flex items-center justify-between">
+                  <span className="text-[14px] lg:text-[16px] leading-[100%] text-[#726969]">
+                    Coupon Discount ({appliedPromoCode})
+                    <button
+                      onClick={handleRemovePromo}
+                      className="ml-4 text-[#fd151b] text-[12px] lg:text-[16px] hover:underline"
+                    >
+                      Remove
+                    </button>
+                  </span>
+                  <p className="text-[14px] lg:text-[16px] font-semibold text-[#16a249]">
+                    -${formatPrice(discountAmount)}
+                  </p>
+                </div>
+              )}
             </div>
 
-            {promoCodeError && (
-              <p className="text-[#fd151b] text-xs mt-1.5">{promoCodeError}</p>
-            )}
-            {appliedPromoCode && (
-              <p className="text-[#16a249] text-xs mt-1.5">
-                Promo &quot;{appliedPromoCode}&quot; applied!
-              </p>
-            )}
-          </div>
+            <div className="pt-4">
+              <div className="flex items-center border border-[#15112b2b] rounded-[5px] pl-5 pr-1.5 h-11 w-[430px] md:w-auto max-w-full overflow-hidden">
+                <Input
+                  type="text"
+                  placeholder="Promo Code"
+                  value={promoCodeInput}
+                  onChange={(e) => setPromoCodeInput(e.target.value)}
+                  className="flex-1 min-w-0 h-auto! p-0! bg-transparent! border-0! rounded-none! shadow-none! ring-0! outline-none text-sm placeholder:text-[#726969] font-medium"
+                />
+                <button
+                  className="text-[#01295f] text-[12px] font-medium  cursor-pointer disabled:opacity-50"
+                  onClick={handleApplyPromoCode}
+                  disabled={isApplyingPromo}
+                >
+                  {isApplyingPromo ? "Applying..." : "Apply"}
+                </button>
+              </div>
 
-          <div className="flex items-center justify-between py-4 border-t border-[#e5e5e5] mt-4">
-            <strong className="text-[18px] leading-[100%] font-semibold text-black">
-              Total (Incl. GST)
-            </strong>
-            <div className="flex flex-col items-end gap-1">
-              {totalSaveAmount > 0 && (
-                <p className="text-[14px] lg:text-[16px] font-semibold leading-[100%] text-[#726969] line-through">
-                  $
-                  {formatPrice(
-                    (newTotalPrice !== null
-                      ? newTotalPrice
-                      : cart.total_price) + totalSaveAmount,
-                  )}
+              {promoCodeError && (
+                <p className="text-[#fd151b] text-xs mt-1.5">
+                  {promoCodeError}
                 </p>
               )}
-              <p className="text-[20px] lg:text-[18px] leading-[100%] font-semibold text-[#fd151b]">
-                $
-                {formatPrice(
-                  newTotalPrice !== null ? newTotalPrice : cart.total_price,
+              {appliedPromoCode && (
+                <p className="text-[#16a249] text-xs mt-1.5">
+                  Promo &quot;{appliedPromoCode}&quot; applied!
+                </p>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between py-4 xl:border-t border-[#e5e5e5] mt-4">
+              <strong className="text-[18px] leading-[100%] font-semibold text-black">
+                Total (Incl. GST)
+              </strong>
+              <div className="flex flex-col items-end gap-1">
+                {totalSaveAmount > 0 && (
+                  <p className="text-[14px] lg:text-[16px] font-semibold leading-[100%] text-[#726969] line-through">
+                    $
+                    {formatPrice(
+                      (newTotalPrice !== null
+                        ? newTotalPrice
+                        : cart.total_price) + totalSaveAmount,
+                    )}
+                  </p>
                 )}
-              </p>
-            </div>
-          </div>
-
-          {/* PINCODE CHECK */}
-          <div className="pb-4">
-            <p className="text-[14px] lg:text-[16px] leading-[100%] font-medium text-black mb-2">
-              Deliver To
-            </p>
-            <div className="flex items-center border border-[#15112b2b] rounded-[5px] pl-5 pr-1.5 h-11 w-[430px] md:w-auto max-w-full overflow-hidden">
-              <GooglePlacesInput
-                mode="pincode"
-                placeholder="Enter Pincode"
-                value={formData.pincode}
-                onPlaceSelect={(data) => {
-                  console.log(data, "data");
-                  if (!data.pincode) {
-                    toast.error("Please select a valid pincode");
-                    return;
-                  }
-
-                  // Update form value (keeps Yup + submit working)
-                  handleChange({
-                    target: {
-                      name: "pincode",
-                      value: data.pincode,
-                    },
-                  } as React.ChangeEvent<HTMLInputElement>);
-                  updatePostcode(data.pincode, data.city || "Melbourne");
-                }}
-                inputClassName="flex-1 min-w-0 !h-auto !p-0 !bg-transparent !border-0 !rounded-none !shadow-none !ring-0 outline-none text-sm placeholder:text-[#726969]"
-              />
-
-              <button
-                onClick={handleCheckDelivery}
-                disabled={isCheckingDelivery}
-                className="text-[#01295f] text-sm font-medium ml-auto whitespace-nowrap cursor-pointer disabled:opacity-50"
-              >
-                {isCheckingDelivery ? "Checking..." : "Check Delivery"}
-              </button>
+                <p className="text-[20px] lg:text-[18px] leading-[100%] font-semibold text-[#fd151b]">
+                  $
+                  {formatPrice(
+                    newTotalPrice !== null ? newTotalPrice : cart.total_price,
+                  )}
+                </p>
+              </div>
             </div>
 
-            {formErrors.pincode && (
-              <p className="text-[#fd151b] text-xs mt-1.5">
-                {formErrors.pincode}
+            <div className="pb-4 order-1 xl:order-2">
+              <p className="text-[14px] lg:text-[16px] leading-[100%] font-medium text-black mb-2">
+                Deliver To
               </p>
-            )}
-          </div>
+              <div className="flex items-center border border-[#15112b2b] rounded-[5px] pl-5 pr-1.5 h-11 w-[430px] md:w-auto max-w-full">
+                <GooglePlacesInput
+                  mode="pincode"
+                  placeholder="Enter Pincode"
+                  value={formData.pincode}
+                  onPlaceSelect={(data) => {
+                    if (!data.pincode) {
+                      toast.error("Please select a valid pincode");
+                      return;
+                    }
 
-          <Link href="/checkout" className="mt-auto">
-            <Button
-              className="bg-gradient-to-r from-[#FF676B] to-[#FD151B] h-[46px] rounded-[74px] text-[#F6F6F6] text-[16px] font-semibold leadiing-5 w-full shadow-md shadow-[#0E35BF]/25 cursor-pointer"
-              debounceDelay={500}
-            >
-              Checkout
-            </Button>
-          </Link>
+                    handleChange({
+                      target: {
+                        name: "pincode",
+                        value: data.pincode,
+                      },
+                    } as React.ChangeEvent<HTMLInputElement>);
+                    updatePostcode(data.pincode, data.city || "Melbourne");
+                  }}
+                  inputClassName="flex-1 min-w-0 !h-auto !p-0 !bg-transparent !border-0 !rounded-none !shadow-none !ring-0 outline-none text-sm placeholder:text-[#726969]"
+                />
 
-          <div className="flex items-center justify-center gap-1.5 text-xs text-[#657689] mt-4 text-[12px] font-medium leading-5">
-            <GppGoodOutlinedIcon /> Guaranteed Safe &amp; Secured Checkout
-          </div>
-
-          <div className="grid grid-cols-6 w-[328px] gap-2 mx-auto mt-3">
-            {["visa", "payment", "american", "paypal", "afterpay", "zip"].map(
-              (img) => (
-                <div
-                  key={img}
-                  className=" rounded h-[15px] flex items-center justify-center bg-white"
+                <button
+                  onClick={handleCheckDelivery}
+                  disabled={isCheckingDelivery}
+                  className="text-[#01295f] text-sm font-medium ml-auto whitespace-nowrap cursor-pointer disabled:opacity-50"
                 >
-                  <Image
-                    src={`/images/${img}.svg`}
-                    alt={img}
-                    width={50}
-                    height={15}
-                    loading="lazy"
-                    className="object-contain"
-                  />
-                </div>
-              ),
-            )}
+                  {isCheckingDelivery ? "Checking..." : "Check Delivery"}
+                </button>
+              </div>
+
+              {formErrors.pincode && (
+                <p className="text-[#fd151b] text-xs mt-1.5">
+                  {formErrors.pincode}
+                </p>
+              )}
+            </div>
+
+            <Link href="/checkout" className="mt-auto order-1 xl:order-2">
+              <Button
+                className="bg-linear-to-r from-[#FF676B] to-[#FD151B] h-[46px] rounded-[74px] text-[#F6F6F6] text-[16px] font-semibold leadiing-5 w-full shadow-md shadow-[#0E35BF]/25 cursor-pointer"
+                debounceDelay={500}
+              >
+                Checkout
+              </Button>
+            </Link>
+
+            {isXlUp && secureCheckoutSection}
           </div>
+
+          {!isXlUp && secureCheckoutSection}
         </div>
       </div>
     </div>

@@ -20,42 +20,40 @@ const Home = async () => {
 
   return (
     <TopCategories>
-      <div>
-        <SingleBanner />
-        <div className="flex flex-col gap-6 mt-2 lg:mt-3">
-          <div className="container">
-            {products.length > 0 && (
-              <ProductCarousel
-                title="Best Sellers"
-                products={products}
-                link="#"
-              />
-            )}
-          </div>
+      <SingleBanner />
+      <div className="flex flex-col gap-6 mt-2 lg:mt-3">
+        <div className="container">
+          {products.length > 0 && (
+            <ProductCarousel
+              title="Best Sellers"
+              products={products}
+              link="#"
+            />
+          )}
+        </div>
 
-          <PopularCategories />
+        <PopularCategories />
 
-          <div className="container">
-            {trendingProducts.length > 0 && (
-              <ProductCarousel
-                title="Trending Products"
-                products={trendingProducts}
-                link="#"
-              />
-            )}
-          </div>
+        <div className="container">
+          {trendingProducts.length > 0 && (
+            <ProductCarousel
+              title="Trending Products"
+              products={trendingProducts}
+              link="#"
+            />
+          )}
+        </div>
 
-          <TopBrands />
+        <TopBrands />
 
-          <div className="container">
-            {products.length > 0 && (
-              <ProductCarousel
-                title="New Arrivals"
-                products={products}
-                link="#"
-              />
-            )}
-          </div>
+        <div className="container">
+          {products.length > 0 && (
+            <ProductCarousel
+              title="New Arrivals"
+              products={products}
+              link="#"
+            />
+          )}
         </div>
       </div>
     </TopCategories>

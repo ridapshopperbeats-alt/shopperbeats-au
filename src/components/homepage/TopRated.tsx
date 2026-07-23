@@ -11,70 +11,70 @@ const brands = [
     title: "Allen Solly",
     subtitle: "Under $100",
     image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
+      "/images/home/brand-card.svg",
   },
   {
     id: 2,
     title: "Hivvago",
     subtitle: "Under $80",
     image:
-      "https://images.unsplash.com/photo-1578500494198-246f612d3b3d?w=800&q=80",
+      "/images/home/brand-card2.svg",
   },
   {
     id: 3,
     title: "FASHNZFAB",
     subtitle: "Under $60",
     image:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&q=80",
+      "/images/home/brand-card3.svg",
   },
   {
     id: 4,
     title: "TRUEDAMES",
     subtitle: "Under $90",
     image:
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&q=80",
+      "/images/home/brand-card4.svg",
   },
   {
     id: 5,
     title: "BreeBe",
     subtitle: "Under $50",
     image:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80",
+      "/images/home/brand-card5.svg",
   },
   {
     id: 6,
     title: "Zara",
     subtitle: "Under $150",
     image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80",
+      "/images/home/brand-card6.svg",
   },
   {
     id: 7,
     title: "Levis",
     subtitle: "Under $120",
     image:
-      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&q=80",
+      "/images/home/brand-card.svg",
   },
   {
     id: 8,
     title: "Nike",
     subtitle: "Under $180",
     image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80",
+      "/images/home/brand-card2.svg",
   },
   {
     id: 9,
     title: "Puma",
     subtitle: "Under $140",
     image:
-      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&q=80",
+      "/images/home/brand-card3.svg",
   },
   {
     id: 10,
     title: "Adidas",
     subtitle: "Under $170",
     image:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&q=80",
+      "/images/home/brand-card4.svg",
   },
 ];
 
@@ -103,14 +103,14 @@ export default function TopBrands() {
           Top Brands
         </h2>
 
-        <Link href="/brand" target="_blank"   rel="noopener noreferrer" className="flex items-center gap-1 text-[#FD151B] text-sm font-semibold">
+        <Link href="/brand" target="_blank"   rel="noopener noreferrer" className="flex items-center gap-1 text-[13px] text-[#FD151B]  font-bold">
           See All Brands
           <ChevronRight size={13} />
         </Link>
       </div>
 
       {/* Mobile */}
-      <div className="grid grid-cols-2 gap-4 lg:hidden pt-3">
+      <div className="grid grid-cols-2 gap-3 lg:gap-4 lg:hidden pt-3">
         {brands.map((brand) => (
           <div
             key={brand.id}
@@ -139,7 +139,7 @@ export default function TopBrands() {
       </div>
 
       {/* Desktop */}
-      <div className="relative hidden lg:block pt-5">
+      <div className="relative hidden lg:block pt-4">
         <div
           ref={sliderRef}
           className="flex gap-5 overflow-x-auto scroll-smooth no-scrollbar"
@@ -156,7 +156,7 @@ export default function TopBrands() {
                 className="object-cover "
               />
 
-              <div className="absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/80" />
+              <div className="absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/70" />
 
               <div className="absolute p-6 w-[226px] flex flex-col ">
                 <h3 className="text-white text-[24px] font-extrabold">

@@ -26,7 +26,7 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
       <div className="delivery-card-box">
         <div className="delivery-details ">
           <div className="mb-5 delivery-option-row">
-            <label className="delivery-option-label">
+            <label className="flex items-center gap-2 font-bold text-[12px] leading-[20px] text-black">
               <input
                 type="radio"
                 name="deliveryOption"
@@ -36,12 +36,13 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
                   setSelectedAddressId(null);
                   onShippingAddressValid(false);
                 }}
+             
               />
               Add New Delivery
             </label>
             {isAuthenticated && (
               <label
-                className="delivery-option-label"
+                className="flex items-center gap-2 font-bold text-[12px] leading-[20px] text-black"
               >
                 <input
                   type="radio"
