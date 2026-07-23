@@ -12,6 +12,7 @@ import ReusableSlider, {
 import { Product, ProductImage, Variant } from "@/types/product";
 import { Heart } from "lucide-react";
 import ImagePreviewModal from "./ImagePreviewModal";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 
 const THUMBS_VISIBLE = 11;
 
@@ -54,61 +55,64 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
 }) => {
   const sliderRef = useRef<ReusableSliderRef>(null);
 
-  const getImages = useCallback((variantId?: string): ProductImage[] => {
-    let images: ProductImage[] = [];
+  const getImages = useCallback(
+    (variantId?: string): ProductImage[] => {
+      let images: ProductImage[] = [];
 
-    if (variantId) {
-      const variant = product?.variants?.find((v) => v.id === variantId);
+      if (variantId) {
+        const variant = product?.variants?.find((v) => v.id === variantId);
 
-      if (variant?.images) {
-        const variantImages = Array.isArray(variant.images)
-          ? variant.images
-          : [{ image_url: variant.images }];
+        if (variant?.images) {
+          const variantImages = Array.isArray(variant.images)
+            ? variant.images
+            : [{ image_url: variant.images }];
 
-        images = variantImages.map((img) =>
+          images = variantImages.map((img) =>
+            typeof img === "string" ? { image_url: img, is_main: false } : img,
+          );
+        }
+      }
+
+      if (!images.length && product.images) {
+        const productImages = Array.isArray(product.images)
+          ? product.images
+          : [{ image_url: product.images }];
+
+        images = productImages.map((img) =>
           typeof img === "string" ? { image_url: img, is_main: false } : img,
         );
       }
-    }
 
-    if (!images.length && product.images) {
-      const productImages = Array.isArray(product.images)
-        ? product.images
-        : [{ image_url: product.images }];
-
-      images = productImages.map((img) =>
-        typeof img === "string" ? { image_url: img, is_main: false } : img,
-      );
-    }
-
-    if (!images.length) {
-      images = [{ image_url: defaultImageUrl, is_main: true }];
-    }
-
-    const validImages = images.filter((img) => {
-      const imgUrl = img?.image_url?.trim();
-      const vidUrl = img?.video_url?.trim();
-
-      return Boolean(imgUrl || vidUrl);
-    });
-
-    validImages.sort((a, b) => {
-      const aIsVideo = !!a.video_url && !a.image_url;
-      const bIsVideo = !!b.video_url && !b.image_url;
-
-      if (aIsVideo !== bIsVideo) {
-        return aIsVideo ? 1 : -1;
+      if (!images.length) {
+        images = [{ image_url: defaultImageUrl, is_main: true }];
       }
 
-      const orderA = a.order ?? a.image_order ?? Number.MAX_SAFE_INTEGER;
+      const validImages = images.filter((img) => {
+        const imgUrl = img?.image_url?.trim();
+        const vidUrl = img?.video_url?.trim();
 
-      const orderB = b.order ?? b.image_order ?? Number.MAX_SAFE_INTEGER;
+        return Boolean(imgUrl || vidUrl);
+      });
 
-      return orderA - orderB;
-    });
+      validImages.sort((a, b) => {
+        const aIsVideo = !!a.video_url && !a.image_url;
+        const bIsVideo = !!b.video_url && !b.image_url;
 
-    return validImages;
-  }, [product]);
+        if (aIsVideo !== bIsVideo) {
+          return aIsVideo ? 1 : -1;
+        }
+
+        const orderA = a.order ?? a.image_order ?? Number.MAX_SAFE_INTEGER;
+
+        const orderB = b.order ?? b.image_order ?? Number.MAX_SAFE_INTEGER;
+
+        return orderA - orderB;
+      });
+
+      return validImages;
+    },
+    [product],
+  );
 
   // Derived state: `images` is fully computed from `product`/`selectedVariant`,
   // so it doesn't need its own useState + effect. useMemo keeps the array
@@ -171,7 +175,8 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
   // (React's recommended pattern for state that derives from a changed prop,
   // using state rather than a ref so it stays safe to read during render)
   // instead of inside an effect, to avoid an extra render pass.
-  const [prevSelectedVariant, setPrevSelectedVariant] = useState(selectedVariant);
+  const [prevSelectedVariant, setPrevSelectedVariant] =
+    useState(selectedVariant);
   const [prevProduct, setPrevProduct] = useState(product);
 
   if (selectedVariant !== prevSelectedVariant || product !== prevProduct) {
@@ -344,7 +349,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                           {!isLoaded(mediaUrl) && <div style={shimmerStyle} />}
 
                           <Image
-                            src={mediaUrl}
+                           src={applyImageVariant(mediaUrl, "pdptmb")}
                             alt={`thumbnail-${originalIndex}`}
                             width={100}
                             height={100}
@@ -483,7 +488,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
               {!isLoaded(mainImage) && <div style={shimmerStyle} />}
 
               <Image
-                src={safeUrl(mainImage)}
+                src={applyImageVariant(safeUrl(mainImage), "pdpmain")}
                 alt={product.title || "Product Image"}
                 width={700}
                 height={700}
@@ -578,7 +583,10 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                     )}
 
                     <Image
-                      src={safeUrl(item.image_url)}
+                      src={applyImageVariant(
+                        safeUrl(item.image_url),
+                        "pdpmain",
+                      )}
                       alt={`slide-${index}`}
                       width={400}
                       height={360}
