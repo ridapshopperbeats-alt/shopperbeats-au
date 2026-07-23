@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function ProductCarousel({
   title,
-  subtitle,
+  // subtitle,
   products,
   bundleProducts,
   from,

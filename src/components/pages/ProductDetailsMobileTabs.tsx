@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Accordion from "../common/Accordion";
-import ReviewCard from "../ui/ReviewCard";
 import { Review } from "@/types/product";
 import { warrantyAndReturnContent } from "../ui/product-tab-content";
+import CustomerRatingViewPage from "./CustomerRatingViewPage";
 
 interface ProductDetailsMobileTabsProps {
   featuresContent: React.ReactNode;
@@ -59,11 +59,9 @@ export default function ProductDetailsMobileTabs({
       )}
 
       {activeTab === "reviews" && (
-        <div className="flex flex-col gap-4 pt-4">
+        <div className="pt-4">
           {reviews.length > 0 ? (
-            reviews.map((review) => (
-              <ReviewCard key={review.id} review={review} />
-            ))
+            <CustomerRatingViewPage reviews={reviews} />
           ) : (
             <p className="text-[14px] text-[#696e79]">No reviews yet.</p>
           )}

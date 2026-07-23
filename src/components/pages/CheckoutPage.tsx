@@ -84,7 +84,6 @@ export default function SecureCheckout() {
   // Handle back button from external payment gateways (Afterpay, Zip, PayPal)
   useEffect(() => {
     if (sessionStorage.getItem("orderConfirmation")) {
-      // User came back from an external payment gateway, clear the session details to prevent loop
       sessionStorage.removeItem("orderConfirmation");
       router.replace("/confirmed-order");
     }
@@ -154,7 +153,7 @@ export default function SecureCheckout() {
     expirationDate: "",
     securityCode: "",
     cardholderName: "",
-    useShippingAddressAsBilling: true, // Default to true for simplicity
+    useShippingAddressAsBilling: true, 
     billingFirstName: "",
     billingLastName: "",
     billingCompany: "",
@@ -663,6 +662,11 @@ export default function SecureCheckout() {
         sessionStorage.removeItem("appliedPromoCode");
 
         router.replace("/confirmed-order");
+      } else {
+        setIsProcessingPayment(false);
+        toast.error(
+          "Payment failed. Please check your card details and try again.",
+        );
       }
     } catch (err) {
       const detail = (err as { data?: { detail?: string } })?.data?.detail;
