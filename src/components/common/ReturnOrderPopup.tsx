@@ -127,8 +127,8 @@ if (prevOrderForAddress !== order) {
     <div className="fixed inset-0 top-20 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-white w-full max-w-3xl max-h-[70vh] rounded-2xl shadow-2xl flex flex-col rounded-[8px]">
 
-        <div className="px-8 py-5 flex justify-between items-center">
-          <h6 className="text-2xl font-semibold text-gray-800">
+        <div className="px-4 py-5 flex justify-between items-center">
+          <h6 className="text-[20px] lg:text-[24px]  font-semibold text-black">
             {isLoadingOrder ? "Loading..." : itemId && product ? `Return Item: ${product.name}` : `Return Order #${order?.order_number || order?.id}`}
           </h6>
           <button
@@ -140,7 +140,7 @@ if (prevOrderForAddress !== order) {
         </div>
 
         <div
-          className="flex-1 overflow-y-auto overscroll-contain px-8 py-6 space-y-6"
+          className="flex-1 overflow-y-auto overscroll-contain px-4 space-y-4"
           data-lenis-prevent
           onWheel={(e) => e.stopPropagation()}
         >
@@ -159,12 +159,12 @@ if (prevOrderForAddress !== order) {
               value={formData.reason}
               onChange={handleChange}
               disabled={isLoadingOptions}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              className="w-full rounded-lg border border-gray-300 px-4  text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
             >
               <option value="">
                 {isLoadingOptions ? "Loading..." : "Select a reason"}
               </option>
-              {returnOptions
+              {returnOptions 
                 ?.filter((option: ReturnOption) => option.is_active)
                 .map((option: ReturnOption) => (
                   <option key={option.id} value={option.reason}>
@@ -180,8 +180,8 @@ if (prevOrderForAddress !== order) {
             )}
           </div>
 
-          <div className="space-y-4">
-            <h5 className="font-semibold text-gray-800 pb-20 " style={{ padding: "10px 0px" }}>
+          <div className="">
+            <h5 className="font-semibold text-gray-800 ">
               Pickup Address
             </h5>
 
@@ -206,7 +206,7 @@ if (prevOrderForAddress !== order) {
               rows={4}
               value={formData.customer_comment}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none resize-none"
+              className="w-full rounded-lg border border-gray-300 px-4 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none resize-none"
               placeholder="Add additional details (if any)..."
             />
           </div>
@@ -251,7 +251,7 @@ if (prevOrderForAddress !== order) {
           )}
         </div>
 
-        <div className="px-8 py-5 flex justify-end gap-4">
+        <div className="px-8 py-3 flex justify-end gap-4">
           <button
             onClick={onClose}
             className="px-5 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
