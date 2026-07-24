@@ -38,7 +38,7 @@ const CancelOrderPopup: React.FC<CancelOrderPopupProps> = ({
   return (
     <div className="bg-black/75 fixed inset-0 flex items-center justify-center z-50 ordermodal">
       <div className="bg-white p-6 rounded-[10px] shadow-lg w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-20">
+        <h2 className="text-xl font-semibold mb-10">
           {itemId ? "Cancel Item" : `Cancel Order #${order?.order_number || orderId}`}
         </h2>
         <p className="mb-4">
