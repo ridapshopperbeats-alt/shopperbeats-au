@@ -15,7 +15,11 @@ import "../../../../../styles/Cart.css";
 import "../../../../../styles/Product.css";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import Image from "next/image";
-import { useCancelOrderItemMutation, useCancelOrderMutation, useGetOrderByIdQuery } from "@/lib/redux/apis/order-api";
+import {
+  useCancelOrderItemMutation,
+  useCancelOrderMutation,
+  useGetOrderByIdQuery,
+} from "@/lib/redux/apis/order-api";
 import { Loader } from "lucide-react";
 import Button from "@/components/common/Button";
 import { formatPrice } from "@/lib/utils/main-utils";
@@ -45,14 +49,23 @@ export default function OrderDetail({ params }: OrderDetailProps) {
   const [isReturnItemPopupOpen, setIsReturnItemPopupOpen] = useState(false);
   const [isRetryPopupOpen, setIsRetryPopupOpen] = useState(false);
 
-  const [selectedItemForCancel, setSelectedItemForCancel] = useState<{ id: string, name: string } | null>(null);
-  const [selectedItemForReturn, setSelectedItemForReturn] = useState<{ id: string, product: APIProduct } | null>(null);
-  const [selectedItemForReplace, setSelectedItemForReplace] = useState<{ id: string, product: APIProduct } | null>(null);
+  const [selectedItemForCancel, setSelectedItemForCancel] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [selectedItemForReturn, setSelectedItemForReturn] = useState<{
+    id: string;
+    product: APIProduct;
+  } | null>(null);
+  const [selectedItemForReplace, setSelectedItemForReplace] = useState<{
+    id: string;
+    product: APIProduct;
+  } | null>(null);
 
   const handleCancelConfirm = async (
     id: string,
     cancelMessage: string,
-    isItemLevel: boolean
+    isItemLevel: boolean,
   ) => {
     try {
       if (isItemLevel) {
@@ -70,9 +83,9 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         toast.success("Order cancelled successfully!");
       }
       setIsCancelPopupOpen(false);
-      refetch();
+      if (!isStatic) refetch();
     } catch {
-      toast.error(`Failed to cancel ${isItemLevel ? 'item' : 'order'}.`);
+      toast.error(`Failed to cancel ${isItemLevel ? "item" : "order"}.`);
     }
   };
 
@@ -114,8 +127,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
   const shipping = Number(order.shipping_cost) || 0;
 
   const totalSavings =
-    (Number(order.total_saving) || 0) +
-    (Number(order.discount_amount) || 0);
+    (Number(order.total_saving) || 0) + (Number(order.discount_amount) || 0);
 
   const finalTotal = subtotal - totalSavings + shipping;
 
@@ -123,9 +135,15 @@ export default function OrderDetail({ params }: OrderDetailProps) {
     <div>
       {/* Header */}
       <div className="flex flex-wrap items-center gap-3 order-action justify-between pb-5">
-        <h4 className="text-[20px] sm:text-[24px] text-bold leading-[100%]">Order Detail</h4>
+        <h4
+          className="text-[20px] sm:text-[24px] leading-[100%]"
+          style={{ fontWeight: "800" }}
+        >
+          Order Detail
+        </h4>
         <div className="btn-action btn-track">
-          {(order.available_actions?.includes("retry") || order.available_actions?.includes("retry_payment")) && (
+          {(order.available_actions?.includes("retry") ||
+            order.available_actions?.includes("retry_payment")) && (
             <Button
               className="btn btn-red btn-filled btn-sharp"
               onClick={() => setIsRetryPopupOpen(true)}
@@ -226,11 +244,14 @@ export default function OrderDetail({ params }: OrderDetailProps) {
           </h5>
           <p>
             {order.estimated_delivery_date
-              ? new Date(order.estimated_delivery_date).toLocaleDateString("en-AU", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })
+              ? new Date(order.estimated_delivery_date).toLocaleDateString(
+                  "en-AU",
+                  {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  },
+                )
               : "Not Available"}
           </p>
         </div>
@@ -244,8 +265,14 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         </thead>
         <tbody>
           {products.map((product: APIProduct, idx: number) => {
-            const matchingItem = orderItems.find((item: OrderLineItem) => item.product_id === product.product_id);
-            const trueItemId = matchingItem?.id || product.id || product.item_id || product.product_id;
+            const matchingItem = orderItems.find(
+              (item: OrderLineItem) => item.product_id === product.product_id,
+            );
+            const trueItemId =
+              matchingItem?.id ||
+              product.id ||
+              product.item_id ||
+              product.product_id;
 
             return (
               <tr key={idx}>
@@ -262,9 +289,13 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                       className="w-[90px] h-[90px] sm:w-[136px] sm:h-[136px] object-contain cursor-pointer"
                     />
                   </Link>
-                  <div>
-                    <Link href={`/product/${product.unique_code || product.product_id}`}>
-                      <h3 className="cursor-pointer hover:text-red-600 transition-colors">{product.name}</h3>
+                  <div className="w-full">
+                    <Link
+                      href={`/product/${product.unique_code || product.product_id}`}
+                    >
+                      <h3 className="cursor-pointer hover:text-red-600 transition-colors">
+                        {product.name}
+                      </h3>
                     </Link>
 
                     {product?.variant_attributes?.length > 0 ? (
@@ -292,13 +323,19 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                       <strong>Quantity:</strong> {product.quantity}
                     </p>
 
-                    <div className="flex flex-wrap gap-2">
-                      {(matchingItem?.available_actions?.includes("cancel") || matchingItem?.available_options?.includes("cancel")) && (
-                        <div className="mt-2 w-full">
+                    <div className="flex flex-wrap gap-2 w-full">
+                      {(matchingItem?.available_actions?.includes("cancel") ||
+                        matchingItem?.available_options?.includes(
+                          "cancel",
+                        )) && (
+                        <div className="mt-2 ">
                           <Button
-                            className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
+                            className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 w-[120px] h-[40px] rounded cursor-pointer"
                             onClick={() => {
-                              setSelectedItemForCancel({ id: String(trueItemId), name: product.name });
+                              setSelectedItemForCancel({
+                                id: String(trueItemId),
+                                name: product.name,
+                              });
                               setIsCancelItemPopupOpen(true);
                             }}
                           >
@@ -309,7 +346,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
                         <Button
-                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
+                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 w-[120px] h-[40px] rounded cursor-pointer"
                           onClick={() => {
                             setSelectedItemForReturn({
                               id: String(trueItemId),
@@ -324,7 +361,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
                         <Button
-                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
+                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 w-[120px] h-[40px] rounded cursor-pointer"
                           onClick={() => {
                             setSelectedItemForReplace({
                               id: String(trueItemId),
@@ -336,23 +373,32 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                           Replace Item
                         </Button>
                       )}
-                    </div>
 
-                    {(matchingItem?.available_actions?.includes("review") || matchingItem?.available_actions?.includes("add_review") || matchingItem?.available_options?.includes("review") || matchingItem?.available_options?.includes("add_review")) && (
-                      <div className="mt-2 w-full">
-                        <Link href={`/user/orders/${order.id}/review?product_id=${product.product_id}`}>
-                          <Button
-                            className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
+                      {(matchingItem?.available_actions?.includes("review") ||
+                        matchingItem?.available_actions?.includes(
+                          "add_review",
+                        ) ||
+                        matchingItem?.available_options?.includes("review") ||
+                        matchingItem?.available_options?.includes(
+                          "add_review",
+                        )) && (
+                        <div className="">
+                          <Link
+                            href={`/user/orders/${order.id}/review?product_id=${product.product_id}`}
                           >
-                            Add Review
-                          </Button>
-                        </Link>
-                      </div>
-                    )}
+                            <Button className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 w-[120px] h-[40px] rounded cursor-pointer">
+                              Add Review
+                            </Button>
+                          </Link>
+                        </div>
+                      )}
 
-                    {product.status === "cancelled" && (
-                      <p className="mt-2 text-red-600 text-sm font-medium">Cancelled</p>
-                    )}
+                      {product.status === "cancelled" && (
+                        <p className="text-red-600 text-sm font-medium">
+                          Cancelled
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -375,7 +421,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
             -{order.currency}{" "}
             {formatPrice(
               (Number(order.total_saving) || 0) +
-              (Number(order.discount_amount) || 0)
+                (Number(order.discount_amount) || 0),
             )}
           </p>
         </div>
@@ -421,7 +467,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
           setIsReturnPopupOpen(false);
           setIsReturnItemPopupOpen(false);
           setSelectedItemForReturn(null);
-          refetch();
+          if (!isStatic) refetch();
         }}
         orderId={order.id}
         itemId={selectedItemForReturn?.id}
@@ -433,7 +479,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         onClose={() => {
           setIsReplacePopupOpen(false);
           setSelectedItemForReplace(null);
-          refetch();
+          if (!isStatic) refetch();
         }}
         orderId={order.id}
         itemId={selectedItemForReplace?.id}
