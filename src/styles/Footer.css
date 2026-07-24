@@ -129,15 +129,22 @@ ul.social {
 }
 
 .footer-copyright-mobile {
-  @apply pt-4 block sm:hidden;
+  @apply pt-4 pb-4 block sm:hidden w-full px-4;
   color: #FFF;
   text-align: center;
   font-family: Montserrat, sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.4;
   opacity: 0.5;
+}
+
+@media screen and (max-width: 360px) {
+  .footer-copyright-mobile {
+    font-size: 10.5px;
+    line-height: 1.5;
+  }
 }
 
 .payment img {
@@ -283,6 +290,7 @@ ul.social {
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
+    margin-top: 12px
   }
 
   .footer-accordion-chevron {
