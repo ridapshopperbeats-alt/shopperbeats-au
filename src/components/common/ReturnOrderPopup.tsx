@@ -254,7 +254,7 @@ if (prevOrderForAddress !== order) {
         <div className="px-8 py-3 flex justify-end gap-4">
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+            className="px-5 py-2 border border-gray-300 font-medium font-semibold text-gray-700 hover:bg-gray-100 transition rounded-[100px]"
           >
             Cancel
           </button>
