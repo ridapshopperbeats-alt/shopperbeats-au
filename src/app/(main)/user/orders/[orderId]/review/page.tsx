@@ -14,7 +14,7 @@ import "../../../../../../styles/Product.css";
 import { useAddReviewMutation, useGetOrderByIdQuery } from "@/lib/redux/apis/order-api";
 import { useUploadAnyImageMutation } from "@/lib/redux/apis/products-api";
 import { findOrderProduct, getOrderProductImage, getReviewProductId } from "@/lib/utils/order-products";
-import { Loader } from "lucide-react";
+import { Star } from "lucide-react";
 import Button from "@/components/common/Button";
 import { getStaticOrder, isStaticOrderId } from "@/lib/mock/static-orders";
 
@@ -122,7 +122,6 @@ export default function ReviewForm({ params }: ReviewPageProps) {
     }
   };
 
-  if (!isStatic && isLoading) return <Loader />;
 
   if ((!isStatic && isError) || !order) {
     return (
@@ -151,7 +150,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
 
   return (
     <div className="">
-      <h4 className="mb-30">Add Review</h4>
+      <h4 className="mb-7.5 text-[16px] lg:text-[24px]  leading-[100%]" style={{fontWeight:"700"}}>Add Review</h4>
 
       <table className="cart-table order-table">
         <tbody>
@@ -200,7 +199,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
         </tbody>
       </table>
 
-      <div className="form-item mt-30">
+      <div className="form-item mt-7.5">
         <div
           className="label-text"
           style={{ fontWeight: 600, marginBottom: "8px" }}
@@ -277,12 +276,17 @@ export default function ReviewForm({ params }: ReviewPageProps) {
         <label>
           Overall Rating<span className="text-red-500">*</span>
         </label>
-        <div className="fa-stars">
+        <div className="fa-stars flex items-center">
           {[1, 2, 3, 4, 5].map((val) => (
-            <i
+            <Star
               key={val}
-              className={`fa-star ${rating >= val ? "fa-solid" : "fa-regular"}`}
+              size={24}
               onClick={() => handleStarClick(val)}
+              className={
+                rating >= val
+                  ? "fill-[#FFCB45] text-[#FFCB45]"
+                  : "text-black"
+              }
               style={{ cursor: "pointer", marginRight: "5px" }}
             />
           ))}
@@ -344,7 +348,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
       <div className="flex justify-end">
         <Button
           type="button"
-          className="btn btn-red btn-filled btn-sharp mt-30"
+          className="btn btn-red btn-filled btn-sharp mt-10 lg:mt-0"
           onClick={handleSubmit}
           isLoading={isSubmitting}
           disabled={isSubmitting}

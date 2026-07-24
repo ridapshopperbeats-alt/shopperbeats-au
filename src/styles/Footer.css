@@ -41,7 +41,7 @@ footer p {
 }
 
 .footer-block.footer-newsletter form button {
-  @apply bg-[var(--secondary)] px-5 py-0 h-[41px] rounded-[5px] flex items-center justify-center shrink-0 cursor-pointer;
+  @apply bg-[var(--secondary)] px-5 py-0 h-[38px] rounded-[8px] flex items-center justify-center shrink-0 cursor-pointer;
 }
 
 .footer-block.footer-newsletter form button:hover {
@@ -280,15 +280,16 @@ ul.social {
   }
 
   .footer-menu-block {
-    @apply mb-0 border-b border-white/15 pb-0;
+    @apply mb-0 gap-0 border-b border-[#333333] pb-0;
   }
 
   .footer-menu-block .footer-section-title {
     @apply mb-0 text-base font-semibold cursor-pointer;
     display: flex;
-    padding: 16px 0;
+    padding: 14px 0;
     justify-content: space-between;
     align-items: center;
+    text-align: center;
     align-self: stretch;
     margin-top: 12px
   }

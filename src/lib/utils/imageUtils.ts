@@ -1,16 +1,23 @@
 import { Product, Variant } from "@/types/product";
 
-const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const CLOUDFLARE_IMAGE_HOSTS = ["imagedelivery.net", "assets.shopperbeats.cloud"];
+const CDN_BASE_URL = "https://assets.shopperbeats.cloud/images";
 
 export function applyImageVariant(url: string, variant?: string): string {
-  if (!variant || !url.includes("imagedelivery.net")) return url;
+  if (!CLOUDFLARE_IMAGE_HOSTS.some((host) => url.includes(host))) return url;
 
-  const lastSegment = url.split("/").pop() ?? "";
-  const result = UUID_PATTERN.test(lastSegment)
-    ? `${url}/${variant}`
-    : url.replace(/\/[^/]+$/, `/${variant}`);
+  const effectiveVariant = variant || "public";
 
-  return result;
+  try {
+    const parsed = new URL(url);
+    const [, imageId] = parsed.pathname.split("/").filter(Boolean);
+
+    if (!imageId) return url;
+
+    return `${CDN_BASE_URL}/${imageId}/${effectiveVariant}`;
+  } catch {
+    return url;
+  }
 }
 
 export function getImageUrl(product: Product, variant?: string): string {

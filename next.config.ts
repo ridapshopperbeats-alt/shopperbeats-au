@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   async rewrites() {
     return [
       {
@@ -18,6 +19,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "imagedelivery.net",
+      },
+      {
+        protocol: "https",
+        hostname: "assets.shopperbeats.cloud",
       },
       {
         protocol: "https",
