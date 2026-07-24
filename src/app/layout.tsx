@@ -24,7 +24,7 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: "ShopperBeats",
-  description: "Shopperbeats - Your One-Stop Onlone Shop",
+  description: "Shopperbeats - Your One-Stop Online Shop",
 };
 
 export default function RootLayout({
