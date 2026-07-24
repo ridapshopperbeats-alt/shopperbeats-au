@@ -36,7 +36,7 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
                   setSelectedAddressId(null);
                   onShippingAddressValid(false);
                 }}
-             
+                className="!w-[18px] !h-[18px] !scale-100 accent-[#01295F] cursor-pointer"
               />
               Add New Delivery
             </label>
@@ -64,6 +64,7 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
                       phone: "",
                     }));
                   }}
+                  className="!w-[18px] !h-[18px] !scale-100 accent-[#01295F] cursor-pointer"
                 />
                 Use Saved Address
               </label>
@@ -322,8 +323,7 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
             />
 
             <label className="delivery-checkbox-label">
-              <input type="checkbox" /> Keep me up to date on news and
-              exclusive offers via email and text messages
+              <input type="checkbox" /> Keep me up to date on news and exclusive offers via email and text messages
             </label>
           </div>
         </div>
