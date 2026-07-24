@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
@@ -13,6 +13,7 @@ import MobileFilterSheet from "../productListing/MobileFilterSheet";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import ProductDisplay from "../productListing/ProductDisplay";
 import { buildFilterTags } from "@/lib/utils/filter-tags";
+import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 
 interface SearchPageClientProps {
@@ -115,11 +116,14 @@ const SearchPageClient = ({
   );
 
   const [allProducts, setAllProducts] = useState<Product[]>(products);
+  const initialParams = useRef(searchParams.toString());
   const [hasChanged, setHasChanged] = useState(false);
 
-  if (searchParams.toString() !== searchParams.toString()) {
-    setHasChanged(true);
-  }
+  useEffect(() => {
+    if (searchParams.toString() !== initialParams.current) {
+      setHasChanged(true);
+    }
+  }, [searchParams]);
 
   const searchParamsObj = Object.fromEntries(searchParams.entries());
   delete searchParamsObj.q;
@@ -196,7 +200,7 @@ const SearchPageClient = ({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: toSafeJsonLd({
             "@context": "https://schema.org",
             "@type": "ItemList",
             name: `Search results for "${query}"`,

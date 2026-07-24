@@ -64,9 +64,12 @@ export function useFormValidation<T extends object>(
       setFormData(initialValues);
     }
   }, [initialValues]);
+  const latestFormErrorsRef = useRef(formErrors);
+
   const validateForm = useCallback(async () => {
     try {
       await schema.validate(formData, { abortEarly: false });
+      latestFormErrorsRef.current = {};
       setFormErrors({});
       return true;
     } catch (err) {
@@ -77,6 +80,7 @@ export function useFormValidation<T extends object>(
             errors[error.path] = error.message;
           }
         });
+        latestFormErrorsRef.current = errors;
         setFormErrors(errors);
       }
       return false;
@@ -94,10 +98,10 @@ export function useFormValidation<T extends object>(
         if (isValid) {
           callback(formData);
         } else if (onError) {
-          onError(formErrors);
+          onError(latestFormErrorsRef.current);
         }
       },
-    [formData, validateForm, formErrors],
+    [formData, validateForm],
   );
 
   const resetForm = useCallback(() => {

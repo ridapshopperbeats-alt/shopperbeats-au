@@ -39,29 +39,42 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 }) => {
   const mounted = useIsClient();
 
+  const CHECKOUT_DATA_TTL_MS = 24 * 60 * 60 * 1000;
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedCheckoutData = localStorage.getItem("checkoutFormData");
       if (savedCheckoutData) {
         try {
-          const parsedData = JSON.parse(savedCheckoutData);
-          setFormData((prev) => ({
-            ...prev,
-            ...parsedData,
-          }));
-          toast.success(
-            "Your saved details have been loaded for express checkout",
-            {
-              toastId: "checkout-saved-details-loaded",
-              position: "top-right",
-              autoClose: 3000,
-            },
-          );
+          const parsed = JSON.parse(savedCheckoutData);
+          const { savedAt, ...parsedData } = parsed;
+          const isExpired =
+            typeof savedAt !== "number" ||
+            Date.now() - savedAt > CHECKOUT_DATA_TTL_MS;
+
+          if (isExpired) {
+            localStorage.removeItem("checkoutFormData");
+          } else {
+            setFormData((prev) => ({
+              ...prev,
+              ...parsedData,
+            }));
+            toast.success(
+              "Your saved details have been loaded for express checkout",
+              {
+                toastId: "checkout-saved-details-loaded",
+                position: "top-right",
+                autoClose: 3000,
+              },
+            );
+          }
         } catch (error) {
           console.error("Error loading saved checkout data:", error);
+          localStorage.removeItem("checkoutFormData");
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setFormData]);
 
   useEffect(() => {
@@ -78,6 +91,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
         postcode: formData.postcode,
         apartment: formData.apartment,
         company: formData.company,
+        savedAt: Date.now(),
       };
       localStorage.setItem("checkoutFormData", JSON.stringify(dataToSave));
     }

@@ -241,6 +241,10 @@
   color: var(--secondary);
 }
 
+.bottom-head ul.menu a.link.active {
+  color: var(--secondary);
+}
+
 .header-link a:hover img {
   filter: brightness(0) invert(1);
 }

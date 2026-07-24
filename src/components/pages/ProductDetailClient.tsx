@@ -134,7 +134,7 @@ export default function ProductDetailClient({
   const { updateMetadata } = useSEO();
 
   useEffect(() => {
-    const mainImage = getImageUrl(product);
+    const mainImage = getImageUrl(product, "public");
     const cleanDescription =
       seo?.meta_description?.replace(/<[^>]*>/g, "").substring(0, 160) ||
       product.description?.replace(/<[^>]*>/g, "").substring(0, 160);
@@ -409,7 +409,7 @@ export default function ProductDetailClient({
         return {
           ...c,
           image: variant
-            ? getVariantImage(variant)
+            ? getVariantImage(variant, "pdptmb")
             : "/images/image-coming-soon.jpg",
         };
       }),
@@ -1086,7 +1086,7 @@ export default function ProductDetailClient({
                               <Image
                                 src={
                                   optionVariant
-                                    ? getVariantImage(optionVariant)
+                                    ? getVariantImage(optionVariant, "pdptmb")
                                     : "/images/image-coming-soon.jpg"
                                 }
                                 alt={option.value}
@@ -1409,7 +1409,7 @@ export default function ProductDetailClient({
                         }}
                       >
                         <Image
-                          src={getImageUrl(product)}
+                          src={getImageUrl(product, "public")}
                           alt="Product Image"
                           width={100}
                           height={500}
@@ -1476,7 +1476,7 @@ export default function ProductDetailClient({
                               }}
                             >
                               <Image
-                                src={getImageUrl(product)}
+                                src={getImageUrl(product, "public")}
                                 alt="Product Image"
                                 width={100}
                                 height={500}

@@ -9,6 +9,7 @@ import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 import { Product } from "@/types/product";
 import ProductDisplay from "../productListing/ProductDisplay";
+import { toSafeJsonLd } from "@/lib/utils/main-utils";
 import "../../styles/Product.css";
 
 interface ProductsPageClientProps {
@@ -28,7 +29,9 @@ const ProductsPageClient = ({
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams.get("page")) || 1
   );
-  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [itemsPerPage, setItemsPerPage] = useState(
+    Number(searchParams.get("limit")) || 20
+  );
 
   const [prevPageSearchParams, setPrevPageSearchParams] = useState(
     searchParams.toString()
@@ -104,7 +107,7 @@ const ProductsPageClient = ({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: toSafeJsonLd({
             "@context": "https://schema.org",
             "@type": "ItemList",
             name: "All Products",

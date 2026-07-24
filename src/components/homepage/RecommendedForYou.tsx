@@ -37,7 +37,7 @@ export default function RecommendedForYou({
         category_name: product.category_name,
         category_slug: product.category_slug,
 
-        image: getImageUrl(product),
+        image: getImageUrl(product, "plpcard"),
 
         mainPrice: priceInfo.mainPrice,
         wasPrice: priceInfo.wasPrice,

@@ -2,12 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
@@ -30,10 +25,13 @@ import "../../styles/Product.css";
 import CategorySlider from "./CategorySlider";
 import Breadcrumb from "../common/Breadcrumb";
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
-import { resolvePriceRange, filterProductsByPriceRange } from "@/lib/utils/price-filter";
+import {
+  resolvePriceRange,
+  filterProductsByPriceRange,
+} from "@/lib/utils/price-filter";
 import { buildFilterTags } from "@/lib/utils/filter-tags";
-
-
+import { applyImageVariant } from "@/lib/utils/imageUtils";
+import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 const Sidebar = dynamic(() => import("../productListing/Sidebar"), {
   loading: DynamicImportLoader,
@@ -79,10 +77,13 @@ const CategoryClient = ({
   const [persistedFilters, setPersistedFilters] = useState<Filter[]>(filters);
 
   const [prevSlug, setPrevSlug] = useState(slug);
+  const [hasHydratedInitialProducts, setHasHydratedInitialProducts] =
+    useState(false);
 
   if (slug !== prevSlug) {
     setPrevSlug(slug);
     setPersistedFilters(filters);
+    setHasHydratedInitialProducts(false);
   } else if (filters?.length > persistedFilters.length) {
     setPersistedFilters(filters);
   }
@@ -138,7 +139,6 @@ const CategoryClient = ({
     [handleSortChange],
   );
 
-
   const pageFromUrl = Number(searchParams.get("page")) || 1;
 
   const limitFromUrl = Number(searchParams.get("limit")) || 20;
@@ -147,11 +147,14 @@ const CategoryClient = ({
 
   const [uiLimit, setUiLimit] = useState(limitFromUrl);
 
-
-
   const [allProducts, setAllProducts] = useState<Product[]>([]);
 
-  if (products?.length > 0 && allProducts.length === 0) {
+  if (
+    products?.length > 0 &&
+    allProducts.length === 0 &&
+    !hasHydratedInitialProducts
+  ) {
+    setHasHydratedInitialProducts(true);
     setAllProducts(products);
   }
 
@@ -186,7 +189,6 @@ const CategoryClient = ({
     }
   }, [slug, megaMenuData, category?.name, dispatch]);
 
-
   const queryParams = useMemo(
     () => ({
       ...Object.fromEntries(searchParams.entries()),
@@ -205,7 +207,6 @@ const CategoryClient = ({
   });
 
   const effectiveTotal = data?.total ?? totalItems;
-
 
   const currentFilterString = useMemo(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -246,7 +247,6 @@ const CategoryClient = ({
     }
   }
 
-
   const handlePageChange = useCallback(
     (page: number) => {
       window.scrollTo({
@@ -285,8 +285,7 @@ const CategoryClient = ({
     [pathname, router, searchParams, currentPage, uiLimit],
   );
 
-  const handleLoadMore = useCallback(() => {
-  }, []);
+  const handleLoadMore = useCallback(() => {}, []);
 
   // -----------------------------
   // SLIDER
@@ -296,7 +295,9 @@ const CategoryClient = ({
     () =>
       category?.subcategories?.map((sub: Category) => ({
         title: sub.name,
-        image: sub.icon_url || "/images/image-coming-soon.jpg",
+        image: sub.icon_url
+          ? applyImageVariant(sub.icon_url, "public")
+          : "/images/image-coming-soon.jpg",
         slug: sub.slug ?? sub.id,
         product_count: sub.product_count,
       })) || [],
@@ -308,7 +309,7 @@ const CategoryClient = ({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: toSafeJsonLd({
             "@context": "https://schema.org",
 
             "@type": "ItemList",
@@ -335,8 +336,8 @@ const CategoryClient = ({
       <div className="container">
         {sliderCategories.length > 0 && (
           <CategorySlider
-          title="Top  Categories"
-          titleClassName=""
+            title="Top  Categories"
+            titleClassName=""
             items={sliderCategories}
             onCategoryClick={(item) =>
               dispatch(

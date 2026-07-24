@@ -11,7 +11,7 @@ export default function StoreProvider({ children }: { children: React.ReactNode 
   useEffect(() => {
     store.dispatch(syncAuthState());
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'isAuthenticated') {
+      if (e.key === 'isAuthenticated' || e.key === 'accessToken') {
         store.dispatch(syncAuthState());
       }
     };

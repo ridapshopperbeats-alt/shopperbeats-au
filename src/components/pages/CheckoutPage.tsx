@@ -60,6 +60,7 @@ export default function SecureCheckout() {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [shippingAddressValid, setShippingAddressValid] = useState(true);
   const [billingAddressValid, setBillingAddressValid] = useState(true);
+  const isSubmittingRef = useRef(false);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { data: userDetails } = useGetUserDetailsQuery(undefined, {
@@ -81,13 +82,11 @@ export default function SecureCheckout() {
     }
   }, [isLoading, isFetching, cart, isProcessingPayment, router]);
 
-  // Handle back button from external payment gateways (Afterpay, Zip, PayPal)
   useEffect(() => {
     if (sessionStorage.getItem("orderConfirmation")) {
       sessionStorage.removeItem("orderConfirmation");
-      router.replace("/confirmed-order");
     }
-  }, [router]);
+  }, []);
 
   const { data: savedAddresses = [] } = useGetAddressesQuery(undefined, {
     skip: !isAuthenticated,
@@ -211,7 +210,7 @@ export default function SecureCheckout() {
     }));
   }, [useSavedAddress, selectedAddressId, savedAddresses, setFormData]);
 
-  const handlePayNow = handleSubmit(async (data) => {
+  const handlePayNowValidated = handleSubmit(async (data) => {
     if (selectedAddressData) {
       const cityMatch =
         data.city.trim().toLowerCase() ===
@@ -235,29 +234,6 @@ export default function SecureCheckout() {
     if (isCreatingOrder || isProcessingPayment) return;
 
     setIsProcessingPayment(true);
-    const hasNonShippableItem = checkoutProducts.some(
-      (item) => item.is_shippable === false,
-    );
-
-    if (hasNonShippableItem) {
-      toast.error(
-        "One or more items in your cart cannot be shipped to this location. Please remove them to continue.",
-      );
-      return;
-    }
-
-    const hasUnavailableItem = checkoutProducts.some(
-      (item) =>
-        !item.is_active ||
-        (item.available_stock !== undefined && item.available_stock <= 0),
-    );
-
-    if (hasUnavailableItem) {
-      toast.error(
-        "One or more items in your cart are currently unavailable or out of available_stock. Please remove them to continue.",
-      );
-      return;
-    }
 
     const storedPromoData = sessionStorage.getItem("appliedPromoCode");
     let promoData: PromoData | null = null;
@@ -270,14 +246,36 @@ export default function SecureCheckout() {
     }
 
     try {
+      const hasNonShippableItem = checkoutProducts.some(
+        (item) => item.is_shippable === false,
+      );
+
+      if (hasNonShippableItem) {
+        toast.error(
+          "One or more items in your cart cannot be shipped to this location. Please remove them to continue.",
+        );
+        return;
+      }
+
+      const hasUnavailableItem = checkoutProducts.some(
+        (item) =>
+          !item.is_active ||
+          (item.available_stock !== undefined && item.available_stock <= 0),
+      );
+
+      if (hasUnavailableItem) {
+        toast.error(
+          "One or more items in your cart are currently unavailable or out of available_stock. Please remove them to continue.",
+        );
+        return;
+      }
+
       if (!shippingAddressValid) {
-        setIsProcessingPayment(false);
         toast.error("Please enter a valid address");
         return;
       }
 
       if (!data.useShippingAddressAsBilling && !billingAddressValid) {
-        setIsProcessingPayment(false);
         toast.error("Please enter a valid billing address");
         return;
       }
@@ -288,22 +286,28 @@ export default function SecureCheckout() {
         formData.paymentMethod !== "afterpay" &&
         formData.paymentMethod !== "zip"
       ) {
-        setIsProcessingPayment(false);
         toast.error("Please select a payment method");
         return;
       }
 
       if (formData.paymentMethod === "CreditCard" && (!stripe || !elements)) {
-        setIsProcessingPayment(false);
         toast.error("Stripe is not ready");
         return;
       }
 
       if (checkoutProducts.length === 0) {
-        setIsProcessingPayment(false);
         toast.error("No items to checkout.");
         return;
       }
+
+      const calculatedSubtotal = checkoutProducts.reduce((acc, item) => {
+        return (
+          acc +
+          Number(item.unit_price ?? item.rrp_price_snapshot ?? 0) *
+            item.quantity
+        );
+      }, 0);
+      const shippingCost = cart?.shipping || 0;
 
       // Order total limit check
       const promoDataForCheck = (() => {
@@ -317,9 +321,8 @@ export default function SecureCheckout() {
       const checkTotal =
         (promoDataForCheck
           ? promoDataForCheck.new_total
-          : (cart?.subtotal ?? 0)) + (cart?.shipping ?? 0);
+          : calculatedSubtotal) + shippingCost;
       if (checkTotal >= 50000) {
-        setIsProcessingPayment(false);
         toast.error(
           "Orders of $50,000 or more cannot be placed in a single transaction. Please reduce your cart total and try again.",
         );
@@ -327,7 +330,6 @@ export default function SecureCheckout() {
       }
 
       if (checkTotal <= 0) {
-        setIsProcessingPayment(false);
         toast.error("Total amount cannot be $0.00.");
         return;
       }
@@ -336,7 +338,6 @@ export default function SecureCheckout() {
         const cardElement = elements?.getElement(CardNumberElement);
 
         if (!cardElement) {
-          setIsProcessingPayment(false);
           toast.error("Card details not found");
           return;
         }
@@ -344,23 +345,12 @@ export default function SecureCheckout() {
         if (elements?.submit) {
           const { error } = await elements.submit();
           if (error) {
-            setIsProcessingPayment(false);
             toast.error(error.message || "Invalid card details");
             return;
           }
         }
       }
 
-      // Calculate subtotal - only product item prices (no shipping/tax)
-      const calculatedSubtotal = checkoutProducts.reduce((acc, item) => {
-        return (
-          acc +
-          Number(item.unit_price ?? item.rrp_price_snapshot ?? 0) *
-            item.quantity
-        );
-      }, 0);
-
-      const shippingCost = cart?.shipping || 0;
       const promoDiscount = promoData?.discount_amount ?? 0;
 
       const finalTotal = calculatedSubtotal + shippingCost - promoDiscount;
@@ -571,7 +561,6 @@ export default function SecureCheckout() {
           window.location.replace(orderResult.approval_url);
           return;
         }
-        setIsProcessingPayment(false);
         toast.error("PayPal initiation failed");
         return;
       }
@@ -611,7 +600,7 @@ export default function SecureCheckout() {
         });
 
         if (result?.error) {
-          setIsProcessingPayment(false);
+          sessionStorage.removeItem("orderConfirmation");
           toast.error(result.error.message || "Payment failed");
         }
         return;
@@ -637,7 +626,6 @@ export default function SecureCheckout() {
       );
 
       if (stripeResult?.error) {
-        setIsProcessingPayment(false);
         toast.error(stripeResult.error.message || "Payment failed");
         return;
       }
@@ -660,15 +648,17 @@ export default function SecureCheckout() {
         );
 
         sessionStorage.removeItem("appliedPromoCode");
+        localStorage.removeItem("checkoutFormData");
 
         router.replace("/confirmed-order");
       } else {
-        setIsProcessingPayment(false);
         toast.error(
           "Payment failed. Please check your card details and try again.",
         );
       }
     } catch (err) {
+      sessionStorage.removeItem("orderConfirmation");
+
       const detail = (err as { data?: { detail?: string } })?.data?.detail;
 
       if (typeof detail === "string" && /insufficient.*stock/i.test(detail)) {
@@ -682,6 +672,25 @@ export default function SecureCheckout() {
       setIsProcessingPayment(false);
     }
   });
+
+  // Wraps the validated submit handler with a synchronous ref-based lock:
+  // state updates like isProcessingPayment only take effect on the next
+  // render, so a fast double-click/Enter can invoke handlePayNowValidated a
+  // second time before that re-render happens. A ref is read/written
+  // immediately, so it blocks re-entry regardless of render timing. Kept
+  // out of the callback passed to handleSubmit itself since reading a ref
+  // from inside a function handed to another function isn't safe to do
+  // during render (only relevant for functions that are called during
+  // render, but this one is just a stricter lint rule playing it safe).
+  const handlePayNow = async (e?: React.FormEvent) => {
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
+    try {
+      await handlePayNowValidated(e);
+    } finally {
+      isSubmittingRef.current = false;
+    }
+  };
 
   const orderSummary = checkoutProducts;
   const calculatedSubtotal = cart?.total_price ?? 0;

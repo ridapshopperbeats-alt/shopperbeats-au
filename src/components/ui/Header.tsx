@@ -36,6 +36,56 @@ import {
   Trophy,
 } from "lucide-react";
 
+const NAV_LINKS = [
+  {
+    key: "home-garden",
+    label: "Home & Garden",
+    href: "/category/home-garden",
+    icon: Home,
+  },
+  {
+    key: "furniture",
+    label: "Furniture",
+    href: "/category/furniture",
+    icon: Armchair,
+  },
+  {
+    key: "fashion-accessories",
+    label: "Fashion & Accessories",
+    href: "#",
+    icon: Handbag,
+  },
+  {
+    key: "health-beauty",
+    label: "Health & Beauty",
+    href: "/category/health-beauty",
+    icon: HeartPulse,
+  },
+  {
+    key: "outdoor-patio",
+    label: "Outdoor & Patio",
+    href: "#",
+    icon: Sofa,
+  },
+  {
+    key: "best-seller",
+    label: "Best Sellers",
+    href: "/category/best-seller",
+    icon: Trophy,
+  },
+  {
+    key: "whats-on-sale",
+    label: "What's On Sale",
+    href: "/product-listing/whats-on-sale",
+    icon: Percent,
+  },
+];
+
+const isNavLinkActive = (href: string, pathname: string | null) => {
+  if (!pathname || href === "#") return false;
+  return pathname === href || pathname.startsWith(`${href}/`);
+};
+
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -712,69 +762,25 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
           <nav className={`navbar `} id="menu">
             <ul className="menu">
-              <li>
-                <Link
-                  className="link flex items-center gap-2 hover:text-red-500"
-                  href="/category/home-garden"
-                >
-                  <Home size={16} className="inline-block " />
-                  Home & Garden
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="link flex items-center gap-2 hover:text-red-500"
-                  href="/category/furniture"
-                >
-                  <Armchair size={16} className="inline-block " />
-                  Furniture
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="link flex items-center gap-2 hover:text-red-500"
-                  href="#"
-                >
-                  <Handbag size={16} className="inline-block " />
-                  Fashion & Accessories
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="link flex items-center gap-2 hover:text-red-500"
-                  href="/category/health-beauty"
-                >
-                  <HeartPulse size={16} className="inline-block " />
-                  Health & Beauty
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="link flex items-center gap-2 hover:text-red-500"
-                  href="#"
-                >
-                  <Sofa size={16} className="inline-block " />
-                  Outdoor & Patio
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="link flex items-center gap-2 hover:text-red-500"
-                  href="/category/best-seller"
-                >
-                  <Trophy size={16} className="inline-block " />
-                  Best Sellers
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="link flex items-center gap-2 hover:text-red-500"
-                  href="/product-listing/whats-on-sale"
-                >
-                  <Percent size={16} className="inline-block " />
-                  What&apos;s On Sale
-                </Link>
-              </li>
+              {NAV_LINKS.map((navLink) => {
+                const Icon = navLink.icon;
+                const isActive = isNavLinkActive(navLink.href, pathname);
+
+                return (
+                  <li key={navLink.key}>
+                    <Link
+                      className={`link flex items-center gap-2 hover:text-red-500 ${
+                        isActive ? "active" : ""
+                      }`}
+                      style={isActive ? { color: "#FD151B" } : undefined}
+                      href={navLink.href}
+                    >
+                      <Icon size={16} className="inline-block " />
+                      {navLink.label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
         </div>

@@ -3,6 +3,7 @@ import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { getFooterMenuData } from "@/lib/utils/get-footer-menu-data";
 import { getCategoryData } from "@/lib/utils/get-category-data";
 import CategorySlider from "@/components/pages/CategorySlider";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 
 export default async function TopCategories({
   children,
@@ -23,7 +24,10 @@ export default async function TopCategories({
   const sliderCategories = categories.map((cat) => ({
     id: cat.id,
     title: cat.name,
-    image: cat.icon_url || cat.image_url || "/images/image-coming-soon.jpg",
+    image:
+      cat.icon_url || cat.image_url
+        ? applyImageVariant(cat.icon_url || cat.image_url, "public")
+        : "/images/image-coming-soon.jpg",
     slug: cat.slug,
     href: `/category/${cat.slug}`,
   }));

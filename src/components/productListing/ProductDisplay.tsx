@@ -14,7 +14,10 @@ const EMPTY_VARIANTS: never[] = [];
 import Pagination from "@/components/common/Pagination";
 import { Product } from "@/types/product";
 import { WishlistKey } from "@/types/wishlist";
-import { getPriceDetails, formatPriceFixed2, getImageUrl } from "@/lib/utils/main-utils";
+import {
+  getPriceDetails,
+  getImageUrl,
+} from "@/lib/utils/main-utils";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
 import {
   useCreateWishlistMutation,
@@ -100,7 +103,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
         hasMore &&
         !isFetchingMore &&
         onLoadMore &&
-        initialProducts.length < 20
+        initialProducts.length < itemsPerPage
       ) {
         onLoadMore();
       }
@@ -109,7 +112,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
       infiniteScroll &&
       hasMore &&
       !isFetchingMore &&
-      initialProducts.length < 20,
+      initialProducts.length < itemsPerPage,
     rootMargin: "100px",
   });
 
@@ -245,42 +248,42 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
         </div>
       ) : (
         <>
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-5  ">
-              {products.map((product) => {
-                const priceInfo = getPriceDetails(product);
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-5  ">
+            {products.map((product) => {
+              const priceInfo = getPriceDetails(product);
 
-                return (
-                  <ProductCard
-                    key={product.id}
-                    wishlistItems={wishlistItems}
-                    image={getImageUrl(product)}
-                    title={product.title}
-                    brand_name={product.brand_name}
-                    mainPrice={priceInfo.mainPrice}
-                    wasPrice={priceInfo.wasPrice}
-                    showWasPrice={priceInfo.showWasPrice}
-                    discountPercentage={priceInfo.discountPercentage}
-                    saveAmount={priceInfo.saveAmount}
-                    id={product.id}
-                    unique_code={product.unique_code}
-                    defaultVariantId={product.variants?.[0]?.id}
-                    variants={product.variants ?? EMPTY_VARIANTS}
-                    promotion_name={product.promotion_name}
-                    stock={product.stock}
-                    vendor_id={product.vendor_id}
-                    rating={product.review_stats?.average_rating || 0}
-                    reviewCount={product.review_stats?.total_reviews || 0}
-                    tags={product.tags}
-                    ships_from_location={product.ships_from_location}
-                    handling_time_days={product.handling_time_days}
-                  />
-                );
-              })}
-            </div>
+              return (
+                <ProductCard
+                  key={product.id}
+                  wishlistItems={wishlistItems}
+                  image={getImageUrl(product, "plpcard")}
+                  title={product.title}
+                  brand_name={product.brand_name}
+                  mainPrice={priceInfo.mainPrice}
+                  wasPrice={priceInfo.wasPrice}
+                  showWasPrice={priceInfo.showWasPrice}
+                  discountPercentage={priceInfo.discountPercentage}
+                  saveAmount={priceInfo.saveAmount}
+                  id={product.id}
+                  unique_code={product.unique_code}
+                  defaultVariantId={product.variants?.[0]?.id}
+                  variants={product.variants ?? EMPTY_VARIANTS}
+                  promotion_name={product.promotion_name}
+                  stock={product.stock}
+                  vendor_id={product.vendor_id}
+                  rating={product.review_stats?.average_rating || 0}
+                  reviewCount={product.review_stats?.total_reviews || 0}
+                  tags={product.tags}
+                  ships_from_location={product.ships_from_location}
+                  handling_time_days={product.handling_time_days}
+                />
+              );
+            })}
+          </div>
         </>
       )}
 
-      {infiniteScroll && hasMore && initialProducts.length < 20 && (
+      {infiniteScroll && hasMore && initialProducts.length < itemsPerPage && (
         <div
           ref={loadMoreRef}
           className="h-10 flex items-center justify-center"
