@@ -32,6 +32,28 @@ import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
 import Pagination from "@/components/common/Pagination";
 import { STATIC_ORDERS } from "@/lib/mock/static-orders";
 
+const ORDER_STATUS_LABELS: Record<string, string> = {
+  confirmed: "Confirmed",
+  shipped: "Shipped",
+  delivered: "Delivered",
+  cancelled: "Cancelled",
+  pending: "Pending",
+  "in progress": "In Progress",
+  "return requested": "Return Requested",
+};
+
+const getOrderStatusLabel = (order: OrderItem) => {
+  const hasReturnRequested = order?.returns?.some(
+    (r: OrderReturn) => r?.status?.toLowerCase() === "requested",
+  );
+
+  const key = hasReturnRequested
+    ? "return requested"
+    : (order?.status || "").toLowerCase();
+
+  return ORDER_STATUS_LABELS[key] ?? order?.status ?? "N/A";
+};
+
 export default function MyOrdersPage() {
   const router = useRouter();
   const [cancelOrder] = useCancelOrderMutation();
@@ -71,7 +93,7 @@ export default function MyOrdersPage() {
   );
 
   const [allOrders, setAllOrders] = useState<OrderItem[]>([]);
-
+  console.log(allOrders, "=====allorders");
   const querySettled = !isLoading && !isFetching;
   const useStaticFallback =
     querySettled && (isError || !data || (data.data?.length ?? 0) === 0);
@@ -279,91 +301,57 @@ export default function MyOrdersPage() {
       {allOrders.map((order) => (
         <div key={order.id} className="order-block">
           <div className="order-detail grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 gap-5">
-            <div className="order-item">
-              <h5
-                style={{
-                  fontSize: "clamp(16px, 1.5vw, 18px)",
-                  fontWeight: "800",
-                }}
-              >
+            <div className="order-detail-item">
+              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
                 Order Number
               </h5>
-              <p style={{ fontSize: "clamp(12px, 1.5vw, 16px)" }}>
+              <p className="text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize">
                 {order.order_number || order.id}
               </p>
             </div>
-            <div className="order-item">
-              <h5
-                style={{
-                  fontSize: "clamp(16px, 1.5vw, 18px)",
-                  fontWeight: "800",
-                }}
-              >
+            <div className="order-detail-item">
+              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
                 Order Date
               </h5>
-              <p style={{ fontSize: "clamp(12px, 1.5vw, 16px)" }}>
+              <p className="text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize">
                 {formatReadableDate(order.created_at)}
               </p>
             </div>
-            <div className="order-item">
-              <h5
-                style={{
-                  fontSize: "clamp(16px, 1.5vw, 18px)",
-                  fontWeight: "800",
-                }}
-              >
+            <div className="order-detail-item">
+              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
                 Total Payment
               </h5>
-              <p style={{ fontSize: "clamp(12px, 1.5vw, 16px)" }}>
+              <p className="text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize">
                 {order.totalPayment}
               </p>
             </div>
 
-            <div className="order-item">
-              <h5
-                style={{
-                  fontSize: "clamp(16px, 1.5vw, 18px)",
-                  fontWeight: "800",
-                }}
-              >
+            <div className="order-detail-item">
+              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
                 Payment Method
               </h5>
-              <p style={{ fontSize: "clamp(12px, 1.5vw, 16px)" }}>
+              <p className="text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize">
                 {order.paymentMethod}
               </p>
             </div>
 
-            <div className="order-item">
-              <h5
-                style={{
-                  fontSize: "clamp(16px, 1.5vw, 18px)",
-                  fontWeight: "800",
-                }}
-              >
+            <div className="order-detail-item">
+              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
                 Order Status
               </h5>
 
-              <div style={{ textTransform: "capitalize" }}>
-                {order?.returns?.some(
-                  (r: OrderReturn) => r?.status?.toLowerCase() === "requested",
-                )
-                  ? "Return Requested"
-                  : order?.status || "N/A"}
-              </div>
+              <p className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
+                {getOrderStatusLabel(order)}
+              </p>
             </div>
 
-            <div className="order-item">
-              <h5
-                style={{
-                  fontSize: "clamp(16px, 1.5vw, 18px)",
-                  fontWeight: "800",
-                }}
-              >
+            <div className="order-detail-item">
+              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
                 {order.status === Status.DELIVERED
                   ? "Delivered on"
                   : "Estimated Delivery Date"}
               </h5>
-              <p style={{ fontSize: "clamp(12px, 1.5vw, 16px)" }}>
+              <p className="text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize">
                 {order.estimated_delivery_date
                   ? new Date(order.estimated_delivery_date).toLocaleDateString(
                       "en-AU",

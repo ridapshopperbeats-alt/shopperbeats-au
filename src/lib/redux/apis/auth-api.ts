@@ -116,7 +116,10 @@ export const authApi = createApi({
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error("Logout request failed", err);
+          const fetchError = (err as { error?: unknown })?.error;
+          if (fetchError) {
+            console.warn("Logout request failed", fetchError);
+          }
         } finally {
           dispatch(clearCart());
           dispatch(authApi.util.resetApiState());
