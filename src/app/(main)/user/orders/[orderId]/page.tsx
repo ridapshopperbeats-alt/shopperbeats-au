@@ -156,12 +156,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
               href={order.tracking_link}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-red btn-filled btn-sharp"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+              className="btn btn-red btn-filled btn-sharp inline-flex items-center justify-center"
             >
               Track Order
             </Link>
@@ -232,12 +227,12 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         <div className="order-item">
           <h5>Order Status</h5>
 
-          <div style={{ textTransform: "capitalize" }}>
-            {order.returns?.some(
-              (r: OrderReturn) => r?.status?.toLowerCase() === "requested",
-            )
-              ? "Return Requested"
-              : order.status || "N/A"}
+          <div className="capitalize">
+            {order.returns?.some((r: OrderReturn) => r?.status?.toLowerCase() === "requested") ? (
+              "Return Requested"
+            ) : (
+              order.status || "N/A"
+            )}
           </div>
         </div>
 
@@ -414,16 +409,14 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
       <div className="order-summery mt-5">
         <div className="summary-row border-b border-gray-200 pb-2">
-          <p style={{ fontSize: "16px", fontWeight: "600" }}>
-            Subtotal ({products.length} Items)
-          </p>
+          <p>Subtotal ({products.length} Items)</p>
           <p className="price">
             {order.currency} {formatPrice(order.subtotal)}
           </p>
         </div>
 
         <div className="summary-row  border-b border-gray-200 pb-2">
-          <p style={{ fontSize: "16px", fontWeight: "600" }}>Total Savings</p>
+          <p>Total Savings</p>
           <p className="savings">
             -{order.currency}{" "}
             {formatPrice(
@@ -434,18 +427,10 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         </div>
 
         <div className="flex-wrap justify-between flex gap-2 border-b border-gray-200 pb-2">
-          <p style={{ fontSize: "16px", fontWeight: "600" }}>
+          <p>
             Delivery Details
             <br />
-            <span
-              style={{
-                fontSize: "14px",
-                fontWeight: "500",
-                color: "#726969",
-                display: "flex",
-                flexWrap: "wrap",
-              }}
-            >
+            <span className="flex flex-wrap">
               Address: {snapshot.shipping_address.address},{" "}
               {snapshot.shipping_address.city}
             </span>
@@ -456,9 +441,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         </div>
 
         <div className="justify-between py-[16px] flex flex-wrap gap-2 bg-[#f5f5f5] pl-4">
-          <strong style={{ fontSize: "18px", fontWeight: "600" }}>
-            Total (Incl. GST)
-          </strong>
+          <strong>Total (Incl. GST)</strong>
           <p className="price">
             {order.currency} {formatPrice(finalTotal)}
           </p>

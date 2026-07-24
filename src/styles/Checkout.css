@@ -415,6 +415,16 @@ button.zip {
   font-family: var(--font-montserrat);
 }
 
+@media screen and (max-width: 767px) {
+  .delivery-checkbox-label {
+    @apply items-start;
+  }
+
+  .delivery-checkbox-label input[type="checkbox"] {
+    @apply mt-0.5 shrink-0;
+  }
+}
+
 /* Payment section (moved from Tailwind utility classes) */
 
 .payment-section {

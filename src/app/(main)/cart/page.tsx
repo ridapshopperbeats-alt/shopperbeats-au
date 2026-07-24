@@ -1007,7 +1007,7 @@ const Cart = () => {
             </div>
 
             <div className="flex items-center justify-between py-4 xl:border-t border-[#e5e5e5] mt-4">
-              <strong className="text-[18px] leading-[100%] font-semibold text-black">
+              <strong className="text-[18px] leading-[100%] font-bold text-black">
                 Total (Incl. GST)
               </strong>
               <div className="flex flex-col items-end gap-1">

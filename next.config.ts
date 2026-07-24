@@ -56,6 +56,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "image.vevor.com",
       },
+      {
+        protocol: "https",
+        hostname: "assets.shopperbeats.cloud",
+      },
     ],
   },
 };
