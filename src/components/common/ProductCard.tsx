@@ -221,22 +221,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 </div>
               )}
 
-              <div className="text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
-                <p className="font-normal">
-                  {shippingCharge === 0
-                    ? "Delivery Fee - $0"
-                    : `Delivery Fee - $${formatPrice(shippingCharge)}`}
-                </p>
+              {!isOutOfStock && (
+                <div className="text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
+                  <p className="font-normal">
+                    {shippingCharge === 0
+                      ? "Delivery Fee - $0"
+                      : `Delivery Fee - $${formatPrice(shippingCharge)}`}
+                  </p>
 
-                <p className="font-normal">
-                  <span className="font-medium">
-                    {getEstimatedDeliveryRange(
-                      ships_from_location,
-                      handling_time_days || 0,
-                    )}
-                  </span>
-                </p>
-              </div>
+                  <p className="font-normal">
+                    <span className="font-medium">
+                      {getEstimatedDeliveryRange(
+                        ships_from_location,
+                        handling_time_days || 0,
+                      )}
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="w-full px-2 lg:px-3 flex justify-center mt-2">

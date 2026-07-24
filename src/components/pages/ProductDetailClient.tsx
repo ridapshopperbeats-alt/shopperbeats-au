@@ -1115,18 +1115,20 @@ export default function ProductDetailClient({
                 <div className="border-t border-[#ECECEC]" />
                 {!hasRealColors && remainingAttributeFields}
 
-                <div className="lg:hidden text-[13px] leading-[18px]">
-                  <p className="font-bold text-[#1D265F]">
-                    Delivery Fee - ${formatPrice(shippingCharge)}
-                  </p>
+                {!isOutOfStock && (
+                  <div className="lg:hidden text-[13px] leading-[18px]">
+                    <p className="font-bold text-[#1D265F]">
+                      Delivery Fee - ${formatPrice(shippingCharge)}
+                    </p>
 
-                  <p className="font-normal text-[#535766]">
-                    {getEstimatedDeliveryRange(
-                      product.ships_from_location,
-                      product.handling_time_days || 0,
-                    )}
-                  </p>
-                </div>
+                    <p className="font-normal text-[#535766]">
+                      {getEstimatedDeliveryRange(
+                        product.ships_from_location,
+                        product.handling_time_days || 0,
+                      )}
+                    </p>
+                  </div>
+                )}
                 <div className="lg:hidden flex border-t border-[#ECECEC]" />
                 <div className="lg:hidden flex flex-col gap-2">
                   <div className="flex items-center justify-between gap-2">
@@ -1527,17 +1529,19 @@ export default function ProductDetailClient({
                 </span>
               </div>
 
-              <p className="font-bold text-[#1D265F] text-[14px]">
-                Delivery Fee - ${formatPrice(shippingCharge)}{" "}
-                <span className="text-[14px] font-normal text-[#1A2553] leading-[20px]">
-                  (
-                  {getEstimatedDeliveryRange(
-                    product.ships_from_location,
-                    product.handling_time_days || 0,
-                  )}
-                  )
-                </span>
-              </p>
+              {!isOutOfStock && (
+                <p className="font-bold text-[#1D265F] text-[14px]">
+                  Delivery Fee - ${formatPrice(shippingCharge)}{" "}
+                  <span className="text-[14px] font-normal text-[#1A2553] leading-[20px]">
+                    (
+                    {getEstimatedDeliveryRange(
+                      product.ships_from_location,
+                      product.handling_time_days || 0,
+                    )}
+                    )
+                  </span>
+                </p>
+              )}
 
               <div className="-mx-5 border-t border-[#ECECEC]"></div>
 
