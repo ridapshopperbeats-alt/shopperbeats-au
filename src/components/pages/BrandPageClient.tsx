@@ -12,6 +12,7 @@ import MobileFilterSheet from "../productListing/MobileFilterSheet";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import ProductDisplay from "../productListing/ProductDisplay";
 import { buildFilterTags } from "@/lib/utils/filter-tags";
+import { toSafeJsonLd } from "@/lib/utils/main-utils";
 import "../../styles/Product.css";
 import Breadcrumb from "../common/Breadcrumb";
 
@@ -137,9 +138,24 @@ const BrandPageClient = ({
   const [prevPage, setPrevPage] = useState(currentPage);
   const [prevUiLimitTracked, setPrevUiLimitTracked] = useState(uiLimit);
 
-  if (currentPage !== prevPage || uiLimit !== prevUiLimitTracked) {
+  const filterParamsKey = useMemo(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("page");
+    params.delete("limit");
+    return params.toString();
+  }, [searchParams]);
+  const [prevFilterParamsKey, setPrevFilterParamsKey] =
+    useState(filterParamsKey);
+
+  if (
+    currentPage !== prevPage ||
+    uiLimit !== prevUiLimitTracked ||
+    filterParamsKey !== prevFilterParamsKey
+  ) {
     const isOnlyLimitIncrease =
-      currentPage === prevPage && uiLimit > prevUiLimitTracked;
+      currentPage === prevPage &&
+      uiLimit > prevUiLimitTracked &&
+      filterParamsKey === prevFilterParamsKey;
 
     if (!isOnlyLimitIncrease) {
       setFetchingPage(calculateStartFetchingPage(currentPage, uiLimit));
@@ -147,6 +163,7 @@ const BrandPageClient = ({
 
     setPrevPage(currentPage);
     setPrevUiLimitTracked(uiLimit);
+    setPrevFilterParamsKey(filterParamsKey);
   }
 
   const [allProducts, setAllProducts] = useState<Product[]>(products);
@@ -252,7 +269,7 @@ const BrandPageClient = ({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: toSafeJsonLd({
             "@context": "https://schema.org",
             "@type": "ItemList",
             name: brand?.name || brandId,

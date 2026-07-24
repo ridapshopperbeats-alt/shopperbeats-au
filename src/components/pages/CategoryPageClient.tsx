@@ -31,6 +31,7 @@ import {
 } from "@/lib/utils/price-filter";
 import { buildFilterTags } from "@/lib/utils/filter-tags";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
+import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 const Sidebar = dynamic(() => import("../productListing/Sidebar"), {
   loading: DynamicImportLoader,
@@ -76,10 +77,13 @@ const CategoryClient = ({
   const [persistedFilters, setPersistedFilters] = useState<Filter[]>(filters);
 
   const [prevSlug, setPrevSlug] = useState(slug);
+  const [hasHydratedInitialProducts, setHasHydratedInitialProducts] =
+    useState(false);
 
   if (slug !== prevSlug) {
     setPrevSlug(slug);
     setPersistedFilters(filters);
+    setHasHydratedInitialProducts(false);
   } else if (filters?.length > persistedFilters.length) {
     setPersistedFilters(filters);
   }
@@ -145,7 +149,12 @@ const CategoryClient = ({
 
   const [allProducts, setAllProducts] = useState<Product[]>([]);
 
-  if (products?.length > 0 && allProducts.length === 0) {
+  if (
+    products?.length > 0 &&
+    allProducts.length === 0 &&
+    !hasHydratedInitialProducts
+  ) {
+    setHasHydratedInitialProducts(true);
     setAllProducts(products);
   }
 
@@ -300,7 +309,7 @@ const CategoryClient = ({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: toSafeJsonLd({
             "@context": "https://schema.org",
 
             "@type": "ItemList",

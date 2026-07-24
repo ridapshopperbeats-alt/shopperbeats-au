@@ -53,11 +53,15 @@ export async function getMegaMenuData() {
 
   if (!data.length) return [];
 
+  const matchedCategories = MAIN_CATEGORY_ORDER
+    .map((name) => data.find((cat) => cat.name?.toLowerCase().includes(name.toLowerCase())))
+    .filter((cat): cat is Category => !!cat);
+
+  const matchedIds = new Set(matchedCategories.map((cat) => cat.id));
+
   const orderedMainCategories = [
-    ...MAIN_CATEGORY_ORDER
-      .map((name) => data.find((cat) => cat.name?.toLowerCase().includes(name.toLowerCase())))
-      .filter((cat): cat is Category => !!cat),
-    ...data.filter((cat) => !MAIN_CATEGORY_ORDER.includes(cat.name)),
+    ...matchedCategories,
+    ...data.filter((cat) => !matchedIds.has(cat.id)),
   ];
 
   return orderedMainCategories.map((category) => transformCategory(category));

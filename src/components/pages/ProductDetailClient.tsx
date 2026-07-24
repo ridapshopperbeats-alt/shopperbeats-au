@@ -409,7 +409,7 @@ export default function ProductDetailClient({
         return {
           ...c,
           image: variant
-            ? getVariantImage(variant)
+            ? getVariantImage(variant, "pdptmb")
             : "/images/image-coming-soon.jpg",
         };
       }),
@@ -1086,7 +1086,7 @@ export default function ProductDetailClient({
                               <Image
                                 src={
                                   optionVariant
-                                    ? getVariantImage(optionVariant)
+                                    ? getVariantImage(optionVariant, "pdptmb")
                                     : "/images/image-coming-soon.jpg"
                                 }
                                 alt={option.value}

@@ -103,7 +103,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
         hasMore &&
         !isFetchingMore &&
         onLoadMore &&
-        initialProducts.length < 20
+        initialProducts.length < itemsPerPage
       ) {
         onLoadMore();
       }
@@ -112,7 +112,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
       infiniteScroll &&
       hasMore &&
       !isFetchingMore &&
-      initialProducts.length < 20,
+      initialProducts.length < itemsPerPage,
     rootMargin: "100px",
   });
 
@@ -283,7 +283,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
         </>
       )}
 
-      {infiniteScroll && hasMore && initialProducts.length < 20 && (
+      {infiniteScroll && hasMore && initialProducts.length < itemsPerPage && (
         <div
           ref={loadMoreRef}
           className="h-10 flex items-center justify-center"
