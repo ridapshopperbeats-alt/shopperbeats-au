@@ -1,30 +1,29 @@
 "use client";
 
 import React, { useState, use } from "react";
-import {
-  useGetOrderByIdQuery,
-  useCancelOrderMutation,
-  useCancelOrderItemMutation,
-} from "@/lib/redux/apis/order-api";
+
 import { APIProduct, OrderReturn, OrderLineItem } from "@/types/order";
-import CancelOrderPopup from "@/components/common/CancelOrderPopup";
-import ReturnOrderPopup from "@/components/common/ReturnOrderPopup";
-import ReplaceOrderPopup from "@/components/ui/ReplaceOrderPopup";
-import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
+
 import { Elements } from "@stripe/react-stripe-js";
 import stripePromise from "@/lib/stripe";
 import { toast } from "react-toastify";
-import Button from "@/components/common/Button";
-import Link from "next/link";
 
-import { API_ENDPOINTS } from "@/lib/constants/api";
-import Image from "next/image";
-import { formatPrice } from "@/lib/utils/main-utils";
+import Link from "next/link";
 
 import "../../../../../styles/Checkout.css";
 import "../../../../../styles/Cart.css";
 import "../../../../../styles/Product.css";
-import "../../../../../styles/auth.css";
+import { API_ENDPOINTS } from "@/lib/constants/api";
+import Image from "next/image";
+import { useCancelOrderItemMutation, useCancelOrderMutation, useGetOrderByIdQuery } from "@/lib/redux/apis/order-api";
+import { Loader } from "lucide-react";
+import Button from "@/components/common/Button";
+import { formatPrice } from "@/lib/utils/main-utils";
+import CancelOrderPopup from "@/components/common/CancelOrderPopup";
+import ReturnOrderPopup from "@/components/common/ReturnOrderPopup";
+import ReplaceOrderPopup from "@/components/ui/ReplaceOrderPopup";
+import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
+import { getStaticOrder, isStaticOrderId } from "@/lib/mock/static-orders";
 
 interface OrderDetailProps {
   params: Promise<{ orderId: string }>;
@@ -32,7 +31,10 @@ interface OrderDetailProps {
 
 export default function OrderDetail({ params }: OrderDetailProps) {
   const { orderId } = use(params);
-  const { data, isLoading, refetch } = useGetOrderByIdQuery(orderId);
+  const isStatic = isStaticOrderId(orderId);
+  const { data, isLoading, refetch } = useGetOrderByIdQuery(orderId, {
+    skip: isStatic,
+  });
   const [cancelOrder] = useCancelOrderMutation();
   const [cancelOrderItem] = useCancelOrderItemMutation();
 
@@ -69,9 +71,8 @@ export default function OrderDetail({ params }: OrderDetailProps) {
       }
       setIsCancelPopupOpen(false);
       refetch();
-    } catch (error) {
+    } catch {
       toast.error(`Failed to cancel ${isItemLevel ? 'item' : 'order'}.`);
-      console.error(`Failed to cancel ${isItemLevel ? 'item' : 'order'}:`, error);
     }
   };
 
@@ -96,21 +97,18 @@ export default function OrderDetail({ params }: OrderDetailProps) {
       a.click();
       window.URL.revokeObjectURL(downloadUrl);
       document.body.removeChild(a);
-    } catch (error) {
-      console.error("Error downloading invoice:", error);
+    } catch {
       toast.error("Failed to download invoice");
     }
   };
 
-  if (!data) return <p>Order not found</p>;
+  if (!isStatic && isLoading) return <Loader />;
 
-  const order = data;
+  const order = isStatic ? getStaticOrder(orderId) : data;
+  if (!order) return <p>Order not found</p>;
   const snapshot = order.order_details?.customer_snapshot || {};
   const products = snapshot.products || [];
   const orderItems = order.items || [];
-
-  const isCancelled =
-    order.shipstation_order_status?.toLowerCase() === "cancelled";
 
   const subtotal = Number(order.subtotal) || 0;
   const shipping = Number(order.shipping_cost) || 0;
@@ -123,8 +121,9 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
   return (
     <div>
-      <div className="dflex order-action order-detail-header">
-        <h4>Order Detail</h4>
+      {/* Header */}
+      <div className="flex flex-wrap items-center gap-3 order-action justify-between pb-5">
+        <h4 className="text-[20px] sm:text-[24px] text-bold leading-[100%]">Order Detail</h4>
         <div className="btn-action btn-track">
           {(order.available_actions?.includes("retry") || order.available_actions?.includes("retry_payment")) && (
             <Button
@@ -139,7 +138,8 @@ export default function OrderDetail({ params }: OrderDetailProps) {
               href={order.tracking_link}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-red btn-filled btn-sharp order-track-link"
+              className="btn btn-red btn-filled btn-sharp"
+              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
             >
               Track Order
             </Link>
@@ -189,7 +189,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
       </div>
 
       {/* Order Info */}
-      <div className="dflex order-detail order-detail-info">
+      <div className="order-detail bg-[#F5F5F5] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-5">
         <div className="order-item">
           <h5>Order Number</h5>
           <p>{order.order_number || order.id}</p>
@@ -210,7 +210,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         <div className="order-item">
           <h5>Order Status</h5>
 
-          <div className="order-status-value">
+          <div style={{ textTransform: "capitalize" }}>
             {order.returns?.some((r: OrderReturn) => r?.status?.toLowerCase() === "requested") ? (
               "Return Requested"
             ) : (
@@ -237,7 +237,6 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         </div>
       </div>
 
-      {/* Products Table */}
       <table className="cart-table order-table">
         <thead className="visually-hidden">
           <tr>
@@ -251,19 +250,22 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
             return (
               <tr key={idx}>
-                <td className="item-info">
-                  <Link href={`/product/${product.unique_code || product.product_id}`}>
+                <td className="item-info !flex-col sm:!flex-row gap-4">
+                  <Link
+                    href={`/product/${product.unique_code || product.product_id}`}
+                    className="shrink-0"
+                  >
                     <Image
                       height={136}
                       width={136}
                       src={product.image}
                       alt={product.name}
-                      className="order-item-image"
+                      className="w-[90px] h-[90px] sm:w-[136px] sm:h-[136px] object-contain cursor-pointer"
                     />
                   </Link>
                   <div>
                     <Link href={`/product/${product.unique_code || product.product_id}`}>
-                      <h3 className="order-item-title">{product.name}</h3>
+                      <h3 className="cursor-pointer hover:text-red-600 transition-colors">{product.name}</h3>
                     </Link>
 
                     {product?.variant_attributes?.length > 0 ? (
@@ -291,12 +293,11 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                       <strong>Quantity:</strong> {product.quantity}
                     </p>
 
-                    <div className="order-item-actions">
-                      {/* Cancel & Return Item Buttons */}
+                    <div className="flex flex-wrap gap-2">
                       {(matchingItem?.available_actions?.includes("cancel") || matchingItem?.available_options?.includes("cancel")) && (
-                        <div className="order-item-action-wrapper">
+                        <div className="mt-2 w-full">
                           <Button
-                            className="order-item-action-btn"
+                            className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
                             onClick={() => {
                               setSelectedItemForCancel({ id: String(trueItemId), name: product.name });
                               setIsCancelItemPopupOpen(true);
@@ -307,11 +308,9 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                         </div>
                       )}
 
-
-
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
                         <Button
-                          className="order-item-action-btn"
+                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
                           onClick={() => {
                             setSelectedItemForReturn({
                               id: String(trueItemId),
@@ -324,10 +323,9 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                         </Button>
                       )}
 
-
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
                         <Button
-                          className="order-item-action-btn"
+                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
                           onClick={() => {
                             setSelectedItemForReplace({
                               id: String(trueItemId),
@@ -342,10 +340,10 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                     </div>
 
                     {(matchingItem?.available_actions?.includes("review") || matchingItem?.available_actions?.includes("add_review") || matchingItem?.available_options?.includes("review") || matchingItem?.available_options?.includes("add_review")) && (
-                      <div className="order-item-action-wrapper">
+                      <div className="mt-2 w-full">
                         <Link href={`/user/orders/${order.id}/review?product_id=${product.product_id}`}>
                           <Button
-                            className="order-item-action-btn"
+                            className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer"
                           >
                             Add Review
                           </Button>
@@ -354,7 +352,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                     )}
 
                     {product.status === "cancelled" && (
-                      <p className="order-item-cancelled-label">Cancelled</p>
+                      <p className="mt-2 text-red-600 text-sm font-medium">Cancelled</p>
                     )}
                   </div>
                 </td>
@@ -364,17 +362,16 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         </tbody>
       </table>
 
-      {/* Order Summary */}
       <div className="order-summery mt-5">
-        <div className="summary-row order-summary-row">
-          <p className="order-summary-label">Subtotal ({products.length} Items)</p>
+        <div className="summary-row border-b border-gray-200 pb-2">
+          <p style={{ fontSize: "16px", fontWeight: "600", }}>Subtotal ({products.length} Items)</p>
           <p className="price">
             {order.currency} {formatPrice(order.subtotal)}
           </p>
         </div>
 
-        <div className="summary-row order-summary-row">
-          <p className="order-summary-label">Total Savings</p>
+        <div className="summary-row  border-b border-gray-200 pb-2">
+          <p style={{ fontSize: "16px", fontWeight: "600", }}>Total Savings</p>
           <p className="savings">
             -{order.currency}{" "}
             {formatPrice(
@@ -384,11 +381,11 @@ export default function OrderDetail({ params }: OrderDetailProps) {
           </p>
         </div>
 
-        <div className="order-delivery-row">
-          <p className="order-summary-label">
+        <div className="flex-wrap justify-between flex gap-2 border-b border-gray-200 pb-2">
+          <p style={{ fontSize: "16px", fontWeight: "600" }}>
             Delivery Details
             <br />
-            <span className="order-delivery-address">
+            <span style={{ fontSize: "14px", fontWeight: "500", color: "#726969", display: "flex", flexWrap: "wrap" }}>
               Address: {snapshot.shipping_address.address},{" "}
               {snapshot.shipping_address.city}
             </span>
@@ -398,8 +395,8 @@ export default function OrderDetail({ params }: OrderDetailProps) {
           </p>
         </div>
 
-        <div className="order-total-row">
-          <strong className="order-total-label">Total (Incl. GST)</strong>
+        <div className="justify-between py-[16px] flex flex-wrap gap-2 bg-[#f5f5f5] pl-4">
+          <strong style={{ fontSize: "18px", fontWeight: "600" }}>Total (Incl. GST)</strong>
           <p className="price">
             {order.currency} {formatPrice(finalTotal)}
           </p>

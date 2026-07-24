@@ -420,7 +420,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   src="/images/logo.svg"
                   alt="ShopperBeats Logo"
                   width={300}
-                  height={300}
+                  height={61}
                   priority
                 />
               </Link>
@@ -620,7 +620,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                         : "/images/default_user_icon.jpg"
                     }
                     alt="account"
-                    className="rounded-full object-cover"
+                    className="rounded-full"
                     fill
                   />
 

@@ -47,6 +47,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.johncoproductions.com",
       },
+      {
+        protocol: "https",
+        hostname: "image.vevor.com",
+      },
     ],
   },
 };

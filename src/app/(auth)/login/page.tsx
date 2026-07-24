@@ -291,17 +291,16 @@ export default function LoginPage() {
             <ReCaptcha onCaptchaChange={setRecaptcha_token} />
           </div>
 
-          <div className="my-6 flex items-center">
-            <Input
+          <div className="form-item form-item-radio">
+            <input
               type="checkbox"
               id="remember_me"
               name="remember_me"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
               disabled={isLoading || isBlocked}
-              className="mr-2 checkbox-input"
             />
-            <label htmlFor="remember_me" className="remember-me">Remember me</label>
+            <label htmlFor="remember_me">Remember me</label>
           </div>
 
           <Button
