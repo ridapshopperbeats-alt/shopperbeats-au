@@ -46,7 +46,7 @@ import {
 import { useVariantSelection } from "@/lib/hooks/use-variant-selection";
 import { WishlistKey } from "@/types/wishlist";
 import BundleSection from "../ui/BundleSection";
-import RecommendedForYou from "../home-page/RecommendedForYou";
+import RecommendedForYou from "../homepage/RecommendedForYou";
 import { useSEO } from "@/contexts/SEOContext";
 import {
   getFeaturesContent,
