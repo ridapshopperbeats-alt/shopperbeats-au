@@ -75,7 +75,7 @@ export default function AboutPage() {
         <>
             <Banner title="About Us" image="/images/cms/about-banner.png" />
 
-            <div className="about-page pt-40 pb-70">
+            <div className="about-page py-5">
                 <div className="container">
                     <div className="  block md:flex  gap-6">
                         {/* Sidebar */}
