@@ -3,6 +3,7 @@
 import type { ComponentProps, ReactNode } from "react";
 import Header from "../ui/Header";
 import Footer from "../ui/Footer";
+import MobileBottomNav from "../ui/MobileBottomNav";
 import "../../styles/Header.css";
 import "../../styles/Footer.css";
 import { FooterMenuData } from "@/types/menu";
@@ -19,10 +20,11 @@ export default function Layout({
   footerMenuData,
 }: LayoutProps) {
   return (
-    <div>
+    <div className="pb-[62px] md:pb-0">
       <Header megaMenuData={megaMenuData} />
       {children}
       <Footer footerMenuData={footerMenuData} />
+      <MobileBottomNav />
     </div>
   );
 }

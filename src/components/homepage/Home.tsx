@@ -7,7 +7,7 @@ import {
 } from "@/lib/utils/main-utils";
 import PopularCategories from "./AllBanner";
 import TopBrands from "./TopRated";
-import StaticProductCards from "../homepage/StaticCard";
+import StaticProductCards from "./StaticCard";
 
 const Home = async () => {
   const [bestSellers, trending] = await Promise.all([
