@@ -624,7 +624,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                     src={
                       profileImage?.trim()
                         ? profileImage
-                        : "/images/default_user_icon.jpg"
+                        : "/images/user.svg"
                     }
                     alt="account"
                     className="rounded-full"
@@ -639,7 +639,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="group"
                 >
                   <Image
-                    src="/images/default_user_icon.jpg"
+                    src="/images/user.svg"
                     alt="account"
                     width={20}
                     height={20}
