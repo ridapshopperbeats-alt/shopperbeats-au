@@ -8,10 +8,10 @@ import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 import { Product, Filter } from "@/types/product";
-import Sidebar from "../productListing/Sidebar";
-import MobileFilterSheet from "../productListing/MobileFilterSheet";
+import Sidebar from "../product-listing/Sidebar";
+import MobileFilterSheet from "../product-listing/MobileFilterSheet";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
-import ProductDisplay from "../productListing/ProductDisplay";
+import ProductDisplay from "../product-listing/ProductDisplay";
 import { buildFilterTags } from "@/lib/utils/filter-tags";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 

@@ -1,117 +1,104 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Button from "@/components/common/Button";
 import "../../../../styles/Cart.css";
 import "../../../../styles/auth.css";
-import { useCalculateShippingMutation } from "@/lib/redux/apis/order-api";
-import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
-import { useFormValidation } from "@/lib/hooks/use-form-validation";
-import { formatReadableDate, formatPrice } from "@/lib/utils/main-utils";
-import { useAddToCartMutation, useGetCartQuery, useGetWishlistQuery, useRemoveFromWishlistMutation } from "@/lib/redux/apis/cart-api";
-import { wishListValidationSchema } from "@/lib/validations/form-schemas";
+import { formatPrice, formatReadableDate } from "@/lib/utils/main-utils";
+
+function formatDateDDMMYY(date: string): string {
+  const d = new Date(date);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = String(d.getFullYear()).slice(-2);
+  return `${day}/${month}/${year}`;
+}
+
+// ---------------- DUMMY DATA (static, for now) ----------------
+const DUMMY_WISHLIST_ITEMS = [
+  {
+    product_id: "prod-1",
+    variant_id: undefined as string | undefined,
+    sku: "SKU001",
+    product_name:
+      "Saint Laurent Classic Biker Leather Jacket (Black) — Signature Biker Silhouette In Supple Lambskin",
+    price: 1290,
+    created_at: "2026-06-15T10:00:00.000Z",
+    is_active: true,
+    available_stock: 15,
+    images: [
+      {
+        image_url:
+          "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&q=80",
+      },
+    ],
+  },
+  {
+    product_id: "prod-2",
+    variant_id: "var-2",
+    sku: "SKU002",
+    product_name:
+      "GUCCI Ace Sneaker (Tan Leather, Gold Buckle) — Low-Top Lace-Up Sneaker With Signature",
+    price: 450,
+    created_at: "2026-07-01T10:00:00.000Z",
+    is_active: true,
+    available_stock: 5,
+    images: [
+      {
+        image_url:
+          "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&q=80",
+      },
+    ],
+  },
+  {
+    product_id: "prod-3",
+    variant_id: undefined as string | undefined,
+    sku: "SKU003",
+    product_name: "Classic Leather Wallet",
+    price: 89.99,
+    created_at: "2026-07-10T10:00:00.000Z",
+    is_active: true,
+    available_stock: 0,
+    images: [
+      {
+        image_url:
+          "https://images.unsplash.com/photo-1627123424574-724758594e93?w=400&q=80",
+      },
+    ],
+  },
+];
 
 export default function WishlistPage() {
   const router = useRouter();
-  const {
-    data: wishlistData,
-    isLoading,
-    isError,
-    error,
-  } = useGetWishlistQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
 
-  const wishlistItems = wishlistData?.items || [];
+  const [wishlistItems, setWishlistItems] = useState(DUMMY_WISHLIST_ITEMS);
+  const [cartProductIds, setCartProductIds] = useState<string[]>([]);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
-  const [removeFromWishlist, { isLoading: isRemoving }] =
-    useRemoveFromWishlistMutation();
+  const isInCart = (productId: string) => cartProductIds.includes(productId);
 
-  const [addToCart] = useAddToCartMutation();
-
-  const { data: cart } = useGetCartQuery(undefined);
-
-  const [calculateShipping, { isLoading: isCalculatingShipping }] =
-    useCalculateShippingMutation();
-
-  const { postcode } = useGlobalPostcode();
-
-  const { setFormData } = useFormValidation(wishListValidationSchema, {
-    pincode: postcode || "",
-  });
-
-  useEffect(() => {
-    if (postcode) {
-      setFormData((prev) => ({
-        ...prev,
-        pincode: postcode,
-      }));
-    }
-  }, [postcode]);
-
-  const isInCart = (productId: string, variantId?: string) => {
-    return cart?.items?.some(
-      (c) =>
-        c.product_id === productId &&
-        (variantId ? c.variant_id === variantId : true)
-    );
-  };
-
-  const handleAddToCart = async (item: any) => {
-    if (postcode) {
-      try {
-        const res = await calculateShipping({
-          postcode,
-          product_identifier: item.sku || item.product_id,
-        }).unwrap();
-
-        if (!res.shipping_cost || res.shipping_cost === "ns") {
-          toast.error("Item cannot be shipped to your location.");
-          return;
-        }
-      } catch {
-        toast.error("Shipping check failed.");
-        return;
-      }
-    }
-
-    try {
-      await addToCart({
-        productId: item.product_id,
-        quantity: 1,
-        variant_id: item.variant_id,
-      }).unwrap();
-
+  const handleAddToCart = async (item: (typeof DUMMY_WISHLIST_ITEMS)[number]) => {
+    setIsAddingToCart(true);
+    setTimeout(() => {
+      setCartProductIds((prev) => [...prev, item.product_id]);
       toast.success("Added to cart");
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to add to cart");
-    }
+      setIsAddingToCart(false);
+    }, 300);
   };
 
-  const handleRemove = async (productId: string, variantId?: string) => {
-    try {
-      await removeFromWishlist({
-        product_id: productId,
-        variant_id: variantId,
-      }).unwrap();
-
+  const handleRemove = async (productId: string) => {
+    setIsRemoving(true);
+    setTimeout(() => {
+      setWishlistItems((prev) =>
+        prev.filter((item) => item.product_id !== productId),
+      );
       toast.success("Removed from wishlist");
-    } catch {
-      toast.error("Failed to remove item");
-    }
+      setIsRemoving(false);
+    }, 300);
   };
-
-  if (isLoading) return null;
-
-  if (isError)
-    return (
-      <div className="wishlist-content">
-        <h4>Error loading wishlist</h4>
-        <pre>{JSON.stringify(error, null, 2)}</pre>
-      </div>
-    );
 
   if (!wishlistItems.length)
     return (
@@ -129,11 +116,12 @@ export default function WishlistPage() {
         <div className="wishlist-col-span-2">Price</div>
         <div className="wishlist-col-span-2">Date Added</div>
         <div className="wishlist-col-span-2">Stock Status</div>
-        <div className="wishlist-col-span-2">Action</div>
-      </div>
+        <div className="wishlist-col-span-2 flex items-center justify-center">
+          Action
+        </div>      </div>
 
       <div className="wishlist-container">
-        {wishlistItems.map((item: any) => {
+        {wishlistItems.map((item) => {
           const outOfStock =
             !item.is_active ||
             (item.available_stock !== undefined &&
@@ -199,15 +187,15 @@ export default function WishlistPage() {
 
                 <div className="wishlist-action-buttons">
                   <Button
-                    disabled={isCalculatingShipping}
+                    disabled={isAddingToCart}
                     onClick={() =>
-                      isInCart(item.product_id, item.variant_id)
+                      isInCart(item.product_id)
                         ? router.push("/cart")
                         : handleAddToCart(item)
                     }
                     className="wishlist-add-to-cart-btn"
                   >
-                    {isInCart(item.product_id, item.variant_id)
+                    {isInCart(item.product_id)
                       ? "Go to Cart"
                       : "Add to Cart"}
                   </Button>
@@ -217,7 +205,7 @@ export default function WishlistPage() {
                     disabled={isRemoving}
                     isLoading={isRemoving}
                     onClick={() =>
-                      handleRemove(item.product_id, item.variant_id)
+                      handleRemove(item.product_id)
                     }
                   >
                     Remove

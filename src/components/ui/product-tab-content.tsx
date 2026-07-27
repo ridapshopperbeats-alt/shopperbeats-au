@@ -146,7 +146,7 @@ export const getProductDetailsContent = (product: Product) => (
           alt={product.title || "Product image"}
           width={1300}
           height={260}
-          className="w-full max-w-[1300px] h-[260px] object-cover"
+          className="tab-content-image"
         />
       </div>
     </div>
@@ -169,7 +169,7 @@ export const getProductDetailsContent = (product: Product) => (
 //           alt={product.title || "Product image"}
 //           width={1300}
 //           height={260}
-//           className="w-full max-w-[1300px] h-[260px] object-cover"
+//           className="tab-content-image"
 //         />
 //       </div>
 //     </div>
@@ -192,7 +192,7 @@ export const getProductDetailsContent = (product: Product) => (
 //           alt={product.title || "Product image"}
 //           width={1300}
 //           height={260}
-//           className="w-full max-w-[1300px] h-[260px] object-cover"
+//           className="tab-content-image"
 //         />
 //       </div>
 //     </div>

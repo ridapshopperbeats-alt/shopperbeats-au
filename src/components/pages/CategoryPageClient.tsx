@@ -33,17 +33,17 @@ import { buildFilterTags } from "@/lib/utils/filter-tags";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
-const Sidebar = dynamic(() => import("../productListing/Sidebar"), {
+const Sidebar = dynamic(() => import("../product-listing/Sidebar"), {
   loading: DynamicImportLoader,
 });
 
 const MobileFilterSheet = dynamic(
-  () => import("../productListing/MobileFilterSheet"),
+  () => import("../product-listing/MobileFilterSheet"),
   { loading: DynamicImportLoader },
 );
 
 const ProductDisplay = dynamic(
-  () => import("../productListing/ProductDisplay"),
+  () => import("../product-listing/ProductDisplay"),
   { loading: DynamicImportLoader },
 );
 

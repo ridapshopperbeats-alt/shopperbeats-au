@@ -6,12 +6,39 @@ import Button from "@/components/common/Button";
 import { Address } from "@/types/address";
 import AddressForm from "@/components/common/AddressForm";
 import ConfirmAlert from "@/components/ui/ConfirmAlert";
-import { useDeleteAddressMutation, useGetAddressesQuery, useUpdateAddressMutation } from "@/lib/redux/apis/address-api";
+
+// ---------------- DUMMY DATA (static, for now) ----------------
+const DUMMY_ADDRESSES: Address[] = [
+  {
+    id: 1,
+    title: "Home",
+    first_name: "John",
+    last_name: "Doe",
+    phone_number: "0400000000",
+    address: "123 Static Street",
+    city: "Melbourne",
+    state: "VIC",
+    pincode: "3000",
+    country: "Australia",
+    is_default: true,
+  },
+  {
+    id: 2,
+    title: "Office",
+    first_name: "John",
+    last_name: "Doe",
+    phone_number: "0400000001",
+    address: "45 Business Avenue",
+    city: "Sydney",
+    state: "NSW",
+    pincode: "2000",
+    country: "Australia",
+    is_default: false,
+  },
+];
 
 export default function AddressesPage() {
-  const { data: addresses, isLoading } = useGetAddressesQuery();
-  const [updateAddress] = useUpdateAddressMutation();
-  const [deleteAddress] = useDeleteAddressMutation();
+  const [addresses, setAddresses] = useState<Address[]>(DUMMY_ADDRESSES);
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -39,31 +66,19 @@ export default function AddressesPage() {
   const handleDelete = async () => {
     if (!selectedId) return;
 
-    try {
-      await deleteAddress({ id: selectedId }).unwrap();
-      toast.success("Address deleted!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to delete address.");
-    } finally {
-      setConfirmOpen(false);
-      setSelectedId(null);
-    }
+    setAddresses((prev) => prev.filter((addr) => addr.id !== selectedId));
+    toast.success("Address deleted!");
+    setConfirmOpen(false);
+    setSelectedId(null);
   };
 
   const handleSetDefault = async (id: number) => {
     const address = addresses?.find((addr) => addr.id === id);
     if (address) {
-      try {
-        await updateAddress({
-          id,
-          body: { id, title: address.title, is_default: true },
-        }).unwrap();
-        toast.success("Default address updated!");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to update default address.");
-      }
+      setAddresses((prev) =>
+        prev.map((addr) => ({ ...addr, is_default: addr.id === id })),
+      );
+      toast.success("Default address updated!");
     }
   };
 

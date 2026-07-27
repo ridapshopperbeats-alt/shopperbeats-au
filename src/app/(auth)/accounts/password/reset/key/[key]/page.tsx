@@ -141,7 +141,7 @@ export default function ResetPasswordPage({ params }: PageProps) {
 
 
           <div className="dflex link mt-30 justify-center">
-            <p>New to ShopperBeats? <a href="/signup">Sign Up</a></p>
+            <p>New to ShopperBeats? <a href="/sign-up">Sign Up</a></p>
           </div>
 
         </form>

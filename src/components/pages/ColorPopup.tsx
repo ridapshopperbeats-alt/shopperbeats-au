@@ -27,14 +27,14 @@ const ColorPopup = ({
   return (
     <>
       <div
-        className="fixed inset-0 bg-black/40 z-50"
+        className="popup-backdrop"
         onClick={onClose}
       />
 
-      <div className="fixed inset-0 z-50 flex items-end lg:items-center justify-center px-4">
+      <div className="popup-container">
         <div className="relative w-[calc(100%+32px)] -mx-4 lg:mx-0 lg:w-full lg:max-w-[430px] min-h-[237px] bg-white rounded-t-[24px] lg:rounded-[15px] shadow-[0px_0px_10px_0px_#00000033] overflow-hidden lg:overflow-visible px-6 lg:px-8 pt-2 lg:pt-8 pb-6 lg:pb-8">
           <div className="flex lg:hidden justify-center pb-2">
-            <span className="w-9 h-1 rounded-full bg-[#D9D2D2]" />
+            <span className="popup-drag-handle" />
           </div>
 
           <button
@@ -70,7 +70,7 @@ const ColorPopup = ({
                   alt={color.value}
                   width={48}
                   height={47}
-                  className="w-full h-full object-cover"
+                  className="img-cover"
                 />
               </button>
             ))}

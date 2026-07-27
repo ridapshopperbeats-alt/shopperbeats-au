@@ -310,3 +310,19 @@ export type OrderSummaryPopupProps = {
   isAuthenticated: boolean;
   from: string;
 };
+
+export type OrderDetailsType = {
+  orderNumber?: string;
+  orderId?: string;
+  products: Array<{
+    id: string;
+    name: string;
+    image?: string;
+    quantity: number;
+    price: string;
+  }>;
+  deliveryAddress: string;
+  deliveryCost: string;
+  couponCode?: string;
+  totalAmount: string;
+};

@@ -335,9 +335,9 @@ export default function LoginPage() {
           )}
 
           <div className="dflex link auth-links-row">
-            <Link href="/forgotpassword">Forgot Password</Link>
+            <Link href="/forgot-password">Forgot Password</Link>
             <p>
-              New to ShopperBeats? <Link href="/signup">Sign Up</Link>
+              New to ShopperBeats? <Link href="/sign-up">Sign Up</Link>
             </p>
           </div>
 

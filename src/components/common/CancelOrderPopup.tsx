@@ -92,7 +92,7 @@ const CancelOrderPopup: React.FC<CancelOrderPopupProps> = ({
 
         {order && !isOrderLoading && (
           <div className="rounded-xl mb-4">
-            <h6 className="font-semibold text-gray-800 mb-4 text-lg" style={{ marginBottom: "10px" }}>
+            <h6 className="popup-section-title" style={{ marginBottom: "10px" }}>
               {itemId ? "Item Refund Estimate" : "Refund Summary"}
             </h6>
 

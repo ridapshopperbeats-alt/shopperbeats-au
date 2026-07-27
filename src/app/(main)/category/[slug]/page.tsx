@@ -90,7 +90,7 @@ async function getCategoryDetails(slug: string) {
     });
 
     if (!listRes.ok) {
-      console.error("Failed to fetch category list for fallback:", listRes.status);
+      console.warn("Failed to fetch category list for fallback:", listRes.status);
       return null;
     }
 
@@ -98,7 +98,7 @@ async function getCategoryDetails(slug: string) {
     return findCategory(categories, slug);
 
   } catch (error) {
-    console.error("Error fetching category details:", error);
+    console.warn("Error fetching category details:", error);
     return null;
   }
 }
@@ -145,7 +145,7 @@ async function getProducts(
     const data = await res.json();
     return { data: data.data, filters: data.filters, totalItems: data.total };
   } catch (error) {
-    console.error(error);
+    console.warn(error);
     return { data: [], filters: [], totalItems: 0 };
   }
 }
@@ -186,7 +186,7 @@ export default async function CategoryPage({
         sidebarFilters = fallbackData?.filters || [];
       }
     } catch (error) {
-      console.error("Failed to load fallback filters:", error);
+      console.warn("Failed to load fallback filters:", error);
     }
   }
 

@@ -38,7 +38,7 @@
 //         {topCategories.map((item) => (
 //           <div
 //             key={item.id}
-//             className="relative w-full h-30 md:h-80 rounded-lg overflow-hidden group cursor-pointer"
+//             className="banner-card"
 //           >
 //             <Image
 //               src={item.image}
@@ -50,8 +50,8 @@
 //             <div className="absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/80" />
 
 //             <div className="absolute left-4 bottom-3 md:left-6 md:right-6 md:bottom-6">
-//               <div className="w-full max-w-[145px] md:max-w-[368px] flex flex-col gap-[6px]">
-//                 <h3 className="text-white text-[13px] md:text-[18px] font-bold leading-[100%]">
+//               <div className="banner-card-content">
+//                 <h3 className="banner-card-title">
 //                   {item.title}
 //                 </h3>
 
@@ -71,7 +71,7 @@
 //         {bottomCategories.map((item) => (
 //           <div
 //             key={item.id}
-//             className="relative w-full h-30 md:h-80 rounded-lg overflow-hidden group cursor-pointer"
+//             className="banner-card"
 //           >
 //             <Image
 //               src={item.image}
@@ -83,8 +83,8 @@
 //             <div className="absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/80" />
 
 //             <div className="absolute left-4 bottom-3 md:left-6 md:right-6 md:bottom-6">
-//               <div className="w-full max-w-[145px] md:max-w-[368px] flex flex-col gap-[6px]">
-//                 <h3 className="text-white text-[13px] md:text-[18px] font-bold leading-[100%]">
+//               <div className="banner-card-content">
+//                 <h3 className="banner-card-title">
 //                   {item.title}
 //                 </h3>
 
@@ -186,7 +186,7 @@ export default function PopularCategories() {
         {topCategories.map((item) => (
           <div
             key={item.id}
-            className="relative w-full h-30 md:h-80 rounded-lg overflow-hidden group cursor-pointer"
+            className="banner-card group"
           >
             <Image
               src={item.image}
@@ -195,11 +195,11 @@ export default function PopularCategories() {
               className="object-cover group-hover:scale-[1.3] transition-transform duration-600 ease-in-out"
             />
 
-            <div className="absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/70" />
+            <div className="banner-gradient-overlay" />
 
             <div className="absolute left-4 bottom-3 md:p-3">
-              <div className="w-full max-w-[145px] md:max-w-[368px] flex flex-col gap-[6px]">
-                <h3 className="text-white text-[13px] md:text-[18px] font-bold leading-[100%]">
+              <div className="banner-card-content">
+                <h3 className="banner-card-title">
                   {item.title}
                 </h3>
 
@@ -235,7 +235,7 @@ export default function PopularCategories() {
         {bottomCategories.map((item) => (
           <div
             key={item.id}
-            className="relative w-full h-30 md:h-80 rounded-lg overflow-hidden group cursor-pointer"
+            className="banner-card group"
           >
             <Image
               src={item.image}
@@ -244,11 +244,11 @@ export default function PopularCategories() {
               className="object-cover group-hover:scale-[1.3] transition-transform duration-600 ease-in-out"
             />
 
-            <div className="absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/70" />
+            <div className="banner-gradient-overlay" />
 
             <div className="absolute left-4 bottom-3 md:p-3 ">
-              <div className="w-full max-w-[145px] md:max-w-[368px] flex flex-col gap-[6px]">
-                <h3 className="text-white text-[13px] md:text-[18px] font-bold leading-[100%]">
+              <div className="banner-card-content">
+                <h3 className="banner-card-title">
                   {item.title}
                 </h3>
 

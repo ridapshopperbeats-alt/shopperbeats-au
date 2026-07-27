@@ -1179,3 +1179,167 @@ input[type="radio"] {
 .handleNext {
   @apply !absolute !right-0 top-1/2 -translate-y-1/2 translate-x-1/2 !z-[999] flex items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed;
 }
+
+/* ============================================================
+    Added common css that using in multiple modules
+   ============================================================ */
+
+.img-cover {
+  @apply w-full h-full object-cover;
+}
+
+.order-detail-label {
+  @apply text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize;
+}
+
+.order-detail-value {
+  @apply text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize;
+}
+
+.order-detail-action-btn {
+  @apply text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 w-[120px] h-[40px] rounded cursor-pointer;
+}
+
+.pdp-qty-box {
+  @apply flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1;
+}
+
+.pdp-qty-box-lg {
+  @apply flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1;
+}
+
+.pdp-field-label {
+  @apply text-[14px] font-bold text-[#1D265F];
+}
+
+.pdp-stepper-btn {
+  @apply text-[18px] leading-none font-bold text-black cursor-pointer select-none;
+}
+
+.pdp-section-divider {
+  @apply -mx-5 border-t border-[#ECECEC];
+}
+
+.popup-field-label {
+  @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.popup-summary-row {
+  @apply flex justify-between text-sm mb-2 text-gray-600;
+}
+
+.popup-section-title {
+  @apply font-semibold text-gray-800 mb-4 text-lg;
+}
+
+.popup-backdrop {
+  @apply fixed inset-0 bg-black/40 z-50;
+}
+
+.popup-container {
+  @apply fixed inset-0 z-50 flex items-end lg:items-center justify-center px-4;
+}
+
+.popup-drag-handle {
+  @apply w-9 h-1 rounded-full bg-[#D9D2D2];
+}
+
+.retry-popup-toggle {
+  @apply flex justify-between items-center w-full cursor-pointer font-bold;
+}
+
+.legal-page-banner {
+  @apply bg-[#FD151B] px-10 py-[16px] rounded-tr-[8px] rounded-tl-[8px];
+}
+
+.legal-page-container {
+  @apply text-black mx-auto py-10 px-4 sm:px-6 lg:px-8;
+}
+
+.legal-text {
+  @apply text-[16px] text-[#00000080];
+}
+
+.legal-strong {
+  @apply text-[#000000]/70;
+}
+
+.legal-heading {
+  @apply text-[18px] font-bold text-black mb-3;
+}
+
+.legal-title {
+  @apply text-white text-[24px] font-semibold m-0;
+}
+
+.legal-intro {
+  @apply text-[#00000060] text-[16px] leading-[1.6] mb-6;
+}
+
+.order-status-box {
+  @apply text-center min-h-[400px] flex flex-col items-center justify-center;
+}
+
+.order-status-title {
+  @apply text-[#e53e3e] mb-5;
+}
+
+.order-status-message {
+  @apply mb-[30px] text-[#666] text-[18px];
+}
+
+.order-status-btn {
+  @apply py-[12px] px-[30px] text-[16px];
+}
+
+.banner-card {
+  @apply relative w-full h-30 md:h-80 rounded-lg overflow-hidden cursor-pointer;
+}
+
+.banner-card-content {
+  @apply w-full max-w-[145px] md:max-w-[368px] flex flex-col gap-[6px];
+}
+
+.banner-card-title {
+  @apply text-white text-[13px] md:text-[18px] font-bold leading-[100%];
+}
+
+.banner-gradient-overlay {
+  @apply absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/70;
+}
+
+.checkout-total-label {
+  @apply text-base font-bold text-black;
+}
+
+.checkout-total-value {
+  @apply text-sm font-bold text-black;
+}
+
+.checkout-field-heading {
+  @apply font-semibold text-[14px] leading-[100%] text-black;
+}
+
+.payment-radio {
+  @apply w-[12px] h-[12px] accent-[#01295F] text-[#B7BAB4];
+}
+
+.size-guide-cell {
+  @apply py-2 px-2 text-[#696e79] border border-[#F0F0F0];
+}
+
+.filter-sidebar-link {
+  @apply cursor-pointer text-[#575757] font-normal tracking-[-0.5%] text-[14px];
+}
+
+.cart-summary-label {
+  @apply text-[14px] lg:text-[16px] leading-[100%] text-[#726969] font-medium;
+}
+
+.field-value-sm {
+  @apply text-[14px] font-medium text-black;
+}
+
+.tab-content-image {
+  @apply w-full max-w-[1300px] h-[260px] object-cover;
+}

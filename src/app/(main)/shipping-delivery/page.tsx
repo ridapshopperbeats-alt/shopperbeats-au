@@ -2,10 +2,10 @@
 
 function ShippingDelivery() {
   return (
-    <div className="text-black mx-auto  py-10 px-4 sm:px-6 lg:px-8">
+    <div className="legal-page-container">
       <div className="bg-white overflow-hidden">
         {/* Header Section */}
-        <div className="bg-[#FD151B] px-10 py-[16px] rounded-tr-[8px] rounded-tl-[8px] ">
+        <div className="legal-page-banner">
           <h1 style={{ color: 'white', fontSize: '24px', fontWeight: '600', margin: '0' }}>
             Shipping Delivery
           </h1>

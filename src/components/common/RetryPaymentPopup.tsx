@@ -193,7 +193,7 @@ const RetryPaymentForm: React.FC<RetryPaymentPopupProps> = ({ isOpen, onClose, o
             </div>
 
             <div className="payment-option mb-10" style={{ padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-              <label className="flex justify-between items-center w-full cursor-pointer font-bold">
+              <label className="retry-popup-toggle">
                 <div className="flex gap-2">
                   <input
                     type="radio"
@@ -209,7 +209,7 @@ const RetryPaymentForm: React.FC<RetryPaymentPopupProps> = ({ isOpen, onClose, o
             </div>
 
             <div className="payment-option mb-10" style={{ padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-              <label className="flex justify-between items-center w-full cursor-pointer font-bold">
+              <label className="retry-popup-toggle">
                 <div className="flex gap-2">
                   <input
                     type="radio"
@@ -225,7 +225,7 @@ const RetryPaymentForm: React.FC<RetryPaymentPopupProps> = ({ isOpen, onClose, o
             </div>
 
             <div className="payment-option mb-20" style={{ padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-              <label className="flex justify-between items-center w-full cursor-pointer font-bold">
+              <label className="retry-popup-toggle">
                 <div className="flex gap-2">
                   <input
                     type="radio"

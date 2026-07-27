@@ -113,7 +113,7 @@ export default function FAQPage() {
           width={100}
           height={218}
           loading="lazy"
-          className="w-full h-full object-cover"
+          className="img-cover"
         />
 
         <div className="absolute inset-0 flex items-center justify-center">

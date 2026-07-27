@@ -24,7 +24,6 @@ import { formatPrice, formatReadableDate } from "@/lib/utils/main-utils";
 import { getOrderProductImage, getReviewProductId, mapOrderProducts } from "@/lib/utils/order-products";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
-import { Loader } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/common/select";
 import CancelOrderPopup from "@/components/common/CancelOrderPopup";
 import ReturnOrderPopup from "@/components/common/ReturnOrderPopup";
@@ -260,7 +259,7 @@ export default function MyOrdersPage() {
   if (isLoading && allOrders.length === 0)
     return (
       <div>
-        <Loader />
+        Loading.....
       </div>
     );
 
@@ -302,56 +301,56 @@ export default function MyOrdersPage() {
         <div key={order.id} className="order-block">
           <div className="order-detail grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 gap-5">
             <div className="order-detail-item">
-              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
+              <h5 className="order-detail-label">
                 Order Number
               </h5>
-              <p className="text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize">
+              <p className="order-detail-value">
                 {order.order_number || order.id}
               </p>
             </div>
             <div className="order-detail-item">
-              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
+              <h5 className="order-detail-label">
                 Order Date
               </h5>
-              <p className="text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize">
+              <p className="order-detail-value">
                 {formatReadableDate(order.created_at)}
               </p>
             </div>
             <div className="order-detail-item">
-              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
+              <h5 className="order-detail-label">
                 Total Payment
               </h5>
-              <p className="text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize">
+              <p className="order-detail-value">
                 {order.totalPayment}
               </p>
             </div>
 
             <div className="order-detail-item">
-              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
+              <h5 className="order-detail-label">
                 Payment Method
               </h5>
-              <p className="text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize">
+              <p className="order-detail-value">
                 {order.paymentMethod}
               </p>
             </div>
 
             <div className="order-detail-item">
-              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
+              <h5 className="order-detail-label">
                 Order Status
               </h5>
 
-              <p className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
+              <p className="order-detail-label">
                 {getOrderStatusLabel(order)}
               </p>
             </div>
 
             <div className="order-detail-item">
-              <h5 className="text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize">
+              <h5 className="order-detail-label">
                 {order.status === Status.DELIVERED
                   ? "Delivered on"
                   : "Estimated Delivery Date"}
               </h5>
-              <p className="text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize">
+              <p className="order-detail-value">
                 {order.estimated_delivery_date
                   ? new Date(order.estimated_delivery_date).toLocaleDateString(
                       "en-AU",
@@ -396,13 +395,13 @@ export default function MyOrdersPage() {
 
                     <div>
                       {product.variant_attributes?.map((attr, i) => (
-                        <p key={i} className="text-[14px] font-medium text-black">
+                        <p key={i} className="field-value-sm">
                           <strong className="font-semibold">{attr.name}:</strong>{" "}
                           {attr.value}
                         </p>
                       ))}
 
-                      <p className="text-[14px] font-medium text-black">
+                      <p className="field-value-sm">
                         <strong className="font-semibold">Quantity:</strong>{" "}
                         {product.quantity}
                       </p>

@@ -330,7 +330,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                         )) && (
                         <div className="mt-2 ">
                           <Button
-                            className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 w-[120px] h-[40px] rounded cursor-pointer"
+                            className="order-detail-action-btn"
                             onClick={() => {
                               setSelectedItemForCancel({
                                 id: String(trueItemId),
@@ -346,7 +346,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
                         <Button
-                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 w-[120px] h-[40px] rounded cursor-pointer"
+                          className="order-detail-action-btn"
                           onClick={() => {
                             setSelectedItemForReturn({
                               id: String(trueItemId),
@@ -361,7 +361,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
                         <Button
-                          className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 w-[120px] h-[40px] rounded cursor-pointer"
+                          className="order-detail-action-btn"
                           onClick={() => {
                             setSelectedItemForReplace({
                               id: String(trueItemId),
@@ -386,7 +386,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                           <Link
                             href={`/user/orders/${order.id}/review?product_id=${product.product_id}`}
                           >
-                            <Button className="text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 w-[120px] h-[40px] rounded cursor-pointer">
+                            <Button className="order-detail-action-btn">
                               Add Review
                             </Button>
                           </Link>

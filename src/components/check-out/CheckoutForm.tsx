@@ -474,11 +474,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     value="paypal"
                     checked={formData.paymentMethod === "paypal"}
                     onChange={handleChange}
-                    className="w-[12px] h-[12px] accent-[#01295F] text-[#B7BAB4]"
+                    className="payment-radio"
                   />
                   <label
                     htmlFor="paypal"
-                    className="font-semibold text-[14px] leading-[100%] text-black"
+                    className="checkout-field-heading"
                   >
                     PayPal
                   </label>
@@ -503,11 +503,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     value="afterpay"
                     checked={formData.paymentMethod === "afterpay"}
                     onChange={handleChange}
-                    className="w-[12px] h-[12px] accent-[#01295F] text-[#B7BAB4]"
+                    className="payment-radio"
                   />
                   <label
                     htmlFor="afterpay"
-                    className="font-semibold text-[14px] leading-[100%] text-black"
+                    className="checkout-field-heading"
                   >
                     Afterpay
                   </label>
@@ -532,11 +532,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     value="zip"
                     checked={formData.paymentMethod === "zip"}
                     onChange={handleChange}
-                    className="w-[12px] h-[12px] accent-[#01295F] text-[#B7BAB4]"
+                    className="payment-radio"
                   />
                   <label
                     htmlFor="zip"
-                    className="font-semibold text-[14px] leading-[100%] text-black"
+                    className="checkout-field-heading"
                   >
                     Zippy
                   </label>

@@ -37,7 +37,7 @@ export default function PersonalInformationPage() {
       date_of_birth: "",
     });
 
-  const [imagePreview, setImagePreview] = useState<string>("/images/user.svg");
+  const [imagePreview, setImagePreview] = useState<string>("/images/Rectangle.png");
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
   const skipNextImageSyncRef = useRef(false);

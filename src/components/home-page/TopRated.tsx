@@ -167,7 +167,7 @@ export default function TopBrands() {
                 className="object-cover group-hover:scale-[1.5] transition-transform duration-600 ease-in-out"
               />
 
-              <div className="absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/70" />
+              <div className="banner-gradient-overlay" />
 
               <div className="absolute p-6 w-[226px] flex flex-col ">
                 <h3 className="text-white text-[24px] font-extrabold">

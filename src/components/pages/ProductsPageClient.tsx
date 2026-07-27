@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 import { Product } from "@/types/product";
-import ProductDisplay from "../productListing/ProductDisplay";
+import ProductDisplay from "../product-listing/ProductDisplay";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 import "../../styles/Product.css";
 
