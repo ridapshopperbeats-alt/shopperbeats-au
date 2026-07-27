@@ -175,14 +175,14 @@ export default function PopularCategories() {
           </h2>
         </div>
 
-        <button className="flex items-center gap-2 text-[13px] text-[#FD151B] font-bold">
+        <button className="flex items-center gap-2 text-[13px] text-[#FD151B] font-bold cursor-pointer">
           View All
           <ChevronRight size={13} />
         </button>
       </div>
 
       {/* TOP */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-3 lg:pt-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-3 lg:pt-4">
         {topCategories.map((item) => (
           <div
             key={item.id}

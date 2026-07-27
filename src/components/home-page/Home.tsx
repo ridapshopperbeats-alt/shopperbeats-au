@@ -1,6 +1,5 @@
 import SingleBanner from "./Banner";
 import TopCategories from "./TopCategories";
-import ProductCarousel from "../common/ProductCarousel";
 import {
   getBestSellers,
   getTrendingProducts,
@@ -8,6 +7,7 @@ import {
 } from "@/lib/utils/main-utils";
 import PopularCategories from "./AllBanner";
 import TopBrands from "./TopRated";
+import StaticProductCards from "./StaticCard";
 
 const Home = async () => {
   const [bestSellers, trending] = await Promise.all([
@@ -21,39 +21,44 @@ const Home = async () => {
   return (
     <TopCategories>
       <SingleBanner />
-      <div className="flex flex-col gap-6 mt-2 lg:mt-3">
+      <div className="flex flex-col gap-6 ">
         <div className="container">
-          {products.length > 0 && (
+          {/* {products.length > 0 && (
             <ProductCarousel
               title="Best Sellers"
               products={products}
               link="#"
             />
-          )}
+          )} */}
+          <StaticProductCards heading="Best Sellers" viewAllHref="#" />
         </div>
 
         <PopularCategories />
 
         <div className="container">
-          {trendingProducts.length > 0 && (
+          {/* {trendingProducts.length > 0 && (
             <ProductCarousel
               title="Trending Products"
               products={trendingProducts}
               link="#"
             />
-          )}
+          )} */}
+
+          <StaticProductCards heading="Trending Products" viewAllHref="#" />
         </div>
 
         <TopBrands />
 
         <div className="container">
-          {products.length > 0 && (
+          {/* {products.length > 0 && (
             <ProductCarousel
               title="New Arrivals"
               products={products}
               link="#"
             />
-          )}
+          )} */}
+
+          <StaticProductCards heading="New Arrival " viewAllHref="#" />
         </div>
       </div>
     </TopCategories>

@@ -605,48 +605,50 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 </div>
               )}
             </div>
-            <HeaderIcon
-              href="/user/wishlist"
-              iconSrc="/images/wishlist.svg"
-              alt="wishlist"
-              className="wishlist"
-              count={wishlistCount}
-            />
+            <div className="hidden md:flex md:items-center">
+              <HeaderIcon
+                href="/user/wishlist"
+                iconSrc="/images/wishlist.svg"
+                alt="wishlist"
+                className="wishlist"
+                count={wishlistCount}
+              />
 
-            <CartPopup isVisible={showCartCard} />
+              <CartPopup isVisible={showCartCard} />
 
-            <div className={`header-link account`}>
-              {isAuthenticated ? (
-                <Link
-                  href="/user/personal-information"
-                  className="relative inline-block !p-0"
-                >
-                  <Image
-                    src={
-                      profileImage?.trim()
-                        ? profileImage
-                        : "/images/user.svg"
-                    }
-                    alt="account"
-                    className="rounded-full"
-                    fill
-                  />
+              <div className={`header-link account`}>
+                {isAuthenticated ? (
+                  <Link
+                    href="/user/personal-information"
+                    className="relative inline-flex items-center justify-center w-10 h-10"
+                  >
+                    <Image
+                      src={
+                        profileImage?.trim()
+                          ? profileImage
+                          : "/images/user.svg"
+                      }
+                      alt="account"
+                      className="rounded-full"
+                      fill
+                    />
 
-                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
-                </Link>
-              ) : (
-                <Link
-                  href={`/login?redirect=${encodeURIComponent("/user/personal-information")}`}
-                  className="group"
-                >
-                  <Image
-                    src="/images/user.svg"
-                    alt="account"
-                    width={20}
-                    height={20}
-                  />
-                </Link>
-              )}
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/login?redirect=${encodeURIComponent("/user/personal-information")}`}
+                    className="relative inline-flex items-center justify-center w-10 h-10"
+                  >
+                    <Image
+                      src="/images/user.svg"
+                      alt="account"
+                      width={18}
+                      height={18}
+                    />
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>

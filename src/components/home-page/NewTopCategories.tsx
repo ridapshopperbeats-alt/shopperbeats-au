@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -38,7 +38,7 @@ const NEW_TOP_CATEGORIES: NewTopCategoryItem[] = [
     href: "/all-categories",
   },
   {
-    title: "Home Décor",
+    title: "Home Decor",
     image: "/images/homeDecor.svg",
     href: "/all-categories",
   },
@@ -111,7 +111,7 @@ export default function NewTopCategories() {
 
         <div
           ref={sliderRef}
-          className="flex items-start gap-[16px] lg:gap-[35px] overflow-x-auto scroll-smooth no-scrollbar py-5"
+          className="flex items-start gap-[16px] lg:gap-[35px] overflow-x-auto scroll-smooth no-scrollbar py-5 "
         >
           {NEW_TOP_CATEGORIES.map((item) => (
             <Link
@@ -125,7 +125,7 @@ export default function NewTopCategories() {
                   alt={item.title}
                   fill
                   loading="lazy"
-                  className="object-cover"
+                  className="object-cover transition-transform duration-800 hover:scale-[1.25] ease-in-out"
                 />
               </div>
 

@@ -107,7 +107,7 @@ export default function TopBrands() {
       </div>
 
       {/* Mobile */}
-      <div className="grid grid-cols-2 gap-3 lg:gap-4 lg:hidden pt-3">
+      <div className="grid grid-cols-2 gap-3 lg:gap-4 lg:hidden pt-2">
         {mobileBrands.map((brand) => (
           <div
             key={brand.id}
