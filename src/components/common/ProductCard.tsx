@@ -186,11 +186,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
           <div className="flex flex-1 flex-col justify-between w-full">
             <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
-              <h4 className="text-[14px] md:text-[16px] font-bold text-black">
+              <h4 className="text-[12px] md:text-[14px] font-bold text-black">
                 {brand_name || "No Brand"}
               </h4>
 
-              <p className="text-[14px] md:text-[16px] leading-4.5 text-[#878787] font-normal">
+              <p className="text-[12px] md:text-[13px] leading-4.5 text-[#878787] font-normal">
                 {limitWords(title, 7) || "MakeupKit"}
               </p>
 
