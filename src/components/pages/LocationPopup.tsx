@@ -131,14 +131,14 @@ export default function LocationPopup({
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/40 z-50" onClick={onClose} />
+      <div className="popup-backdrop" onClick={onClose} />
 
-      <div className="fixed inset-0 z-50 flex items-end lg:items-center justify-center px-4">
+      <div className="popup-container">
         <div
           className="relative w-[calc(100%+32px)] -mx-4 lg:mx-0 lg:w-full lg:max-w-[430px] max-h-[414px] lg:max-h-none flex flex-col bg-white rounded-t-[24px] lg:rounded-[15px] shadow-[#000000]/20 overflow-hidden lg:overflow-visible px-5 lg:px-6 pt-2 lg:pt-6 pb-4 lg:pb-6"
         >
           <div className="flex lg:hidden justify-center py-2 shrink-0">
-            <span className="w-9 h-1 rounded-full bg-[#D9D2D2]" />
+            <span className="popup-drag-handle" />
           </div>
 
           <button

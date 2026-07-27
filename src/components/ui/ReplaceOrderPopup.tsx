@@ -183,7 +183,7 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
           <div>
             <label
               htmlFor="reason"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="popup-field-label"
             >
               Reason for replacement
             </label>
@@ -211,7 +211,7 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
           <div>
             <label
               htmlFor="file-upload"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="popup-field-label"
             >
               Attach Images <span className="text-red-500">*</span>
             </label>
@@ -292,7 +292,7 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
           <div>
             <label
               htmlFor="customer_comment"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="popup-field-label"
             >
               Comment (optional)
             </label>
@@ -339,14 +339,14 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
           {order && (
             <div className="bg-gray-50 rounded-xl p-5">
               <h6
-                className="font-semibold text-gray-800 mb-4 text-lg"
+                className="popup-section-title"
                 style={{ marginBottom: "10px" }}
               >
                 {itemId ? "Item Summary" : "Order Summary"}
               </h6>
               {itemId && product ? (
                 <>
-                  <div className="flex justify-between text-sm mb-2 text-gray-600">
+                  <div className="popup-summary-row">
                     <span>Item Price</span>
                     <span>
                       {order.currency} {formatPrice(product.unit_price)} x{" "}
@@ -365,13 +365,13 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
                 </>
               ) : (
                 <>
-                  <div className="flex justify-between text-sm mb-2 text-gray-600">
+                  <div className="popup-summary-row">
                     <span>Order Subtotal</span>
                     <span>
                       {order.currency} {order.subtotal}
                     </span>
                   </div>
-                  <div className="flex justify-between text-sm mb-2 text-gray-600">
+                  <div className="popup-summary-row">
                     <span>Shipping Cost</span>
                     <span>
                       {order.currency} {order.shipping_cost}

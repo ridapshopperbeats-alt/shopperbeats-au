@@ -185,7 +185,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
                     ) : itemIsVideo ? (
                       <video
                         src={mediaUrl}
-                        className="w-full h-full object-cover"
+                        className="img-cover"
                         muted
                         playsInline
                       />

@@ -11,7 +11,7 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import CheckoutForm from "@/components/checkout/CheckoutForm";
+import CheckoutForm from "@/components/check-out/CheckoutForm";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 import Button from "@/components/common/Button";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
@@ -820,7 +820,7 @@ export default function SecureCheckout() {
                   )}
 
                   <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#E5E5E5]">
-                    <h6 className="text-base font-bold text-black">
+                    <h6 className="checkout-total-label">
                       Order Summary
                     </h6>
                     <Link href="/cart" className="">
@@ -910,7 +910,7 @@ export default function SecureCheckout() {
 
                   <div className="px-4 py-4 flex flex-col gap-3 bg-white">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-bold text-black">Delivery</p>
+                      <p className="checkout-total-value">Delivery</p>
                       <p className="text-[14px] font-semibold mr-[5px]">
                         ${formatPrice(cart?.shipping || 0)}
                       </p>
@@ -919,7 +919,7 @@ export default function SecureCheckout() {
                     {totalSaveAmount + (promoData?.discount_amount || 0) >
                       0 && (
                       <div className="flex items-center justify-between">
-                        <p className="text-sm font-bold text-black">Savings</p>
+                        <p className="checkout-total-value">Savings</p>
                         <p className="text-[14px] font-semibold mr-[5px] text-[#16A249]">
                           -$
                           {formatPrice(
@@ -931,7 +931,7 @@ export default function SecureCheckout() {
                   </div>
 
                   <div className="flex items-center justify-between px-4 py-4 bg-[#F5F5F5] rounded-b-[8px]">
-                    <p className="text-base font-bold text-black">
+                    <p className="checkout-total-label">
                       Total (incl. GST)
                     </p>
                     <p className="price text-base">
@@ -955,7 +955,7 @@ export default function SecureCheckout() {
                   )}
 
                   <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#E5E5E5]">
-                    <h6 className="text-base font-bold text-black">
+                    <h6 className="checkout-total-label">
                       Order Summary
                     </h6>
                     <a
@@ -1032,7 +1032,7 @@ export default function SecureCheckout() {
 
                   <div className="px-4 py-4 flex flex-col gap-3 bg-white">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-bold text-black">Delivery</p>
+                      <p className="checkout-total-value">Delivery</p>
                       <p className="price text-sm">
                         ${formatPrice(cart?.shipping || 0)}
                       </p>
@@ -1041,7 +1041,7 @@ export default function SecureCheckout() {
                     {totalSaveAmount + (promoData?.discount_amount || 0) >
                       0 && (
                       <div className="flex items-center justify-between">
-                        <p className="text-sm font-bold text-black">Savings</p>
+                        <p className="checkout-total-value">Savings</p>
                         <p className="text-[14px] font-semibold leading-[100%] text-[#16A249]">
                           -$
                           {formatPrice(
@@ -1053,7 +1053,7 @@ export default function SecureCheckout() {
                   </div>
 
                   <div className="flex items-center justify-between px-4 py-4 bg-[#F5F5F5] rounded-b-[8px]">
-                    <p className="text-base font-bold text-black">
+                    <p className="checkout-total-label">
                       Total (incl. GST)
                     </p>
                     <p className="price text-base">

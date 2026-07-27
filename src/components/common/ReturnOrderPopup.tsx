@@ -129,7 +129,7 @@ if (prevOrderForAddress !== order) {
 
         <div className="px-4 py-5 flex justify-between items-center">
           <h6 className="text-[20px] lg:text-[24px]  font-semibold text-black">
-            {isLoadingOrder ? "Loading..." : itemId && product ? `Return Item: ${product.name}` : `Return Order #${order?.order_number || order?.id}`}
+            {isLoadingOrder ? "Loading..." : itemId && product ? `Return Item: ${product.name}` : `Return Order`}
           </h6>
           <button
             onClick={onClose}
@@ -150,7 +150,7 @@ if (prevOrderForAddress !== order) {
           </p>
 
           <div>
-            <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="reason" className="popup-field-label">
               Reason for return
             </label>
             <select
@@ -197,7 +197,7 @@ if (prevOrderForAddress !== order) {
           </div>
 
           <div>
-            <label htmlFor="customer_comment" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="customer_comment" className="popup-field-label">
               Comment (optional)
             </label>
             <textarea
@@ -213,13 +213,13 @@ if (prevOrderForAddress !== order) {
 
           {order && (
             <div className="bg-gray-50 rounded-xl p-5 ">
-              <h6 className="font-semibold text-gray-800 mb-4 text-lg" style={{ marginBottom: "10px" }}>
+              <h6 className="popup-section-title" style={{ marginBottom: "10px" }}>
                 {itemId ? "Item Refund Estimate" : "Refund Summary"}
               </h6>
 
               {itemId && product ? (
                 <>
-                  <div className="flex justify-between text-sm mb-2 text-gray-600">
+                  <div className="popup-summary-row">
                     <span>Item Price</span>
                     <span>{order.currency} {formatPrice(product.unit_price)} x {product.quantity}</span>
                   </div>
@@ -233,7 +233,7 @@ if (prevOrderForAddress !== order) {
                 </>
               ) : (
                 <>
-                  <div className="flex justify-between text-sm mb-2 text-gray-600">
+                  <div className="popup-summary-row">
                     <span>Order Subtotal</span>
                     <span>{order.currency} {order.subtotal}</span>
                   </div>

@@ -26,14 +26,13 @@ export const FOOTER_LINKS_STATIC = [
     links: [
       { label: "About Us", href: "/abouts" },
       { label: "Brands", href: "/brand" },
-      { label: "FAQ", href: "/cms/faq" },
     ],
   },
   {
     title: "My Account",
     links: [
       { label: "Login", href: "/login" },
-      { label: "Sign up", href: "/signup" },
+      { label: "Sign up", href: "/sign-up" },
       { label: "User Profile", href: "/user/personal-information" },
       { label: "My Cart", href: "/cart" },
       { label: "Track My Order", href: "/cms/track" },

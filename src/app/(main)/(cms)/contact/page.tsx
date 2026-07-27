@@ -78,7 +78,7 @@ export default function ContactPage() {
           <img
             src="/images/cms/contact-banner.svg"
             alt="Contact Banner"
-            className="w-full h-full object-cover"
+            className="img-cover"
           />
         }
       />

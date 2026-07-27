@@ -339,7 +339,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                         ) : (
                           <video
                             src={mediaUrl}
-                            className="w-full h-full object-cover"
+                            className="img-cover"
                             muted
                             playsInline
                           />
@@ -562,7 +562,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                         title="YouTube video player"
-                        className="w-full h-full object-cover"
+                        className="img-cover"
                       ></iframe>
                     </div>
                   ) : (
@@ -573,7 +573,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                       muted
                       loop
                       playsInline
-                      className="w-full h-full object-cover"
+                      className="img-cover"
                     />
                   )
                 ) : (

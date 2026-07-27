@@ -168,7 +168,7 @@ export default function Footer({
                   if (isAuthenticated) {
                     // Hide Login and Sign up when authenticated
                     return (
-                      !href.includes("/login") && !href.includes("/signup")
+                      !href.includes("/login") && !href.includes("/sign-up")
                     );
                   } else {
                     // Hide User Profile when not authenticated
@@ -198,7 +198,7 @@ export default function Footer({
                     if (isAuthenticated) {
                       // Hide Login & Signup after login
                       return (
-                        !href.includes("/login") && !href.includes("/signup")
+                        !href.includes("/login") && !href.includes("/sign-up")
                       );
                     }
 

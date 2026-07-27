@@ -2,19 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  useGetCartQuery,
-  useRemoveFromCartMutation,
-  useCheckDeliveryMutation,
-  useUpdateCartItemQuantityMutation,
-  useValidatePromoCodeMutation,
-} from "@/lib/redux/apis/cart-api";
 
 import { toast } from "react-toastify";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import * as yup from "yup";
 import { useMemo, useRef, useState, useEffect } from "react";
-import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import Button from "@/components/common/Button";
 import { pincode } from "@/lib/validations/form-schemas";
 import GooglePlacesInput from "@/components/common/AddressAutocomplete";
@@ -24,37 +16,124 @@ import {
   formatPrice,
 } from "@/lib/utils/main-utils";
 import NoProductsFound from "@/components/NoProductFound";
-import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
 import { Input } from "@/components/common/input";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, ThumbsUp } from "lucide-react";
 
 // ---------------- SCHEMAS ----------------
 const pincodeSchema = yup.object().shape({
   pincode: pincode,
 });
 
+// ---------------- DUMMY DATA (static, for now) ----------------
+const DUMMY_CART_ITEMS = [
+  {
+    id: "item-1",
+    product_id: "prod-1",
+    variant_id: undefined as string | undefined,
+    unique_code: "SKU001",
+    product_name:
+      "Saint Laurent Classic Biker Leather Jacket (Black) — Signature Biker Silhouette In Supple Lambskin",
+    quantity: 1,
+    unit_price: 1290,
+    rrp_price_snapshot: 1490,
+    discount_percentage: 50,
+    discounted_price: 1290,
+    oldPrice: 1490,
+    discount: 50,
+    final_price: 1290,
+    subtotal: 1290,
+    promotion_discount: 0,
+    is_active: true,
+    available_stock: 15,
+    stock: 15,
+    is_shippable: true,
+    shipping_cost: 0,
+    handling_time_days: 2,
+    delivery_prefix: "Leaves Warehouse In",
+    promoCode: "GET500",
+    images:
+      "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&q=80",
+    variant_attributes: [
+      { name: "Size", value: "M" },
+      { name: "Colour", value: "Black" },
+    ],
+  },
+  {
+    id: "item-2",
+    product_id: "prod-2",
+    variant_id: "var-2",
+    unique_code: "SKU002",
+    product_name:
+      "GUCCI Ace Sneaker (Tan Leather, Gold Buckle) — Low-Top Lace-Up Sneaker With Signature",
+    quantity: 1,
+    unit_price: 450,
+    rrp_price_snapshot: 520,
+    discount_percentage: 20,
+    discounted_price: 450,
+    oldPrice: 520,
+    discount: 20,
+    final_price: 450,
+    subtotal: 450,
+    promotion_discount: 0,
+    is_active: true,
+    available_stock: 5,
+    stock: 5,
+    is_shippable: true,
+    shipping_cost: 0,
+    handling_time_days: 2,
+    delivery_prefix: "FREE Delivery As Soon As",
+    saleBadge: "Sale 20% Off",
+    images:
+      "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&q=80",
+    variant_attributes: [
+      { name: "Size", value: "US 8" },
+      { name: "Colour", value: "Tan" },
+    ],
+  },
+];
+
+function buildCartFromItems(items: typeof DUMMY_CART_ITEMS) {
+  const items_total = items.reduce(
+    (acc, item) => acc + (item.final_price ?? item.subtotal ?? 0),
+    0,
+  );
+  const items_discount = items.reduce(
+    (acc, item) => acc + (item.promotion_discount || 0),
+    0,
+  );
+  const shipping = items
+    .filter((i) => i.is_shippable)
+    .reduce((acc, item) => acc + (item.shipping_cost || 0), 0);
+
+  return {
+    id: "dummy-cart-id",
+    items,
+    items_total,
+    subtotal: items_total,
+    items_discount,
+    shipping,
+    taxes: [{ name: "GST", rate: 10, amount: (items_total * 0.1).toFixed(2) }],
+    total_price: items_total + shipping,
+    grand_total: items_total + shipping,
+  };
+}
+
 const Cart = () => {
-  const { postcode, updatePostcode } = useGlobalPostcode();
-  const {
-    data: cart,
-    error,
-    isLoading,
-    isFetching,
-  } = useGetCartQuery(postcode ? { postcode } : undefined, {
-    refetchOnMountOrArgChange: true,
-  });
+  const [postcode, setPostcode] = useState("");
+  const [cartItems, setCartItems] = useState(DUMMY_CART_ITEMS);
+  const cart = useMemo(() => buildCartFromItems(cartItems), [cartItems]);
+
   const clickLockRef = useRef(false);
+  const orderSummaryRef = useRef<HTMLDivElement>(null);
+  const [matchedHeight, setMatchedHeight] = useState<number | null>(null);
 
-  const [removeFromCart, { isLoading: isRemoving }] =
-    useRemoveFromCartMutation();
-  const [validatePromoCode, { isLoading: isApplyingPromo }] =
-    useValidatePromoCodeMutation();
-  const [checkDelivery, { isLoading: isCheckingDelivery }] =
-    useCheckDeliveryMutation();
-  const [updateCartItemQuantity, { isLoading: isUpdating }] =
-    useUpdateCartItemQuantityMutation();
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [isApplyingPromo, setIsApplyingPromo] = useState(false);
+  const [isCheckingDelivery, setIsCheckingDelivery] = useState(false);
+  const [updatingItemId, setUpdatingItemId] = useState<string | null>(null);
+  const isUpdating = updatingItemId !== null;
 
-  const { formData, formErrors, handleChange, handleSubmit, setFormData } =
+  const { formData, formErrors, handleChange, handleSubmit } =
     useFormValidation(pincodeSchema, { pincode: postcode || "" });
 
   const [promoCodeInput, setPromoCodeInput] = useState("");
@@ -76,103 +155,21 @@ const Cart = () => {
     return () => mql.removeEventListener("change", handleChange);
   }, []);
 
-  // Update form when global postcode changes
+  
   useEffect(() => {
-    if (postcode) {
-      setFormData((prev) => ({ ...prev, pincode: postcode }));
+    const el = orderSummaryRef.current;
+    if (!el || !isXlUp || cart.items.length < 3) {
+      setMatchedHeight(null);
+      return;
     }
-  }, [postcode, setFormData]);
 
-  // Restore promo code from session storage on mount
-  useEffect(() => {
-    const storedPromoData = sessionStorage.getItem("appliedPromoCode");
-    if (storedPromoData) {
-      try {
-        const promoData = JSON.parse(storedPromoData);
-        if (promoData && promoData.code) {
-          setAppliedPromoCode(promoData.code);
-          setDiscountAmount(promoData.discount_amount);
-          setNewTotalPrice(promoData.new_total);
-          setPromoCodeInput(promoData.code);
-        }
-      } catch {
-        // ignore malformed stored promo data
-      }
-    }
-  }, []);
+    const update = () => setMatchedHeight(el.offsetHeight);
+    update();
 
-  // Recalculate promo discount when cart changes
-  useEffect(() => {
-    const revalidatePromo = async () => {
-      if (!appliedPromoCode || !cart?.total_price || !cart.id) return;
-
-      try {
-        const response = await validatePromoCode({
-          coupon_code: appliedPromoCode,
-          cart_id: cart.id,
-          post_code: postcode,
-        }).unwrap();
-
-        if (response.is_valid) {
-          const { discount_type, discount_value, max_discount } = response;
-          let discount = 0;
-          if (discount_type === "percentage" && discount_value) {
-            discount =
-              (cart.total_price * Number.parseFloat(discount_value)) / 100;
-            if (max_discount) {
-              discount = Math.min(discount, Number.parseFloat(max_discount));
-            }
-          } else if (discount_type === "fixed" && discount_value) {
-            discount = Number.parseFloat(discount_value);
-          }
-          const newTotal = Math.max(cart.total_price - discount, 0);
-
-          setDiscountAmount(discount);
-          setNewTotalPrice(newTotal);
-
-          const promoData = {
-            code: appliedPromoCode,
-            discount_amount: discount,
-            discount_type,
-            discount_value: discount_value || "0",
-            original_total: cart.grand_total,
-            new_total: newTotal,
-            max_discount: max_discount,
-          };
-          sessionStorage.setItem("appliedPromoCode", JSON.stringify(promoData));
-          window.dispatchEvent(new Event("promoUpdated"));
-        } else {
-          // If no longer valid, remove it
-          handleRemovePromo();
-          toast.info("Promo code no longer applicable.");
-        }
-      } catch {
-        // ignore re-validation error silently
-      }
-    };
-
-    revalidatePromo();
-  }, [cart?.total_price]);
-
-  /* ---------------- MEMOIZED SUBTOTAL ---------------- */
-  /*
-  const subtotal = useMemo(() => {
-    if (!cart?.items) return 0;
-
-    return cart.items.reduce((acc, item) => {
-      const productForPriceDetails = {
-        price: item.unit_price,
-        rrp_price: item.rrp_price_snapshot,
-        discount_percentage: item.discount_percentage,
-        discounted_price: item.discounted_price,
-        oldPrice: item.oldPrice,
-        discount: item.discount,
-      };
-      const { mainPrice } = getPriceDetails(productForPriceDetails);
-      return acc + mainPrice * Number(item.quantity);
-    }, 0);
-  }, [cart]);
-  */
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [isXlUp, cart.items.length, appliedPromoCode, discountAmount]);
 
   const totalSaveAmount = useMemo(() => {
     if (!cart?.items) return 0;
@@ -186,7 +183,7 @@ const Cart = () => {
         oldPrice: item.oldPrice,
         discount: item.discount,
       };
-      const { saveAmount } = getPriceDetails(productForPriceDetails);
+      const { saveAmount } = getPriceDetails(productForPriceDetails as never);
       return acc + saveAmount * Number(item.quantity);
     }, 0);
 
@@ -196,17 +193,11 @@ const Cart = () => {
     return itemSavings + promotionDiscount + couponDiscount;
   }, [cart, discountAmount]);
 
-  // ---------------- APPLY PROMO CODE ----------------
+  // ---------------- APPLY PROMO CODE (dummy) ----------------
   const handleApplyPromoCode = async () => {
     if (!promoCodeInput.trim()) {
       setPromoCodeError("Please enter a promo code.");
       toast.error("Please enter a promo code.");
-      return;
-    }
-
-    if (!cart) {
-      setPromoCodeError("Cart not available.");
-      toast.error("Cart not available.");
       return;
     }
 
@@ -219,82 +210,33 @@ const Cart = () => {
       return;
     }
 
-    // try {
-    //   setPromoCodeError(null);
-    //   const response = await validatePromoCode({
-    //     code: promoCodeInput,
-    //     cartTotal: cart.total_price,
-    //   }).unwrap();
-    try {
-      setPromoCodeError(null);
-      const response = await validatePromoCode({
-        coupon_code: promoCodeInput,
-        cart_id: cart.id,
-        user_id: "", // Optional
-        order_id: "", // Optional
-        post_code: postcode,
-      }).unwrap();
+    setIsApplyingPromo(true);
+    setPromoCodeError(null);
 
-      // const { discount_type, discount_value } = response;
+    setTimeout(() => {
+      const code = promoCodeInput.trim().toUpperCase();
+      const isValid = code === "SAVE10" || code === "FLAT20";
 
-      // Check if coupon is valid
-      if (!response.is_valid) {
-        setPromoCodeError(response.message || "Invalid coupon code");
+      if (!isValid) {
+        setPromoCodeError("Invalid coupon code");
         setAppliedPromoCode(null);
         setDiscountAmount(0);
         setNewTotalPrice(null);
-        toast.error(response.message || "Invalid coupon code");
+        toast.error("Invalid coupon code");
+        setIsApplyingPromo(false);
         return;
       }
 
-      // Calculate discount
-      const { discount_type, discount_value, max_discount } = response;
-      let discount = 0;
-      // if (discount_type === "percentage") {
-      //   discount = (subtotal * discount_value) / 100;
-      // } else if (discount_type === "fixed") {
-      //   discount = discount_value;
-      if (discount_type === "percentage" && discount_value) {
-        discount = (cart.total_price * Number.parseFloat(discount_value)) / 100;
-
-        // Apply max discount cap if specified
-        if (max_discount) {
-          discount = Math.min(discount, Number.parseFloat(max_discount));
-        }
-      } else if (discount_type === "fixed" && discount_value) {
-        discount = Number.parseFloat(discount_value);
-      }
-      // const newTotal = Math.max(subtotal - discount, 0);
-      // Calculate new total: total_price - discount
+      const discount =
+        code === "SAVE10" ? cart.total_price * 0.1 : Math.min(20, cart.total_price);
       const newTotal = Math.max(cart.total_price - discount, 0);
 
       setAppliedPromoCode(promoCodeInput);
       setDiscountAmount(discount);
       setNewTotalPrice(newTotal);
-
-      // Store promo code data for checkout
-      const promoData = {
-        code: promoCodeInput,
-        discount_amount: discount,
-        discount_type,
-        discount_value: discount_value || "0",
-        original_total: cart.grand_total,
-        new_total: newTotal,
-        max_discount: max_discount, // Store max_discount for recalculation
-      };
-      sessionStorage.setItem("appliedPromoCode", JSON.stringify(promoData));
-      window.dispatchEvent(new Event("promoUpdated"));
-
-      toast.success(response.message || "Coupon applied successfully!");
-    } catch (error) {
-      setPromoCodeError("Failed to apply promo code.");
-      setAppliedPromoCode(null);
-      setDiscountAmount(0);
-      setNewTotalPrice(null);
-      // Clear any stored promo data on error
-      sessionStorage.removeItem("appliedPromoCode");
-      toast.error("Failed to apply promo code.");
-    }
+      toast.success("Coupon applied successfully!");
+      setIsApplyingPromo(false);
+    }, 500);
   };
 
   const handleRemovePromo = () => {
@@ -302,25 +244,29 @@ const Cart = () => {
     setDiscountAmount(0);
     setNewTotalPrice(null);
     setPromoCodeInput("");
-    sessionStorage.removeItem("appliedPromoCode");
-    window.dispatchEvent(new Event("promoUpdated"));
     toast.info("Promo code removed.");
   };
 
-  // ---------------- REMOVE ITEM ----------------
+  // ---------------- REMOVE ITEM (dummy) ----------------
   const handleRemoveItem = async (id: string, variant_id?: string) => {
     if (clickLockRef.current) return;
     clickLockRef.current = true;
-    if (isRemoving || isUpdating) return;
-    try {
-      await removeFromCart({ product_id: id, variant_id }).unwrap();
-    } catch {
-      toast.error("Failed to remove item.");
-    } finally {
-      setTimeout(() => {
-        clickLockRef.current = false;
-      }, 300); // small delay to prevent rapid spam
+    if (isRemoving || isUpdating) {
+      clickLockRef.current = false;
+      return;
     }
+
+    setIsRemoving(true);
+    setTimeout(() => {
+      setCartItems((prev) =>
+        prev.filter(
+          (item) =>
+            !(item.product_id === id && item.variant_id === variant_id),
+        ),
+      );
+      setIsRemoving(false);
+      clickLockRef.current = false;
+    }, 300);
   };
 
   useEffect(() => {
@@ -329,34 +275,27 @@ const Cart = () => {
       setDiscountAmount(0);
       setNewTotalPrice(null);
       setPromoCodeInput("");
-
-      sessionStorage.removeItem("appliedPromoCode");
-      window.dispatchEvent(new Event("promoUpdated"));
     }
   }, [cart]);
 
-  // ---------------- CHECK DELIVERY ----------------
+  // ---------------- CHECK DELIVERY (dummy) ----------------
   const handleCheckDelivery = handleSubmit(async (data) => {
-    try {
-      const response = await checkDelivery(data.pincode).unwrap();
-      response.deliverable
-        ? toast.success("Delivery available!")
-        : toast.error(response.message || "Delivery not available");
-    } catch {
-      toast.error("Invalid Pincode");
-    }
+    setIsCheckingDelivery(true);
+    setTimeout(() => {
+      setPostcode(data.pincode);
+      toast.success("Delivery available!");
+      setIsCheckingDelivery(false);
+    }, 500);
   });
 
   // Per-item local quantity display (allows user to clear & retype)
   const [localQtyMap, setLocalQtyMap] = useState<Record<string, string>>({});
 
-  // Sync local qty map whenever cart items update from API
   useEffect(() => {
     if (!cart?.items) return;
     setLocalQtyMap((prev) => {
       const next = { ...prev };
       cart.items.forEach((item) => {
-        // Only overwrite if there's no pending local edit
         if (next[item.id] === undefined) {
           next[item.id] = String(item.quantity);
         }
@@ -365,9 +304,8 @@ const Cart = () => {
     });
   }, [cart]);
 
-  // ---------------- QUANTITY DEBOUNCED UPDATE ----------------
+  // ---------------- QUANTITY DEBOUNCED UPDATE (dummy) ----------------
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [updatingItemId, setUpdatingItemId] = useState<string | null>(null);
 
   const handleUpdateQuantity = (
     product_id: string,
@@ -379,8 +317,7 @@ const Cart = () => {
     if (quantity < 1 || Number.isNaN(quantity)) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
-    debounceRef.current = setTimeout(async () => {
-      // Final safety check against available_stock before API call
+    debounceRef.current = setTimeout(() => {
       const item = cart?.items.find((i) => i.id === item_id);
       const stockLimit = item?.available_stock ?? item?.stock;
 
@@ -401,40 +338,32 @@ const Cart = () => {
         return;
       }
 
-      try {
-        await updateCartItemQuantity({
-          product_id,
-          quantity,
-          variant_id,
-          postcode: postcode,
-        }).unwrap();
-        // Sync local state back to confirmed server value
+      if (item_id != null) setUpdatingItemId(item_id);
+
+      setTimeout(() => {
+        setCartItems((prev) =>
+          prev.map((it) =>
+            it.product_id === product_id && it.variant_id === variant_id
+              ? {
+                ...it,
+                quantity,
+                subtotal: it.unit_price * quantity,
+                final_price:
+                  (it.final_price / it.quantity || it.unit_price) * quantity,
+              }
+              : it,
+          ),
+        );
         if (item_id != null) {
-          const id: string = item_id;
-          setLocalQtyMap((prev) => ({ ...prev, [id]: String(quantity) }));
+          setLocalQtyMap((prev) => ({ ...prev, [item_id]: String(quantity) }));
         }
-      } catch (err) {
-        const error = err as { data?: { message?: string; detail?: string } };
-        const errorMessage =
-          error?.data?.message ||
-          error?.data?.detail ||
-          "Failed to update quantity";
-        toast.error(errorMessage);
-        if (item_id != null) {
-          const id: string = item_id;
-          setLocalQtyMap((prev) => {
-            const next = { ...prev };
-            delete next[id];
-            return next;
-          });
-        }
-      }
+        setUpdatingItemId(null);
+      }, 400);
     }, 800);
   };
 
   // ---------------- LOADING / EMPTY STATES ----------------
-  if (isLoading || isFetching) return null;
-  if (error || !cart || cart.items.length === 0)
+  if (!cart || cart.items.length === 0)
     return (
       <div className="flex flex-col justify-center items-center text-center p-8 min-h-[40vh]">
         <NoProductsFound
@@ -485,8 +414,15 @@ const Cart = () => {
       </h4>
 
       <div className="flex flex-col xl:flex-row items-start gap-5 xl:pb-10">
-        <div className="w-full xl:w-[1226px] lg:rounded-[8px] lg:overflow-visible lg:shadow-[0_0_14px_rgba(0,0,0,0.08)]">
-          <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#D9D2D2] text-[16px] leading-[100%] font-medium">
+        <div
+          className={`w-full xl:w-[1226px] lg:rounded-[8px] lg:overflow-visible lg:shadow-[0_0_14px_rgba(0,0,0,0.08)] ${cart.items.length >= 3 ? "xl:flex xl:flex-col" : ""}`}
+          style={
+            cart.items.length >= 3 && isXlUp && matchedHeight
+              ? { height: matchedHeight }
+              : undefined
+          }
+        >
+          <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#D9D2D2] text-[16px] leading-[100%] font-medium shrink-0">
             <div className="col-span-6 text-base">Item</div>
             <div className="col-span-2 text-base text-center">Qty.</div>
             <div className="col-span-2 text-base">Item Price</div>
@@ -494,7 +430,7 @@ const Cart = () => {
           </div>
 
           <div
-            className="flex flex-col items-center gap-[14px]  lg:block lg:gap-0 lg:py-0 lg:max-h-[490px] lg:overflow-y-auto lg:overscroll-contain gray-scrollbar"
+            className={`flex flex-col items-center gap-[14px]  lg:block lg:gap-0 lg:py-0 lg:max-h-[490px] lg:overflow-y-auto lg:overscroll-contain gray-scrollbar ${cart.items.length >= 3 ? "xl:max-h-none xl:flex-1 xl:min-h-0" : ""}`}
             data-lenis-prevent
             onWheel={(e) => e.stopPropagation()}
           >
@@ -508,7 +444,7 @@ const Cart = () => {
                 discount: item.discount,
               };
               const { mainPrice, wasPrice, showWasPrice } = getPriceDetails(
-                productForPriceDetails,
+                productForPriceDetails as never,
               );
 
               const itemSubtotal =
@@ -516,7 +452,7 @@ const Cart = () => {
 
               const itemInfo = (
                 <>
-                  <h3 className="text-[12px] lg:text-[14px] font-semibold leading-[100%] text-black mb-0.5 lg:mb-1.5 line-clamp-1">
+                  <h3 className="text-[12px] lg:text-[14px] font-semibold leading-[140%] text-black mb-0.5 lg:mb-1.5 line-clamp-3 lg:line-clamp-2">
                     {item.is_active ? (
                       <Link
                         href={`/product/${item.unique_code || item.product_id}`}
@@ -540,17 +476,24 @@ const Cart = () => {
                       Out of Stock
                     </p>
                   ) : (
-                    <p className="text-[11px] lg:text-[12px]  lg:leading-[100%] font-bold text-[#01295F] mb-0.5 lg:mb-1.5">
-                      {/* In Stock{" "} */}
-                      <span className="text-[#049950]">
-                        {/* Code Applied - (GET500) 50% OFF */}
-                        {item.promotion_discount != null &&
-                          item.promotion_discount > 0 && (
-                            <span className="ml-1 font-medium">
-                              - ${formatPrice(item.promotion_discount)}
-                            </span>
-                          )}
-                      </span>
+                    <p className="flex items-center flex-wrap gap-1.5 text-[11px] lg:text-[12px] lg:leading-[100%] font-bold text-[#01295F] mb-0.5 lg:mb-1.5">
+                      <span>In Stock</span>
+                      {item.promoCode && (
+                        <span className="text-[#049950] font-montserrat text-[12px] font-medium leading-normal capitalize">
+                          Code Applied - ({item.promoCode}){" "}
+                          <span className="font-bold">
+                            {item.discount_percentage}% Off
+                          </span>
+                        </span>
+                      )}
+                      {item.saleBadge && (
+                        <span className="inline-flex items-center justify-center gap-1 w-[108px] h-[19px] rounded-[5px] bg-[#01295F] p-0.5">
+                          <ThumbsUp className="w-[11.853px] h-[11.289px] fill-white" />
+                          <span className="text-white font-montserrat text-[12px] font-medium leading-[18px] capitalize">
+                            {item.saleBadge}
+                          </span>
+                        </span>
+                      )}
                     </p>
                   )}
                   {item.shipping_cost === 0 && (
@@ -560,10 +503,18 @@ const Cart = () => {
                   )}
                   {item.handling_time_days === 1 ? (
                     <p className="text-[12px] lg:text-[14px] leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5">
-                      Leaves warehouse in Next business day
+                      {item.delivery_prefix}{" "}
+                      <strong className="font-semibold text-black">
+                        Next Business Day
+                      </strong>
                     </p>
                   ) : (
-                    <p className="text-[12px] lg:text-[14px] leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5">{`Leaves warehouse in 1 – ${item.handling_time_days} business days`}</p>
+                    <p className="text-[12px] lg:text-[14px] leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5">
+                      {item.delivery_prefix}{" "}
+                      {/* <strong className="font-semibold text-black"> */}
+                        1-{item.handling_time_days} Business Days
+                      {/* </strong> */}
+                    </p>
                   )}
 
                   {item.variant_attributes &&
@@ -760,13 +711,13 @@ const Cart = () => {
                     <div className="flex flex-row gap-3">
                       <div className="shrink-0 w-[84px] h-[84px]">
                         {item.is_active &&
-                        (item.available_stock === undefined ||
-                          item.available_stock > 0) ? (
+                          (item.available_stock === undefined ||
+                            item.available_stock > 0) ? (
                           <Link
                             href={`/product/${item.unique_code || item.product_id}`}
                           >
                             <Image
-                              src={getImageUrl(item)}
+                              src={getImageUrl(item as never)}
                               alt={item.product_name}
                               width={84}
                               height={84}
@@ -776,7 +727,7 @@ const Cart = () => {
                           </Link>
                         ) : (
                           <Image
-                            src={getImageUrl(item)}
+                            src={getImageUrl(item as never)}
                             alt={item.product_name}
                             width={84}
                             height={84}
@@ -806,22 +757,24 @@ const Cart = () => {
                       </div>
                     </div>
 
-                    <span className="inline-flex mt-1.5 bg-[#01295F] text-white text-[10px] leading-[100%] font-semibold w-[88px] h-[20px] rounded-[4px] text-center items-center  justify-center">
-                      SALE 20% OFF
-                    </span>
+                    {item.promoCode && (
+                      <span className="inline-flex mt-1.5 bg-[#01295F] text-white text-[10px] leading-[100%] font-semibold w-[88px] h-[20px] rounded-[4px] text-center items-center justify-center">
+                        SALE 20% OFF
+                      </span>
+                    )}
                   </div>
 
                   <div className="hidden lg:grid lg:grid-cols-12 lg:items-center lg:gap-4">
                     <div className="col-span-6 flex flex-row gap-[20px]">
                       <div className="shrink-0 w-[137px] h-[136px]">
                         {item.is_active &&
-                        (item.available_stock === undefined ||
-                          item.available_stock > 0) ? (
+                          (item.available_stock === undefined ||
+                            item.available_stock > 0) ? (
                           <Link
                             href={`/product/${item.unique_code || item.product_id}`}
                           >
                             <Image
-                              src={getImageUrl(item)}
+                              src={getImageUrl(item as never)}
                               alt={item.product_name}
                               width={137}
                               height={136}
@@ -831,7 +784,7 @@ const Cart = () => {
                           </Link>
                         ) : (
                           <Image
-                            src={getImageUrl(item)}
+                            src={getImageUrl(item as never)}
                             alt={item.product_name}
                             width={137}
                             height={136}
@@ -862,13 +815,13 @@ const Cart = () => {
                             </span>
                           )}
                         </div>
-                        {item.promotion_discount != null &&
+                        {/* {item.promotion_discount != null &&
                           item.promotion_discount > 0 && (
                             <span className="inline-block mt-1.5 bg-[#fff4f4] text-[#e53e3e] border border-[#fed7d7] rounded px-2 py-0.5 text-xs font-semibold whitespace-nowrap">
                               🏷 Item Discount: $
                               {formatPrice(item.promotion_discount)}
                             </span>
-                          )}
+                          )} */}
                       </div>
                     </div>
 
@@ -887,7 +840,10 @@ const Cart = () => {
           </div>
         </div>
 
-        <div className="w-[358px] mx-auto md:mx-0 md:w-full xl:w-[488px] xl:min-h-[522px] flex flex-col xl:sticky xl:top-24 xl:self-start">
+        <div
+          ref={orderSummaryRef}
+          className="w-[358px] mx-auto md:mx-0 md:w-full xl:w-[488px] xl:min-h-[522px] flex flex-col xl:sticky xl:top-24 xl:self-start"
+        >
           <div className="bg-white rounded-[8px] shadow-[0px_0px_14px_rgba(0,0,0,0.08)] p-6 flex flex-col">
             <div className="flex items-center justify-between mb-5">
               <h5 className="text-[18px] font-bold leading-[100%] text-black">
@@ -903,7 +859,7 @@ const Cart = () => {
 
             <div className="flex flex-col gap-3 pb-4 border-b border-[#e5e5e5]">
               <div className="flex items-center justify-between">
-                <span className="text-[14px] lg:text-[16px] leading-[100%] text-[#726969] font-medium">
+                <span className="cart-summary-label">
                   Subtotal (
                   {cart.items
                     .filter(
@@ -922,7 +878,7 @@ const Cart = () => {
 
               {totalSaveAmount > 0 && (
                 <div className="flex items-center justify-between">
-                  <span className="text-[14px] lg:text-[16px] leading-[100%] text-[#726969] font-medium">
+                  <span className="cart-summary-label">
                     Total Savings
                   </span>
                   <p className="text-[14px] lg:text-[16px] font-semibold text-[#16a249]">
@@ -933,7 +889,7 @@ const Cart = () => {
 
               {hasShippableItem && (
                 <div className="flex items-center justify-between">
-                  <span className="text-[14px] lg:text-[16px] leading-[100%] text-[#726969] font-medium">
+                  <span className="cart-summary-label">
                     Shipping
                   </span>
                   <p className="text-[14px] lg:text-[16px] font-semibold text-black">
@@ -1051,7 +1007,7 @@ const Cart = () => {
                         value: data.pincode,
                       },
                     } as React.ChangeEvent<HTMLInputElement>);
-                    updatePostcode(data.pincode, data.city || "Melbourne");
+                    setPostcode(data.pincode);
                   }}
                   inputClassName="flex-1 min-w-0 !h-auto !p-0 !bg-transparent !border-0 !rounded-none !shadow-none !ring-0 outline-none text-sm placeholder:text-[#726969]"
                 />
@@ -1072,7 +1028,7 @@ const Cart = () => {
               )}
             </div>
 
-            <Link href="/checkout" className="mt-auto order-1 xl:order-2">
+            <Link href="/check-out" className="mt-auto order-1 xl:order-2">
               <Button
                 className="bg-linear-to-r from-[#FF676B] to-[#FD151B] h-[46px] rounded-[74px] text-[#F6F6F6] text-[16px] font-semibold leadiing-5 w-full shadow-md shadow-[#0E35BF]/25 cursor-pointer"
                 debounceDelay={500}

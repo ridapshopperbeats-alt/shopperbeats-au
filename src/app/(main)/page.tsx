@@ -1,4 +1,4 @@
-import Home from "@/components/homepage/Home";
+import Home from "@/components/home-page/Home";
 import type { Metadata } from "next";
 // import { getHomepageData } from "@/lib/utils/get-homepage-data";
 

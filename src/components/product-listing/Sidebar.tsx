@@ -406,7 +406,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         />
                         <label
                           htmlFor={`brand-${idx}`}
-                          className="cursor-pointer text-[#575757] font-normal tracking-[-0.5%] text-[14px]"
+                          className="filter-sidebar-link"
                         >
                           {brand.name} ({brand.count})
                         </label>
@@ -459,7 +459,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                             className={checkboxAccentClass}
                           />
                           <label
-                            className="cursor-pointer text-[#575757] font-normal tracking-[-0.5%] text-[14px]"
+                            className="filter-sidebar-link"
                             htmlFor={`brand-${idx}`}
                           >
                             {brand}
@@ -534,7 +534,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         className={checkboxAccentClass}
                       />
                       <label
-                        className="cursor-pointer text-[#575757] font-normal tracking-[-0.5%] text-[14px]"
+                        className="filter-sidebar-link"
                         htmlFor={`color-${idx}`}
                       >
                         {value}
@@ -570,7 +570,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         className={checkboxAccentClass}
                       />
                       <label
-                        className="cursor-pointer text-[#575757] font-normal tracking-[-0.5%] text-[14px]"
+                        className="filter-sidebar-link"
                         htmlFor={`size-${idx}`}
                       >
                         {value}

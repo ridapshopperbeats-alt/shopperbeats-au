@@ -5,23 +5,9 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/common/Button";
+import { OrderDetailsType } from "@/types/order";
 
 // Extract the order details type from OrderSummaryPopup's props
-type OrderDetailsType = {
-  orderNumber?: string;
-  orderId?: string;
-  products: Array<{
-    id: string;
-    name: string;
-    image?: string;
-    quantity: number;
-    price: string;
-  }>;
-  deliveryAddress: string;
-  deliveryCost: string;
-  couponCode?: string;
-  totalAmount: string;
-};
 
 export default function ConfirmedOrderPage() {
   const router = useRouter();

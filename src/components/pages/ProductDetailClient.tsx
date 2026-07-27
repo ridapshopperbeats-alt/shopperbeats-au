@@ -22,7 +22,7 @@ import {
 } from "@/lib/redux/apis/products-api";
 import { useCalculateShippingMutation } from "@/lib/redux/apis/order-api";
 import Image from "next/image";
-import ProductGallery from "../productListing/ProductGallery";
+import ProductGallery from "../product-listing/ProductGallery";
 import { toast } from "react-toastify";
 
 import Button from "@/components/common/Button";
@@ -46,7 +46,7 @@ import {
 import { useVariantSelection } from "@/lib/hooks/use-variant-selection";
 import { WishlistKey } from "@/types/wishlist";
 import BundleSection from "../ui/BundleSection";
-import RecommendedForYou from "../homepage/RecommendedForYou";
+import RecommendedForYou from "../home-page/RecommendedForYou";
 import { useSEO } from "@/contexts/SEOContext";
 import {
   getFeaturesContent,
@@ -482,7 +482,7 @@ export default function ProductDetailClient({
           postcode: postcode,
         }).unwrap();
 
-        router.push("/checkout");
+        router.push("/check-out");
       } catch (err) {
         const error = err as {
           data?: { detail?: string; error?: string };
@@ -801,7 +801,7 @@ export default function ProductDetailClient({
       if (isCompactAttribute) {
         return (
           <div key={attrName} className="flex flex-col gap-2">
-            <span className="text-[14px] font-bold text-[#1D265F]">
+            <span className="pdp-field-label">
               {attrLabel} : <span>{selectedAttributes[attrName] || ""}</span>
             </span>
 
@@ -834,7 +834,7 @@ export default function ProductDetailClient({
 
       return (
         <div key={attrName} className="flex flex-col gap-1.5">
-          <label className="text-[14px] font-medium text-black">
+          <label className="field-value-sm">
             {attrLabel}
           </label>
           <Select
@@ -1002,7 +1002,7 @@ export default function ProductDetailClient({
                               alt={c.value}
                               width={32}
                               height={32}
-                              className="w-full h-full object-cover"
+                              className="img-cover"
                             />
                           </button>
                         ))}
@@ -1092,7 +1092,7 @@ export default function ProductDetailClient({
                                 alt={option.value}
                                 width={47}
                                 height={48}
-                                className="w-full h-full object-cover"
+                                className="img-cover"
                               />
                             </div>
                             <span className="inline-flex flex-col text-[12px] tracking-[0px]">
@@ -1171,7 +1171,7 @@ export default function ProductDetailClient({
                   <div className="flex items-center justify-between">
                     <label
                       htmlFor="product-quantity"
-                      className="text-[14px] font-bold text-[#1D265F]"
+                      className="pdp-field-label"
                     >
                       Quantity:
                     </label>
@@ -1212,7 +1212,7 @@ export default function ProductDetailClient({
                         <button
                           type="button"
                           onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                          className="text-[18px] leading-none font-bold text-black cursor-pointer select-none"
+                          className="pdp-stepper-btn"
                           aria-label="Decrease quantity"
                         >
                           &minus;
@@ -1225,7 +1225,7 @@ export default function ProductDetailClient({
                           onClick={() =>
                             setQuantity((q) => Math.min(maxQty, q + 1))
                           }
-                          className="text-[18px] leading-none font-bold text-black cursor-pointer select-none"
+                          className="pdp-stepper-btn"
                           aria-label="Increase quantity"
                         >
                           +
@@ -1297,7 +1297,7 @@ export default function ProductDetailClient({
                   <ShieldCheck /> Guaranteed Safe & Secured Checkout
                 </div>
                 <div className="lg:hidden flex flex-wrap gap-2">
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
+                  <div className="pdp-qty-box">
                     {" "}
                     <Image
                       src="/images/visa.svg"
@@ -1306,7 +1306,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
+                  <div className="pdp-qty-box">
                     <Image
                       src="/images/payment.svg"
                       alt="Payment"
@@ -1314,7 +1314,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
+                  <div className="pdp-qty-box">
                     <Image
                       src="/images/american.svg"
                       alt="American Express"
@@ -1322,7 +1322,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
+                  <div className="pdp-qty-box">
                     <Image
                       src="/images/paypal.svg"
                       alt="PayPal"
@@ -1330,7 +1330,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
+                  <div className="pdp-qty-box">
                     {" "}
                     <Image
                       src="/images/afterpay.svg"
@@ -1339,7 +1339,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1">
+                  <div className="pdp-qty-box">
                     {" "}
                     <Image
                       src="/images/zip.svg"
@@ -1543,7 +1543,7 @@ export default function ProductDetailClient({
                 </p>
               )}
 
-              <div className="-mx-5 border-t border-[#ECECEC]"></div>
+              <div className="pdp-section-divider"></div>
 
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
@@ -1555,10 +1555,10 @@ export default function ProductDetailClient({
                       stroke="#FFFFFF"
                     />
                     <div className="flex flex-col leading-[18px]">
-                      <span className="text-[14px] font-bold text-[#1D265F]">
+                      <span className="pdp-field-label">
                         Deliver To
                       </span>
-                      <span className="text-[14px] font-bold text-[#1D265F]">
+                      <span className="pdp-field-label">
                         {mounted
                           ? selectedLocation
                             ? [
@@ -1584,13 +1584,13 @@ export default function ProductDetailClient({
                 </div>
               </div>
 
-              <div className="-mx-5 border-t border-[#ECECEC]"></div>
+              <div className="pdp-section-divider"></div>
 
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="product-quantity"
-                    className="text-[14px] font-bold text-[#1D265F]"
+                    className="pdp-field-label"
                   >
                     Quantity:
                   </label>
@@ -1632,7 +1632,7 @@ export default function ProductDetailClient({
                       <button
                         type="button"
                         onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                        className="text-[18px] leading-none font-bold text-black cursor-pointer select-none"
+                        className="pdp-stepper-btn"
                         aria-label="Decrease quantity"
                       >
                         &minus;
@@ -1645,7 +1645,7 @@ export default function ProductDetailClient({
                         onClick={() =>
                           setQuantity((q) => Math.min(maxQty, q + 1))
                         }
-                        className="text-[18px] leading-none font-bold text-black cursor-pointer select-none"
+                        className="pdp-stepper-btn"
                         aria-label="Increase quantity"
                       >
                         +
@@ -1654,7 +1654,7 @@ export default function ProductDetailClient({
                   );
                 })()}
               </div>
-              <div className="-mx-5 border-t border-[#ECECEC]"></div>
+              <div className="pdp-section-divider"></div>
 
               {/* Error message for non-shippable */}
               {shippingStatus === "unavailable" && (
@@ -1728,7 +1728,7 @@ export default function ProductDetailClient({
 
               <div>
                 <div className="flex flex-wrap gap-2">
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="pdp-qty-box-lg">
                     {" "}
                     <Image
                       src="/images/visa.svg"
@@ -1737,7 +1737,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="pdp-qty-box-lg">
                     <Image
                       src="/images/payment.svg"
                       alt="Payment"
@@ -1745,7 +1745,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="pdp-qty-box-lg">
                     <Image
                       src="/images/american.svg"
                       alt="American Express"
@@ -1753,7 +1753,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="pdp-qty-box-lg">
                     <Image
                       src="/images/paypal.svg"
                       alt="PayPal"
@@ -1761,7 +1761,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="pdp-qty-box-lg">
                     {" "}
                     <Image
                       src="/images/afterpay.svg"
@@ -1770,7 +1770,7 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
-                  <div className="flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1">
+                  <div className="pdp-qty-box-lg">
                     {" "}
                     <Image
                       src="/images/zip.svg"
@@ -1836,7 +1836,7 @@ export default function ProductDetailClient({
         onIncrement={handleCartDrawerIncrement}
         onDecrement={handleCartDrawerDecrement}
         onRemove={handleCartDrawerRemove}
-        onCheckout={() => router.push("/checkout")}
+        onCheckout={() => router.push("/check-out")}
       />
     </div>
   );

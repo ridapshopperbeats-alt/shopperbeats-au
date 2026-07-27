@@ -177,10 +177,10 @@ const {
   if (status === "cancel") {
     return (
       <div className="pt-40 pb-70">
-        <div className="container" style={{ textAlign: 'center', minHeight: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h2 style={{ color: '#e53e3e', marginBottom: '20px' }}>Payment Cancelled</h2>
-          <p style={{ marginBottom: '30px', color: '#666', fontSize: '18px' }}>Your payment was cancelled and the order has not been placed.</p>
-          <button className="btn btn-red btn-filled" onClick={() => router.replace('/cart')} style={{ padding: '12px 30px', fontSize: '16px' }}>
+        <div className="container order-status-box">
+          <h2 className="order-status-title">Payment Cancelled</h2>
+          <p className="order-status-message">Your payment was cancelled and the order has not been placed.</p>
+          <button className="btn btn-red btn-filled order-status-btn" onClick={() => router.replace('/cart')}>
             Return to Cart
           </button>
         </div>
@@ -191,10 +191,10 @@ const {
   if (actualRedirectStatus === "failed") {
     return (
       <div className="pt-40 pb-70">
-        <div className="container" style={{ textAlign: 'center', minHeight: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h2 style={{ color: '#e53e3e', marginBottom: '20px' }}>Payment Failed</h2>
-          <p style={{ marginBottom: '30px', color: '#666', fontSize: '18px' }}>Unfortunately, your payment could not be processed. Please try again with a different payment method.</p>
-          <button className="btn btn-red btn-filled" onClick={() => router.replace('/user/orders')} style={{ padding: '12px 30px', fontSize: '16px' }}>
+        <div className="container order-status-box">
+          <h2 className="order-status-title">Payment Failed</h2>
+          <p className="order-status-message">Unfortunately, your payment could not be processed. Please try again with a different payment method.</p>
+          <button className="btn btn-red btn-filled order-status-btn" onClick={() => router.replace('/user/orders')}>
             Return to My Orders
           </button>
         </div>
