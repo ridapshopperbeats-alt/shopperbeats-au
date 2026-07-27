@@ -11,7 +11,17 @@ import { useGetPersonalDataQuery, useUpdatePersonalDataMutation } from "@/lib/re
 import { toYYYYMMDD, handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
 import { Input } from "@/components/common/input";
 import { personalInfoSchema } from "@/lib/validations/form-schemas";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 
+// The backend returns bare Cloudflare Images URLs for profile_image
+// (".../images/{id}", no variant segment). Cloudflare Images requires a
+// variant (".../images/{id}/public") to actually serve the file, so every
+// other Cloudflare-hosted image in this codebase already goes through
+// applyImageVariant — profile_image needs the same treatment.
+function resolveProfileImage(url?: string | null): string | null {
+  if (!url) return null;
+  return applyImageVariant(url, "public");
+}
 
 export default function PersonalInformationPage() {
   const { data: personalData } = useGetPersonalDataQuery();
@@ -46,7 +56,7 @@ export default function PersonalInformationPage() {
         skipNextImageSyncRef.current = false;
       } else if (personalData.response.profile_image) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setImagePreview(personalData.response.profile_image);
+        setImagePreview(resolveProfileImage(personalData.response.profile_image)!);
       }
     }
   }, [personalData, setFormData]);
@@ -74,7 +84,7 @@ export default function PersonalInformationPage() {
         (result as unknown as { profile_image?: string })?.profile_image;
 
       if (updatedImage) {
-        setImagePreview(updatedImage);
+        setImagePreview(resolveProfileImage(updatedImage)!);
         skipNextImageSyncRef.current = true;
       }
 

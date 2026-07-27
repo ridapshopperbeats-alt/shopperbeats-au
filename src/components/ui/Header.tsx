@@ -12,6 +12,7 @@ import CartPopup from "./CartPopup";
 import { useRouter, usePathname } from "next/navigation";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 import GooglePlacesInput from "../common/AddressAutocomplete";
 import { toast } from "react-toastify";
 
@@ -397,7 +398,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
   });
 
   const profileImage = personalData?.response?.profile_image?.trim()
-    ? personalData.response.profile_image
+    ? applyImageVariant(personalData.response.profile_image, "public")
     : "/images/user.svg";
   return (
     <div className="header-fixed ">
