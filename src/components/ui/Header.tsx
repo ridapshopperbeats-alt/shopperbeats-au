@@ -11,6 +11,7 @@ import HeaderIcon from "./HeaderIcon";
 import CartPopup from "./CartPopup";
 import { useRouter, usePathname } from "next/navigation";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
+import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
 import GooglePlacesInput from "../common/AddressAutocomplete";
 import { toast } from "react-toastify";
 
@@ -103,6 +104,11 @@ export default function Header({ megaMenuData }: HeaderProps) {
   useGetAddressesQuery(undefined, {
     skip: !isAuthenticated,
   });
+  const { data: wishlistData } = useGetWishlistQuery(undefined, {
+    skip: !isAuthenticated,
+    refetchOnMountOrArgChange: true,
+  });
+  const wishlistCount = wishlistData?.items?.length ?? 0;
 
   const locationRequestedRef = useRef(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -603,6 +609,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               iconSrc="/images/wishlist.svg"
               alt="wishlist"
               className="wishlist"
+              count={wishlistCount}
             />
 
             <CartPopup isVisible={showCartCard} />
@@ -617,7 +624,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                     src={
                       profileImage?.trim()
                         ? profileImage
-                        : "/images/default_user_icon.jpg"
+                        : "/images/user.svg"
                     }
                     alt="account"
                     className="rounded-full"
@@ -632,7 +639,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="group"
                 >
                   <Image
-                    src="/images/default_user_icon.jpg"
+                    src="/images/user.svg"
                     alt="account"
                     width={20}
                     height={20}

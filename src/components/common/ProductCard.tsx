@@ -211,7 +211,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   </span>
                 )}
               </div>
-
+              {/* 
               {rating > 0 && (
                 <div className="flex text-[12px] font-medium items-center leading-[18px] gap-1 h-[13px]">
                   <StarRating rating={rating} size={13} />
@@ -219,9 +219,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     ({reviewCount})
                   </span>
                 </div>
-              )}
+              )} */}
 
-              {!isOutOfStock && (
+              {/* {!isOutOfStock && (
                 <div className="text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
                   <p className="font-normal">
                     {shippingCharge === 0
@@ -238,7 +238,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     </span>
                   </p>
                 </div>
-              )}
+              )} */}
             </div>
 
             <div className="w-full px-2 lg:px-3 flex justify-center mt-2">

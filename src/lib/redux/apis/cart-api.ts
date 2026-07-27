@@ -207,12 +207,13 @@ export const cartApi = createApi({
         { product_id, variant_id },
         { dispatch, queryFulfilled }
       ) {
+        const normalizedVariantId: string | null = variant_id ?? null;
         const patch = dispatch(
           cartApi.util.updateQueryData("getWishlist", undefined, (draft) => {
             if (draft?.items) {
               draft.items = draft.items.filter(
                 (item) =>
-                  !(item.product_id === product_id && item.variant_id === variant_id)
+                  !(item.product_id === product_id && item.variant_id === normalizedVariantId)
               );
             }
           })

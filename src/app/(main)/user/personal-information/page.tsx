@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 
 import Button from "@/components/common/Button";
@@ -27,8 +27,10 @@ export default function PersonalInformationPage() {
       date_of_birth: "",
     });
 
-  const [imagePreview, setImagePreview] = useState<string>("/images/default_user_icon.jpg");
+  const [imagePreview, setImagePreview] = useState<string>("/images/user.svg");
   const [profileImage, setProfileImage] = useState<File | null>(null);
+
+  const skipNextImageSyncRef = useRef(false);
 
   useEffect(() => {
     if (personalData && personalData.response) {
@@ -39,7 +41,10 @@ export default function PersonalInformationPage() {
         phonenumber: personalData.response.phonenumber || "",
         date_of_birth: personalData.response.date_of_birth || "",
       });
-      if (personalData.response.profile_image) {
+
+      if (skipNextImageSyncRef.current) {
+        skipNextImageSyncRef.current = false;
+      } else if (personalData.response.profile_image) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setImagePreview(personalData.response.profile_image);
       }
@@ -62,8 +67,18 @@ export default function PersonalInformationPage() {
         formDataToSend.append("profile_image", profileImage);
       }
 
-      await updatePersonalData(formDataToSend as any).unwrap();
+      const result = await updatePersonalData(formDataToSend as any).unwrap();
 
+      const updatedImage =
+        result?.response?.profile_image ||
+        (result as unknown as { profile_image?: string })?.profile_image;
+
+      if (updatedImage) {
+        setImagePreview(updatedImage);
+        skipNextImageSyncRef.current = true;
+      }
+
+      setProfileImage(null);
       toast.success("Profile updated successfully!");
     } catch (error) {
       console.error(error);
@@ -196,7 +211,7 @@ export default function PersonalInformationPage() {
                 type="submit"
                 disabled={isUpdating}
                 isLoading={isUpdating}
-                className="btn btn-red btn-filled btn-sharp mt-20 w-30 flex items-center justify-center mt-[10px]"
+                className="btn btn-red btn-filled btn-sharp w-30 flex items-center justify-center mt-[10px]"
                 debounceDelay={500}
               >
                 {isUpdating ? "Saving..." : "Update"}

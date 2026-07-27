@@ -87,9 +87,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const checkboxAccentClass = "!accent-[#F51721] cursor-pointer";
 
-  // Synced with the external `matchMedia` API instead of mirrored into
-  // useState + effect. Returns null on the server / before hydration (no
-  // `window`), matching the previous initial state.
   const isDesktopViewport = useSyncExternalStore(
     (onStoreChange) => {
       const mql = window.matchMedia("(min-width: 1024px)");
@@ -123,25 +120,26 @@ const Sidebar: React.FC<SidebarProps> = ({
   }, [hasAnyExpanded]);
 
   const MIN_PRICE = 0;
-  const MAX_PRICE = 1000;
+  const MAX_PRICE = 5000;
 
   const [priceRange, setPriceRange] = useState([
     Number(minPrice) || MIN_PRICE,
     Number(maxPrice) || MAX_PRICE,
   ]);
 
-  // Resync the slider range whenever the min/max price filter values change
-  // elsewhere. Adjusted directly during render (React's recommended pattern
-  // for state that derives from a changed prop, using state rather than a
-  // ref so it stays safe to read during render) instead of inside an effect,
-  // to avoid an extra render pass.
   const [prevMinPrice, setPrevMinPrice] = useState(minPrice);
   const [prevMaxPrice, setPrevMaxPrice] = useState(maxPrice);
 
   if (minPrice !== prevMinPrice || maxPrice !== prevMaxPrice) {
     setPrevMinPrice(minPrice);
     setPrevMaxPrice(maxPrice);
-    setPriceRange([Number(minPrice) || MIN_PRICE, Number(maxPrice) || MAX_PRICE]);
+
+    const nextMin = Number(minPrice) || MIN_PRICE;
+    const nextMax = Number(maxPrice) || MAX_PRICE;
+
+    if (nextMin !== priceRange[0] || nextMax !== priceRange[1]) {
+      setPriceRange([nextMin, nextMax]);
+    }
   }
 
 
@@ -327,7 +325,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <span className="text-[16px] text-[#000000]">$</span>
                     <Input
                       type="number"
-                      placeholder="0"
+                      placeholder="Min"
                       value={minPrice}
                       onChange={(e) => {
                         const newMin = e.target.value;

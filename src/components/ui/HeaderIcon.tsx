@@ -9,6 +9,7 @@ interface HeaderIconProps {
   iconSrc: string;
   alt: string;
   className?: string;
+  count?: number;
 }
 
 const HeaderIcon: React.FC<HeaderIconProps> = ({
@@ -16,12 +17,14 @@ const HeaderIcon: React.FC<HeaderIconProps> = ({
   iconSrc,
   alt,
   className = "",
+  count = 0,
 }) => {
   return (
     <div className={`header-link ${className}`}>
       <Link href={href}>
         <Image src={iconSrc} alt={alt} width={20} height={20} />
       </Link>
+      {count > 0 && <span className="wishlist-num">{count}</span>}
     </div>
   );
 };

@@ -452,8 +452,8 @@ export default function ProductDetailClient({
 
   const productTabItems = [
     { key: "description", label: "Description" },
-    { key: "delivery", label: "Delivery" },
-    { key: "warranty", label: "Warranty and Return" },
+    // { key: "delivery", label: "Delivery" },
+    // { key: "warranty", label: "Warranty and Return" },
   ];
   const isProductInCart = useMemo(() => {
     if (!selectedVariant?.id) return false;
@@ -928,7 +928,7 @@ export default function ProductDetailClient({
                       {productTitle || "Product Title"}
                     </h5>
 
-                    <div className="flex items-center w-auto h-[18px] gap-1">
+                    {/* <div className="flex items-center w-auto h-[18px] gap-1">
                       {(product.review_stats?.average_rating ?? 0) > 0 && (
                         <StarRating
                           rating={product.review_stats?.average_rating ?? 0}
@@ -938,7 +938,7 @@ export default function ProductDetailClient({
                       <span className="text-[14px] leading-[18px] font-bold text-[#162DC3]">
                         {product.review_stats?.total_reviews ?? 0} Reviews
                       </span>
-                    </div>
+                    </div> */}
                     <p className="mt-1 font-bold text-[12px] lg:text-[14px] leading-[18px] text-[#162DC3]">
                       <Link href={`/brand/${product.brand_slug}`}>
                         <span className="text-[#535766]">By</span>{" "}
@@ -1403,7 +1403,7 @@ export default function ProductDetailClient({
                       Product Description
                     </h6>
                     <div className="product-content">
-                      <div
+                      {/* <div
                         style={{
                           display: "flex",
                           justifyContent: "flex-start",
@@ -1418,7 +1418,7 @@ export default function ProductDetailClient({
                           loading="lazy"
                           className="w-full h-[500px] object-contain"
                         />
-                      </div>
+                      </div> */}
 
                       <div
                         className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black"
@@ -1470,7 +1470,7 @@ export default function ProductDetailClient({
                             Product Description
                           </h6>
                           <div className="product-content">
-                            <div
+                            {/* <div
                               style={{
                                 display: "flex",
                                 justifyContent: "flex-start",
@@ -1485,7 +1485,7 @@ export default function ProductDetailClient({
                                 loading="lazy"
                                 className="w-full h-[500px] object-contain"
                               />
-                            </div>
+                            </div> */}
 
                             <div
                               className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black"

@@ -22,8 +22,8 @@ export default function ProductDetailsMobileTabs({
 
   const accordionItems = [
    { id: "description", title: "Description", content: descriptionContent },
-    { id: "delivery", title: "Delivery", content: deliveryContent },
-    { id: "Warranty and return ", title: "Warranty And Return", content: warrantyAndReturnContent },
+    // { id: "delivery", title: "Delivery", content: deliveryContent },
+    // { id: "Warranty and return ", title: "Warranty And Return", content: warrantyAndReturnContent },
   ];
 
   const tabButtonClass = (tab: "details" | "reviews") =>

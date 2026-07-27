@@ -167,6 +167,10 @@
   margin: 0 20px;
 }
 
+.header-link.wishlist {
+  position: relative;
+}
+
 .header-link.cart .cart-popup p {
   text-align: center;
   padding: 12px;
@@ -378,6 +382,20 @@
 }
 
 span.cart-num {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  background: var(--secondary);
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 12px;
+  color: var(--white);
+}
+
+span.wishlist-num {
   position: absolute;
   top: 0;
   right: -5px;
@@ -916,7 +934,8 @@ nav.navbar {
     padding: 7px;
   }
 
-  span.cart-num {
+  span.cart-num,
+  span.wishlist-num {
     top: -2px;
     right: -3px;
   }

@@ -135,19 +135,11 @@ export const useProductFilters = (
       params.set("categories", selectedCategories.join(","));
     }
 
-    const customPriceRange =
-      minPrice && maxPrice
-        ? `${minPrice}-${maxPrice}`
-        : minPrice
-          ? `${minPrice}+`
-          : maxPrice
-            ? `0-${maxPrice}`
-            : null;
-
-    const priceRanges = customPriceRange ? [customPriceRange] : selectedPrices;
-
-    if (priceRanges.length > 0) {
-      params.set("price_ranges", priceRanges.join(","));
+    if (minPrice || maxPrice) {
+      if (minPrice) params.set("min_price", minPrice);
+      if (maxPrice) params.set("max_price", maxPrice);
+    } else if (selectedPrices.length > 0) {
+      params.set("price_ranges", selectedPrices.join(","));
     }
 
     // Set all other filters

@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import React, { useRef, useState } from "react";
-import DOMPurify from "isomorphic-dompurify";
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
 
 const ProductCard = dynamic(() => import("@/components/common/ProductCard"), {
@@ -20,12 +19,6 @@ import {
 } from "@/lib/utils/main-utils";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
 import {
-  useCreateWishlistMutation,
-  useRemoveFromWishlistMutation,
-} from "@/lib/redux/apis/cart-api";
-
-import { toast } from "react-toastify";
-import {
   Select,
   SelectItem,
   SelectContent,
@@ -35,7 +28,6 @@ import {
 
 import { Filter, X } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import NoProductsFound from "../NoProductFound";
 import Button from "../common/Button";
 import MobileSortSheet from "./MobileSortSheet";
@@ -87,13 +79,9 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
   const products = initialProducts;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  const [viewMode] = useState<"grid" | "list">("grid");
   const [showMobileSort, setShowMobileSort] = useState(false);
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
-
-  const [createWishlist] = useCreateWishlistMutation();
-  const [removeFromWishlist] = useRemoveFromWishlistMutation();
 
   useIntersectionObserver({
     target: loadMoreRef as React.RefObject<Element>,
@@ -116,36 +104,6 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
     rootMargin: "100px",
   });
 
-  const handleWishlist = async (e: React.MouseEvent, product: Product) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const isWishlisted = wishlistItems.some(
-      (item) =>
-        item.product_id === product.id &&
-        item.variant_id === (product.variants?.[0]?.id ?? null),
-    );
-
-    try {
-      if (isWishlisted) {
-        await removeFromWishlist({
-          product_id: product.id as string,
-          variant_id: product.variants?.[0]?.id,
-        }).unwrap();
-
-        toast.success("Removed from wishlist");
-      } else {
-        await createWishlist({
-          product_id: product.id as string,
-          variant_id: product.variants?.[0]?.id as string,
-        }).unwrap();
-
-        toast.success("Added to wishlist");
-      }
-    } catch {
-      toast.error("Wishlist update failed");
-    }
-  };
   return (
     <div className="w-full  flex-1">
       {!hideSortAndPagination && (
