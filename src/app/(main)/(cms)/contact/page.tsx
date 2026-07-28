@@ -190,7 +190,7 @@ export default function ContactPage() {
                   id="phone"
                   type="tel"
                   name="phone"
-                  placeholder="e.g. 0412345678 or +61412345678"
+                  placeholder="e.g. 1234567890 or +11234567890" 
                   value={formData.phone}
                   onChange={handlePhoneChange}
                   inputMode="numeric"

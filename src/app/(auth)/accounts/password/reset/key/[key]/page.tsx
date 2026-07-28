@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import { useResetPasswordMutation } from "@/lib/redux/apis/auth-api";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -9,10 +9,10 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/common/Button";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { resetPasswordSchema } from "@/lib/validations/form-schemas";
+import { Link } from "lucide-react";
 
 interface PageProps {
-  params: { key: string };
-  searchParams: URLSearchParams;
+  params: Promise<{ key: string }>;
 }
 
 export default function ResetPasswordPage({ params }: PageProps) {
@@ -22,7 +22,7 @@ export default function ResetPasswordPage({ params }: PageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [recaptcha_token, setRecaptcha_token] = useState<string | null>(null);
-  const { key } = params;
+  const { key } = use(params);
 
   const router = useRouter();
 
@@ -64,7 +64,7 @@ export default function ResetPasswordPage({ params }: PageProps) {
   return (
     <main className="container">
       <div className="user-form-wrapper">
-        <h3 className="align-center mb-24" style={{ fontSize: "30px" }}>Reset Password</h3>
+        <h3 className="auth-title my-6">Reset Password</h3>
 
         <form onSubmit={handleSubmit(handleResetPasswordSubmit)} noValidate>
 
@@ -128,7 +128,7 @@ export default function ResetPasswordPage({ params }: PageProps) {
 
           <Button
             type="submit"
-            className="btn btn-red btn-filled btn-sharp w-100"
+            className="btn btn-red btn-filled btn-sharp w-full"
             disabled={isLoading}
             isLoading={isLoading}
           >
@@ -140,7 +140,7 @@ export default function ResetPasswordPage({ params }: PageProps) {
           {success && <p className="success mt-10">{success}</p>}
 
 
-          <div className="dflex link mt-30 justify-center">
+          <div className="flex link justify-center">
             <p>New to ShopperBeats? <a href="/sign-up">Sign Up</a></p>
           </div>
 

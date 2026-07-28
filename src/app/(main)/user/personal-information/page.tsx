@@ -8,19 +8,24 @@ import { PersonalInfoFormData } from "@/types/auth";
 import Image from "next/image";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { useGetPersonalDataQuery, useUpdatePersonalDataMutation } from "@/lib/redux/apis/auth-api";
-import { toYYYYMMDD, handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
+import { toYYYYMMDD, handleAustralianPhoneNumberChange, handleUSPhoneNumberChange } from "@/lib/utils/main-utils";
 import { Input } from "@/components/common/input";
 import { personalInfoSchema } from "@/lib/validations/form-schemas";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 
-// The backend returns bare Cloudflare Images URLs for profile_image
-// (".../images/{id}", no variant segment). Cloudflare Images requires a
-// variant (".../images/{id}/public") to actually serve the file, so every
-// other Cloudflare-hosted image in this codebase already goes through
-// applyImageVariant — profile_image needs the same treatment.
+
 function resolveProfileImage(url?: string | null): string | null {
   if (!url) return null;
   return applyImageVariant(url, "public");
+}
+
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/svg+xml", "image/gif", "image/webp"];
+const ALLOWED_IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "svg", "gif", "webp"];
+
+function isAllowedImageFile(file: File): boolean {
+  if (ALLOWED_IMAGE_TYPES.includes(file.type)) return true;
+  const extension = file.name.split(".").pop()?.toLowerCase();
+  return !!extension && ALLOWED_IMAGE_EXTENSIONS.includes(extension);
 }
 
 export default function PersonalInformationPage() {
@@ -40,7 +45,7 @@ export default function PersonalInformationPage() {
   const [imagePreview, setImagePreview] = useState<string>("/images/Rectangle.png");
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
-  const skipNextImageSyncRef = useRef(false);
+  const hasInitializedImageRef = useRef(false);
 
   useEffect(() => {
     if (personalData && personalData.response) {
@@ -48,20 +53,20 @@ export default function PersonalInformationPage() {
         first_name: personalData.response.first_name || "",
         last_name: personalData.response.last_name || "",
         email: personalData.response.email || "",
-        phonenumber: personalData.response.phonenumber || "",
-        date_of_birth: personalData.response.date_of_birth || "",
+          phonenumber: personalData.response.phonenumber || "",
+          date_of_birth: personalData.response.date_of_birth || "",
       });
 
-      if (skipNextImageSyncRef.current) {
-        skipNextImageSyncRef.current = false;
-      } else if (personalData.response.profile_image) {
+      if (!hasInitializedImageRef.current && personalData.response.profile_image) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setImagePreview(resolveProfileImage(personalData.response.profile_image)!);
+        hasInitializedImageRef.current = true;
       }
     }
   }, [personalData, setFormData]);
 
   const handleFormSubmit = async (data: PersonalInfoFormData) => {
+    console.log(data, "dat========");
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("first_name", data.first_name);
@@ -79,35 +84,60 @@ export default function PersonalInformationPage() {
 
       const result = await updatePersonalData(formDataToSend as any).unwrap();
 
+      const backendErrors = (result?.response as unknown as { errors?: { file: string; message: string }[] })?.errors;
+
       const updatedImage =
         result?.response?.profile_image ||
         (result as unknown as { profile_image?: string })?.profile_image;
 
       if (updatedImage) {
         setImagePreview(resolveProfileImage(updatedImage)!);
-        skipNextImageSyncRef.current = true;
+        hasInitializedImageRef.current = true;
       }
 
       setProfileImage(null);
-      toast.success("Profile updated successfully!");
+
+      if (backendErrors?.length) {
+        backendErrors.forEach((err) => toast.error(err.message));
+      } else {
+        toast.success("Profile updated successfully!");
+      }
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to update profile.");
+      const apiError = error as {
+        status?: number | string;
+        data?: { message?: string; errors?: { message: string }[] };
+        message?: string;
+      };
+
+      const message =
+        apiError?.data?.errors?.[0]?.message ||
+        apiError?.data?.message ||
+        apiError?.message ||
+        "Failed to update profile.";
+
+      console.error("Failed to update personal information:", apiError);
+      toast.error(message);
     }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setProfileImage(file);
-      setImagePreview(URL.createObjectURL(file));
+    if (!file) return;
+
+    if (!isAllowedImageFile(file)) {
+      toast.error("Only JPG, JPEG, PNG, SVG, GIF, and WEBP images are allowed.");
+      e.target.value = "";
+      return;
     }
+
+    setProfileImage(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   const handlePhoneChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const { value, error } = handleAustralianPhoneNumberChange(
+    const { value, error } = handleUSPhoneNumberChange(
       e,
       formData.phonenumber
     );
@@ -134,7 +164,7 @@ export default function PersonalInformationPage() {
               type="file"
               id="profile_image"
               name="profile_image"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/svg+xml,image/gif,image/webp"
               onChange={handleImageChange}
               className="hidden"
             />
@@ -191,7 +221,7 @@ export default function PersonalInformationPage() {
                 type="tel"
                 label="Phone Number*"
                 name="phonenumber"
-                placeholder="e.g. 0412345678 or +61412345678"
+                placeholder="e.g. 1234567890 or +11234567890" 
                 value={formData.phonenumber}
                 onChange={handlePhoneChange}
                 inputMode="numeric"
@@ -210,7 +240,6 @@ export default function PersonalInformationPage() {
                 onChange={handleChange}
                 min="1900-01-01"
                 max="2025-12-31"
-                error={formErrors.date_of_birth}
               />
 
             </div>

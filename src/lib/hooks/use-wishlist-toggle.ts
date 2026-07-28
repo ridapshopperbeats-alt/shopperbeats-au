@@ -5,17 +5,7 @@ import {
   useCreateWishlistMutation,
   useRemoveFromWishlistMutation,
 } from "@/lib/redux/apis/cart-api";
-import { WishlistKey } from "@/types/wishlist";
-
-interface UseWishlistToggleArgs {
-  productId?: string;
-  variantId?: string | null;
-  wishlistItems?: WishlistKey[];
-  syncWishlistItems?: React.Dispatch<React.SetStateAction<WishlistKey[]>>;
-  requireVariant?: boolean;
-  hasVariants?: boolean;
-  matchAnyVariant?: boolean;
-}
+import { UseWishlistToggleArgs } from "@/types/wishlist";
 
 export function useWishlistToggle({
   productId,
@@ -37,13 +27,14 @@ export function useWishlistToggle({
       if (!productId) return false;
       if (matchAnyVariant) return item.product_id === productId;
       return (
-        item.product_id === productId &&
-        item.variant_id === (variantId ?? null)
+        item.product_id === productId && item.variant_id === (variantId ?? null)
       );
     });
   }, [wishlistItems, productId, variantId, matchAnyVariant]);
 
-  const [wishlistOverride, setWishlistOverride] = useState<boolean | null>(null);
+  const [wishlistOverride, setWishlistOverride] = useState<boolean | null>(
+    null,
+  );
   const isWishlisted = wishlistOverride ?? wishlistedFromProp;
 
   const isLoading = isAddingToWishlist || isRemovingFromWishlist;
@@ -67,7 +58,9 @@ export function useWishlistToggle({
         wasWishlisted
           ? prev.filter(
               (item) =>
-                !(item.product_id === productId && item.variant_id === variantId),
+                !(
+                  item.product_id === productId && item.variant_id === variantId
+                ),
             )
           : [...prev, { product_id: productId, variant_id: variantId }],
       );
@@ -95,7 +88,10 @@ export function useWishlistToggle({
             ? [...prev, { product_id: productId, variant_id: variantId }]
             : prev.filter(
                 (item) =>
-                  !(item.product_id === productId && item.variant_id === variantId),
+                  !(
+                    item.product_id === productId &&
+                    item.variant_id === variantId
+                  ),
               ),
         );
       }

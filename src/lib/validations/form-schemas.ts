@@ -19,13 +19,13 @@ export const confirmPassword = (fieldName: string) =>
 
 /* ------------------ PHONE ------------------ */
 
+
 export const phoneNumber = yup
   .string()
   .required("Phone number is required")
   .matches(
-    /^(?:\+?61\s?|0)4\d{8}$/,
-    "Enter a valid Australian mobile number (e.g. 0412345678 or +61412345678)"
-
+    /^(?:\+1\d{10}|\d{10})$/,
+    "Enter a valid USA phone number (e.g. 1234567890 or +11234567890)"
   );
 
 /* ------------------ EMAIL ------------------ */
