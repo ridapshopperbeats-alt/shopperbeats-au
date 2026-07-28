@@ -12,7 +12,7 @@ import Button from "@/components/common/Button";
 import { Input } from "@/components/common/input";
 import { Address, AddressFormProps, AddressFormValues } from "@/types/address";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { toYYYYMMDD, handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
+import { toYYYYMMDD, handleUSPhoneNumberChange } from "@/lib/utils/main-utils";
 import { addressSchema } from "@/lib/validations/form-schemas";
 
 export default function AddressForm({ editingAddress, addresses, onSave, isTemporaryInput, from }: AddressFormProps) {
@@ -29,11 +29,12 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
 
   const [addressValid, setAddressValid] = useState(false);
 
-
+  const isTitleTaken = (title: string, excludeId?: number) =>
+    addresses?.some((addr) => addr.title === title && addr.id !== excludeId) ?? false;
 
   const defaultInitialValues: AddressFormValues = useMemo(
     () => ({
-      title: "Home",
+      title: !isTitleTaken("Home") ? "Home" : !isTitleTaken("Work") ? "Work" : "Others",
       first_name: "",
       last_name: "",
       phone_number: "",
@@ -46,7 +47,8 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
       date_of_birth: null,
       is_default: false,
     }),
-    []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [addresses]
   );
 
   const { formData, formErrors, handleChange, handleSubmit, setFormData, setFormErrors } =
@@ -93,7 +95,7 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
   const handlePhoneChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const { value, error } = handleAustralianPhoneNumberChange(
+    const { value, error } = handleUSPhoneNumberChange(
       e,
       formData.phone_number
     );
@@ -112,11 +114,6 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
   const handleSave = async (data: AddressFormValues) => {
     if (!manualAddress && !autoAddress) {
       toast.error("Address is required");
-      return;
-    }
-
-    if (!addressValid) {
-      toast.error("Please enter a valid address");
       return;
     }
 
@@ -220,7 +217,7 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
           error={formErrors.phone_number}
           type="tel"
           name="phone_number"
-          placeholder="e.g. 0412345678 or +61412345678"
+          placeholder="e.g. 1234567890 or +11234567890" 
           value={formData.phone_number}
           onChange={handlePhoneChange}
           inputMode="numeric"
@@ -248,9 +245,18 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
           id="address-autocomplete"
           key={resetKey}
           placeholder="Address Line"
+          value={autoAddress}
+          onChange={(val) => {
+            setAutoAddress(val);
+            setFormData((prev) => ({ ...prev, address: val }));
+            if (val) {
+              setFormErrors((prev) => ({ ...prev, address: "" }));
+            }
+          }}
           onValidPlace={setAddressValid}
           onPlaceSelect={(details) => {
             setAutoAddress(details.address);
+            setManualAddress("");
             setFormData((prev) => ({
               ...prev,
               address: details.address,
@@ -366,9 +372,12 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
             id="Home"
             value="Home"
             checked={formData.title === "Home"}
+            disabled={isTitleTaken("Home", editingAddress?.id)}
             onChange={handleChange}
           />
-          <label htmlFor="Home">Home</label>
+          <label htmlFor="Home">
+            Home{isTitleTaken("Home", editingAddress?.id) ? " (already added)" : ""}
+          </label>
         </div>
         <div className="form-item form-item-radio">
           <input
@@ -377,9 +386,12 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
             id="Work"
             value="Work"
             checked={formData.title === "Work"}
+            disabled={isTitleTaken("Work", editingAddress?.id)}
             onChange={handleChange}
           />
-          <label htmlFor="Work">Work</label>
+          <label htmlFor="Work">
+            Work{isTitleTaken("Work", editingAddress?.id) ? " (already added)" : ""}
+          </label>
         </div>
         <div className="form-item form-item-radio">
           <input
@@ -417,7 +429,7 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
           style={{ alignItems: "center", justifyContent: "center", display: "flex", marginTop: "10px" }}
           debounceDelay={500}
         >
-          {isUpdating ? "Saving..." : "Update"}
+          {isUpdating ? "Saving..." : "Save"}
         </Button>
       </div>
     </form>

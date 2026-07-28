@@ -21,3 +21,13 @@ export interface WishlistKey {
   product_id: string;
   variant_id: string | null;
 }
+
+export interface UseWishlistToggleArgs {
+  productId?: string;
+  variantId?: string | null;
+  wishlistItems?: WishlistKey[];
+  syncWishlistItems?: React.Dispatch<React.SetStateAction<WishlistKey[]>>;
+  requireVariant?: boolean;
+  hasVariants?: boolean;
+  matchAnyVariant?: boolean;
+}

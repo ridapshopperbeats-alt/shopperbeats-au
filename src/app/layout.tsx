@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Montserrat } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import StoreProvider from "../lib/redux/store-provider";
 import { SEOProvider } from "@/contexts/SEOContext";
@@ -37,6 +38,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} font-sans antialiased`}
       >
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&libraries=places&v=beta`}
+          strategy="afterInteractive"
+        />
         <StoreProvider>
           <SEOProvider>{children}</SEOProvider>
           <RouteChangeLoader />

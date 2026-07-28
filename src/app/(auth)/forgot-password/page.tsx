@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
   return (
     <main className="container">
       <div className="user-form-wrapper">
-        <h3 className="flex justify-center my-6 auth-form-title">Reset Password</h3>
+        <h3 className="flex justify-center my-6 auth-form-title">Reset Password1</h3>
 
         <form onSubmit={handleSubmit(handleForgotPasswordSubmit)} noValidate>
           <div className="form-item">
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
             disabled={isLoading}
             isLoading={isLoading}
           >
-            {isLoading ? "Sending..." : "Send Reset Link"}
+            {isLoading ? "Sending..." : "Send Reset Link1"}
           </Button>
 
           <div className="flex link my-6 justify-center">

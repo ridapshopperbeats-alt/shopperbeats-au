@@ -21,7 +21,7 @@ function VerifyEmailInner() {
           await verifyEmail({ token }).unwrap();
           setSuccess("Email verified successfully!");
           toast.success("Email verified successfully!");
-          router.push("/");
+          router.push("http://localhost:3000/");
         } catch (err) {
           const errorMessage =
             (err as { data?: { message?: string } })?.data?.message ||

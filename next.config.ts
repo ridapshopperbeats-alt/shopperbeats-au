@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/v1/:path*",
-        destination: "https://preprod.shopperbeats.com.au/api/v1/:path*",
+        destination: "https://api-us.shopperbeats.cloud/api/v1/:path*",
       },
     ];
   },

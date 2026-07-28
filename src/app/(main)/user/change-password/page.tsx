@@ -38,8 +38,20 @@ export default function ChangePasswordPage() {
       }
       router.push("/login");
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to change password. Please check your current password.");
+      const apiError = error as {
+        status?: number | string;
+        data?: { message?: string; errors?: { message: string }[] };
+        message?: string;
+      };
+
+      const message =
+        apiError?.data?.errors?.[0]?.message ||
+        apiError?.data?.message ||
+        apiError?.message ||
+        "Failed to change password. Please check your current password.";
+
+      console.error("Failed to change password:", apiError);
+      toast.error(message);
     }
   };
   return (

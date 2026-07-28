@@ -1,55 +1,38 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import Button from "@/components/common/Button";
-import { Address } from "@/types/address";
-import AddressForm from "@/components/common/AddressForm";
-import ConfirmAlert from "@/components/ui/ConfirmAlert";
 
-// ---------------- DUMMY DATA (static, for now) ----------------
-const DUMMY_ADDRESSES: Address[] = [
-  {
-    id: 1,
-    title: "Home",
-    first_name: "John",
-    last_name: "Doe",
-    phone_number: "0400000000",
-    address: "123 Static Street",
-    city: "Melbourne",
-    state: "VIC",
-    pincode: "3000",
-    country: "Australia",
-    is_default: true,
-  },
-  {
-    id: 2,
-    title: "Office",
-    first_name: "John",
-    last_name: "Doe",
-    phone_number: "0400000001",
-    address: "45 Business Avenue",
-    city: "Sydney",
-    state: "NSW",
-    pincode: "2000",
-    country: "Australia",
-    is_default: false,
-  },
-];
+import ConfirmAlert from "@/components/ui/ConfirmAlert";
+import { useDeleteAddressMutation, useGetAddressesQuery, useUpdateAddressMutation } from "@/lib/redux/apis/address-api";
+import { getApiErrorMessage } from "@/lib/utils/main-utils";
+import { Address } from "@/types/address";
+import { Loader } from "lucide-react";
+import Button from "@/components/common/Button";
+import AddressForm from "@/components/common/AddressForm";
 
 export default function AddressesPage() {
-  const [addresses, setAddresses] = useState<Address[]>(DUMMY_ADDRESSES);
+  const { data: addresses, isLoading, isError } = useGetAddressesQuery();
+  const [updateAddress] = useUpdateAddressMutation();
+  const [deleteAddress] = useDeleteAddressMutation();
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const formRef = useRef<HTMLDivElement | null>(null);
 
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+  const showLoader = !hasMounted || isLoading;
+
 
   const handleEdit = (address: Address) => {
     setEditingAddress(address);
 
+    // Small delay so DOM updates first
     setTimeout(() => {
-      const yOffset = -110;
+      const yOffset = -110; // adjust based on header height
       const y =
         formRef.current!.getBoundingClientRect().top +
         window.pageYOffset +
@@ -66,19 +49,31 @@ export default function AddressesPage() {
   const handleDelete = async () => {
     if (!selectedId) return;
 
-    setAddresses((prev) => prev.filter((addr) => addr.id !== selectedId));
-    toast.success("Address deleted!");
-    setConfirmOpen(false);
-    setSelectedId(null);
+    try {
+      await deleteAddress({ id: selectedId }).unwrap();
+      toast.success("Address deleted!");
+    } catch (error) {
+      console.error("Failed to delete address:", error);
+      toast.error(getApiErrorMessage(error, "Failed to delete address."));
+    } finally {
+      setConfirmOpen(false);
+      setSelectedId(null);
+    }
   };
 
   const handleSetDefault = async (id: number) => {
     const address = addresses?.find((addr) => addr.id === id);
     if (address) {
-      setAddresses((prev) =>
-        prev.map((addr) => ({ ...addr, is_default: addr.id === id })),
-      );
-      toast.success("Default address updated!");
+      try {
+        await updateAddress({
+          id,
+          body: { id, title: address.title, is_default: true },
+        }).unwrap();
+        toast.success("Default address updated!");
+      } catch (error) {
+        console.error("Failed to update default address:", error);
+        toast.error(getApiErrorMessage(error, "Failed to update default address."));
+      }
     }
   };
 
@@ -89,9 +84,10 @@ export default function AddressesPage() {
   return (
     <>
       <div className="">
-        {(addresses?.length ?? 0) > 0 && <h4 className="text-heading-lg">Address</h4>}
+        {!showLoader && (addresses?.length ?? 0) > 0 && <h4 className="wishlist-title">Address</h4>}
+        {showLoader && <Loader />}
         <div className="address-block">
-          {addresses?.map((address: Address) => (
+          {!showLoader && addresses?.map((address: Address) => (
             <div key={address.id} className="address-content">
               <div className="flex justify-between">
                 <div className="form-item form-item-radio">
@@ -102,7 +98,7 @@ export default function AddressesPage() {
                     checked={address.is_default}
                     onChange={() => address.id && handleSetDefault(address.id)}
                   />
-                  <label htmlFor={`address-${address.id}`} className="text-base">
+                  <label htmlFor={`address-${address.id}`}>
                     {address.is_default ? "Default" : "Set as Default Address"}
                   </label>
                 </div>

@@ -15,6 +15,22 @@ export function toSafeJsonLd(data: unknown): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
+// Extracts a human-readable message from an RTK Query error, falling back
+// to `fallback` when the error has none (e.g. a network failure).
+export function getApiErrorMessage(error: unknown, fallback: string): string {
+  const apiError = error as {
+    data?: { message?: string; errors?: { message: string }[] };
+    message?: string;
+  };
+
+  return (
+    apiError?.data?.errors?.[0]?.message ||
+    apiError?.data?.message ||
+    apiError?.message ||
+    fallback
+  );
+}
+
 // Price formatting utilities
 export const formatPrice = (
   price: number | string | undefined | null,
@@ -69,6 +85,58 @@ export const formatReadableDate = (
   });
 };
 
+// Handle usa numbers utility
+export const handleUSPhoneNumberChange = (
+  event: React.ChangeEvent<HTMLInputElement>,
+  previousValue: string,
+): { value: string; error: string | null } => {
+  const value = event.target.value;
+
+  // Allow only digits and +
+  if (!/^[0-9+]*$/.test(value)) {
+    return { value: previousValue, error: "Only numbers and '+' allowed" };
+  }
+
+  // Only one +
+  if ((value.match(/\+/g) || []).length > 1) {
+    return { value: previousValue, error: "Only one '+' allowed" };
+  }
+
+  // First character must be a digit or +
+  if (
+    value.length === 1 &&
+    value !== "+" &&
+    !/^[0-9]$/.test(value)
+  ) {
+    return { value: previousValue, error: "Must start with a digit or +1" };
+  }
+
+  // ===== LOCAL FORMAT (10 digits) =====
+  if (!value.startsWith("+")) {
+    if (value.length > 10) {
+      return { value: previousValue, error: null };
+    }
+
+    return { value, error: null };
+  }
+
+  // ===== INTERNATIONAL FORMAT (+1XXXXXXXXXX) =====
+  if (value.startsWith("+")) {
+    // Allow typing + → +1 progressively
+    if (value.length >= 2 && value[1] !== "1") {
+      return { value: previousValue, error: "Must start with +1" };
+    }
+
+    // Maximum length: +1 + 10 digits = 12 characters
+    if (value.length > 12) {
+      return { value: previousValue, error: null };
+    }
+
+    return { value, error: null };
+  }
+
+  return { value, error: null };
+};
 // Validate Australian phone numbers with specific rules for local and international formats
 export const handleAustralianPhoneNumberChange = (
   event: React.ChangeEvent<HTMLInputElement>,
