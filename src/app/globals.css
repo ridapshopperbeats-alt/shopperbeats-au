@@ -929,8 +929,6 @@ input[type="radio"] {
   }
 }
 
-/* ProductCarousel (product cards only): 2-up from the smallest screen,
-   dedicated class so it doesn't affect the brand/deal/category sliders above. */
 .pc-product-slide {
   @apply w-1/2;
 }

@@ -5,76 +5,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface NewTopCategoryItem {
+export interface StaticTopCategoryItem {
+  id?: string;
+  slug?: string;
   title: string;
   image: string;
-  href: string;
+  href?: string;
 }
 
-const NEW_TOP_CATEGORIES: NewTopCategoryItem[] = [
-  {
-    title: "Women's Clothing",
-    image: "/images/women-clothing.svg",
-    href: "/",
-  },
-  {
-    title: "Fragrance",
-    image: "/images/fragrance.svg",
-    href: "/",
-  },
-  {
-    title: "Furniture",
-    image: "/images/furniture.svg",
-    href: "/",
-  },
-  {
-    title: "Patio Furniture",
-    image: "/images/patioFurniture.svg",
-    href: "/",
-  },
-  {
-    title: "Baby & Kids",
-    image: "/images/baby-kids.svg",
-    href: "/",
-  },
-  {
-    title: "Home Decor",
-    image: "/images/homeDecor.svg",
-    href: "/",
-  },
-  {
-    title: "Jewelry",
-    image: "/images/jewelry.svg",
-    href: "/",
-  },
-  {
-    image: "/images/menClothing.svg",
-    title: "Men's Clothing",
-    href: "/",
-  },
-  {
-    title: "Footwear",
-    image: "/images/footwear.svg",
-    href: "/",
-  },
-  {
-    title: "Watches",
-    image: "/images/watches.svg",
-    href: "/",
-  },
-  {
-    title: "Children Clothing",
-    image: "/images/baby-kids.svg",
-    href: "/",
-  },
-  {
-    title: "Fashion",
-    image: "/images/women-clothing.svg",
-    href: "/",
-  },
-];
+interface StaticTopCategoriesSliderProps {
+  title?: string;
+  items: StaticTopCategoryItem[];
+  onCategoryClick?: (item: StaticTopCategoryItem) => void;
+  getHref?: (item: StaticTopCategoryItem) => string;
+}
 
-export default function NewTopCategories() {
+export default function StaticTopCategoriesSlider({
+  title = "Top Categories",
+  items,
+  onCategoryClick,
+  getHref,
+}: StaticTopCategoriesSliderProps) {
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = (direction: "left" | "right") => {
@@ -87,10 +38,12 @@ export default function NewTopCategories() {
   };
 
   return (
-    <div className="w-full container">
-      <h2 className="text-center text-[20px] lg:text-[24px] font-bold leading-6 mx-auto lg:pt-4">
-        Top Categories
-      </h2>
+    <div className="w-full">
+      {title && (
+        <h2 className="text-center text-[20px] lg:text-[24px] font-bold leading-6 mx-auto lg:pt-4">
+          {title}
+        </h2>
+      )}
 
       <div className="relative max-w-[1700px] mx-auto">
         <button
@@ -113,10 +66,11 @@ export default function NewTopCategories() {
           ref={sliderRef}
           className="flex items-start gap-[16px] lg:gap-[35px] overflow-x-auto scroll-smooth no-scrollbar py-5 "
         >
-          {NEW_TOP_CATEGORIES.map((item) => (
+          {items.map((item, index) => (
             <Link
-              key={item.title}
-              href={item.href}
+              key={item.slug || item.id || index}
+              href={getHref ? getHref(item) : (item.href ?? "#")}
+              onClick={() => onCategoryClick?.(item)}
               className="shrink-0 flex flex-col gap-[8px] items-center justify-start cursor-pointer w-[72px] h-[98px] md:w-[138px] md:h-[172px] md:gap-[16px]"
             >
               <div className="relative w-[64px] h-[64px] md:w-[138px] md:h-[138px] rounded-full border border-[#D8D8D8] shadow-[0px_2px_6px_0px_#00000014] md:shadow-none bg-white overflow-hidden">

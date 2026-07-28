@@ -1,12 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Button from "@/components/common/Button";
 import "../../../../styles/Cart.css";
 import "../../../../styles/auth.css";
 import { formatPrice, formatReadableDate } from "@/lib/utils/main-utils";
+import { useStaticWishlist } from "@/lib/hooks/useStaticWishlist";
+import {
+  addStaticWishlistItemToCart,
+  type StaticWishlistItem,
+} from "@/lib/utils/staticStorage";
 
 function formatDateDDMMYY(date: string): string {
   const d = new Date(date);
@@ -74,13 +79,28 @@ export default function WishlistPage() {
   const router = useRouter();
 
   const [wishlistItems, setWishlistItems] = useState(DUMMY_WISHLIST_ITEMS);
+  const { items: staticWishlistItems, removeItem: removeStaticWishlistItemById } =
+    useStaticWishlist();
+  const combinedWishlistItems = useMemo(
+    () => [
+      ...(wishlistItems as unknown as StaticWishlistItem[]),
+      ...staticWishlistItems,
+    ],
+    [wishlistItems, staticWishlistItems],
+  );
   const [cartProductIds, setCartProductIds] = useState<string[]>([]);
   const [isRemoving, setIsRemoving] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const isInCart = (productId: string) => cartProductIds.includes(productId);
 
-  const handleAddToCart = async (item: (typeof DUMMY_WISHLIST_ITEMS)[number]) => {
+  const handleAddToCart = async (item: StaticWishlistItem) => {
+    if (item.product_id.startsWith("static-")) {
+      addStaticWishlistItemToCart(item);
+      setCartProductIds((prev) => [...prev, item.product_id]);
+      toast.success("Added to cart");
+      return;
+    }
     setIsAddingToCart(true);
     setTimeout(() => {
       setCartProductIds((prev) => [...prev, item.product_id]);
@@ -90,6 +110,11 @@ export default function WishlistPage() {
   };
 
   const handleRemove = async (productId: string) => {
+    if (productId.startsWith("static-")) {
+      removeStaticWishlistItemById(productId);
+      toast.success("Removed from wishlist");
+      return;
+    }
     setIsRemoving(true);
     setTimeout(() => {
       setWishlistItems((prev) =>
@@ -100,7 +125,7 @@ export default function WishlistPage() {
     }, 300);
   };
 
-  if (!wishlistItems.length)
+  if (!combinedWishlistItems.length)
     return (
       <div className="wishlist-content">
         <h4>Wishlist</h4>
@@ -121,7 +146,7 @@ export default function WishlistPage() {
         </div>      </div>
 
       <div className="wishlist-container">
-        {wishlistItems.map((item) => {
+        {combinedWishlistItems.map((item) => {
           const outOfStock =
             !item.is_active ||
             (item.available_stock !== undefined &&

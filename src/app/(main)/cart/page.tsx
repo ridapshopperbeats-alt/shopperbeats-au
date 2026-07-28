@@ -18,6 +18,8 @@ import {
 import NoProductsFound from "@/components/NoProductFound";
 import { Input } from "@/components/common/input";
 import { ShieldCheck, ThumbsUp } from "lucide-react";
+import { useStaticCart } from "@/lib/hooks/useStaticCart";
+import type { StaticCartItem } from "@/lib/utils/staticStorage";
 
 // ---------------- SCHEMAS ----------------
 const pincodeSchema = yup.object().shape({
@@ -92,7 +94,13 @@ const DUMMY_CART_ITEMS = [
   },
 ];
 
-function buildCartFromItems(items: typeof DUMMY_CART_ITEMS) {
+function getCartItemHref(item: { product_id: string; unique_code: string }) {
+  return item.product_id.startsWith("static-")
+    ? `/static-product/${item.product_id.replace(/^static-/, "")}`
+    : `/product/${item.unique_code || item.product_id}`;
+}
+
+function buildCartFromItems(items: StaticCartItem[]) {
   const items_total = items.reduce(
     (acc, item) => acc + (item.final_price ?? item.subtotal ?? 0),
     0,
@@ -121,7 +129,22 @@ function buildCartFromItems(items: typeof DUMMY_CART_ITEMS) {
 const Cart = () => {
   const [postcode, setPostcode] = useState("");
   const [cartItems, setCartItems] = useState(DUMMY_CART_ITEMS);
-  const cart = useMemo(() => buildCartFromItems(cartItems), [cartItems]);
+  const {
+    items: staticCartItems,
+    updateQuantity: updateStaticCartQuantity,
+    removeItem: removeStaticCartItemById,
+  } = useStaticCart();
+  const combinedCartItems = useMemo(
+    () => [
+      ...(cartItems as unknown as StaticCartItem[]),
+      ...staticCartItems,
+    ],
+    [cartItems, staticCartItems],
+  );
+  const cart = useMemo(
+    () => buildCartFromItems(combinedCartItems),
+    [combinedCartItems],
+  );
 
   const clickLockRef = useRef(false);
   const orderSummaryRef = useRef<HTMLDivElement>(null);
@@ -249,6 +272,10 @@ const Cart = () => {
 
   // ---------------- REMOVE ITEM (dummy) ----------------
   const handleRemoveItem = async (id: string, variant_id?: string) => {
+    if (id.startsWith("static-")) {
+      removeStaticCartItemById(id);
+      return;
+    }
     if (clickLockRef.current) return;
     clickLockRef.current = true;
     if (isRemoving || isUpdating) {
@@ -313,8 +340,17 @@ const Cart = () => {
     variant_id?: string,
     item_id?: string,
   ) => {
-    if (isUpdating || isRemoving) return;
     if (quantity < 1 || Number.isNaN(quantity)) return;
+
+    if (product_id.startsWith("static-")) {
+      updateStaticCartQuantity(product_id, quantity);
+      if (item_id != null) {
+        setLocalQtyMap((prev) => ({ ...prev, [item_id]: String(quantity) }));
+      }
+      return;
+    }
+
+    if (isUpdating || isRemoving) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     debounceRef.current = setTimeout(() => {
@@ -455,7 +491,7 @@ const Cart = () => {
                   <h3 className="text-[12px] lg:text-[14px] font-semibold leading-[140%] text-black mb-0.5 lg:mb-1.5 line-clamp-3 lg:line-clamp-2">
                     {item.is_active ? (
                       <Link
-                        href={`/product/${item.unique_code || item.product_id}`}
+                        href={getCartItemHref(item)}
                       >
                         {item.product_name}
                       </Link>
@@ -714,7 +750,7 @@ const Cart = () => {
                           (item.available_stock === undefined ||
                             item.available_stock > 0) ? (
                           <Link
-                            href={`/product/${item.unique_code || item.product_id}`}
+                            href={getCartItemHref(item)}
                           >
                             <Image
                               src={getImageUrl(item as never)}
@@ -771,7 +807,7 @@ const Cart = () => {
                           (item.available_stock === undefined ||
                             item.available_stock > 0) ? (
                           <Link
-                            href={`/product/${item.unique_code || item.product_id}`}
+                            href={getCartItemHref(item)}
                           >
                             <Image
                               src={getImageUrl(item as never)}

@@ -12,6 +12,7 @@ import CartPopup from "./CartPopup";
 import { useRouter, usePathname } from "next/navigation";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
+import { useStaticWishlist } from "@/lib/hooks/useStaticWishlist";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 import GooglePlacesInput from "../common/AddressAutocomplete";
 import { toast } from "react-toastify";
@@ -88,6 +89,14 @@ const isNavLinkActive = (href: string, pathname: string | null) => {
   return pathname === href || pathname.startsWith(`${href}/`);
 };
 
+// TEMPORARY: the mega menu's "Shop By Category" data currently falls back to
+// dummy static categories (see getMegaMenuData) while real category data is
+// unavailable. Those dummy entries use "static-" prefixed slugs and should
+// route to the static category listing instead of the real /category/[slug]
+// page. Remove this helper (and its usages below) once real data is back.
+const resolveCategoryHref = (slugOrId: string) =>
+  slugOrId?.startsWith("static-") ? "/static-category" : `/category/${slugOrId}`;
+
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -109,7 +118,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
     skip: !isAuthenticated,
     refetchOnMountOrArgChange: true,
   });
-  const wishlistCount = wishlistData?.items?.length ?? 0;
+  const { count: staticWishlistCount } = useStaticWishlist();
+  const wishlistCount = (wishlistData?.items?.length ?? 0) + staticWishlistCount;
 
   const locationRequestedRef = useRef(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -685,7 +695,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                         }
                       >
                         <Link
-                          href={`/category/${cat.slug ?? cat.id}`}
+                          href={resolveCategoryHref(cat.slug ?? cat.id)}
                           prefetch={false}
                           className="category-link"
                           onClick={closeMegaMenu}
@@ -718,8 +728,17 @@ export default function Header({ megaMenuData }: HeaderProps) {
                             <div key={subCat.name} className="mega-column">
                               <Link
                                 prefetch={false}
-                                href={`/category/${subCat.slug ?? subCat.id}`}
-                                onClick={closeMegaMenu}
+                                href={resolveCategoryHref(subCat.slug ?? subCat.id)}
+                                className="mega-column-title"
+                                onClick={() => {
+                                  dispatch(
+                                    addBreadcrumb({
+                                      name: cat.name,
+                                      path: resolveCategoryHref(cat.slug ?? cat.id),
+                                    }),
+                                  );
+                                  closeMegaMenu();
+                                }}
                               >
                                 <h5>{subCat.name}</h5>
                               </Link>
@@ -738,27 +757,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                     </Link>
                                   </li>
                                 ))}
-
-                                {subCat.viewAll && (
-                                  <li>
-                                    <Link
-                                      href={`/category/${subCat.slug ?? subCat.id}`}
-                                      className="view-link"
-                                      prefetch={false}
-                                      onClick={() => {
-                                        dispatch(
-                                          addBreadcrumb({
-                                            name: cat.name,
-                                            path: `/category/${cat.slug ?? cat.id}`,
-                                          }),
-                                        );
-                                        closeMegaMenu();
-                                      }}
-                                    >
-                                      View All
-                                    </Link>
-                                  </li>
-                                )}
                               </ul>
                             </div>
                           ))}
