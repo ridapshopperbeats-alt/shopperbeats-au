@@ -1,6 +1,7 @@
 import { MegaMenuCategory } from "@/types/megamenu";
 import { Category } from "@/types/product";
 import { getRawCategories } from "@/lib/utils/main-utils";
+import { getStaticMegaMenuData } from "@/lib/utils/staticCategoryData";
 
 const MAIN_CATEGORY_ORDER = [
   "Home & Garden",
@@ -51,7 +52,10 @@ function transformCategory(category: Category, level = 1): MegaMenuCategory {
 export async function getMegaMenuData() {
   const data: Category[] = await getRawCategories();
 
-  if (!data.length) return [];
+  // TEMPORARY: fall back to dummy static categories until real category data
+  // is available from the API. Remove this fallback (and getStaticMegaMenuData
+  // in staticCategoryData.ts) once real data is populated.
+  if (!data.length) return getStaticMegaMenuData();
 
   const matchedCategories = MAIN_CATEGORY_ORDER
     .map((name) => data.find((cat) => cat.name?.toLowerCase().includes(name.toLowerCase())))

@@ -312,6 +312,12 @@
   text-decoration: underline;
 }
 
+.mega-column-title:hover h5 {
+  color: #F51721;
+  text-decoration: underline;
+  text-decoration-color: #F51721;
+}
+
 .mega-menu {
   display: flex;
 }

@@ -15,62 +15,62 @@ const NEW_TOP_CATEGORIES: NewTopCategoryItem[] = [
   {
     title: "Women's Clothing",
     image: "/images/women-clothing.svg",
-    href: "/all-categories",
+    href: "/",
   },
   {
     title: "Fragrance",
     image: "/images/fragrance.svg",
-    href: "/all-categories",
+    href: "/",
   },
   {
     title: "Furniture",
     image: "/images/furniture.svg",
-    href: "/all-categories",
+    href: "/",
   },
   {
     title: "Patio Furniture",
     image: "/images/patioFurniture.svg",
-    href: "/all-categories",
+    href: "/",
   },
   {
     title: "Baby & Kids",
     image: "/images/baby-kids.svg",
-    href: "/all-categories",
+    href: "/",
   },
   {
     title: "Home Decor",
     image: "/images/homeDecor.svg",
-    href: "/all-categories",
+    href: "/",
   },
   {
     title: "Jewelry",
     image: "/images/jewelry.svg",
-    href: "/all-categories",
+    href: "/",
   },
   {
     image: "/images/menClothing.svg",
     title: "Men's Clothing",
-    href: "/all-categories",
+    href: "/",
   },
   {
     title: "Footwear",
     image: "/images/footwear.svg",
-    href: "/all-categories",
+    href: "/",
   },
   {
     title: "Watches",
     image: "/images/watches.svg",
-    href: "/all-categories",
+    href: "/",
   },
   {
     title: "Children Clothing",
     image: "/images/baby-kids.svg",
-    href: "/all-categories",
+    href: "/",
   },
   {
     title: "Fashion",
     image: "/images/women-clothing.svg",
-    href: "/all-categories",
+    href: "/",
   },
 ];
 
