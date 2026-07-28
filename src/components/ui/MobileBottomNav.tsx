@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { Home, Heart, ShoppingCart, User } from "lucide-react";
 import { useGetWishlistQuery, useGetCartQuery } from "@/lib/redux/apis/cart-api";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
+import { useStaticCart } from "@/lib/hooks/useStaticCart";
+import { useStaticWishlist } from "@/lib/hooks/useStaticWishlist";
 import { RootState } from "@/lib/redux/store";
 import { CartItem } from "@/types/cart";
 
@@ -21,17 +23,19 @@ export default function MobileBottomNav() {
     skip: !isAuthenticated,
     refetchOnMountOrArgChange: true,
   });
-  const wishlistCount = wishlistData?.items?.length ?? 0;
+  const { count: staticWishlistCount } = useStaticWishlist();
+  const wishlistCount = (wishlistData?.items?.length ?? 0) + staticWishlistCount;
 
   const { data: cartData } = useGetCartQuery(
     postcode ? { postcode } : undefined,
     { refetchOnMountOrArgChange: true },
   );
+  const { count: staticCartCount } = useStaticCart();
   const cartItems: CartItem[] = (cartData?.items ?? []).filter(
     (item) =>
       item.is_active && (item.available_stock === undefined || item.available_stock > 0),
   );
-  const cartCount = cartItems.length;
+  const cartCount = cartItems.length + staticCartCount;
 
   const isHomeActive = pathname === "/";
   const isWishlistActive =
