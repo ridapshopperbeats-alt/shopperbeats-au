@@ -8,6 +8,7 @@ export interface AuthState {
   isAuthenticated: boolean;
   /** JWT from login; sent on cart/wishlist requests when the API expects Bearer auth. */
   accessToken: string | null;
+  authChecked: boolean;
 }
 
 export interface UserDetails {

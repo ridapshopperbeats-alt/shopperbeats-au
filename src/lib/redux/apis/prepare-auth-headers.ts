@@ -1,6 +1,6 @@
 export const prepareAuthHeaders = (
   headers: Headers,
-  { getState }: { getState: () => unknown },
+  { getState }: { getState: () => unknown; endpoint?: string },
 ) => {
   const state = getState() as { auth?: { accessToken?: string | null } };
   const token = state.auth?.accessToken;

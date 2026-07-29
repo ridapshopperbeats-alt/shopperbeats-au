@@ -1,18 +1,17 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS } from "../../constants/api";
 import { Brand, Product } from "@/types/product";
 import {
   ImageUploadResponse,
   ProductHighlightsResponse,
+  SearchSuggestionsResponse,
 } from "@/types/api";
+import { createBaseQuery } from "./base-query";
 
 export const productsApi = createApi({
   reducerPath: "productsApi",
 
-  baseQuery: fetchBaseQuery({
-    baseUrl: API_ENDPOINTS.PRODUCTS.PRODUCT_BASE_URL_CLIENT,
-    credentials: "include",
-  }),
+  baseQuery: createBaseQuery(API_ENDPOINTS.PRODUCTS.PRODUCT_BASE_URL_CLIENT),
 
   tagTypes: ["Brands"],
 
@@ -162,16 +161,18 @@ export const productsApi = createApi({
         body: formData,
       }),
     }),
+
+    getSearchSuggestions: builder.query<SearchSuggestionsResponse, string>({
+      query: (q) =>
+        `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}/api/v1/search/suggest?q=${encodeURIComponent(q)}&limit=15`,
+    }),
   }),
 });
 
 export const highlightsApi = createApi({
   reducerPath: "highlightsApi",
 
-  baseQuery: fetchBaseQuery({
-    baseUrl: "",
-    credentials: "include",
-  }),
+  baseQuery: createBaseQuery(""),
 
   endpoints: (builder) => ({
     getProductHighlights: builder.query<
@@ -194,6 +195,7 @@ export const {
   useGetBrandsQuery,
   useGetProductBySlugQuery,
   useUploadAnyImageMutation,
+  useGetSearchSuggestionsQuery
 } = productsApi;
 
 export const { useGetProductHighlightsQuery } = highlightsApi;

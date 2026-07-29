@@ -1,19 +1,12 @@
 
 
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS } from "../../constants/api";
-import { prepareAuthHeaders } from "./prepare-auth-headers";
+import { createBaseQuery } from "./base-query";
 
 import { OrderPayload, CreateOrderResponse, CancelOrderResponse, ReturnOrderPayload, OrderAPIResponse, ReturnOption, OrderActionResponse, AddReviewPayload, AddReviewResponse, ListOrdersParams } from "@/types/order";
 
-const baseOrderQuery = fetchBaseQuery({
-  baseUrl: API_ENDPOINTS.ORDER.BASE_URL,
-  credentials: "include",
-  prepareHeaders: (headers, api) =>
-    ["listOrders", "cancelOrder"].includes(api.endpoint)
-      ? prepareAuthHeaders(headers, api)
-      : headers,
-});
+const baseOrderQuery = createBaseQuery(API_ENDPOINTS.ORDER.BASE_URL);
 
 export const orderApi = createApi({
   reducerPath: "orderApi",

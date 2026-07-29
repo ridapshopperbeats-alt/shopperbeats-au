@@ -17,7 +17,6 @@ import { useLoginMutation, useResendVerificationCodeMutation } from "@/lib/redux
 import { useCreateWishlistMutation } from "@/lib/redux/apis/cart-api";
 import { loginSchema } from "@/lib/validations/form-schemas";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
-import { setAccessToken } from "@/lib/redux/slices/auth-slice";
 import { Input } from "@/components/common/input";
 
 
@@ -62,18 +61,16 @@ export default function LoginPage() {
     { email: "", password: "" }
   );
 
-  const flushPendingWishlist = async (loginResponse: LoginResponse) => {
+  const flushPendingWishlist = async (_loginResponse: LoginResponse) => {
     const raw = sessionStorage.getItem("pendingWishlist");
     if (!raw) return;
 
-    const token = loginResponse?.response?.access_token;
-    if (token) {
-      dispatch(setAccessToken(token));
-    }
-
     let parsed: { product_id?: string; variant_id?: string | null };
     try {
-      parsed = JSON.parse(raw) as { product_id?: string; variant_id?: string | null };
+      parsed = JSON.parse(raw) as {
+        product_id?: string;
+        variant_id?: string | null;
+      };
     } catch {
       sessionStorage.removeItem("pendingWishlist");
       return;
@@ -92,7 +89,9 @@ export default function LoginPage() {
       sessionStorage.removeItem("pendingWishlist");
       toast.success("Added to wishlist!");
     } catch {
-      toast.error("Could not add your saved item to wishlist. Try again from the product page.");
+      toast.error(
+        "Could not add your saved item to wishlist. Try again from the product page.",
+      );
     }
   };
 
