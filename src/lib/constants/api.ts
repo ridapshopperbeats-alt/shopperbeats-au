@@ -13,6 +13,7 @@ export const API_ENDPOINTS = {
     ADDRESS: "address",
     PERSONAL_DATA: "profile",
     GOOGLE_LOGIN: "google-login",
+    REFRESH_TOKEN: "refresh-token",
   },
   PRODUCTS: {
     BASE_URL: "/api/v1/product",

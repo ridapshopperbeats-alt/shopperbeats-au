@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AuthState } from "@/types/auth";
 
-const ACCESS_TOKEN_KEY = "accessToken";
-
 const initialState: AuthState = {
   isAuthenticated: false,
   accessToken: null,
+  authChecked: false,
 };
 
 const authSlice = createSlice({
@@ -15,29 +14,27 @@ const authSlice = createSlice({
     logout: (state) => {
       state.isAuthenticated = false;
       state.accessToken = null;
+      state.authChecked = true;
       if (typeof window !== "undefined") {
-        localStorage.removeItem("isAuthenticated");
-        localStorage.removeItem(ACCESS_TOKEN_KEY);
+        // Non-sensitive ping only (no token/flag value) so other open tabs
+        // know to re-check their session with the backend.
+        localStorage.setItem("auth-sync", Date.now().toString());
       }
     },
-    syncAuthState: (state) => {
+    setAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload;
+      state.authChecked = true;
       if (typeof window !== "undefined") {
-        state.isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
-        state.accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+        localStorage.setItem("auth-sync", Date.now().toString());
       }
     },
     setAccessToken: (state, action: PayloadAction<string | null>) => {
       state.accessToken = action.payload;
-      if (typeof window !== "undefined") {
-        if (action.payload) {
-          localStorage.setItem(ACCESS_TOKEN_KEY, action.payload);
-        } else {
-          localStorage.removeItem(ACCESS_TOKEN_KEY);
-        }
-      }
     },
   },
 });
 
-export const { logout, syncAuthState, setAccessToken } = authSlice.actions;
+export const { logout, setAuthenticated, setAccessToken } = authSlice.actions;
 export default authSlice.reducer;
+
+

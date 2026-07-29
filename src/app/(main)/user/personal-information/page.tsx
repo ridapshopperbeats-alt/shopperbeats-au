@@ -1,19 +1,28 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
+import * as yup from "yup";
+import { useSelector } from "react-redux";
 
-import Button from "@/components/common/Button";
-import { PersonalInfoFormData } from "@/types/auth";
-import Image from "next/image";
-import { useFormValidation } from "@/lib/hooks/use-form-validation";
-import { useGetPersonalDataQuery, useUpdatePersonalDataMutation } from "@/lib/redux/apis/auth-api";
-import { toYYYYMMDD, handleAustralianPhoneNumberChange, handleUSPhoneNumberChange } from "@/lib/utils/main-utils";
-import { Input } from "@/components/common/input";
-import { personalInfoSchema } from "@/lib/validations/form-schemas";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
+import Image from "next/image";
+import { dateOfBirth, email, nameField, phoneNumber } from "@/lib/validations/form-schemas";
+import { useGetPersonalDataQuery, useUpdatePersonalDataMutation } from "@/lib/redux/apis/auth-api";
+import { useFormValidation } from "@/lib/hooks/use-form-validation";
+import { PersonalInfoFormData } from "@/types/auth";
+import { RootState } from "@/lib/redux/store";
+import { handleAustralianPhoneNumberChange, handleUSPhoneNumberChange, toYYYYMMDD } from "@/lib/utils/main-utils";
+import { toast } from "react-toastify";
+import Button from "@/components/common/Button";
+import { Input } from "@/components/common/input";
 
-
+const personalInfoSchema = yup.object().shape({
+  first_name: nameField("First Name"),
+  last_name: nameField("Last Name"),
+  email: email,
+  phonenumber: phoneNumber,
+  date_of_birth: dateOfBirth,
+});
 function resolveProfileImage(url?: string | null): string | null {
   if (!url) return null;
   return applyImageVariant(url, "public");
@@ -29,7 +38,14 @@ function isAllowedImageFile(file: File): boolean {
 }
 
 export default function PersonalInformationPage() {
-  const { data: personalData } = useGetPersonalDataQuery();
+  const { isAuthenticated, authChecked } = useSelector((state: RootState) => state.auth);
+  // Wait for the app's session check (getUserDetails, which also drives the
+  // access-token refresh on a hard reload) to settle before firing this
+  // query — otherwise it races that check, 401s with a stale/empty token,
+  // and blanks the form instead of waiting for the refreshed token.
+  const { data: personalData } = useGetPersonalDataQuery(undefined, {
+    skip: !authChecked || !isAuthenticated,
+  });
   const [updatePersonalData, { isLoading: isUpdating }] =
     useUpdatePersonalDataMutation();
 
@@ -42,10 +58,16 @@ export default function PersonalInformationPage() {
       date_of_birth: "",
     });
 
-  const [imagePreview, setImagePreview] = useState<string>("/images/Rectangle.png");
+  const [imagePreview, setImagePreview] = useState<string>("/images/default_user_icon.jpg");
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
-  const hasInitializedImageRef = useRef(false);
+  const [, setOriginalData] = useState<PersonalInfoFormData>({
+    first_name: "",
+    last_name: "",
+    email: "",
+    phonenumber: "",
+    date_of_birth: "",
+  });
 
   useEffect(() => {
     if (personalData && personalData.response) {
@@ -53,20 +75,23 @@ export default function PersonalInformationPage() {
         first_name: personalData.response.first_name || "",
         last_name: personalData.response.last_name || "",
         email: personalData.response.email || "",
-          phonenumber: personalData.response.phonenumber || "",
-          date_of_birth: personalData.response.date_of_birth || "",
+        phonenumber: personalData.response.phonenumber || "",
+        date_of_birth: personalData.response.date_of_birth || "",
       });
-
-      if (!hasInitializedImageRef.current && personalData.response.profile_image) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setImagePreview(resolveProfileImage(personalData.response.profile_image)!);
-        hasInitializedImageRef.current = true;
+      setOriginalData({
+        first_name: personalData.response.first_name || "",
+        last_name: personalData.response.last_name || "",
+        email: personalData.response.email || "",
+        phonenumber: personalData.response.phonenumber || "",
+        date_of_birth: personalData.response.date_of_birth || "",
+      });
+      if (personalData.response.profile_image) {
+        setImagePreview(applyImageVariant(personalData.response.profile_image, "public"));
       }
     }
   }, [personalData, setFormData]);
 
   const handleFormSubmit = async (data: PersonalInfoFormData) => {
-    console.log(data, "dat========");
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("first_name", data.first_name);
@@ -82,45 +107,17 @@ export default function PersonalInformationPage() {
         formDataToSend.append("profile_image", profileImage);
       }
 
-      const result = await updatePersonalData(formDataToSend as any).unwrap();
+      await updatePersonalData(formDataToSend).unwrap();
+      setOriginalData(data);
 
-      const backendErrors = (result?.response as unknown as { errors?: { file: string; message: string }[] })?.errors;
-
-      const updatedImage =
-        result?.response?.profile_image ||
-        (result as unknown as { profile_image?: string })?.profile_image;
-
-      if (updatedImage) {
-        setImagePreview(resolveProfileImage(updatedImage)!);
-        hasInitializedImageRef.current = true;
-      }
-
-      setProfileImage(null);
-
-      if (backendErrors?.length) {
-        backendErrors.forEach((err) => toast.error(err.message));
-      } else {
-        toast.success("Profile updated successfully!");
-      }
+      toast.success("Profile updated successfully!");
     } catch (error) {
-      const apiError = error as {
-        status?: number | string;
-        data?: { message?: string; errors?: { message: string }[] };
-        message?: string;
-      };
-
-      const message =
-        apiError?.data?.errors?.[0]?.message ||
-        apiError?.data?.message ||
-        apiError?.message ||
-        "Failed to update profile.";
-
-      console.error("Failed to update personal information:", apiError);
-      toast.error(message);
+      console.error("Profile update failed:", error);
+      toast.error("Failed to update profile.");
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 

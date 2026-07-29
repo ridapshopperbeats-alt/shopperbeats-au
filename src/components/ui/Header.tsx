@@ -1,101 +1,64 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { addBreadcrumb } from "@/lib/redux/slices/breadcrumb-slice";
-import { syncAuthState } from "@/lib/redux/slices/auth-slice";
-import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
+
 import HeaderIcon from "./HeaderIcon";
 import CartPopup from "./CartPopup";
-import { useRouter, usePathname } from "next/navigation";
-import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
-import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
-import { useStaticWishlist } from "@/lib/hooks/useStaticWishlist";
-import { applyImageVariant } from "@/lib/utils/imageUtils";
-import GooglePlacesInput from "../common/AddressAutocomplete";
-import { toast } from "react-toastify";
 
-import { useSearchProductsQuery } from "../../lib/redux/apis/products-api";
-import { Product } from "@/types/product";
-import Button from "../common/Button";
 import { RootState } from "@/lib/redux/store";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { useGetPersonalDataQuery } from "@/lib/redux/apis/auth-api";
-import { useLazyReverseGeocodeQuery } from "@/lib/redux/apis/geocode-api";
-import { HeaderProps } from "@/types/form";
-import { useDebounceValue } from "@/lib/hooks/use-debounce";
-import { useIsClient } from "@/lib/hooks/use-is-client";
+import { useRef } from "react";
+
 import {
   Percent,
+  Sparkles,
   Home,
   Armchair,
   HeartPulse,
-  ChevronDown,
+  Gamepad2,
+  Baby,
   X,
-  Handbag,
-  Sofa,
-  Trophy,
+  ChevronDown,
+  ChevronRight,
+  Menu,
 } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
+import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
+import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
+import { useLazyReverseGeocodeQuery } from "@/lib/redux/apis/geocode-api";
+import { toast } from "react-toastify";
+import { useDebounceValue } from "@/lib/hooks/use-debounce";
+import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
+import { useGetPersonalDataQuery } from "@/lib/redux/apis/auth-api";
+import { useLockBodyScroll } from "@/lib/hooks/use-lock-body-scroll";
+import GooglePlacesInput from "../common/AddressAutocomplete";
+import Button from "../common/Button";
+import { addBreadcrumb } from "@/lib/redux/slices/breadcrumb-slice";
 
-const NAV_LINKS = [
-  {
-    key: "home-garden",
-    label: "Home & Garden",
-    href: "/category/home-garden",
-    icon: Home,
-  },
-  {
-    key: "furniture",
-    label: "Furniture",
-    href: "/category/furniture",
-    icon: Armchair,
-  },
-  {
-    key: "fashion-accessories",
-    label: "Fashion & Accessories",
-    href: "#",
-    icon: Handbag,
-  },
-  {
-    key: "health-beauty",
-    label: "Health & Beauty",
-    href: "/category/health-beauty",
-    icon: HeartPulse,
-  },
-  {
-    key: "outdoor-patio",
-    label: "Outdoor & Patio",
-    href: "#",
-    icon: Sofa,
-  },
-  {
-    key: "best-seller",
-    label: "Best Sellers",
-    href: "/category/best-seller",
-    icon: Trophy,
-  },
-  {
-    key: "whats-on-sale",
-    label: "What's On Sale",
-    href: "/product-listing/whats-on-sale",
-    icon: Percent,
-  },
-];
+export interface MegaMenuCategory {
+  name: string;
+  id: string;
+  slug?: string;
+  subcategories: {
+    name: string;
+    id: string;
+    slug?: string;
+    links: {
+      name: string;
+      href: string;
+      children?: { name: string; href: string }[];
+    }[];
+    viewAll?: string;
+  }[];
+}
 
-const isNavLinkActive = (href: string, pathname: string | null) => {
-  if (!pathname || href === "#") return false;
-  return pathname === href || pathname.startsWith(`${href}/`);
-};
-
-// TEMPORARY: the mega menu's "Shop By Category" data currently falls back to
-// dummy static categories (see getMegaMenuData) while real category data is
-// unavailable. Those dummy entries use "static-" prefixed slugs and should
-// route to the static category listing instead of the real /category/[slug]
-// page. Remove this helper (and its usages below) once real data is back.
-const resolveCategoryHref = (slugOrId: string) =>
-  slugOrId?.startsWith("static-") ? "/static-category" : `/category/${slugOrId}`;
+interface HeaderProps {
+  megaMenuData: MegaMenuCategory[];
+}
 
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -103,10 +66,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
   const [selectedResultIndex, setSelectedResultIndex] = useState(-1);
   const [showCartCard] = useState(false);
   const [showPincodeInput, setShowPincodeInput] = useState(false);
-  const mounted = useIsClient();
+  const [mounted, setMounted] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const pathname = usePathname();
-  const [prevPathname, setPrevPathname] = useState(pathname);
   const dispatch = useDispatch();
   const router = useRouter();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -114,12 +76,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
   useGetAddressesQuery(undefined, {
     skip: !isAuthenticated,
   });
-  const { data: wishlistData } = useGetWishlistQuery(undefined, {
-    skip: !isAuthenticated,
-    refetchOnMountOrArgChange: true,
-  });
-  const { count: staticWishlistCount } = useStaticWishlist();
-  const wishlistCount = (wishlistData?.items?.length ?? 0) + staticWishlistCount;
+  const { data: wishlistData } = useGetWishlistQuery(undefined);
 
   const locationRequestedRef = useRef(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -131,6 +88,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
         const { latitude, longitude } = position.coords;
 
         try {
+         
           const data = await triggerReverseGeocode({
             lat: latitude,
             lng: longitude,
@@ -195,6 +153,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
           requestLocation();
         })
         .catch(() => {
+          // Permissions API not supported here, fall back to requesting directly
           requestLocation();
         });
     } else {
@@ -203,13 +162,12 @@ export default function Header({ megaMenuData }: HeaderProps) {
   }, [requestLocation]);
 
   useEffect(() => {
-    dispatch(syncAuthState());
-  }, [dispatch]);
+    setMounted(true);
+  }, []);
 
-  if (prevPathname !== pathname) {
-    setPrevPathname(pathname);
+  useEffect(() => {
     setIsSearching(false);
-  }
+  }, [pathname]);
 
   useEffect(() => {
     const checkLocationAndPostcode = async () => {
@@ -255,54 +213,77 @@ export default function Header({ megaMenuData }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounceValue(searchQuery, 1000);
   const { data: searchResults, isLoading: isSearchLoading } =
-    useSearchProductsQuery(debouncedSearchQuery, {
+    useGetSearchSuggestionsQuery(debouncedSearchQuery, {
       skip: !debouncedSearchQuery,
     });
 
-  const mapProductToSearchResult = (product: Product, query: string) => {
-    const titleMatch = product.title?.toLowerCase().includes(query);
-    const brandMatch = product.brand_name?.toLowerCase().includes(query);
-    const categoryMatch = product.category_name?.toLowerCase().includes(query);
+  useEffect(() => {
+  }, [searchResults]);
 
-    if (brandMatch && !titleMatch && !categoryMatch) {
-      return {
-        displayLabel: product.brand_name,
-        linkHref: `/brand/${product.brand_name}`,
-        id: product.id,
-      };
-    }
-    if (categoryMatch && !titleMatch && !brandMatch) {
-      return {
-        displayLabel: product.category_name || "",
-        linkHref: `/category/${product.category_slug ?? product.category_id}`,
-        id: product.id,
-      };
-    }
-    return {
-      displayLabel: product.title,
-      linkHref: `/product/${product.unique_code || product.id}`,
-      id: product.id,
-    };
-  };
+  interface SuggestionItem {
+    id: string;
+    type: "product" | "category" | "brand";
+    displayLabel: string;
+    linkHref: string;
+    thumbnailUrl?: string | null;
+    price?: number;
+  }
 
-  const dedupedResults = React.useMemo(() => {
-    const query = debouncedSearchQuery.toLowerCase();
-    const results =
-      searchResults?.data?.map((p) => mapProductToSearchResult(p, query)) || [];
+  // Single source of truth for what's actually on screen — each list narrows
+  // further as the user keeps typing ahead of the debounce, so keyboard
+  // bounds/selection and the rendered rows must read from these same
+  // filtered lists, not the raw API response.
+  const query = searchQuery.toLowerCase();
 
-    return results.filter(
-      (item, index, self) =>
-        index === self.findIndex((t) => t.displayLabel === item.displayLabel),
-    );
-  }, [searchResults, debouncedSearchQuery]);
+  const filteredProducts: SuggestionItem[] = React.useMemo(() => {
+    return (searchResults?.products || [])
+      .filter((p) => p.title?.toLowerCase().includes(query))
+      .map((p) => ({
+        id: p.id,
+        type: "product" as const,
+        displayLabel: p.title,
+        linkHref: `/product/${p.slug}`,
+        thumbnailUrl: p.thumbnail_url
+          ? applyImageVariant(p.thumbnail_url, "public")
+          : p.thumbnail_url,
+        price: p.price,
+      }));
+  }, [searchResults, query]);
+
+  const filteredCategories: SuggestionItem[] = React.useMemo(() => {
+    return (searchResults?.categories || [])
+      .filter((c) => c.name?.toLowerCase().includes(query))
+      .map((c) => ({
+        id: c.id,
+        type: "category" as const,
+        displayLabel: c.name,
+        linkHref: `/category/${c.slug}`,
+      }));
+  }, [searchResults, query]);
+
+  const filteredBrands: SuggestionItem[] = React.useMemo(() => {
+    return (searchResults?.brands || [])
+      .filter((b) => b.name?.toLowerCase().includes(query))
+      .map((b) => ({
+        id: b.id,
+        type: "brand" as const,
+        displayLabel: b.name,
+        linkHref: `/brand/${b.slug}`,
+      }));
+  }, [searchResults, query]);
+
+  const filteredResults: SuggestionItem[] = React.useMemo(
+    () => [...filteredProducts, ...filteredCategories, ...filteredBrands],
+    [filteredProducts, filteredCategories, filteredBrands],
+  );
 
   const handleSearch = () => {
     if (
       selectedResultIndex !== -1 &&
-      dedupedResults &&
-      dedupedResults[selectedResultIndex]
+      filteredResults &&
+      filteredResults[selectedResultIndex]
     ) {
-      const selectedItem = dedupedResults[selectedResultIndex];
+      const selectedItem = filteredResults[selectedResultIndex];
       setIsSearching(true);
       router.push(selectedItem.linkHref);
       setShowSearchResults(false);
@@ -389,19 +370,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
     };
   }, [isMobileNavOpen, isMegaMenuOpen, showPincodeInput, showSearchResults]);
 
-  useEffect(() => {
-    if (!isMobileNavOpen) return;
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousHtmlOverflow = document.documentElement.style.overflow;
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-    window.lenisInstance?.stop();
-    return () => {
-      document.body.style.overflow = previousBodyOverflow;
-      document.documentElement.style.overflow = previousHtmlOverflow;
-      window.lenisInstance?.start();
-    };
-  }, [isMobileNavOpen]);
+  useLockBodyScroll(isMobileNavOpen);
 
   const { data: personalData } = useGetPersonalDataQuery(undefined, {
     skip: !isAuthenticated,
@@ -409,7 +378,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
   const profileImage = personalData?.response?.profile_image?.trim()
     ? applyImageVariant(personalData.response.profile_image, "public")
-    : "/images/user.svg";
+    : "/images/default_user_icon.jpg";
   return (
     <div className="header-fixed ">
       <div className="container flex flex-col">
@@ -429,7 +398,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 }
               }}
             >
-              <RxHamburgerMenu size={22} />
+              <Menu size={22} />
             </div>
             <div className="logo">
               <Link href="/">
@@ -437,7 +406,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   src="/images/logo.svg"
                   alt="ShopperBeats Logo"
                   width={300}
-                  height={61}
+                  height={300}
                   priority
                 />
               </Link>
@@ -468,16 +437,16 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 if (e.key === "ArrowDown") {
                   e.preventDefault();
                   setSelectedResultIndex((prev) =>
-                    dedupedResults && prev < dedupedResults.length - 1
+                    filteredResults && prev < filteredResults.length - 1
                       ? prev + 1
                       : 0,
                   );
                 } else if (e.key === "ArrowUp") {
                   e.preventDefault();
                   setSelectedResultIndex((prev) =>
-                    dedupedResults && prev > 0
+                    filteredResults && prev > 0
                       ? prev - 1
-                      : (dedupedResults?.length || 1) - 1,
+                      : (filteredResults?.length || 1) - 1,
                   );
                 } else if (e.key === "Enter") {
                   e.preventDefault();
@@ -499,40 +468,92 @@ export default function Header({ megaMenuData }: HeaderProps) {
             )}
 
             {searchQuery && showSearchResults && (
-              <div className="search-results">
+              <div className="search-results" data-lenis-prevent>
                 {isSearchLoading ? (
                   <p>Loading...</p>
-                ) : dedupedResults &&
-                  dedupedResults.filter((item) =>
-                    item.displayLabel
-                      ?.toLowerCase()
-                      .includes(searchQuery.toLowerCase()),
-                  ).length > 0 ? (
-                  dedupedResults
-                    .filter((item) =>
-                      item.displayLabel
-                        ?.toLowerCase()
-                        .includes(searchQuery.toLowerCase()),
-                    )
-                    .map((item, index) => (
-                      <Link
-                        prefetch={false}
-                        key={`${item.id ?? ""}-${item.displayLabel ?? ""}`}
-                        href={item.linkHref}
-                        onClick={() => {
-                          setIsSearching(true);
-                          setShowSearchResults(false);
-                        }}
-                      >
-                        <div
-                          className={`search-result-item ${
-                            index === selectedResultIndex ? "selected" : ""
-                          }`}
-                        >
-                          <p className="text-[#696e79]">{item.displayLabel}</p>
+                ) : filteredResults.length > 0 ? (
+                  (() => {
+                    let runningIndex = -1;
+
+                    const renderGroup = (
+                      title: string,
+                      items: SuggestionItem[],
+                    ) =>
+                      items.length > 0 && (
+                        <div className="search-result-group" key={title}>
+                          <p className="search-result-group-title text-[11px] font-semibold uppercase tracking-wide text-[#9aa0ab] px-3 pt-2">
+                            {title}
+                          </p>
+                          {items.map((item) => {
+                            runningIndex += 1;
+                            const currentIndex = runningIndex;
+
+                            return (
+                              <Link
+                                prefetch={false}
+                                key={`${item.type}-${item.id}`}
+                                href={item.linkHref}
+                                onClick={() => {
+                                  setIsSearching(true);
+                                  setShowSearchResults(false);
+                                }}
+                              >
+                                <div
+                                  className={`search-result-item flex items-center gap-2 ${
+                                    currentIndex === selectedResultIndex
+                                      ? "selected"
+                                      : ""
+                                  }`}
+                                >
+                                  {item.type === "product" && (
+                                    <span className="relative w-8 h-8 shrink-0 rounded-[4px] overflow-hidden bg-[#F5F5F5]">
+                                      {item.thumbnailUrl && (
+                                        <Image
+                                          src={item.thumbnailUrl}
+                                          alt={item.displayLabel}
+                                          fill
+                                          className="object-cover"
+                                        />
+                                      )}
+                                    </span>
+                                  )}
+                                  <p className="text-[#696e79] flex-1 min-w-0 truncate">
+                                    {item.displayLabel}
+                                  </p>
+                                  {item.type === "product" &&
+                                    item.price !== undefined && (
+                                      <span className="text-[#fd151b] font-semibold text-[13px] shrink-0">
+                                        ${formatPrice(item.price)}
+                                      </span>
+                                    )}
+                                </div>
+                              </Link>
+                            );
+                          })}
                         </div>
-                      </Link>
-                    ))
+                      );
+
+                    return (
+                      <>
+                        {renderGroup("Products", filteredProducts)}
+                        {renderGroup("Categories", filteredCategories)}
+                        {renderGroup("Brands", filteredBrands)}
+                        <Link
+                          prefetch={false}
+                          href={`/search?q=${encodeURIComponent(searchQuery.trim())}`}
+                          onClick={() => {
+                            setIsSearching(true);
+                            setShowSearchResults(false);
+                            setSelectedResultIndex(-1);
+                          }}
+                        >
+                          <div className="search-result-item see-all-results w-full text-center font-semibold text-[#fd151b]">
+                            See all results
+                          </div>
+                        </Link>
+                      </>
+                    );
+                  })()
                 ) : (
                   <div className="search-result-item">
                     <p className="text-[#696e79]">No products found</p>
@@ -615,64 +636,69 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 </div>
               )}
             </div>
-            <div className="hidden md:flex md:items-center">
-              <HeaderIcon
-                href="/user/wishlist"
-                iconSrc="/images/wishlist.svg"
-                alt="wishlist"
-                className="wishlist"
-                count={wishlistCount}
-              />
+            <HeaderIcon
+              href="/user/wishlist"
+              iconSrc="/images/wishlist.svg"
+              alt="wishlist"
+              className="wishlist"
+              count={wishlistData?.total_items ?? wishlistData?.items?.length ?? 0}
+            />
 
-              <CartPopup isVisible={showCartCard} />
+            <CartPopup isVisible={showCartCard} />
 
-              <div className={`header-link account`}>
-                {isAuthenticated ? (
-                  <Link
-                    href="/user/personal-information"
-                    className="relative inline-flex items-center justify-center w-10 h-10"
-                  >
-                    <Image
-                      src={
-                        profileImage?.trim()
-                          ? profileImage
-                          : "/images/user.svg"
-                      }
-                      alt="account"
-                      className="rounded-full"
-                      fill
-                    />
+            <div className={`header-link account`}>
+              {isAuthenticated ? (
+                <Link
+                  href="/user/personal-information"
+                  className="relative inline-block !p-0"
+                >
+                  <Image
+                    src={
+                      profileImage?.trim()
+                        ? profileImage
+                        : "/images/default_user_icon.jpg"
+                    }
+                    alt="account"
+                    className="rounded-full object-cover"
+                    fill
+                  />
 
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
-                  </Link>
-                ) : (
-                  <Link
-                    href={`/login?redirect=${encodeURIComponent("/user/personal-information")}`}
-                    className="relative inline-flex items-center justify-center w-10 h-10"
-                  >
-                    <Image
-                      src="/images/user.svg"
-                      alt="account"
-                      width={18}
-                      height={18}
-                    />
-                  </Link>
-                )}
-              </div>
+                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
+                </Link>
+              ) : (
+                <Link
+                  href={`/login?redirect=${encodeURIComponent("/user/personal-information")}`}
+                  className="group"
+                >
+                  <Image
+                    src="/images/default_user_icon.jpg"
+                    alt="account"
+                    width={20}
+                    height={20}   
+                  />
+                </Link>
+              )}
             </div>
           </div>
         </div>
         <div className="bottom-head border-b border-[#D8D8D8] ">
-          <Button
-            id="toggleMenuBtn"
-            className="megamenuBtn"
-            onClick={toggleMegaMenu}
+          <div
+            className="megamenu-container"
             onMouseEnter={() => setIsMegaMenuOpen(true)}
             onMouseLeave={() => setIsMegaMenuOpen(false)}
           >
-            <RxHamburgerMenu size={20} />
-            Shop By Category
-            <ChevronDown size={18} />
+            <Button
+              id="toggleMenuBtn"
+              className={`megamenuBtn ${isMegaMenuOpen ? "active" : ""}`}
+              onClick={toggleMegaMenu}
+              aria-haspopup="true"
+              aria-expanded={isMegaMenuOpen}
+              aria-controls="megaMenu"
+            >
+              <Menu size={20} />
+              Shop By Category{" "}
+              <ChevronDown size={16} className="inline-block" aria-hidden="true" />
+            </Button>
             <div
               id="megaMenu"
               data-lenis-prevent
@@ -695,16 +721,17 @@ export default function Header({ megaMenuData }: HeaderProps) {
                         }
                       >
                         <Link
-                          href={resolveCategoryHref(cat.slug ?? cat.id)}
+                          href={`/category/${cat.slug ?? cat.id}`}
                           prefetch={false}
                           className="category-link"
                           onClick={closeMegaMenu}
                         >
                           {cat.name}{" "}
-                          <i
-                            className="fa fa-angle-right"
+                          <ChevronRight
+                            size={14}
+                            className="inline-block"
                             aria-hidden="true"
-                          ></i>
+                          />
                         </Link>
                       </li>
                     ))}
@@ -728,17 +755,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
                             <div key={subCat.name} className="mega-column">
                               <Link
                                 prefetch={false}
-                                href={resolveCategoryHref(subCat.slug ?? subCat.id)}
-                                className="mega-column-title"
-                                onClick={() => {
-                                  dispatch(
-                                    addBreadcrumb({
-                                      name: cat.name,
-                                      path: resolveCategoryHref(cat.slug ?? cat.id),
-                                    }),
-                                  );
-                                  closeMegaMenu();
-                                }}
+                                href={`/category/${subCat.slug ?? subCat.id}`}
+                                onClick={closeMegaMenu}
                               >
                                 <h5>{subCat.name}</h5>
                               </Link>
@@ -757,6 +775,27 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                     </Link>
                                   </li>
                                 ))}
+
+                                {subCat.viewAll && (
+                                  <li>
+                                    <Link
+                                      href={`/category/${subCat.slug ?? subCat.id}`}
+                                      className="view-link"
+                                      prefetch={false}
+                                      onClick={() => {
+                                        dispatch(
+                                          addBreadcrumb({
+                                            name: cat.name,
+                                            path: `/category/${cat.slug ?? cat.id}`,
+                                          }),
+                                        );
+                                        closeMegaMenu();
+                                      }}
+                                    >
+                                      View All
+                                    </Link>
+                                  </li>
+                                )}
                               </ul>
                             </div>
                           ))}
@@ -766,29 +805,73 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 )}
               </div>
             </div>
-          </Button>
+          </div>
 
           <nav className={`navbar `} id="menu">
             <ul className="menu">
-              {NAV_LINKS.map((navLink) => {
-                const Icon = navLink.icon;
-                const isActive = isNavLinkActive(navLink.href, pathname);
-
-                return (
-                  <li key={navLink.key}>
-                    <Link
-                      className={`link flex items-center gap-2 hover:text-red-500 ${
-                        isActive ? "active" : ""
-                      }`}
-                      style={isActive ? { color: "#FD151B" } : undefined}
-                      href={navLink.href}
-                    >
-                      <Icon size={16} className="inline-block " />
-                      {navLink.label}
-                    </Link>
-                  </li>
-                );
-              })}
+              <li>
+                <Link
+                  className={`link flex items-center gap-2 ${pathname === "/product-listing/whats-on-sale" ? "active" : ""}`}
+                  href="/product-listing/whats-on-sale"
+                >
+                  <Percent size={16} className="inline-block " />
+                  What&apos;s On Sale
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className={`link flex items-center gap-2 ${pathname === "/product-listing/clearance" ? "active" : ""}`}
+                  href="/product-listing/clearance"
+                >
+                  <Sparkles size={16} className="inline-block " />
+                  Clearance
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className={`link flex items-center gap-2 ${pathname === "/category/home-garden" ? "active" : ""}`}
+                  href="/category/home-garden"
+                >
+                  <Home size={16} className="inline-block " />
+                  Home & Garden
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className={`link flex items-center gap-2 ${pathname === "/category/furniture" ? "active" : ""}`}
+                  href="/category/furniture"
+                >
+                  <Armchair size={16} className="inline-block " />
+                  Furniture
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className={`link flex items-center gap-2 ${pathname === "/category/health-beauty" ? "active" : ""}`}
+                  href="/category/health-beauty"
+                >
+                  <HeartPulse size={16} className="inline-block " />
+                  Health & Beauty
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className={`link flex items-center gap-2 ${pathname === "/category/toys-games" ? "active" : ""}`}
+                  href="/category/toys-games"
+                >
+                  <Gamepad2 size={16} className="inline-block " />
+                  Toys & Games
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className={`link flex items-center gap-2 ${pathname === "/category/baby-kids" ? "active" : ""}`}
+                  href="/category/baby-kids"
+                >
+                  <Baby size={16} className="inline-block " />
+                  Baby & Kids
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>

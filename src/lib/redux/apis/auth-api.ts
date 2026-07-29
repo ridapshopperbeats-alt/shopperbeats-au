@@ -1,23 +1,19 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS } from "../../constants/api";
-import { logout, syncAuthState, setAccessToken } from '../slices/auth-slice';
-import { clearCart } from '../slices/cart-slice';
-import { UserDetails, PersonalData, LoginResponse, UpdatePersonalDataRequest, SocialMediaLink } from "@/types/auth";
 
+import { UserDetails, PersonalData, LoginResponse, UpdatePersonalDataRequest, SocialMediaLink } from "@/types/auth";
+import { createBaseQuery } from "./base-query";
+import { logout, setAuthenticated, setAccessToken } from "../slices/auth-slice";
+import { clearRefreshToken, setRefreshToken } from "@/lib/utils/refresh-token-cokkie";
+import { clearAccessTokenCookie, setAccessTokenCookie } from "@/lib/utils/access-token";
+import { clearCart } from "../slices/cart-slice";
 import { addressApi } from "./address-api";
 import { cartApi } from "./cart-api";
 import { orderApi } from "./order-api";
-import { vendorApi } from "./vendor-api";
-import { marketingApi } from "./marketing-api";
-import { helpdeskApi } from "./helpdesk-api";
-import { faqApi } from "./faq-api";
-import { geocodeApi } from "./geocode-api";
-import { createBaseQuery } from "./base-query";
 
 const baseQuery = createBaseQuery(API_ENDPOINTS.AUTH.BASE_URL);
 
 export const authApi = createApi({
-  
   reducerPath: "authApi",
   baseQuery,
   tagTypes: ["User", "PersonalData"],
@@ -39,16 +35,14 @@ export const authApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (typeof window !== "undefined") {
-            localStorage.setItem("isAuthenticated", "true");
+          dispatch(setAuthenticated(true));
+          if (data?.response?.access_token) {
+            dispatch(setAccessToken(data.response.access_token));
+            setAccessTokenCookie(data.response.access_token);
           }
-          const token = data?.response?.access_token;
-          if (token) {
-            dispatch(setAccessToken(token));
-          } else {
-            dispatch(setAccessToken(null));
+          if (data?.response?.refresh_token) {
+            setRefreshToken(data.response.refresh_token);
           }
-          dispatch(syncAuthState());
         } catch {}
       },
     }),
@@ -70,13 +64,13 @@ export const authApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const token = data?.response?.access_token;
-          if (token) {
-            if (typeof window !== "undefined") {
-              localStorage.setItem("isAuthenticated", "true");
-            }
-            dispatch(setAccessToken(token));
-            dispatch(syncAuthState());
+          if (data?.response?.access_token) {
+            dispatch(setAuthenticated(true));
+            dispatch(setAccessToken(data.response.access_token));
+            setAccessTokenCookie(data.response.access_token);
+          }
+          if (data?.response?.refresh_token) {
+            setRefreshToken(data.response.refresh_token);
           }
         } catch {}
       },
@@ -116,21 +110,18 @@ export const authApi = createApi({
         try {
           await queryFulfilled;
         } catch (err) {
-          const fetchError = (err as { error?: unknown })?.error;
-          if (fetchError) {
-            console.warn("Logout request failed", fetchError);
-          }
+          // The server call can fail (e.g. an already-expired session
+          // returns 401) but the user still asked to log out, so the
+          // local session is cleared regardless below.
+          console.error("Logout request failed; clearing local session anyway", err);
         } finally {
+          clearRefreshToken();
+          clearAccessTokenCookie();
           dispatch(clearCart());
           dispatch(authApi.util.resetApiState());
           dispatch(addressApi.util.resetApiState());
           dispatch(cartApi.util.resetApiState());
           dispatch(orderApi.util.resetApiState());
-          dispatch(vendorApi.util.resetApiState());
-          dispatch(marketingApi.util.resetApiState());
-          dispatch(helpdeskApi.util.resetApiState());
-          dispatch(faqApi.util.resetApiState());
-          dispatch(geocodeApi.util.resetApiState());
           dispatch(logout());
         }
       },
@@ -141,6 +132,18 @@ export const authApi = createApi({
         url: API_ENDPOINTS.AUTH.USER_DETAILS,
       }),
       providesTags: ["User"],
+      // This is also the app's sole session check (see StoreProvider): the
+      // cookie session is HttpOnly and can't be read from JS, so whether
+      // this call succeeds or fails IS the source of truth for
+      // `state.auth.isAuthenticated`, instead of a client-writable flag.
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(setAuthenticated(true));
+        } catch {
+          dispatch(setAuthenticated(false));
+        }
+      },
     }),
     updateUserDetails: builder.mutation<UserDetails, Partial<UserDetails>>({
       query: (body) => ({
@@ -163,11 +166,12 @@ export const authApi = createApi({
         try {
           const { data } = await queryFulfilled;
           if (data?.access_token) {
-            if (typeof window !== "undefined") {
-              localStorage.setItem("isAuthenticated", "true");
-            }
+            dispatch(setAuthenticated(true));
             dispatch(setAccessToken(data.access_token));
-            dispatch(syncAuthState());
+            setAccessTokenCookie(data.access_token);
+          }
+          if (data?.refresh_token) {
+            setRefreshToken(data.refresh_token);
           }
         } catch {}
       },
@@ -217,14 +221,14 @@ export const authApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (typeof window !== "undefined") {
-            localStorage.setItem("isAuthenticated", "true");
+          dispatch(setAuthenticated(true));
+          if (data?.response?.access_token) {
+            dispatch(setAccessToken(data.response.access_token));
+            setAccessTokenCookie(data.response.access_token);
           }
-          const token = data?.response?.access_token;
-          if (token) {
-            dispatch(setAccessToken(token));
+          if (data?.response?.refresh_token) {
+            setRefreshToken(data.response.refresh_token);
           }
-          dispatch(syncAuthState());
         } catch {}
       },
     }),
@@ -258,3 +262,5 @@ export const {
   useGoogleLoginMutation,
   useGetSocialMediaLinksQuery,
 } = authApi;
+
+

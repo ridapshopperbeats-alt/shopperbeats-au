@@ -1,20 +1,12 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS } from "../../constants/api";
 import { Cart, PromoValidationResponse } from "@/types/cart";
 import { WishlistItem, Wishlist } from "@/types/wishlist";
-const baseCartQuery = fetchBaseQuery({
-  baseUrl: API_ENDPOINTS.CART.BASE_URL_CLIENT,
-  credentials: "include",
-});
-const baseWishlistQuery = fetchBaseQuery({
-  baseUrl: API_ENDPOINTS.WISHLIST.BASE_URL_CLIENT,
-  credentials: "include",
-});
+import { createBaseQuery } from "./base-query";
 
-const basePromoQuery = fetchBaseQuery({
-  baseUrl: API_ENDPOINTS.CART.PROMO_BASE_URL,
-  credentials: "include",
-});
+const baseCartQuery = createBaseQuery(API_ENDPOINTS.CART.BASE_URL_CLIENT);
+const baseWishlistQuery = createBaseQuery(API_ENDPOINTS.WISHLIST.BASE_URL_CLIENT);
+const basePromoQuery = createBaseQuery(API_ENDPOINTS.CART.PROMO_BASE_URL);
 export const cartApi = createApi({
   reducerPath: "cartApi",
   baseQuery: baseCartQuery,
