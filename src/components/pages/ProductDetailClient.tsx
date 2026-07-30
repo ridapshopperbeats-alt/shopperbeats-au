@@ -61,26 +61,12 @@ import LocationPopup from "./LocationPopup";
 import CustomerRatingViewPage from "./CustomerRatingViewPage";
 import StarRating from "../common/StarRating";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../common/select";
-import {
   findCategoryPath,
   formatPrice,
   getImageUrl,
   getPriceDetails,
   getVariantImage,
 } from "@/lib/utils/main-utils";
-
-function isCompactAttributeValue(rawValue: string): boolean {
-  const value = rawValue.trim();
-  if (!value) return false;
-
-  return false;
-}
 
 export default function ProductDetailClient({
   product: initialProduct,
@@ -794,72 +780,35 @@ export default function ProductDetailClient({
 
       const attrLabel = attrName.charAt(0).toUpperCase() + attrName.slice(1);
 
-      const isCompactAttribute =
-        availableOptions.length > 0 &&
-        availableOptions.every((item) => isCompactAttributeValue(item.value));
-
-      if (isCompactAttribute) {
-        return (
-          <div key={attrName} className="flex flex-col gap-2">
-            <span className="pdp-field-label">
-              {attrLabel} : <span>{selectedAttributes[attrName] || ""}</span>
-            </span>
-
-            <div className="flex items-center gap-2 flex-wrap">
-              {availableOptions.map((item) => {
-                const isSelected = selectedAttributes[attrName] === item.value;
-                const isOutOfStockOption = (item.stock ?? 0) <= 0;
-
-                return (
-                  <button
-                    type="button"
-                    key={item.value}
-                    onClick={() => handleAttributeChange(attrName, item.value)}
-                    disabled={isOutOfStockOption}
-                    title={item.value}
-                    className={`min-w-[30px] h-[30px] lg:min-w-10 lg:h-10 px-2 flex items-center justify-center border rounded-[8px] text-[14px] font-bold cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-                      isSelected
-                        ? "border-[#FD151B] text-[#FD151B]"
-                        : "border-[#CCCCCC] text-[#1D265F]/50"
-                    }`}
-                  >
-                    {item.value}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        );
-      }
-
       return (
-        <div key={attrName} className="flex flex-col gap-1.5">
-          <label className="field-value-sm">
-            {attrLabel}
-          </label>
-          <Select
-            value={selectedAttributes[attrName] || undefined}
-            onValueChange={(value) => handleAttributeChange(attrName, value)}
-          >
-            <SelectTrigger className="h-[32px] w-full max-w-[230px] rounded-[20px] border border-[#001325]/64 bg-white px-4 shadow-none focus:ring-0">
-              <SelectValue placeholder={`Select ${attrLabel}`} />
-            </SelectTrigger>
-            <SelectContent
-              position="popper"
-              className="w-[240px] max-w-[230px] border !border-[#F6F6F6] bg-white p-2 shadow-[#000000]/25 rounded-[5px] ring-0 outline-none focus:outline-none focus:ring-0 text-[14px] font-normal leading-[17px] "
-            >
-              {availableOptions.map((item) => (
-                <SelectItem
+        <div key={attrName} className="flex flex-col gap-2">
+          <span className="pdp-field-label">
+            {attrLabel} : <span>{selectedAttributes[attrName] || ""}</span>
+          </span>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {availableOptions.map((item) => {
+              const isSelected = selectedAttributes[attrName] === item.value;
+              const isOutOfStockOption = (item.stock ?? 0) <= 0;
+
+              return (
+                <button
+                  type="button"
                   key={item.value}
-                  value={item.value}
-                  disabled={(item.stock ?? 0) <= 0}
+                  onClick={() => handleAttributeChange(attrName, item.value)}
+                  disabled={isOutOfStockOption}
+                  title={item.value}
+                  className={`min-w-[30px] h-[30px] lg:min-w-10 lg:h-10 px-2 flex items-center justify-center border rounded-[8px] text-[14px] font-bold cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                    isSelected
+                      ? "border-[#FD151B] text-[#FD151B]"
+                      : "border-[#CCCCCC] text-[#1D265F]/50"
+                  }`}
                 >
                   {item.value}
-                  {(item.stock ?? 0) <= 0 ? " (Out of Stock)" : ""}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+                </button>
+              );
+            })}
+          </div>
         </div>
       );
     });
@@ -1189,6 +1138,7 @@ export default function ProductDetailClient({
                             size={16}
                             className="inline-flex mb-1 font-bold"
                           />{" "}
+                          Only {stockValue} items left
                         </span>
                       ) : null;
                     })()}

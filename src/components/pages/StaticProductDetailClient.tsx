@@ -27,13 +27,6 @@ import SizeGuidePopup from "./SizeGuidePopup";
 import CustomerRatingViewPage from "./CustomerRatingViewPage";
 import StaticRecommendedForYou from "../homepage/StaticRecommendedForYou";
 import NoProductsFound from "@/components/NoProductFound";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../common/select";
 
 import { renderContent, cleanText } from "@/lib/utils/render-content";
 import { useVariantSelection } from "@/lib/hooks/use-variant-selection";
@@ -155,18 +148,19 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
         stock: number | undefined;
       }[];
       const attrLabel = attrName.charAt(0).toUpperCase() + attrName.slice(1);
+      const isSizeAttribute = attrName === "size";
 
-      if (attrName === "size") {
-        return (
-          <div key={attrName} className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <label className=" text-[14px]  font-bold text-[#1D265F]">
-                {attrLabel}
-                {selectedAttributes[attrName] && (
-                  <span> : {selectedAttributes[attrName]}</span>
-                )}
-              </label>
+      return (
+        <div key={attrName} className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <label className=" text-[14px]  font-bold text-[#1D265F]">
+              {attrLabel}
+              {selectedAttributes[attrName] && (
+                <span> : {selectedAttributes[attrName]}</span>
+              )}
+            </label>
 
+            {isSizeAttribute && (
               <button
                 type="button"
                 onClick={() => setShowSizeGuide(true)}
@@ -175,67 +169,40 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 <Pencil size={16} className="shrink-0" />
                 Size Guide
               </button>
-            </div>
+            )}
+          </div>
 
-            <div className="flex items-center gap-2 flex-wrap">
-              {availableOptions.map((item) => {
-                const isSelected = selectedAttributes[attrName] === item.value;
-                const isOutOfStockOption = (item.stock ?? 0) <= 0;
+          <div className="flex items-center gap-2 flex-wrap">
+            {availableOptions.map((item) => {
+              const isSelected = selectedAttributes[attrName] === item.value;
+              const isOutOfStockOption = (item.stock ?? 0) <= 0;
 
-                return (
-                  <button
-                    type="button"
-                    key={item.value}
-                    disabled={isOutOfStockOption}
-                    onClick={() => handleAttributeChange(attrName, item.value)}
-                    aria-label={item.value}
-                    title={item.value}
-                    className={`w-10 h-10 rounded-[8px] border text-[14px] font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-                      isSelected
-                        ? "border-[#FD151B] text-[#FD151B]"
-                        : "border-[#CCCCCC] text-[#CCCCCC]"
-                    }`}
-                  >
-                    {item.value}
-                  </button>
-                );
-              })}
-            </div>
+              return (
+                <button
+                  type="button"
+                  key={item.value}
+                  disabled={isOutOfStockOption}
+                  onClick={() => handleAttributeChange(attrName, item.value)}
+                  aria-label={item.value}
+                  title={item.value}
+                  className={`w-auto px-2 h-10 rounded-[8px] border text-[14px] font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                    isSelected
+                      ? "border-[#FD151B] text-[#FD151B]"
+                      : "border-[#CCCCCC] text-[#1D265F]/50"
+                  }`}
+                >
+                  {item.value}
+                </button>
+              );
+            })}
+          </div>
 
+          {isSizeAttribute && (
             <SizeGuidePopup
               open={showSizeGuide}
               onClose={() => setShowSizeGuide(false)}
             />
-          </div>
-        );
-      }
-
-      return (
-        <div key={attrName} className="flex flex-col gap-1.5">
-          <label className="field-value-sm">{attrLabel}</label>
-          <Select
-            value={selectedAttributes[attrName] || undefined}
-            onValueChange={(value) => handleAttributeChange(attrName, value)}
-          >
-            <SelectTrigger className="h-[32px] w-full max-w-[230px] rounded-[20px] border border-[#001325]/64 bg-white px-4 shadow-none focus:ring-0">
-              <SelectValue placeholder={`Select ${attrLabel}`} />
-            </SelectTrigger>
-            <SelectContent
-              position="popper"
-              className="w-[240px] max-w-[230px] border !border-[#F6F6F6] bg-white p-2 shadow-[#000000]/25 rounded-[5px] ring-0 outline-none focus:outline-none focus:ring-0 text-[14px] font-normal leading-[17px] "
-            >
-              {availableOptions.map((item) => (
-                <SelectItem
-                  key={item.value}
-                  value={item.value}
-                  disabled={(item.stock ?? 0) <= 0}
-                >
-                  {item.value}
-                  {(item.stock ?? 0) <= 0 ? " (Out of Stock)" : ""}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          )}
         </div>
       );
     });
@@ -668,6 +635,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                             size={16}
                             className="inline-flex mb-1 font-bold"
                           />{" "}
+                          Only {stockValue} items left
                         </span>
                       ) : null;
                     })()}

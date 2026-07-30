@@ -23,6 +23,8 @@ import {
   ChevronDown,
   ChevronRight,
   Menu,
+  Handbag,
+  HandbagIcon,
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
@@ -62,7 +64,9 @@ interface HeaderProps {
 }
 
 const resolveCategoryHref = (slugOrId: string) =>
-  slugOrId?.startsWith("static-") ? "/static-category" : `/category/${slugOrId}`;
+  slugOrId?.startsWith("static-")
+    ? "/static-category"
+    : `/category/${slugOrId}`;
 
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -92,7 +96,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
         const { latitude, longitude } = position.coords;
 
         try {
-         
           const data = await triggerReverseGeocode({
             lat: latitude,
             lng: longitude,
@@ -221,8 +224,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
       skip: !debouncedSearchQuery,
     });
 
-  useEffect(() => {
-  }, [searchResults]);
+  useEffect(() => {}, [searchResults]);
 
   interface SuggestionItem {
     id: string;
@@ -645,7 +647,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
               iconSrc="/images/wishlist.svg"
               alt="wishlist"
               className="wishlist"
-              count={wishlistData?.total_items ?? wishlistData?.items?.length ?? 0}
+              count={
+                wishlistData?.total_items ?? wishlistData?.items?.length ?? 0
+              }
             />
 
             <CartPopup isVisible={showCartCard} />
@@ -678,7 +682,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                     src="/images/default_user_icon.jpg"
                     alt="account"
                     width={20}
-                    height={20}   
+                    height={20}
                   />
                 </Link>
               )}
@@ -701,7 +705,11 @@ export default function Header({ megaMenuData }: HeaderProps) {
             >
               <Menu size={20} />
               Shop By Category{" "}
-              <ChevronDown size={16} className="inline-block" aria-hidden="true" />
+              <ChevronDown
+                size={16}
+                className="inline-block"
+                aria-hidden="true"
+              />
             </Button>
             <div
               id="megaMenu"
@@ -759,7 +767,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
                             <div key={subCat.name} className="mega-column">
                               <Link
                                 prefetch={false}
-                                href={resolveCategoryHref(subCat.slug ?? subCat.id)}
+                                href={resolveCategoryHref(
+                                  subCat.slug ?? subCat.id,
+                                )}
                                 onClick={closeMegaMenu}
                               >
                                 <h5>{subCat.name}</h5>
@@ -783,14 +793,18 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                 {subCat.viewAll && (
                                   <li>
                                     <Link
-                                      href={resolveCategoryHref(subCat.slug ?? subCat.id)}
+                                      href={resolveCategoryHref(
+                                        subCat.slug ?? subCat.id,
+                                      )}
                                       className="view-link"
                                       prefetch={false}
                                       onClick={() => {
                                         dispatch(
                                           addBreadcrumb({
                                             name: cat.name,
-                                            path: resolveCategoryHref(cat.slug ?? cat.id),
+                                            path: resolveCategoryHref(
+                                              cat.slug ?? cat.id,
+                                            ),
                                           }),
                                         );
                                         closeMegaMenu();
@@ -815,35 +829,17 @@ export default function Header({ megaMenuData }: HeaderProps) {
             <ul className="menu">
               <li>
                 <Link
-                  className={`link flex items-center gap-2 ${pathname === "/product-listing/whats-on-sale" ? "active" : ""}`}
-                  href="/product-listing/whats-on-sale"
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="#"
                 >
-                  <Percent size={16} className="inline-block " />
-                  What&apos;s On Sale
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className={`link flex items-center gap-2 ${pathname === "/product-listing/clearance" ? "active" : ""}`}
-                  href="/product-listing/clearance"
-                >
-                  <Sparkles size={16} className="inline-block " />
-                  Clearance
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className={`link flex items-center gap-2 ${pathname === "/category/home-garden" ? "active" : ""}`}
-                  href="/category/home-garden"
-                >
-                  <Home size={16} className="inline-block " />
+                  <Home size={16} className="inline-block text-center" />
                   Home & Garden
                 </Link>
               </li>
               <li>
                 <Link
-                  className={`link flex items-center gap-2 ${pathname === "/category/furniture" ? "active" : ""}`}
-                  href="/category/furniture"
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="/category/home-garden"
                 >
                   <Armchair size={16} className="inline-block " />
                   Furniture
@@ -851,8 +847,17 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className={`link flex items-center gap-2 ${pathname === "/category/health-beauty" ? "active" : ""}`}
-                  href="/category/health-beauty"
+                  className="link flex items-center  xl:gap-2 hover:text-red-500"
+                  href="#"
+                >
+                  <HandbagIcon size={16} className="inline-block" />
+                  Fashion & Accessories
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="#"
                 >
                   <HeartPulse size={16} className="inline-block " />
                   Health & Beauty
@@ -860,20 +865,30 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className={`link flex items-center gap-2 ${pathname === "/category/toys-games" ? "active" : ""}`}
-                  href="/category/toys-games"
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="#"
                 >
-                  <Gamepad2 size={16} className="inline-block " />
-                  Toys & Games
+                  <Armchair size={16} className="inline-block " />
+                  Outdoor & Patio
                 </Link>
               </li>
               <li>
                 <Link
-                  className={`link flex items-center gap-2 ${pathname === "/category/baby-kids" ? "active" : ""}`}
-                  href="/category/baby-kids"
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="#"
                 >
-                  <Baby size={16} className="inline-block " />
-                  Baby & Kids
+                  <Gamepad2 size={16} className="inline-block " />
+                  Best Sellers
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="/product-listing/whats-on-sale"
+                >
+                  <Sparkles size={16} className="inline-block " />
+                  What&apos;s On Sale
                 </Link>
               </li>
             </ul>

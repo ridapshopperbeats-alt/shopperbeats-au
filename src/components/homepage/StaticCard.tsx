@@ -330,7 +330,7 @@ export default function StaticProductCards({
 
                 <div className="flex flex-1 flex-col justify-between w-full">
                   <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
-                    <h4 className="text-[12px] md:text-[14px] font-bold text-black">
+                    <h4 className="text-[0.75rem] md:text-[0.875rem] font-bold text-black">
                       {product.brand_name}
                     </h4>
 
