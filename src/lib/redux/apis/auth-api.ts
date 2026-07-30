@@ -10,6 +10,8 @@ import { clearCart } from "../slices/cart-slice";
 import { addressApi } from "./address-api";
 import { cartApi } from "./cart-api";
 import { orderApi } from "./order-api";
+import { paymentApi } from "./payment-api";
+import { vendorApi } from "./vendor-api";
 
 const baseQuery = createBaseQuery(API_ENDPOINTS.AUTH.BASE_URL);
 
@@ -113,7 +115,7 @@ export const authApi = createApi({
           // The server call can fail (e.g. an already-expired session
           // returns 401) but the user still asked to log out, so the
           // local session is cleared regardless below.
-          console.error("Logout request failed; clearing local session anyway", err);
+          console.error("Logout request failed; clearing local session anyway, status:", (err as { status?: number | string })?.status);
         } finally {
           clearRefreshToken();
           clearAccessTokenCookie();
@@ -122,6 +124,8 @@ export const authApi = createApi({
           dispatch(addressApi.util.resetApiState());
           dispatch(cartApi.util.resetApiState());
           dispatch(orderApi.util.resetApiState());
+          dispatch(paymentApi.util.resetApiState());
+          dispatch(vendorApi.util.resetApiState());
           dispatch(logout());
         }
       },

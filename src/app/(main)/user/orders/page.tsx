@@ -3,7 +3,9 @@
 import React, { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 import Link from "next/link";
+import { RootState } from "@/lib/redux/store";
 import {
   OrderAPIResponse,
   OrderItem,
@@ -55,6 +57,7 @@ const getOrderStatusLabel = (order: OrderItem) => {
 
 export default function MyOrdersPage() {
   const router = useRouter();
+  const { isAuthenticated, authChecked } = useSelector((state: RootState) => state.auth);
   const [cancelOrder] = useCancelOrderMutation();
 
   const [isCancelPopupOpen, setIsCancelPopupOpen] = useState(false);
@@ -88,11 +91,11 @@ export default function MyOrdersPage() {
     },
     {
       refetchOnMountOrArgChange: true,
+      skip: !authChecked || !isAuthenticated,
     },
   );
 
   const [allOrders, setAllOrders] = useState<OrderItem[]>([]);
-  console.log(allOrders, "=====allorders");
   const querySettled = !isLoading && !isFetching;
   const useStaticFallback =
     querySettled && (isError || !data || (data.data?.length ?? 0) === 0);

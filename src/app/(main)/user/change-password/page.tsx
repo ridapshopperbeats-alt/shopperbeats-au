@@ -50,7 +50,7 @@ export default function ChangePasswordPage() {
         apiError?.message ||
         "Failed to change password. Please check your current password.";
 
-      console.error("Failed to change password:", apiError);
+      console.error("Failed to change password, status:", apiError?.status);
       toast.error(message);
     }
   };

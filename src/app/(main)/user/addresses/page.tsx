@@ -2,17 +2,22 @@
 
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 import ConfirmAlert from "@/components/ui/ConfirmAlert";
 import { useDeleteAddressMutation, useGetAddressesQuery, useUpdateAddressMutation } from "@/lib/redux/apis/address-api";
 import { getApiErrorMessage } from "@/lib/utils/main-utils";
 import { Address } from "@/types/address";
+import { RootState } from "@/lib/redux/store";
 import { Loader } from "lucide-react";
 import Button from "@/components/common/Button";
 import AddressForm from "@/components/common/AddressForm";
 
 export default function AddressesPage() {
-  const { data: addresses, isLoading, isError } = useGetAddressesQuery();
+  const { isAuthenticated, authChecked } = useSelector((state: RootState) => state.auth);
+  const { data: addresses, isLoading, isError } = useGetAddressesQuery(undefined, {
+    skip: !authChecked || !isAuthenticated,
+  });
   const [updateAddress] = useUpdateAddressMutation();
   const [deleteAddress] = useDeleteAddressMutation();
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
@@ -53,7 +58,7 @@ export default function AddressesPage() {
       await deleteAddress({ id: selectedId }).unwrap();
       toast.success("Address deleted!");
     } catch (error) {
-      console.error("Failed to delete address:", error);
+      console.error("Failed to delete address, status:", (error as { status?: number | string })?.status);
       toast.error(getApiErrorMessage(error, "Failed to delete address."));
     } finally {
       setConfirmOpen(false);
@@ -71,7 +76,7 @@ export default function AddressesPage() {
         }).unwrap();
         toast.success("Default address updated!");
       } catch (error) {
-        console.error("Failed to update default address:", error);
+        console.error("Failed to update default address, status:", (error as { status?: number | string })?.status);
         toast.error(getApiErrorMessage(error, "Failed to update default address."));
       }
     }

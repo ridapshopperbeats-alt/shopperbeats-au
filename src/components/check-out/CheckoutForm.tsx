@@ -43,7 +43,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const savedCheckoutData = localStorage.getItem("checkoutFormData");
+      const savedCheckoutData = sessionStorage.getItem("checkoutFormData");
       if (savedCheckoutData) {
         try {
           const parsed = JSON.parse(savedCheckoutData);
@@ -53,7 +53,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             Date.now() - savedAt > CHECKOUT_DATA_TTL_MS;
 
           if (isExpired) {
-            localStorage.removeItem("checkoutFormData");
+            sessionStorage.removeItem("checkoutFormData");
           } else {
             setFormData((prev) => ({
               ...prev,
@@ -70,7 +70,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           }
         } catch (error) {
           console.error("Error loading saved checkout data:", error);
-          localStorage.removeItem("checkoutFormData");
+          sessionStorage.removeItem("checkoutFormData");
         }
       }
     }
@@ -93,7 +93,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
         company: formData.company,
         savedAt: Date.now(),
       };
-      localStorage.setItem("checkoutFormData", JSON.stringify(dataToSave));
+      sessionStorage.setItem("checkoutFormData", JSON.stringify(dataToSave));
     }
   }, [formData, mounted]);
 

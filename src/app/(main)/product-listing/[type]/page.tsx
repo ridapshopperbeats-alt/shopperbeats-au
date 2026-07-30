@@ -129,10 +129,17 @@ async function fetchProductData(
 
   let productApiUrl = "";
 
+  // The products API expects the JWT as a Bearer header, not a Cookie header
+  // — forward it explicitly, since access_token only reaches this server
+  // component as a raw cookie (see access-token.ts).
+  const accessTokenMatch = allCookies?.match(/(?:^|; )access_token=([^;]*)/);
+  const accessToken = accessTokenMatch ? decodeURIComponent(accessTokenMatch[1]) : null;
+
   const fetchOptions: RequestInit = {
     cache: "no-store",
     headers: {
       Cookie: allCookies || "",
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     },
   };
 
@@ -204,7 +211,6 @@ async function fetchProductData(
       }
     }
 
-    console.log("Resolved Filters:", filters);
     const megaMenuData: Category[] = [];
 
     const category: Category = {
@@ -285,7 +291,6 @@ export default async function ProductListingPage({
     resolvedSearchParams,
     allCookies
   );
-  console.log("API Filters:", filters);
   const megaMenuData = await getMegaMenuData();
 
   const isHighlight = [

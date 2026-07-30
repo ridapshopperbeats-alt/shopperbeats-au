@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { ChevronDownIcon, Clock, MapPin, ShieldCheck } from "lucide-react";
 
 import Button from "@/components/common/Button";
+import CartCheckoutDrawer from "@/components/cart/CartCheckoutDrawer";
 import ProductGallery from "../product-listing/ProductGallery";
 import Accordion from "../common/Accordion";
 import Breadcrumb from "@/components/common/Breadcrumb";
@@ -32,6 +33,8 @@ import { useVariantSelection } from "@/lib/hooks/use-variant-selection";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useStaticCart } from "@/lib/hooks/useStaticCart";
 import { useStaticWishlist } from "@/lib/hooks/useStaticWishlist";
+import type { StaticCartItem } from "@/lib/utils/staticStorage";
+import type { CartItem } from "@/types/cart";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 import { getDeliveryTabContent } from "@/components/ui/product-tab-content";
@@ -55,8 +58,9 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
   const dispatch = useDispatch();
 
   const { postcode, suburb, updatePostcode } = useGlobalPostcode();
-  const { addToCart, items: cartItems } = useStaticCart();
+  const { addToCart, items: cartItems, updateQuantity, removeItem } = useStaticCart();
   const { toggleItem, isWishlisted: checkWishlisted } = useStaticWishlist();
+  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
 
   const {
     attributeNames,
@@ -326,7 +330,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
 
   const handleCartButtonClick = () => {
     if (isProductInCart) {
-      router.push("/cart");
+      setIsCartDrawerOpen(true);
       return;
     }
     if (hasVariants && !selectedVariant?.id) {
@@ -335,8 +339,39 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
     }
     addStaticProductToCartLocal();
     toast.success("Product added to cart!");
-    router.push("/cart");
+    setIsCartDrawerOpen(true);
   };
+
+  // Adapts the local-storage-backed static cart item shape to the CartItem
+  // shape CartCheckoutDrawer expects (the same drawer the real product page
+  // uses) — field names line up closely, this just fills in the couple that
+  // differ in type (numbers vs strings) or don't exist on the static item.
+  const toDrawerCartItem = (item: StaticCartItem): CartItem => ({
+    id: item.id,
+    product_id: item.product_id,
+    variant_id: item.variant_id || "",
+    variant_attributes: item.variant_attributes || [],
+    quantity: item.quantity,
+    unit_price: String(item.unit_price),
+    rrp_price_snapshot: String(item.rrp_price_snapshot),
+    product_name: item.product_name,
+    discount_percentage: item.discount_percentage,
+    discounted_price: item.discounted_price,
+    oldPrice: String(item.oldPrice),
+    discount: String(item.discount),
+    final_price: item.final_price,
+    subtotal: item.subtotal,
+    shipping_cost: item.shipping_cost,
+    is_shippable: item.is_shippable,
+    handling_time_days: item.handling_time_days,
+    images: item.images,
+    tags: [],
+  });
+
+  const drawerCartItems = cartItems.map(toDrawerCartItem);
+  const drawerSubtotal = cartItems.reduce((acc, item) => acc + item.subtotal, 0);
+  const drawerShippingCost = cartItems.reduce((acc, item) => acc + item.shipping_cost, 0);
+  const drawerHasShippableItem = cartItems.some((item) => item.is_shippable);
 
   const handleBuyNow = () => {
     if (hasVariants && !selectedVariant?.id) {
@@ -957,6 +992,25 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
           });
           setSelectedAddressId(data.addressId);
         }}
+      />
+
+      <CartCheckoutDrawer
+        open={isCartDrawerOpen}
+        onClose={() => setIsCartDrawerOpen(false)}
+        items={drawerCartItems}
+        subtotal={drawerSubtotal}
+        shippingCost={drawerShippingCost}
+        hasShippableItem={drawerHasShippableItem}
+        localQtyMap={{}}
+        isUpdating={false}
+        isRemoving={false}
+        onIncrement={(item) => updateQuantity(item.product_id, item.quantity + 1)}
+        onDecrement={(item) => {
+          if (item.quantity <= 1) return;
+          updateQuantity(item.product_id, item.quantity - 1);
+        }}
+        onRemove={(id) => removeItem(id)}
+        onCheckout={() => router.push("/cart")}
       />
     </div>
   );

@@ -28,6 +28,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
+import { formatPrice } from "@/lib/utils/main-utils";
 import { useLazyReverseGeocodeQuery } from "@/lib/redux/apis/geocode-api";
 import { toast } from "react-toastify";
 import { useDebounceValue } from "@/lib/hooks/use-debounce";

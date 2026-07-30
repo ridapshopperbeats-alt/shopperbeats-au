@@ -112,7 +112,7 @@ export default function PersonalInformationPage() {
 
       toast.success("Profile updated successfully!");
     } catch (error) {
-      console.error("Profile update failed:", error);
+      console.error("Profile update failed, status:", (error as { status?: number | string })?.status);
       toast.error("Failed to update profile.");
     }
   };

@@ -7,7 +7,7 @@ function PaymentPolicy() {
         {/* Header Section */}
         <div className="legal-page-banner">
           <h1 className="legal-title">
-            Payment Policy
+            Payment Policy123
           </h1>
         </div>
 
