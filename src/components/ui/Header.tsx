@@ -360,7 +360,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
   const profileImage = personalData?.response?.profile_image?.trim()
     ? applyImageVariant(personalData.response.profile_image, "public")
-    : "/images/default_user_icon.jpg";
+    : "/images/user.svg";
 
   const isCheckout = pathname === "/check-out";
 
@@ -521,7 +521,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                     src={
                       profileImage?.trim()
                         ? profileImage
-                        : "/images/default_user_icon.jpg"
+                        : "/images/user.svg"
                     }
                     alt="account"
                     className="rounded-full object-cover"
@@ -536,7 +536,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="group"
                 >
                   <Image
-                    src="/images/default_user_icon.jpg"
+                    src="/images/user.svg"
                     alt="account"
                     width={20}
                     height={20}
