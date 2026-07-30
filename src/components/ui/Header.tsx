@@ -12,35 +12,34 @@ import { RootState } from "@/lib/redux/store";
 import { useRef } from "react";
 
 import {
-  Percent,
-  Sparkles,
-  Home,
-  Armchair,
-  HeartPulse,
-  Gamepad2,
-  Baby,
   X,
   ChevronDown,
   ChevronRight,
   Menu,
   Handbag,
   HandbagIcon,
+  HeartPulse,
+  Gamepad2,
+  Sparkles,
+  Armchair,
+  Home,
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
-import { formatPrice } from "@/lib/utils/main-utils";
 import { useLazyReverseGeocodeQuery } from "@/lib/redux/apis/geocode-api";
 import { toast } from "react-toastify";
-import { useDebounceValue } from "@/lib/hooks/use-debounce";
-import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 import { useGetPersonalDataQuery } from "@/lib/redux/apis/auth-api";
 import { useLockBodyScroll } from "@/lib/hooks/use-lock-body-scroll";
 import GooglePlacesInput from "../common/AddressAutocomplete";
 import Button from "../common/Button";
+import GlobalSearch from "../common/GlobalSearch";
+import CategoryNavbar from "./CategoryNavbar";
 import { addBreadcrumb } from "@/lib/redux/slices/breadcrumb-slice";
+import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
+import { useDebounceValue } from "@/lib/hooks/use-debounce";
 
 export interface MegaMenuCategory {
   name: string;
@@ -70,12 +69,9 @@ const resolveCategoryHref = (slugOrId: string) =>
 
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
-  const [showSearchResults, setShowSearchResults] = useState(false);
-  const [selectedResultIndex, setSelectedResultIndex] = useState(-1);
   const [showCartCard] = useState(false);
   const [showPincodeInput, setShowPincodeInput] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
   const pathname = usePathname();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -87,7 +83,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
   const { data: wishlistData } = useGetWishlistQuery(undefined);
 
   const locationRequestedRef = useRef(false);
-  const searchRef = useRef<HTMLDivElement>(null);
   const [triggerReverseGeocode] = useLazyReverseGeocodeQuery();
 
   const requestLocation = useCallback(() => {
@@ -96,6 +91,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
         const { latitude, longitude } = position.coords;
 
         try {
+
           const data = await triggerReverseGeocode({
             lat: latitude,
             lng: longitude,
@@ -173,10 +169,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
   }, []);
 
   useEffect(() => {
-    setIsSearching(false);
-  }, [pathname]);
-
-  useEffect(() => {
     const checkLocationAndPostcode = async () => {
       if (locationRequestedRef.current) return;
       locationRequestedRef.current = true;
@@ -235,10 +227,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
     price?: number;
   }
 
-  // Single source of truth for what's actually on screen — each list narrows
-  // further as the user keeps typing ahead of the debounce, so keyboard
-  // bounds/selection and the rendered rows must read from these same
-  // filtered lists, not the raw API response.
   const query = searchQuery.toLowerCase();
 
   const filteredProducts: SuggestionItem[] = React.useMemo(() => {
@@ -283,24 +271,24 @@ export default function Header({ megaMenuData }: HeaderProps) {
     [filteredProducts, filteredCategories, filteredBrands],
   );
 
-  const handleSearch = () => {
-    if (
-      selectedResultIndex !== -1 &&
-      filteredResults &&
-      filteredResults[selectedResultIndex]
-    ) {
-      const selectedItem = filteredResults[selectedResultIndex];
-      setIsSearching(true);
-      router.push(selectedItem.linkHref);
-      setShowSearchResults(false);
-      setSelectedResultIndex(-1);
-    } else {
-      if (searchQuery.trim() == "") return;
-      setIsSearching(true);
-      router.push(`/search?q=${searchQuery.trim()}`);
-      setShowSearchResults(false);
-    }
-  };
+  // const handleSearch = () => {
+  //   if (
+  //     selectedResultIndex !== -1 &&
+  //     filteredResults &&
+  //     filteredResults[selectedResultIndex]
+  //   ) {
+  //     const selectedItem = filteredResults[selectedResultIndex];
+  //     setIsSearching(true);
+  //     router.push(selectedItem.linkHref);
+  //     setShowSearchResults(false);
+  //     setSelectedResultIndex(-1);
+  //   } else {
+  //     if (searchQuery.trim() == "") return;
+  //     setIsSearching(true);
+  //     router.push(`/search?q=${searchQuery.trim()}`);
+  //     setShowSearchResults(false);
+  //   }
+  // };
 
   const toggleMegaMenu = () => {
     setIsMegaMenuOpen(!isMegaMenuOpen);
@@ -351,21 +339,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
       ) {
         setShowPincodeInput(false);
       }
-      if (
-        showSearchResults &&
-        searchRef.current &&
-        !isInside(searchRef.current)
-      ) {
-        setShowSearchResults(false);
-      }
     };
 
-    if (
-      isMobileNavOpen ||
-      isMegaMenuOpen ||
-      showPincodeInput ||
-      showSearchResults
-    ) {
+    if (isMobileNavOpen || isMegaMenuOpen || showPincodeInput) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -374,7 +350,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isMobileNavOpen, isMegaMenuOpen, showPincodeInput, showSearchResults]);
+  }, [isMobileNavOpen, isMegaMenuOpen, showPincodeInput]);
 
   useLockBodyScroll(isMobileNavOpen);
 
@@ -385,6 +361,35 @@ export default function Header({ megaMenuData }: HeaderProps) {
   const profileImage = personalData?.response?.profile_image?.trim()
     ? applyImageVariant(personalData.response.profile_image, "public")
     : "/images/default_user_icon.jpg";
+
+  const isCheckout = pathname === "/check-out";
+
+  if (isCheckout) {
+    return (
+      <div className="header-fixed">
+        <div className="container">
+          <div className="top-head" style={{ justifyContent: "space-between" }}>
+            <div className="logo-block">
+              <div className="logo">
+                <Link href="/">
+                  <Image
+                    src="/images/logo.svg"
+                    alt="ShopperBeats Logo"
+                    width={300}
+                    height={300}
+                    priority
+                  />
+                </Link>
+              </div>
+            </div>
+
+            <CartPopup isVisible={showCartCard} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="header-fixed ">
       <div className="container flex flex-col">
@@ -419,155 +424,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
             </div>
           </div>
 
-          <div className="search-block" ref={searchRef}>
-            <label htmlFor="headerSearch" className="visually-hidden">
-              Search products
-            </label>
-            <input
-              style={{ background: "#fff", borderRadius: "5px" }}
-              id="headerSearch"
-              type="text"
-              placeholder="Explore amazing products you'll love"
-              value={searchQuery}
-              onChange={(e) => {
-                setShowSearchResults(true);
-                setSearchQuery(e.target.value);
-                setSelectedResultIndex(-1);
-              }}
-              onFocus={() => {
-                if (searchQuery.trim() !== "") {
-                  setShowSearchResults(true);
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "ArrowDown") {
-                  e.preventDefault();
-                  setSelectedResultIndex((prev) =>
-                    filteredResults && prev < filteredResults.length - 1
-                      ? prev + 1
-                      : 0,
-                  );
-                } else if (e.key === "ArrowUp") {
-                  e.preventDefault();
-                  setSelectedResultIndex((prev) =>
-                    filteredResults && prev > 0
-                      ? prev - 1
-                      : (filteredResults?.length || 1) - 1,
-                  );
-                } else if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleSearch();
-                } else if (e.key === "Escape") {
-                  setShowSearchResults(false);
-                }
-              }}
-            />
-
-            {isSearching ? (
-              <div className="search-loader"></div>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSearch}
-                aria-label="Search"
-              ></button>
-            )}
-
-            {searchQuery && showSearchResults && (
-              <div className="search-results" data-lenis-prevent>
-                {isSearchLoading ? (
-                  <p>Loading...</p>
-                ) : filteredResults.length > 0 ? (
-                  (() => {
-                    let runningIndex = -1;
-
-                    const renderGroup = (
-                      title: string,
-                      items: SuggestionItem[],
-                    ) =>
-                      items.length > 0 && (
-                        <div className="search-result-group" key={title}>
-                          <p className="search-result-group-title text-[11px] font-semibold uppercase tracking-wide text-[#9aa0ab] px-3 pt-2">
-                            {title}
-                          </p>
-                          {items.map((item) => {
-                            runningIndex += 1;
-                            const currentIndex = runningIndex;
-
-                            return (
-                              <Link
-                                prefetch={false}
-                                key={`${item.type}-${item.id}`}
-                                href={item.linkHref}
-                                onClick={() => {
-                                  setIsSearching(true);
-                                  setShowSearchResults(false);
-                                }}
-                              >
-                                <div
-                                  className={`search-result-item flex items-center gap-2 ${
-                                    currentIndex === selectedResultIndex
-                                      ? "selected"
-                                      : ""
-                                  }`}
-                                >
-                                  {item.type === "product" && (
-                                    <span className="relative w-8 h-8 shrink-0 rounded-[4px] overflow-hidden bg-[#F5F5F5]">
-                                      {item.thumbnailUrl && (
-                                        <Image
-                                          src={item.thumbnailUrl}
-                                          alt={item.displayLabel}
-                                          fill
-                                          className="object-cover"
-                                        />
-                                      )}
-                                    </span>
-                                  )}
-                                  <p className="text-[#696e79] flex-1 min-w-0 truncate">
-                                    {item.displayLabel}
-                                  </p>
-                                  {item.type === "product" &&
-                                    item.price !== undefined && (
-                                      <span className="text-[#fd151b] font-semibold text-[13px] shrink-0">
-                                        ${formatPrice(item.price)}
-                                      </span>
-                                    )}
-                                </div>
-                              </Link>
-                            );
-                          })}
-                        </div>
-                      );
-
-                    return (
-                      <>
-                        {renderGroup("Products", filteredProducts)}
-                        {renderGroup("Categories", filteredCategories)}
-                        {renderGroup("Brands", filteredBrands)}
-                        <Link
-                          prefetch={false}
-                          href={`/search?q=${encodeURIComponent(searchQuery.trim())}`}
-                          onClick={() => {
-                            setIsSearching(true);
-                            setShowSearchResults(false);
-                            setSelectedResultIndex(-1);
-                          }}
-                        >
-                          <div className="search-result-item see-all-results w-full text-center font-semibold text-[#fd151b]">
-                            See all results
-                          </div>
-                        </Link>
-                      </>
-                    );
-                  })()
-                ) : (
-                  <div className="search-result-item">
-                    <p className="text-[#696e79]">No products found</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          <GlobalSearch />
 
           <div className="login-block">
             <div className="delivery-block" style={{ position: "relative" }}>
@@ -755,11 +612,10 @@ export default function Header({ megaMenuData }: HeaderProps) {
                     activeCategory === (cat.slug ?? cat.id) && (
                       <div
                         key={cat.id}
-                        className={`mega-content ${
-                          activeCategory === (cat.slug ?? cat.id)
+                        className={`mega-content ${activeCategory === (cat.slug ?? cat.id)
                             ? "active"
                             : ""
-                        }`}
+                          }`}
                         id={cat.id}
                       >
                         <div className="mega-cat">

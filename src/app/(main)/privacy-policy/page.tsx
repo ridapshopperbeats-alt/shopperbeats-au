@@ -1,5 +1,3 @@
-"use client";
-
 function PrivacyPolicy() {
   return (
     <div className="bg-white h-auto w-[1732px] mx-auto rounded-[8px] my-10 container">

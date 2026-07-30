@@ -320,6 +320,7 @@ export type OrderDetailsType = {
     image?: string;
     quantity: number;
     price: string;
+    originalPrice?: string;
   }>;
   deliveryAddress: string;
   deliveryCost: string;

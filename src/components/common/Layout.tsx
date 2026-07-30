@@ -1,5 +1,3 @@
-"use client";
-
 import type { ComponentProps, ReactNode } from "react";
 import Header from "../ui/Header";
 import Footer from "../ui/Footer";

@@ -561,7 +561,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
       <div className="hidden lg:flex justify-center mt-5">
         <Button
-          className="btn btn-red btn-filled btn-sharp w-full"
+          className="global-btn"
           type="submit"
           disabled={isCreatingOrder}
           isLoading={isCreatingOrder}

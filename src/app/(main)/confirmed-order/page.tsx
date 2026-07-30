@@ -9,15 +9,38 @@ import { OrderDetailsType } from "@/types/order";
 
 // Extract the order details type from OrderSummaryPopup's props
 
+// TODO: remove once the real order-confirmation flow is wired back up —
+// static placeholder so this page has something to show for now.
+const STATIC_ORDER_DETAILS: OrderDetailsType = {
+  orderNumber: "1234F61920",
+  orderId: "1234F61920",
+  products: [
+    {
+      id: "1",
+      name: "REDMI A7 Pro 5G (Sunset Orange, 4GB RAM, 64GB Storage) | Segment's ....",
+      image: "/images/headphone.png",
+      quantity: 1,
+      price: "$245.78",
+      originalPrice: "$291.99",
+    },
+    {
+      id: "2",
+      name: "IFB 8 Kg 5 Star with Deep Clean® Technology, AI Powered...",
+      image: "/images/ear-pods.png",
+      quantity: 1,
+      price: "$245.78",
+      originalPrice: "$291.99",
+    },
+  ],
+  deliveryAddress: "145 Kingfisher Avenue, Brunswick VIC 3056, Melbourne, Australia",
+  deliveryCost: "$38.99",
+  couponCode: "GET500",
+  totalAmount: "$337.99",
+};
+
 export default function ConfirmedOrderPage() {
   const router = useRouter();
-  const [orderDetails, setOrderDetails] = useState<OrderDetailsType>({
-    orderId: "",
-    deliveryCost: "",
-    totalAmount: "",
-    products: [],
-    deliveryAddress: "",
-  });
+  const [orderDetails, setOrderDetails] = useState<OrderDetailsType>(STATIC_ORDER_DETAILS);
   const hasLoadedRef = useRef(false);
 
   useEffect(() => {
@@ -27,7 +50,6 @@ export default function ConfirmedOrderPage() {
     const stored = sessionStorage.getItem("orderConfirmation");
 
     if (!stored) {
-      router.replace("/");
       return;
     }
 
@@ -52,9 +74,9 @@ export default function ConfirmedOrderPage() {
             <div className="overflow-auto">
               {/* Header */}
               <div className="text-center py-4 border-b border-[#D9D2D2]">
-                <h6 className="text-[18px] font-semibold">
+                <h6 className="font-montserrat font-bold text-[18px] leading-none tracking-normal capitalize">
                   Order ID:{" "}
-                  <span className="font-normal text-[#555]">
+                  <span className="font-montserrat font-normal text-[18px] leading-none tracking-normal capitalize">
                     #{orderDetails.orderNumber || orderDetails.orderId}
                   </span>
                 </h6>
@@ -84,11 +106,12 @@ export default function ConfirmedOrderPage() {
                       <div className="flex flex-wrap gap-2 my-2 sm:my-4">
                         <p className="font-montserrat font-semibold text-[12px] leading-[16px] tracking-[0%]">QTY - {item.quantity || 0}</p>
                         {orderDetails.couponCode && (
-                          <p className="px-2 py-1 rounded-[4px] flex gap-1 items-center">
-                            <span className="font-montserrat font-medium text-[12px] leading-[100%] tracking-[0%] capitalize" style={{ color: "#049950" }}>
-                              Code Applied -{" "}
+                          <p className="px-2 rounded-[4px] flex items-center gap-1">
+                            <span className="font-montserrat font-medium text-[12px] leading-none tracking-normal capitalize text-[#049950]">
+                              Code Applied -
                             </span>
-                            <span className="font-montserrat font-bold text-[12px] leading-[100%] tracking-[0%] capitalize" style={{ color: "#049950" }}>
+
+                            <span className="font-montserrat font-bold text-[12px] leading-none tracking-normal capitalize text-[#049950]">
                               {orderDetails.couponCode}
                             </span>
                           </p>
@@ -98,6 +121,9 @@ export default function ConfirmedOrderPage() {
                   </div>
 
                   <div className="text-right whitespace-nowrap flex flex-col justify-end shrink-0">
+                    {item.originalPrice && item.originalPrice !== item.price && (
+                      <p className="font-montserrat font-normal text-[12px] leading-[20px] tracking-[0%] text-right align-middle line-through text-[#049950]">{item.originalPrice}</p>
+                    )}
                     <p className="text-[14px] text-[#FD151B] font-semibold">{item.price}</p>
                   </div>
                 </div>
@@ -125,7 +151,7 @@ export default function ConfirmedOrderPage() {
           <div className="w-full mx-auto flex flex-col px-2 mt-8 gap-4">
             <Link href="/">
               <Button
-                className="bg-gradient-to-r from-[#FF676B] to-[#FD151B] h-[46px] rounded-[74px] text-[#F6F6F6] text-[16px] font-semibold leadiing-5 w-full shadow-md shadow-[#0E35BF]/25 cursor-pointer"
+                className="global-btn"
                 debounceDelay={500}
               >
                 Continue Shopping
