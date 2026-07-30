@@ -35,7 +35,8 @@ export default function ResetPasswordPage({ params }: PageProps) {
       toast.error("Invalid or missing reset token.");
       return;
     }
-    if (!recaptcha_token) {
+    const isProd = process.env.NEXT_PUBLIC_ENV_VARIABLE === 'prod';
+    if (isProd && !recaptcha_token) {
       toast.error("Please complete the reCAPTCHA.");
       return;
     }
@@ -47,7 +48,7 @@ export default function ResetPasswordPage({ params }: PageProps) {
         ...formData,
         uid,
         token,
-        recaptcha_token
+        recaptcha_token: recaptcha_token || "",
       }).unwrap();
       setSuccess("Password has been reset successfully.");
       toast.success("Password has been reset successfully.");
@@ -121,9 +122,11 @@ export default function ResetPasswordPage({ params }: PageProps) {
             )}
           </div>
 
-          <div className="form-item">
-            <ReCaptcha onCaptchaChange={setRecaptcha_token} />
-          </div>
+          {process.env.NEXT_PUBLIC_ENV_VARIABLE === 'prod' && (
+            <div className="form-item">
+              <ReCaptcha onCaptchaChange={setRecaptcha_token} />
+            </div>
+          )}
 
 
           <Button
@@ -140,8 +143,8 @@ export default function ResetPasswordPage({ params }: PageProps) {
           {success && <p className="success mt-10">{success}</p>}
 
 
-          <div className="flex link justify-center">
-            <p>New to ShopperBeats? <a href="/sign-up">Sign Up</a></p>
+          <div className="flex link justify-center my-2">
+            <p>New to ShopperBeats?<a href="/sign-up">Sign Up</a></p>
           </div>
 
         </form>
