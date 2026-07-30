@@ -41,19 +41,73 @@ function normalizeReview(review: Review): DisplayReview {
     rating: Number(review.rating) || 0,
     date: formatReviewDate(review.created_at),
     comment: review.comment,
+    verified: true,
     reviewer_profile_image: review.reviewer_profile_image,
     images: review.images,
   };
 }
 
-const STORE_REVIEWS: DisplayReview[] = [];
+const STORE_REVIEWS: DisplayReview[] = [
+  {
+    id: "store-review-1",
+    name: "Amelia Clarke",
+    rating: 5,
+    date: "18 Jul 2026",
+    comment:
+      "Great experience shopping with this store — fast dispatch and the packaging was excellent.",
+    verified: true,
+    reviewer_profile_image: null,
+  },
+  {
+    id: "store-review-2",
+    name: "Noah Bennett",
+    rating: 4,
+    date: "10 Jul 2026",
+    comment:
+      "Customer support was quick to respond when I had a question about my order.",
+    verified: true,
+    reviewer_profile_image: null,
+  },
+  {
+    id: "store-review-3",
+    name: "Sophia Turner",
+    rating: 5,
+    date: "02 Jul 2026",
+    comment: "Reliable seller, this is my third order and everything arrived as described.",
+    verified: false,
+    reviewer_profile_image: null,
+  },
+];
+
 const QUESTIONS: {
   id: string;
   name: string;
   date: string;
   question: string;
   answer?: string;
-}[] = [];
+}[] = [
+  {
+    id: "question-1",
+    name: "Liam Foster",
+    date: "20 Jul 2026",
+    question: "Does this come with a warranty?",
+    answer: "Yes, it includes a 1-year manufacturer warranty.",
+  },
+  {
+    id: "question-2",
+    name: "Emma Johnson",
+    date: "14 Jul 2026",
+    question: "Is this true to size?",
+    answer: "Yes, most buyers found it fits true to size.",
+  },
+  {
+    id: "question-3",
+    name: "Oliver Smith",
+    date: "05 Jul 2026",
+    question: "Can I return this if it doesn't fit?",
+    answer: "Yes, returns are accepted within 30 days of delivery.",
+  },
+];
 
 const TABS = ["Product Reviews", "Store Reviews", "Questions"] as const;
 type Tab = (typeof TABS)[number];
@@ -68,21 +122,14 @@ export default function CustomerRatingViewPage({
   reviews,
 }: CustomerRatingViewPageProps) {
   const [activeTab, setActiveTab] = useState<Tab>(TABS[0]);
-  const [sortBy, setSortBy] = useState("Latest");
+  const [sortBy, setSortBy] = useState("latest");
   const [visibleCount, setVisibleCount] = useState(REVIEWS_PAGE_SIZE);
 
   const productReviews = (reviews ?? []).map(normalizeReview);
 
-  const tabHasData: Record<Tab, boolean> = {
-    "Product Reviews": productReviews.length > 0,
-    "Store Reviews": STORE_REVIEWS.length > 0,
-    Questions: QUESTIONS.length > 0,
-  };
-  const visibleTabs = TABS.filter((tab) => tabHasData[tab]);
+  const visibleTabs = TABS;
 
-  if (visibleTabs.length === 0) return null;
-
-  const currentTab = tabHasData[activeTab] ? activeTab : visibleTabs[0];
+  const currentTab = activeTab;
 
   const handleTabClick = (tab: Tab) => {
     setActiveTab(tab);
@@ -122,17 +169,17 @@ export default function CustomerRatingViewPage({
       <div className="flex flex-col lg:flex-row lg:flex-wrap lg:items-center lg:justify-between gap-4 mb-2 lg:mb-6">
         <h2 className="text-[14px] lg:text-[26px] leading-[18px] font-bold">
           <span className="text-[#FD151B]">Customer ratings</span>{" "}
-          <span className="text-black">&amp; reviews</span>
+          <span className="text-[#012A62]">&amp; reviews</span>
         </h2>
 
         <div className="flex flex-col gap-3 w-full lg:w-auto lg:flex-1 lg:min-w-0 md:flex-row md:items-center md:justify-between">
-          <div className="no-scrollbar flex items-center gap-2 overflow-x-auto whitespace-nowrap">
+          <div className="no-scrollbar flex justify-center items-center gap-2 overflow-x-auto whitespace-nowrap">
             {visibleTabs.map((tab) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => handleTabClick(tab)}
-                className={`shrink-0 h-[38px] px-5 rounded-full text-[10px] lg:text-[13px] font-semibold border cursor-pointer whitespace-nowrap transition-colors ${
+                className={` shrink-0 h-[38px] px-5 rounded-full text-[10px] lg:text-[13px] font-semibold border items-center justify-center cursor-pointer whitespace-nowrap transition-colors ${
                   currentTab === tab
                     ? "bg-[#FD151B] border-[#FD151B] text-white"
                     : "bg-white border-[#E2E2E2] text-black"
@@ -166,17 +213,17 @@ export default function CustomerRatingViewPage({
                 position="popper"
                 className="w-(--radix-select-trigger-width)  2xl:w-[230px]  border !border-[#F6F6F6] bg-white p-2 shadow-[#000000]/25 rounded-[5px] ring-0 outline-none focus:outline-none focus:ring-0 text-[14px] font-normal leading-[17px] "
               >
-                <SelectItem value="price_asc" className="mb-2">
+                <SelectItem value="latest" className="mb-2">
                   Latest
                 </SelectItem>
 
-                <SelectItem value="price_desc" className="mb-2">
+                <SelectItem value="highest_rating" className="mb-2">
                   Highest Rating
                 </SelectItem>
 
-                <SelectItem value="newly_added">Lowest Rating</SelectItem>
+                <SelectItem value="lowest_rating">Lowest Rating</SelectItem>
 
-                <SelectItem value="top_rated" className="mb-2">
+                <SelectItem value="most_helpful" className="mb-2">
                   Most Helpful
                 </SelectItem>
               </SelectContent>
@@ -185,7 +232,7 @@ export default function CustomerRatingViewPage({
         </div>
       </div>
 
-      <div className="flex flex-col xl:flex-row gap-10 xl:gap-10">
+      <div className="flex flex-col xl:flex-row gap-4 xl:gap-7">
         {!isQuestionsTab && (
           <div className="w-full xl:w-[320px] xl:shrink-0">
             <p className="text-[15px] leading-[20px] lg:text-[30px] font-bold text-black">
@@ -212,8 +259,10 @@ export default function CustomerRatingViewPage({
                       style={{ width: `${row.percent}%` }}
                     />
                   </div>
-                  <span className="w-9 shrink-0  text-[13px] font-normal leading-[18px] text-[#535766] 
-                  ">
+                  <span
+                    className="w-9 shrink-0  text-[13px] font-normal leading-[18px] text-[#535766] 
+                  "
+                  >
                     {row.count}
                   </span>
                 </div>
@@ -222,104 +271,114 @@ export default function CustomerRatingViewPage({
           </div>
         )}
 
+        <div className="flex lg:hidden w-[calc(100%+64px)] -ml-8 border-t border-[#ECECEC]" />
+
         <div className="relative flex-1 min-w-0 xl:pl-10">
-          <div className="hidden xl:block absolute left-0 top-4 bottom-20 w-px bg-[#D2D2D2]" />
-          {isQuestionsTab
-            ? visibleQuestions.length > 0 && (
-                <div
-                  className="flex flex-col divide-y divide-[#F0F0F0] max-h-[520px] overflow-y-auto overscroll-contain pr-2 scrollbar scrollbar-track-[#F2F2F2] scrollbar-thumb-[#BDBDBD] scrollbar-track-rounded-[15px] scrollbar-thumb-rounded-[15px]"
-                  data-lenis-prevent
-                  onWheel={(e) => e.stopPropagation()}
-                >
-                  {visibleQuestions.map((item) => (
-                    <div key={item.id} className="py-4">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="font-semibold text-[13px] lg:text-[16px] leading-[13px] capitalize text-[#0F0F0F]">
-                          {item.name}
-                        </span>
-                        <span className="text-[12px] text-[#696e79]">
-                          {item.date}
-                        </span>
-                      </div>
-
-                      <p className="mt-1 text-[13px] text-[#0F0F0F]">
-                        <span className="font-semibold">Q:</span>{" "}
-                        {item.question}
-                      </p>
-
-                      {item.answer && (
-                        <p className="mt-1 text-[13px] text-[#696e79]">
-                          <span className="font-semibold">A:</span>{" "}
-                          {item.answer}
-                        </p>
-                      )}
+          {!isQuestionsTab && (
+            <div className="hidden xl:block absolute left-0 top-4 bottom-0 w-px bg-[#D2D2D2]" />
+          )}
+          {isQuestionsTab ? (
+            visibleQuestions.length > 0 ? (
+              <div
+                className="flex flex-col divide-y divide-[#F0F0F0] max-h-[520px] overflow-y-auto overscroll-contain pr-2 scrollbar scrollbar-track-[#F2F2F2] scrollbar-thumb-[#BDBDBD] scrollbar-track-rounded-[15px] scrollbar-thumb-rounded-[15px]"
+                data-lenis-prevent
+                onWheel={(e) => e.stopPropagation()}
+              >
+                {visibleQuestions.map((item) => (
+                  <div key={item.id} className="py-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="font-semibold text-[13px] lg:text-[16px] leading-[13px] capitalize text-[#0F0F0F]">
+                        {item.name}
+                      </span>
+                      <span className="text-[12px] text-[#696e79]">
+                        {item.date}
+                      </span>
                     </div>
-                  ))}
-                </div>
-              )
-            : visibleReviews.length > 0 && (
-                <div
-                  className="flex flex-col divide-y divide-[#F0F0F0] max-h-[520px] overflow-y-auto overscroll-contain pr-2 scrollbar scrollbar-track-[#F2F2F2] scrollbar-thumb-[#BDBDBD] scrollbar-track-rounded-[15px] scrollbar-thumb-rounded-[15px]"
-                  data-lenis-prevent
-                  onWheel={(e) => e.stopPropagation()}
-                >
-                  {visibleReviews.map((review) => (
-                    <div
-                      key={review.id}
-                      className="flex items-start gap-3 py-4"
-                    >
-                      <Image
-                        src={
-                          review.reviewer_profile_image ||
-                          "/images/default_user_icon.jpg"
-                        }
-                        alt={review.name}
-                        width={54}
-                        height={54}
-                        className="rounded-full w-10 h-10 object-cover shrink-0"
-                      />
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center justify-between gap-2 lg:flex-nowrap">
-                          <div className="order-1 flex flex-wrap items-center gap-2 lg:gap-6">
-                            <span className="font-semibold text-[13px] lg:text-[16px] leading-[13px] capitalize text-[#0F0F0F]">
-                              {review.name}
-                            </span>
+                    <p className="mt-1 text-[13px] text-[#0F0F0F]">
+                      <span className="font-semibold">Q:</span>{" "}
+                      {item.question}
+                    </p>
 
-                            <div className="shrink-0">
-                              <StarRating rating={review.rating} size={13} />
-                            </div>
+                    {item.answer && (
+                      <p className="mt-1 text-[13px] text-[#696e79]">
+                        <span className="font-semibold">A:</span>{" "}
+                        {item.answer}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="py-10 text-center text-[13px] text-[#696e79]">
+                No questions yet.
+              </p>
+            )
+          ) : visibleReviews.length > 0 ? (
+            <div
+              className="flex flex-col max-h-[520px] overflow-y-auto overscroll-contain pr-2 scrollbar scrollbar-track-[#F2F2F2] scrollbar-thumb-[#BDBDBD] scrollbar-track-rounded-[15px] scrollbar-thumb-rounded-[15px]"
+              data-lenis-prevent
+              onWheel={(e) => e.stopPropagation()}
+            >
+              {visibleReviews.map((review) => (
+                <div key={review.id} className="flex items-start gap-3 py-3">
+                  <Image
+                    src={
+                      review.reviewer_profile_image ||
+                      "/images/default_user_icon.jpg"
+                    }
+                    alt={review.name}
+                    width={54}
+                    height={54}
+                    className="rounded-full w-10 h-10 object-cover shrink-0"
+                  />
 
-                            {review.verified && (
-                              <span className="whitespace-nowrap font-normal text-[12px] lg:text-[14px] leading-[18px] capitalize text-[#00AD34]">
-                                Verified Purchase
-                              </span>
-                            )}
-                          </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center justify-between gap-2 lg:flex-nowrap">
+                      <div className="order-1 flex flex-wrap items-center gap-2 lg:gap-6">
+                        <span className="font-semibold text-[13px] lg:text-[16px] leading-[13px] capitalize text-[#0F0F0F]">
+                          {review.name}
+                        </span>
 
-                          <span className="order-2 text-[12px] text-[#696e79] lg:ml-auto">
-                            {review.date}
-                          </span>
+                        <div className="shrink-0">
+                          <StarRating rating={review.rating} size={13} />
                         </div>
 
-                        <p className="mt-1 text-[13px] text-[#696e79]">
-                          {review.comment}
-                        </p>
+                        {review.verified && (
+                          <span className="whitespace-nowrap font-normal text-[12px] lg:text-[14px] leading-[18px] capitalize text-[#00AD34]">
+                            Verified Purchase
+                          </span>
+                        )}
                       </div>
 
-                      <Image
-                        src={getReviewImage(review)}
-                        alt="Reviewed product"
-                        width={75}
-                        height={75}
-                        className="rounded-[6px] w-14 h-14 object-cover shrink-0"
-                      />
+                      <span className="order-2 text-[12px] text-[#696e79] lg:ml-auto">
+                        {review.date}
+                      </span>
                     </div>
-                  ))}
-                </div>
-              )}
 
-          <div className="flex justify-center py-6">
+                    <p className="mt-1 text-[13px] text-[#696e79]">
+                      {review.comment}
+                    </p>
+                  </div>
+
+                  <Image
+                    src={getReviewImage(review)}
+                    alt="Reviewed product"
+                    width={75}
+                    height={75}
+                    className="rounded-[6px] w-14 h-14 object-cover shrink-0"
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="py-10 text-center text-[13px] text-[#696e79]">
+              No {currentTab === "Store Reviews" ? "store reviews" : "reviews"}{" "}
+              yet.
+            </p>
+          )}
+
+          {/* <div className="flex justify-center py-6">
             {isQuestionsTab
               ? canToggleQuestions && (
                   <button
@@ -359,7 +418,7 @@ export default function CustomerRatingViewPage({
                     {hasMoreReviews ? "View More Reviews" : "View Less Reviews"}
                   </button>
                 )}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

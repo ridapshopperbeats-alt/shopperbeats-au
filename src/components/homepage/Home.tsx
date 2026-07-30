@@ -58,7 +58,7 @@ const Home = async () => {
             />
           )} */}
 
-          <StaticProductCards heading="New Arrival " viewAllHref="#" />
+          <StaticProductCards heading="New Arrivals " viewAllHref="#" />
         </div>
       </div>
     </TopCategories>

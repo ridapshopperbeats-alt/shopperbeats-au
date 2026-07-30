@@ -157,9 +157,6 @@ ul.social {
     @apply text-sm;
   }
 
-  .footer-block h5 {
-    @apply text-lg;
-  }
 }
 
 @media screen and (max-width: 1199px) {

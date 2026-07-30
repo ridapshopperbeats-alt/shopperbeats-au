@@ -122,7 +122,7 @@ export default function Footer({
   return (
     <div className="page-footer">
       <div className="pt-9">
-        <div className="footer-highlights-wrapper">
+        <div className="footer-highlights-wrapper shadow-[0px_0px_4px_1px_#C7C7C740]">
           <div className="footer-highlights-grid">
             {footerHighlights.map((item) => (
               <div key={item.img} className="group footer-highlight-item">
@@ -246,7 +246,7 @@ export default function Footer({
 
             {/* Newsletter */}
             <div className="footer-block footer-newsletter">
-              <h5 className="footer-newsletter-title">JOIN OUR MAILING LIST</h5>
+              <h5 className="text-[16px] md:text-[20px] text-white leading-[28px]" style={{fontWeight:"700"}}>JOIN OUR MAILING LIST</h5>
               <p className="footer-newsletter-desc">
                 Enter your email to get $10 off and free shipping
               </p>
