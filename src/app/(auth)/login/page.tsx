@@ -151,7 +151,9 @@ export default function LoginPage() {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
-    if (!recaptcha_token) {
+    const isProd = process.env.NEXT_PUBLIC_ENV_VARIABLE === 'prod';
+
+    if (isProd && !recaptcha_token) {
       toast.error("Please complete the reCAPTCHA.", {
         toastId: "captcha-error",
       });
@@ -162,7 +164,7 @@ export default function LoginPage() {
     try {
       const response: LoginResponse = await login({
         ...formData,
-        recaptcha_token,
+        recaptcha_token: recaptcha_token || "",
         remember_me: rememberMe,
       }).unwrap();
 

@@ -115,7 +115,9 @@ export const authApi = createApi({
           // The server call can fail (e.g. an already-expired session
           // returns 401) but the user still asked to log out, so the
           // local session is cleared regardless below.
-          console.error("Logout request failed; clearing local session anyway, status:", (err as { status?: number | string })?.status);
+          // The local session is cleared regardless (see finally below), so
+          // this isn't fatal — avoid tripping Next's console.error dev overlay.
+          console.warn("Logout request failed; clearing local session anyway, status:", (err as { status?: number | string })?.status);
         } finally {
           clearRefreshToken();
           clearAccessTokenCookie();

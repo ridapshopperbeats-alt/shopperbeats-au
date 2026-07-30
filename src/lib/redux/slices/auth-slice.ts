@@ -12,19 +12,23 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      const wasAuthenticated = state.isAuthenticated;
       state.isAuthenticated = false;
       state.accessToken = null;
       state.authChecked = true;
-      if (typeof window !== "undefined") {
-        // Non-sensitive ping only (no token/flag value) so other open tabs
-        // know to re-check their session with the backend.
+      // Only ping other tabs when this actually changes something — otherwise
+      // an already-logged-out tab re-checking its session keeps re-writing
+      // this key, which triggers other tabs' storage listener to re-check
+      // theirs, which writes it again, looping forever between tabs.
+      if (wasAuthenticated && typeof window !== "undefined") {
         localStorage.setItem("auth-sync", Date.now().toString());
       }
     },
     setAuthenticated: (state, action: PayloadAction<boolean>) => {
+      const changed = state.isAuthenticated !== action.payload;
       state.isAuthenticated = action.payload;
       state.authChecked = true;
-      if (typeof window !== "undefined") {
+      if (changed && typeof window !== "undefined") {
         localStorage.setItem("auth-sync", Date.now().toString());
       }
     },
