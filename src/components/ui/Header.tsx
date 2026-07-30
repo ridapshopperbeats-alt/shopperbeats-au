@@ -878,6 +878,15 @@ export default function Header({ megaMenuData }: HeaderProps) {
         </div>
 
         <div
+          className={`fixed inset-0 bg-black/40 z-998 transition-opacity duration-300 ${
+            isMobileNavOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
+          }`}
+          onClick={() => setIsMobileNavOpen(false)}
+        />
+
+        <div
           className={`${isMobileNavOpen ? "active" : ""} mobile-mega-menu`}
           data-lenis-prevent
           onWheel={(e) => e.stopPropagation()}

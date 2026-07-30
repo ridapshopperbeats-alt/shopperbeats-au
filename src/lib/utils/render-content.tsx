@@ -70,33 +70,33 @@ function escapeRegExp(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function extractSectionBody(html: string, label: string): string | null {
-  const labelMatch = html.match(
-    new RegExp(`<(strong|b)>\\s*${escapeRegExp(label)}\\s*:?\\s*<\\/\\1>`, "i")
-  );
+// function extractSectionBody(html: string, label: string): string | null {
+//   const labelMatch = html.match(
+//     new RegExp(`<(strong|b)>\\s*${escapeRegExp(label)}\\s*:?\\s*<\\/\\1>`, "i")
+//   );
 
-  if (!labelMatch || typeof labelMatch.index !== "number") return null;
+//   if (!labelMatch || typeof labelMatch.index !== "number") return null;
 
-  const afterLabel = html.slice(labelMatch.index + labelMatch[0].length);
-  const nextLabelIndex = afterLabel.search(/<(strong|b)>/i);
+//   const afterLabel = html.slice(labelMatch.index + labelMatch[0].length);
+//   const nextLabelIndex = afterLabel.search(/<(strong|b)>/i);
 
-  return nextLabelIndex === -1 ? afterLabel : afterLabel.slice(0, nextLabelIndex);
-}
+//   return nextLabelIndex === -1 ? afterLabel : afterLabel.slice(0, nextLabelIndex);
+// }
 
-function extractListItems(section: string): string[] {
-  const listMatch = section.match(/<(ul|ol)[^>]*>([\s\S]*?)<\/\1>/i);
+// function extractListItems(section: string): string[] {
+//   const listMatch = section.match(/<(ul|ol)[^>]*>([\s\S]*?)<\/\1>/i);
 
-  if (listMatch) {
-    const liMatches: string[] =
-      listMatch[2].match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
-    return liMatches.map((li: string) => cleanText(li));
-  }
+//   if (listMatch) {
+//     const liMatches: string[] =
+//       listMatch[2].match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
+//     return liMatches.map((li: string) => cleanText(li));
+//   }
 
-  return section
-    .split(/<br\s*\/?>/i)
-    .map((item) => cleanText(item))
-    .filter(Boolean);
-}
+//   return section
+//     .split(/<br\s*\/?>/i)
+//     .map((item) => cleanText(item))
+//     .filter(Boolean);
+// }
 
 export function parseProductHTML({ htmlString }: ParseProps): ProductData {
   const html = htmlString;

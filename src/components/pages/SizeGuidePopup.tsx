@@ -1,4 +1,4 @@
-import { Pencil, X } from "lucide-react";
+import { X } from "lucide-react";
 
 interface SizeGuidePopupProps {
   open: boolean;
@@ -22,46 +22,63 @@ const SizeGuidePopup = ({ open, onClose }: SizeGuidePopupProps) => {
       <div className="popup-backdrop" onClick={onClose} />
 
       <div className="popup-container">
-        <div className="relative w-[calc(100%+32px)] -mx-4 lg:mx-0 lg:w-full lg:max-w-[430px] min-h-[237px] bg-white rounded-t-[24px] lg:rounded-[15px] shadow-[0px_0px_10px_0px_#00000033] overflow-hidden lg:overflow-visible px-6 lg:px-8 pt-2 lg:pt-8 pb-6 lg:pb-8">
-          <div className="flex lg:hidden justify-center pb-2">
+        <div className="relative w-[95vw] max-w-[580px] bg-white rounded-t-[24px] lg:rounded-[15px] shadow-[0px_0px_10px_0px_#00000033] px-6 lg:px-[30px] pt-4 lg:pt-6 pb-6 lg:pb-[30px]">
+          {/* Mobile Drag Handle */}
+          <div className="flex lg:hidden justify-center mb-3">
             <span className="popup-drag-handle" />
           </div>
 
+          {/* Close Button */}
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="absolute bg-white/90 w-8 h-8 text-black flex items-center justify-center p-1 rounded-full top-3 right-4 lg:-top-4 lg:-right-2 cursor-pointer shadow-[0_0px_10px_0_#0000001F]"
+            className="absolute bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-[0px_0px_10px_0px_#0000001F] top-3 right-3 lg:-top-5 lg:-right-5 cursor-pointer"
           >
-            <X size={18} strokeWidth={1.5} className="text-center" />
+            <X size={18} strokeWidth={1.8} />
           </button>
 
-          <h3 className="text-[16px] font-bold text-black"><Pencil size={18}/> Size Guide</h3>
+          {/* Heading */}
+          <h3 className="text-[16px] font-bold text-black mb-5">Size Guide</h3>
 
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-[13px] text-left border border-collapse border-[#F0F0F0]">
+          {/* Table */}
+          <div className="overflow-hidden rounded-[2px] border border-[#E5E5E5]">
+            <table className="w-full table-fixed border-collapse text-[13px]">
               <thead>
                 <tr>
                   {["Size", "Bust", "Waist", "Hip", "Length"].map((label) => (
                     <th
                       key={label}
-                      className="font-semibold text-black py-2 px-2 whitespace-nowrap border border-[#E2E2E2] bg-[#F2F2F2]"
+                      className="h-[38px] px-4 text-left font-semibold text-black bg-[#F5F5F5] border border-[#E5E5E5]"
                     >
                       {label}
                     </th>
                   ))}
                 </tr>
               </thead>
+
               <tbody>
                 {SIZE_GUIDE_ROWS.map((row) => (
                   <tr key={row.size}>
-                    <td className="py-2 px-2 font-medium text-black border border-[#F0F0F0]">
+                    <td className="h-[38px] px-4 text-black font-medium border border-[#EAEAEA]">
                       {row.size}
                     </td>
-                    <td className="size-guide-cell">{row.bust}</td>
-                    <td className="size-guide-cell">{row.waist}</td>
-                    <td className="size-guide-cell">{row.hip}</td>
-                    <td className="size-guide-cell">{row.length}</td>
+
+                    <td className="h-[38px] px-4 text-[#6B7280] border border-[#EAEAEA]">
+                      {row.bust}
+                    </td>
+
+                    <td className="h-[38px] px-4 text-[#6B7280] border border-[#EAEAEA]">
+                      {row.waist}
+                    </td>
+
+                    <td className="h-[38px] px-4 text-[#6B7280] border border-[#EAEAEA]">
+                      {row.hip}
+                    </td>
+
+                    <td className="h-[38px] px-4 text-[#6B7280] border border-[#EAEAEA]">
+                      {row.length}
+                    </td>
                   </tr>
                 ))}
               </tbody>

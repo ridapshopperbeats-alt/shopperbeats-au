@@ -51,7 +51,7 @@ export default function StaticTopCategoriesSlider({
           onClick={() => handleScroll("left")}
           className="hidden lg:flex absolute left-[-12px] top-20 -translate-y-3 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 transition-all"
         >
-          <ChevronLeft size={18} className="text-[#979797]" />
+          <ChevronLeft size={18} className="text-black" />
         </button>
 
         <button
@@ -59,7 +59,7 @@ export default function StaticTopCategoriesSlider({
           onClick={() => handleScroll("right")}
           className="hidden lg:flex absolute right-[-16px] top-20 -translate-y-3 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 transition-all"
         >
-          <ChevronRight size={18} className="text-[#979797]" />
+          <ChevronRight size={18} className="text-black" />
         </button>
 
         <div

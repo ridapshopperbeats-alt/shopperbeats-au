@@ -6,7 +6,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { ChevronDownIcon, Clock, MapPin, ShieldCheck } from "lucide-react";
+import {
+  ChevronDownIcon,
+  Clock,
+  MapPin,
+  Pencil,
+  ShieldCheck,
+} from "lucide-react";
 
 import Button from "@/components/common/Button";
 import CartCheckoutDrawer from "@/components/cart/CartCheckoutDrawer";
@@ -17,6 +23,7 @@ import ProductDetailsMobileTabs from "./ProductDetailsMobileTabs";
 import DeliveryDetailsPopup from "../ui/DeliveryDetailsPopup";
 import ColorPopup from "./ColorPopup";
 import LocationPopup from "./LocationPopup";
+import SizeGuidePopup from "./SizeGuidePopup";
 import CustomerRatingViewPage from "./CustomerRatingViewPage";
 import StaticRecommendedForYou from "../homepage/StaticRecommendedForYou";
 import NoProductsFound from "@/components/NoProductFound";
@@ -72,6 +79,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
 
   const [quantity, setQuantity] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [showDeliveryPopup, setShowDeliveryPopup] = useState(false);
   const [showLocationPopup, setShowLocationPopup] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<{
@@ -125,7 +133,8 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
       realColorOptions.map((c) => {
         const variant = product?.variants?.find((v) =>
           v.attributes.some(
-            (a) => a.name.toLowerCase() === colorAttrName && a.value === c.value,
+            (a) =>
+              a.name.toLowerCase() === colorAttrName && a.value === c.value,
           ),
         );
         return {
@@ -146,6 +155,60 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
         stock: number | undefined;
       }[];
       const attrLabel = attrName.charAt(0).toUpperCase() + attrName.slice(1);
+
+      if (attrName === "size") {
+        return (
+          <div key={attrName} className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <label className=" text-[14px]  font-bold text-[#1D265F]">
+                {attrLabel}
+                {selectedAttributes[attrName] && (
+                  <span> : {selectedAttributes[attrName]}</span>
+                )}
+              </label>
+
+              <button
+                type="button"
+                onClick={() => setShowSizeGuide(true)}
+                className="inline-flex items-center gap-1 whitespace-nowrap underline text-[14px] font-bold leading-[14px] text-[#0B38D7] cursor-pointer"
+              >
+                <Pencil size={16} className="shrink-0" />
+                Size Guide
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              {availableOptions.map((item) => {
+                const isSelected = selectedAttributes[attrName] === item.value;
+                const isOutOfStockOption = (item.stock ?? 0) <= 0;
+
+                return (
+                  <button
+                    type="button"
+                    key={item.value}
+                    disabled={isOutOfStockOption}
+                    onClick={() => handleAttributeChange(attrName, item.value)}
+                    aria-label={item.value}
+                    title={item.value}
+                    className={`w-10 h-10 rounded-[8px] border text-[14px] font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                      isSelected
+                        ? "border-[#FD151B] text-[#FD151B]"
+                        : "border-[#CCCCCC] text-[#CCCCCC]"
+                    }`}
+                  >
+                    {item.value}
+                  </button>
+                );
+              })}
+            </div>
+
+            <SizeGuidePopup
+              open={showSizeGuide}
+              onClose={() => setShowSizeGuide(false)}
+            />
+          </div>
+        );
+      }
 
       return (
         <div key={attrName} className="flex flex-col gap-1.5">
@@ -189,7 +252,8 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
     let newIndex = index;
 
     if (e.key === "ArrowRight") newIndex = (index + 1) % tabCount;
-    else if (e.key === "ArrowLeft") newIndex = (index - 1 + tabCount) % tabCount;
+    else if (e.key === "ArrowLeft")
+      newIndex = (index - 1 + tabCount) % tabCount;
     else if (e.key === "Home") newIndex = 0;
     else if (e.key === "End") newIndex = tabCount - 1;
 
@@ -219,13 +283,13 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
       .filter((attr) => attr.value?.trim())
       .map((attr) => attr.value)
       .join(" | ");
-    return attributeValues ? `${product.title} ${attributeValues}` : product.title || "";
+    return attributeValues
+      ? `${product.title} ${attributeValues}`
+      : product.title || "";
   })();
 
-  const { mainPrice, wasPrice, saveAmount, discountPercentage } = getPriceDetails(
-    product,
-    selectedVariant,
-  );
+  const { mainPrice, wasPrice, saveAmount, discountPercentage } =
+    getPriceDetails(product, selectedVariant);
 
   const shippingCharge = getStaticProductShippingCost(product);
 
@@ -290,7 +354,9 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
 
   const relatedProducts = getStaticRelatedProducts(product, 10);
 
-  const handleWishlistButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleWishlistButtonClick = (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     e.preventDefault();
     e.stopPropagation();
     const wasWishlisted = isWishlisted;
@@ -306,7 +372,9 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
       isOutOfStock,
     });
     toast.success(
-      wasWishlisted ? "Product removed from wishlist!" : "Product added to wishlist!",
+      wasWishlisted
+        ? "Product removed from wishlist!"
+        : "Product added to wishlist!",
     );
   };
 
@@ -402,10 +470,15 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 <div className="flex items-start justify-between gap-2">
                   <div className="mr-2 pb-1.5">
                     <div className="flex items-center gap-2">
-                      {(selectedVariant ? selectedVariant.stock : product.stock) !==
-                        undefined &&
-                        (selectedVariant ? selectedVariant.stock : product.stock)! > 0 &&
-                        (selectedVariant ? selectedVariant.stock : product.stock)! < 5 && (
+                      {(selectedVariant
+                        ? selectedVariant.stock
+                        : product.stock) !== undefined &&
+                        (selectedVariant
+                          ? selectedVariant.stock
+                          : product.stock)! > 0 &&
+                        (selectedVariant
+                          ? selectedVariant.stock
+                          : product.stock)! < 5 && (
                           <div className="promotion-badge low-stock-badge">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -444,17 +517,21 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                       You Save :
                     </span>
                     <span className="ml-2 text-[#267A03]">
-                      $ {formatPrice(saveAmount)} ({discountPercentage.toFixed(0)}% Off )
+                      $ {formatPrice(saveAmount)} (
+                      {discountPercentage.toFixed(0)}% Off )
                     </span>
                   </span>
                 </div>
                 {hasRealColors && <div className="border-t border-[#ECECEC]" />}
                 {hasRealColors && (
-                  <div className="lg:py-2 flex flex-col gap-[10px]">
+                  <div className="lg:py-2 flex flex-col gap-[12px]">
                     <div>
                       <div className="flex text-[13px] lg:text-[14px] font-bold text-[#1D265F] leading-[24px] items-center justify-between mb-2">
                         <span>
-                          Color : <span>{selectedAttributes[colorAttrName!] || ""}</span>
+                          Color :{" "}
+                          <span>
+                            {selectedAttributes[colorAttrName!] || ""}
+                          </span>
                         </span>
                       </div>
 
@@ -463,7 +540,9 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                           <button
                             type="button"
                             key={c.value}
-                            onClick={() => handleAttributeChange(colorAttrName!, c.value)}
+                            onClick={() =>
+                              handleAttributeChange(colorAttrName!, c.value)
+                            }
                             disabled={(c.stock ?? 0) <= 0}
                             aria-label={c.value}
                             title={c.value}
@@ -490,7 +569,8 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                               type="button"
                               className="text-[12px] lg:text-[14px] ml-auto font-bold text-[#0B38D7] underline cursor-pointer shrink-0 inline-flex items-center gap-1 leading-[18px]"
                             >
-                              More <ChevronDownIcon className="shrink-0" size={13} />
+                              More{" "}
+                              <ChevronDownIcon className="shrink-0" size={13} />
                             </Button>
 
                             <ColorPopup
@@ -544,7 +624,10 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                           Deliver To{" "}
                           {mounted
                             ? selectedLocation
-                              ? [selectedLocation.suburb, selectedLocation.pincode]
+                              ? [
+                                  selectedLocation.suburb,
+                                  selectedLocation.pincode,
+                                ]
                                   .filter(Boolean)
                                   .join(" ")
                               : postcode
@@ -566,17 +649,25 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 <div className="lg:hidden flex  border-t border-[#ECECEC]" />
                 <div className="lg:hidden flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <label htmlFor="product-quantity" className="pdp-field-label">
+                    <label
+                      htmlFor="product-quantity"
+                      className="pdp-field-label"
+                    >
                       Quantity:
                     </label>
                     {(() => {
-                      const stockValue = selectedVariant ? selectedVariant.stock : product.stock;
+                      const stockValue = selectedVariant
+                        ? selectedVariant.stock
+                        : product.stock;
                       return stockValue !== undefined &&
                         stockValue !== null &&
                         stockValue > 0 &&
                         stockValue < 10 ? (
                         <span className="text-[12px]  font-bold text-[#FD151B]">
-                          <Clock size={16} className="inline-flex mb-1 font-bold" />{" "}
+                          <Clock
+                            size={16}
+                            className="inline-flex mb-1 font-bold"
+                          />{" "}
                         </span>
                       ) : null;
                     })()}
@@ -584,7 +675,12 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                   {(() => {
                     const maxQty = Math.max(
                       1,
-                      Math.min(10, (selectedVariant ? selectedVariant.stock : product.stock) || 0),
+                      Math.min(
+                        10,
+                        (selectedVariant
+                          ? selectedVariant.stock
+                          : product.stock) || 0,
+                      ),
                     );
 
                     return (
@@ -600,10 +696,14 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                         >
                           &minus;
                         </button>
-                        <span className="text-[14px] font-bold text-black">{quantity}</span>
+                        <span className="text-[14px] font-bold text-black">
+                          {quantity}
+                        </span>
                         <button
                           type="button"
-                          onClick={() => setQuantity((q) => Math.min(maxQty, q + 1))}
+                          onClick={() =>
+                            setQuantity((q) => Math.min(maxQty, q + 1))
+                          }
                           className="pdp-stepper-btn"
                           aria-label="Increase quantity"
                         >
@@ -616,7 +716,8 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 <div className="lg:hidden flex border-t border-[#ECECEC]" />
                 <div className="lg:hidden flex flex-col gap-3">
                   {(() => {
-                    const shouldDisableAddToCart = hasVariants && !selectedVariant;
+                    const shouldDisableAddToCart =
+                      hasVariants && !selectedVariant;
 
                     if (isOutOfStock) {
                       return (
@@ -639,7 +740,9 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                               : handleCartButtonClick
                           }
                           className={`w-full h-[46px] rounded-full font-semibold text-white transition-colors cursor-pointer bg-[#FD151B] ${
-                            shouldDisableAddToCart ? "opacity-50 cursor-not-allowed" : ""
+                            shouldDisableAddToCart
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
                           }`}
                           aria-disabled={shouldDisableAddToCart}
                           debounceDelay={500}
@@ -662,9 +765,21 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                   <ShieldCheck /> Guaranteed Safe & Secured Checkout
                 </div>
                 <div className="lg:hidden flex flex-wrap gap-2">
-                  {["visa", "payment", "american", "paypal", "afterpay", "zip"].map((img) => (
+                  {[
+                    "visa",
+                    "payment",
+                    "american",
+                    "paypal",
+                    "afterpay",
+                    "zip",
+                  ].map((img) => (
                     <div className="pdp-qty-box" key={img}>
-                      <Image src={`/images/${img}.svg`} alt={img} width={50} height={25} />
+                      <Image
+                        src={`/images/${img}.svg`}
+                        alt={img}
+                        width={50}
+                        height={25}
+                      />
                     </div>
                   ))}
                 </div>
@@ -824,7 +939,10 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                       <span className="pdp-field-label">
                         {mounted
                           ? selectedLocation
-                            ? [selectedLocation.suburb, selectedLocation.pincode]
+                            ? [
+                                selectedLocation.suburb,
+                                selectedLocation.pincode,
+                              ]
                                 .filter(Boolean)
                                 .join(" ")
                             : postcode
@@ -848,18 +966,26 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
 
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
-                  <label htmlFor="product-quantity-desktop" className="pdp-field-label">
+                  <label
+                    htmlFor="product-quantity-desktop"
+                    className="pdp-field-label"
+                  >
                     Quantity:
                   </label>
                   {(() => {
-                    const stockValue = selectedVariant ? selectedVariant.stock : product.stock;
+                    const stockValue = selectedVariant
+                      ? selectedVariant.stock
+                      : product.stock;
                     return stockValue !== undefined &&
                       stockValue !== null &&
                       stockValue > 0 &&
                       stockValue < 10 ? (
                       <span className="text-[12px] font-bold text-[#FD151B]">
-                        <Clock size={16} className="inline-flex mb-1 font-bold" /> Only{" "}
-                        {stockValue} items left
+                        <Clock
+                          size={16}
+                          className="inline-flex mb-1 font-bold"
+                        />{" "}
+                        Only {stockValue} items left
                       </span>
                     ) : null;
                   })()}
@@ -867,7 +993,12 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 {(() => {
                   const maxQty = Math.max(
                     1,
-                    Math.min(10, (selectedVariant ? selectedVariant.stock : product.stock) || 0),
+                    Math.min(
+                      10,
+                      (selectedVariant
+                        ? selectedVariant.stock
+                        : product.stock) || 0,
+                    ),
                   );
 
                   return (
@@ -883,10 +1014,14 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                       >
                         &minus;
                       </button>
-                      <span className="text-[14px] font-bold text-black">{quantity}</span>
+                      <span className="text-[14px] font-bold text-black">
+                        {quantity}
+                      </span>
                       <button
                         type="button"
-                        onClick={() => setQuantity((q) => Math.min(maxQty, q + 1))}
+                        onClick={() =>
+                          setQuantity((q) => Math.min(maxQty, q + 1))
+                        }
                         className="pdp-stepper-btn"
                         aria-label="Increase quantity"
                       >
@@ -900,7 +1035,8 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
 
               <div className="flex flex-col gap-3">
                 {(() => {
-                  const shouldDisableAddToCart = hasVariants && !selectedVariant;
+                  const shouldDisableAddToCart =
+                    hasVariants && !selectedVariant;
 
                   if (isOutOfStock) {
                     return (
@@ -918,10 +1054,14 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                     <>
                       <Button
                         onClick={
-                          shouldDisableAddToCart ? handleDisabledAddToCart : handleCartButtonClick
+                          shouldDisableAddToCart
+                            ? handleDisabledAddToCart
+                            : handleCartButtonClick
                         }
                         className={`w-full h-[46px] rounded-full font-semibold text-white transition-colors cursor-pointer bg-[#FD151B] ${
-                          shouldDisableAddToCart ? "opacity-50 cursor-not-allowed" : ""
+                          shouldDisableAddToCart
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
                         }`}
                         aria-disabled={shouldDisableAddToCart}
                         debounceDelay={500}
@@ -941,15 +1081,27 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 })()}
               </div>
 
-              <div className="text-[12px] text-center font-medium text-[#657689] leading-[20px] ">
+              <div className=" flex mx-auto items-center gap-2 text-[12px] text-center font-medium text-[#657689] leading-[20px]  ">
                 <ShieldCheck /> Guaranteed Safe & Secured Checkout
               </div>
 
               <div>
                 <div className="flex flex-wrap gap-2">
-                  {["visa", "payment", "american", "paypal", "afterpay", "zip"].map((img) => (
+                  {[
+                    "visa",
+                    "payment",
+                    "american",
+                    "paypal",
+                    "afterpay",
+                    "zip",
+                  ].map((img) => (
                     <div className="pdp-qty-box-lg" key={img}>
-                      <Image src={`/images/${img}.svg`} alt={img} width={50} height={25} />
+                      <Image
+                        src={`/images/${img}.svg`}
+                        alt={img}
+                        width={50}
+                        height={25}
+                      />
                     </div>
                   ))}
                 </div>

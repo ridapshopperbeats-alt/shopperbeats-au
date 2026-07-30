@@ -108,17 +108,16 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
             strokeWidth={2}
           />
         </button>
-
         <Link
           href={`/static-product/${unique_code || id}`}
           className="flex h-full max-h-[450px] flex-col no-underline text-inherit"
         >
-          <div className="relative w-full aspect-square overflow-hidden bg-[#F5F5F5]">
+          <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden">
             <Image
               src={image}
               alt={title || "Product Image"}
               fill
-              sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 20vw"
+              sizes="(max-width: 768px) 180px, 270px"
               loading="lazy"
               className="object-cover"
             />
@@ -126,12 +125,12 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
           </div>
 
           <div className="flex flex-1 flex-col justify-between w-full">
-            <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
-              <h4 className="text-[12px] md:text-[14px] font-bold text-black">
+            <div className="flex flex-col  pt-1 md:pt-2">
+              <h4 className="text-[14px] font-bold text-black">
                 {brand_name || "No Brand"}
               </h4>
 
-              <p className="text-[12px] md:text-[13px] leading-4.5 text-[#878787] font-normal">
+              <p className="text-[14px] leading-4.5 text-[#878787] font-normal">
                 {limitWords(title, 7) || "MakeupKit"}
               </p>
 
