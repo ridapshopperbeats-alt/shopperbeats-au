@@ -45,7 +45,9 @@ function refreshAccessToken(
     )
       .then((result) => {
         if (result.error) {
-          console.error("Refresh token request failed:", result.error);
+          // Handled below by clearing the stale refresh token and logging
+          // the user out — not fatal, so don't trip Next's dev overlay.
+          console.warn("Refresh token request failed:", result.error);
           clearRefreshToken();
           return false;
         }
@@ -53,7 +55,7 @@ function refreshAccessToken(
         const data = result.data as { access_token?: string; response?: { access_token?: string } } | undefined;
         const newAccessToken = data?.access_token || data?.response?.access_token;
         if (!newAccessToken) {
-          console.error("Refresh token response missing access_token:", result.data);
+          console.warn("Refresh token response missing access_token:", result.data);
           clearRefreshToken();
           return false;
         }

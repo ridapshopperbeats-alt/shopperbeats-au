@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import StaticProductCarousel from "../common/StaticProductCarousel";
 import { Product } from "@/types/product";

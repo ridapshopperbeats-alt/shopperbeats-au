@@ -1,5 +1,3 @@
-"use client";
-
 import ReusableSlider from "./ReusableSlider";
 import StaticProductCard from "./StaticProductCard";
 import { ProductCardProps } from "@/types/product";

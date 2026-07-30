@@ -1,5 +1,3 @@
-"use client";
-
 import ReusableSlider from "./ReusableSlider";
 import { Product, BundleProduct, ProductCarouselProps } from "@/types/product";
 import ProductCard from "./ProductCard";

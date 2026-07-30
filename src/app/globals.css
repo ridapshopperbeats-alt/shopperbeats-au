@@ -288,6 +288,10 @@ input[type="password"]::-ms-clear {
   @apply h-[37px] px-5 py-2;
 }
 
+.global-btn {
+  @apply bg-gradient-to-r from-[#FF676B] to-[#FD151B] h-[46px] rounded-[74px] text-[#F6F6F6] text-[16px] font-semibold leading-5 w-full shadow-md shadow-[#0E35BF]/25 cursor-pointer;
+}
+
 /* Filled Red */
 .btn-filled.btn-red {
   @apply bg-[var(--secondary)] text-[var(--white)];

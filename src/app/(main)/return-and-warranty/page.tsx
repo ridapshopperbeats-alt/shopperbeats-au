@@ -1,5 +1,3 @@
-"use client";
-
 function ReturnAndWarranty() {
   return (
     <div className="legal-page-container">

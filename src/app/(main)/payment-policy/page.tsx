@@ -1,5 +1,3 @@
-"use client";
-
 function PaymentPolicy() {
   return (
     <div className="legal-page-container">

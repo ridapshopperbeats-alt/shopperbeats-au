@@ -33,6 +33,7 @@ import {
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import Image from "next/image";
+import { useStaticCart } from "@/lib/hooks/useStaticCart";
 
 export default function SecureCheckout() {
   const { postcode } = useGlobalPostcode();
@@ -67,20 +68,46 @@ export default function SecureCheckout() {
     skip: !isAuthenticated,
   });
 
+  // Reference data added via the static cart (e.g. "Add to cart" on pages not
+  // wired to the real cart API yet) — merged in here so checkout shows and
+  // totals the same items the cart page shows, for now.
+  const { items: staticCartItems } = useStaticCart();
+
   const router = useRouter();
   const pathname = usePathname();
+
+  const combinedCartItems: CartItem[] = useMemo(
+    () => [...(cart?.items ?? []), ...(staticCartItems as unknown as CartItem[])],
+    [cart, staticCartItems],
+  );
+
+  const staticItemsSubtotal = useMemo(
+    () => staticCartItems.reduce((acc, item) => acc + (item.final_price ?? item.subtotal ?? 0), 0),
+    [staticCartItems],
+  );
+  const staticItemsShipping = useMemo(
+    () =>
+      staticCartItems
+        .filter((item) => item.is_shippable)
+        .reduce((acc, item) => acc + (item.shipping_cost || 0), 0),
+    [staticCartItems],
+  );
+  const staticItemsDiscount = useMemo(
+    () => staticCartItems.reduce((acc, item) => acc + (item.promotion_discount || 0), 0),
+    [staticCartItems],
+  );
 
   useEffect(() => {
     if (
       !isLoading &&
       !isFetching &&
       cart &&
-      (!cart.items || cart.items.length === 0) &&
+      combinedCartItems.length === 0 &&
       !isProcessingPayment
     ) {
       router.replace("/confirmed-order");
     }
-  }, [isLoading, isFetching, cart, isProcessingPayment, router]);
+  }, [isLoading, isFetching, cart, combinedCartItems, isProcessingPayment, router]);
 
   useEffect(() => {
     if (sessionStorage.getItem("orderConfirmation")) {
@@ -99,12 +126,12 @@ export default function SecureCheckout() {
   const stripe = useStripe();
   const elements = useElements();
   const checkoutProducts: CartItem[] = useMemo(() => {
-    return (cart?.items || []).filter(
+    return combinedCartItems.filter(
       (item) =>
         item.is_active &&
         (item.available_stock === undefined || item.available_stock > 0),
     );
-  }, [cart]);
+  }, [combinedCartItems]);
 
   const maxHandlingDays = useMemo(() => {
     if (checkoutProducts.length === 0) return 0;
@@ -307,7 +334,7 @@ export default function SecureCheckout() {
             item.quantity
         );
       }, 0);
-      const shippingCost = cart?.shipping || 0;
+      const shippingCost = effectiveShipping;
 
       // Order total limit check
       const promoDataForCheck = (() => {
@@ -693,7 +720,8 @@ export default function SecureCheckout() {
   };
 
   const orderSummary = checkoutProducts;
-  const calculatedSubtotal = cart?.total_price ?? 0;
+  const effectiveShipping = (cart?.shipping ?? 0) + staticItemsShipping;
+  const calculatedSubtotal = (cart?.total_price ?? 0) + staticItemsSubtotal + staticItemsShipping;
 
   const totalSaveAmount = ((): number => {
     if (orderSummary.length === 0) return 0;
@@ -711,7 +739,7 @@ export default function SecureCheckout() {
       return acc + saveAmount * Number(item.quantity);
     }, 0);
 
-    const promotionDiscount = cart?.items_discount || 0;
+    const promotionDiscount = (cart?.items_discount || 0) + staticItemsDiscount;
 
     return itemSavings + promotionDiscount;
   })();
@@ -788,7 +816,7 @@ export default function SecureCheckout() {
             setFormErrors={setFormErrors}
             onShippingAddressValid={setShippingAddressValid}
             onBillingAddressValid={setBillingAddressValid}
-            shippingCost={cart?.shipping || 0}
+            shippingCost={effectiveShipping}
             setSelectedAddressData={setSelectedAddressData}
             isAuthenticated={isAuthenticated}
           />
@@ -912,7 +940,7 @@ export default function SecureCheckout() {
                     <div className="flex items-center justify-between">
                       <p className="checkout-total-value">Delivery</p>
                       <p className="text-[14px] font-semibold mr-[5px]">
-                        ${formatPrice(cart?.shipping || 0)}
+                        ${formatPrice(effectiveShipping)}
                       </p>
                     </div>
 
@@ -1034,7 +1062,7 @@ export default function SecureCheckout() {
                     <div className="flex items-center justify-between">
                       <p className="checkout-total-value">Delivery</p>
                       <p className="price text-sm">
-                        ${formatPrice(cart?.shipping || 0)}
+                        ${formatPrice(effectiveShipping)}
                       </p>
                     </div>
 

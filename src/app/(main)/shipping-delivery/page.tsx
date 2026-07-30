@@ -1,5 +1,3 @@
-"use client";
-
 function ShippingDelivery() {
   return (
     <div className="legal-page-container">
