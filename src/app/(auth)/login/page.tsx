@@ -285,10 +285,11 @@ export default function LoginPage() {
               <li>Must include uppercase and lowercase letters, numbers plus at least one special character</li>
             </ul>
           </div>
-
-          <div className="form-item ">
-            <ReCaptcha onCaptchaChange={setRecaptcha_token} />
-          </div>
+          {process.env.NEXT_PUBLIC_ENV_VARIABLE === 'prod' && (
+            <div className="form-item">
+              <ReCaptcha onCaptchaChange={setRecaptcha_token} />
+            </div>
+          )}
 
           <div className="form-item form-item-radio">
             <input

@@ -265,10 +265,12 @@ export default function SignupPage() {
           </div>
 
 
-          <div className="form-item recaptcha-wrapper">
-            <ReCaptcha onCaptchaChange={setRecaptcha_token} />
-          </div>
 
+          {process.env.NEXT_PUBLIC_ENV_VARIABLE === 'prod' && (
+            <div className="form-item">
+              <ReCaptcha onCaptchaChange={setRecaptcha_token} />
+            </div>
+          )}
           
            <div className="form-item form-item-radio link">
             <input
