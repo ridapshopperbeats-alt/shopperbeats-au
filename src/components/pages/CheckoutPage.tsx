@@ -648,7 +648,7 @@ export default function SecureCheckout() {
         );
 
         sessionStorage.removeItem("appliedPromoCode");
-        localStorage.removeItem("checkoutFormData");
+        sessionStorage.removeItem("checkoutFormData");
 
         router.replace("/confirmed-order");
       } else {

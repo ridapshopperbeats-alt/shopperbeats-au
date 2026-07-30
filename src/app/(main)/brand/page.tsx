@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
@@ -37,7 +36,6 @@ const alphabet = [
 async function fetchBrands() {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL_PRODUCTS;
-    // console.log("API PRODUCT", apiUrl);
 
     const response = await fetch(
       `${apiUrl}/api/v1/brand/list-brands?page=1&limit=1000`,
@@ -49,7 +47,6 @@ async function fetchBrands() {
       return [];
     }
     const data: BrandsResponse = await response.json();
-    // console.log("Product Data", data);
 
     return data.data || [];
   } catch (error) {
@@ -65,7 +62,6 @@ async function fetchFeaturedBrands() {
     const response = await fetch(`${apiUrl}/api/v1/featured-brand/`, {
       next: { revalidate: 60 },
     });
-    // console.log("featured", apiUrl);
 
     if (!response.ok) {
       console.warn("Failed to fetch featured brands, status:", response.status);
@@ -73,7 +69,6 @@ async function fetchFeaturedBrands() {
     }
 
     const data = await response.json();
-    console.log("featured brand", data);
 
     return Array.isArray(data) ? data : data.data || [];
   } catch (error) {

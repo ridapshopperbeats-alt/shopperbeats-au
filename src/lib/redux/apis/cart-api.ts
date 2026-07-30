@@ -157,7 +157,6 @@ export const cartApi = createApi({
            extraOptions
          );
 
-        //  console.log("Wishlist API Result:", result);
          if (result.error) return { error: result.error };
          const data = result.data as Wishlist | Wishlist[];
 

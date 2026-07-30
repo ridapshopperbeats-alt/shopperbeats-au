@@ -19,6 +19,28 @@ const DynamicHead = ({ metadata, cookie_logo }: { metadata: MetaInfo, cookie_log
     code_container
   } = metadata;
 
+  // CMS-editable content can include arbitrary <script src="..."> tags —
+  // only ever load one from a known, trusted analytics/tag-manager host so
+  // a compromised CMS account or tampered response can't point the site at
+  // an attacker-controlled script.
+  const TRUSTED_SCRIPT_HOSTS = [
+    "www.googletagmanager.com",
+    "www.google-analytics.com",
+    "www.google.com",
+    "www.gstatic.com",
+    "connect.facebook.net",
+    "cdn.osano.com",
+  ];
+
+  const isTrustedScriptSrc = (src: string): boolean => {
+    try {
+      const url = new URL(src, "https://placeholder.invalid");
+      return url.protocol === "https:" && TRUSTED_SCRIPT_HOSTS.includes(url.hostname);
+    } catch {
+      return false;
+    }
+  };
+
   const extractScripts = (html: string | undefined) => {
     if (!html) return [];
     const scriptRegex = /<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi;
@@ -30,9 +52,14 @@ const DynamicHead = ({ metadata, cookie_logo }: { metadata: MetaInfo, cookie_log
       const srcMatch = attributes.match(/src="([^"]*)"/);
       const typeMatch = attributes.match(/type="([^"]*)"/);
       const scriptType = typeMatch ? typeMatch[1] : "text/javascript";
+      const src = srcMatch ? srcMatch[1] : null;
+
+      if (src && !isTrustedScriptSrc(src)) {
+        continue;
+      }
 
       matches.push({
-        src: srcMatch ? srcMatch[1] : null,
+        src,
         content: content || null,
         type: scriptType,
       });

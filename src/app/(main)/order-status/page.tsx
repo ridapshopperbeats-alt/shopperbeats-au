@@ -80,7 +80,7 @@ const {
               isLoading: false,
               autoClose: 3000,
             });
-            localStorage.removeItem("checkoutFormData");
+            sessionStorage.removeItem("checkoutFormData");
 
           // Wait for cart to be available
           if (isCartLoaded && cart?.id) {

@@ -26,6 +26,7 @@ function refreshAccessToken(
   if (!pendingRefresh) {
     const refresh_token = getRefreshToken();
     if (!refresh_token) {
+      console.error("No refresh_token cookie found; cannot refresh access token.");
       return Promise.resolve(false);
     }
 
@@ -42,6 +43,7 @@ function refreshAccessToken(
     )
       .then((result) => {
         if (result.error) {
+          console.error("Refresh token request failed:", result.error);
           clearRefreshToken();
           return false;
         }
@@ -49,6 +51,7 @@ function refreshAccessToken(
         const data = result.data as { access_token?: string; response?: { access_token?: string } } | undefined;
         const newAccessToken = data?.access_token || data?.response?.access_token;
         if (!newAccessToken) {
+          console.error("Refresh token response missing access_token:", result.data);
           clearRefreshToken();
           return false;
         }

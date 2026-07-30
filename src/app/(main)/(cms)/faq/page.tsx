@@ -2,12 +2,11 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
+import { FAQItem, useGetFaqsQuery } from "@/lib/redux/apis/faq-api";
 import Accordion from "@/components/common/Accordion";
-import Banner from "@/components/common/Banner";
 import ContactBanner from "@/components/common/ContactBanner";
-import { useGetFaqsQuery, FAQItem } from "@/lib/redux/apis/faq-api";
 
-// Predefined grid section metadata mapping
+
 const faqGridMeta: Record<string, { title: string; description: string; icon: string }> = {
   orders: {
     title: "My Orders",
@@ -58,9 +57,25 @@ const faqGridMeta: Record<string, { title: string; description: string; icon: st
 
 export default function FAQPage() {
   const [activeTab, setActiveTab] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const { data: faqApiData, isLoading, isError } = useGetFaqsQuery();
 
-  // Group FAQs by type
+  const trimmedQuery = searchQuery.trim().toLowerCase();
+  const isSearching = trimmedQuery.length > 0;
+
+  // When the hero search box has a query, filter every FAQ (across all types)
+  // by question/answer text and show a flat result list instead of the tabs.
+  const searchResults = useMemo(() => {
+    if (!trimmedQuery || !faqApiData) return [];
+    return faqApiData
+      .filter(
+        (item) =>
+          item.question?.toLowerCase().includes(trimmedQuery) ||
+          item.answer?.toLowerCase().includes(trimmedQuery),
+      )
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+  }, [trimmedQuery, faqApiData]);
+
   const faqsByType = useMemo(() => {
     if (!faqApiData) return {};
     const grouped: Record<string, FAQItem[]> = {};
@@ -71,14 +86,12 @@ export default function FAQPage() {
       }
       grouped[typeKey].push(item);
     });
-    // Sort items by order
     for (const key in grouped) {
       grouped[key].sort((a, b) => (a.order || 0) - (b.order || 0));
     }
     return grouped;
   }, [faqApiData]);
 
-  // Generate dynamic grid/tabs based on available types
   const dynamicTabs = useMemo(() => {
     return Object.keys(faqsByType).map(type => {
       const predefined = faqGridMeta[type];
@@ -86,34 +99,29 @@ export default function FAQPage() {
         key: type,
         title: predefined ? predefined.title : type.charAt(0).toUpperCase() + type.slice(1),
         description: predefined ? predefined.description : `Questions about ${type}`,
-        icon: predefined ? predefined.icon : "/images/cms/account.svg" // fallback icon always
+        icon: predefined ? predefined.icon : "/images/cms/account.svg"
       };
     });
   }, [faqsByType]);
 
-  // Set initial active tab when data is loaded
   useEffect(() => {
     if (dynamicTabs.length > 0 && !activeTab) {
       setActiveTab(dynamicTabs[0].key);
     }
   }, [dynamicTabs, activeTab]);
 
-  if (isLoading) {
-    return null;
-  }
+
   return (
     <div className="faq-page">
-      {/* Banner */}
-      {/* <Banner title="Frequently Asked Questions" image="/faq1.svg" /> */}
-
+      
       <div className="relative w-full h-[218px] overflow-hidden">
         <Image
-          src="/faq1.svg"
+          src="/faq1.webp"
           alt="FAQ Banner"
           width={100}
           height={218}
           loading="lazy"
-          className="img-cover"
+          className="w-full h-full object-cover"
         />
 
         <div className="absolute inset-0 flex items-center justify-center">
@@ -138,10 +146,17 @@ export default function FAQPage() {
               Everything You Need To Know About All The Things
             </p>
 
-            <div className="relative w-full px-4 md:px-0 max-w-[733px] h-[53px]">
+            <form
+              className="relative w-full px-4 md:px-0 max-w-[733px] h-[53px]"
+              onSubmit={(e) => e.preventDefault()}
+              role="search"
+            >
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Enter a product code or ask us a question"
+                aria-label="Search FAQs"
                 className="!rounded-[50px]"
                 style={{
                   width: "100%",
@@ -155,11 +170,12 @@ export default function FAQPage() {
               />
 
               <button
+                type="submit"
                 className="absolute right-[20px] md:right-[8px] h-[43px] w-[100px] md:w-[121px] top-1/2 -translate-y-1/2 bg-red-500 text-white rounded-full font-semibold"
               >
                 Search
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -169,7 +185,6 @@ export default function FAQPage() {
 
           {isError && (
             <div className="text-center py-10 text-red-500">
-              {/* Yash */}
               <p>Failed to load FAQs. Please try again later.</p>
             </div>
           )}
@@ -180,8 +195,27 @@ export default function FAQPage() {
             </div>
           )}
 
-          {/* 4-Grid Section */}
-          {!isLoading && dynamicTabs.length > 0 && (
+          {/* Search results view — replaces the tab grid while a query is active */}
+          {!isLoading && !isError && isSearching && (
+            <div id="faq-accordion-section">
+              {searchResults.length > 0 ? (
+                <Accordion
+                  items={searchResults.map((item: FAQItem) => ({
+                    id: String(item.id),
+                    title: item.question,
+                    content: <p>{item.answer}</p>,
+                  }))}
+                  variation={2}
+                />
+              ) : (
+                <div className="text-center py-10">
+                  <p>No FAQs match &quot;{searchQuery.trim()}&quot;.</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {!isLoading && !isSearching && dynamicTabs.length > 0 && (
             <div className="grid-4">
               {dynamicTabs.map((grid) => (
                 <button
@@ -197,7 +231,6 @@ export default function FAQPage() {
                       );
 
                       if (faqSection) {
-                        // Adjustable scroll offset
                         const yOffset =
                           window.innerWidth < 1024 ? -450 : -300;
 
@@ -241,8 +274,7 @@ export default function FAQPage() {
             </div>
           )}
 
-          {/* FAQ Accordion */}
-          {!isLoading && activeTab && faqsByType[activeTab] && (
+          {!isLoading && !isSearching && activeTab && faqsByType[activeTab] && (
             <div
               id="faq-accordion-section"
               className="mt-40"

@@ -24,7 +24,7 @@ export const FOOTER_LINKS_STATIC = [
   {
     title: "Company",
     links: [
-      { label: "About Us", href: "/abouts" },
+      { label: "About Us", href: "/cms/About-us" },
       { label: "Brands", href: "/brand" },
     ],
   },
