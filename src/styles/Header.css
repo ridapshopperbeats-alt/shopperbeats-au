@@ -791,6 +791,7 @@ nav.navbar {
 
   nav.navbar {
     padding-left: 13px;
+    padding-right: 13px;
   }
 
   .bottom-head ul.menu a.link,
@@ -798,16 +799,14 @@ nav.navbar {
     font-size: 13px;
   }
 
-  .bottom-head ul.menu {
-    padding-right: 4px;
-  }
-
   .bottom-head ul.menu a.link {
     font-size: 11px !important;
   }
 
   .bottom-head ul.menu {
-    gap: 10px;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
   }
 
   .mega-content {

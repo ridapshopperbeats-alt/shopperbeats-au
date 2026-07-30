@@ -488,7 +488,7 @@ const Cart = () => {
 
               const itemInfo = (
                 <>
-                  <h3 className="text-[12px] lg:text-[14px] font-semibold leading-[140%] text-black mb-0.5 lg:mb-1.5 line-clamp-3 lg:line-clamp-2">
+                  <h3 className="text-[12px] lg:text-[14px] font-semibold leading-[100%]  text-black mb-0.5 lg:mb-1.5 ">
                     {item.is_active ? (
                       <Link
                         href={getCartItemHref(item)}
@@ -496,7 +496,7 @@ const Cart = () => {
                         {item.product_name}
                       </Link>
                     ) : (
-                      <span style={{ cursor: "not-allowed", opacity: 0.7 }}>
+                      <span className="cursor-pointer">
                         {item.product_name}
                       </span>
                     )}
@@ -513,12 +513,12 @@ const Cart = () => {
                     </p>
                   ) : (
                     <p className="flex items-center flex-wrap gap-1.5 text-[11px] lg:text-[12px] lg:leading-[100%] font-bold text-[#01295F] mb-0.5 lg:mb-1.5">
-                      <span>In Stock</span>
+                      <span className="">In Stock</span>
                       {item.promoCode && (
-                        <span className="text-[#049950] font-montserrat text-[12px] font-medium leading-normal capitalize">
-                          Code Applied - ({item.promoCode}){" "}
+                        <span className="text-[#049950] text-[12px] font-medium leading-[100%] capitalize">
+                          Code Applied - {" "}
                           <span className="font-bold">
-                            {item.discount_percentage}% Off
+                            ({item.promoCode}){" "} {item.discount_percentage}% Off
                           </span>
                         </span>
                       )}
@@ -533,19 +533,19 @@ const Cart = () => {
                     </p>
                   )}
                   {item.shipping_cost === 0 && (
-                    <p className="text-[12px] lg:text-[14px] leading-[12px] text-[#726969] mb-0.5 lg:mb-1.5">
+                    <p className="text-[12px] lg:text-[14px] leading-[12px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
                       Eligible For FREE Shipping
                     </p>
                   )}
                   {item.handling_time_days === 1 ? (
-                    <p className="text-[12px] lg:text-[14px] leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5">
+                    <p className="text-[12px] lg:text-[14px] leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
                       {item.delivery_prefix}{" "}
                       <strong className="font-semibold text-black">
                         Next Business Day
                       </strong>
                     </p>
                   ) : (
-                    <p className="text-[12px] lg:text-[14px] leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5">
+                    <p className="text-[12px] lg:text-[14px] leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
                       {item.delivery_prefix}{" "}
                       {/* <strong className="font-semibold text-black"> */}
                         1-{item.handling_time_days} Business Days
@@ -559,9 +559,9 @@ const Cart = () => {
                         {item.variant_attributes.map((attr) => (
                           <p
                             key={attr.name}
-                            className="text-[12px] lg:text-[14px] leading-[100%] text-black mb-1"
+                            className="text-[12px] lg:text-[14px] leading-[100%] text-black mb-1 font-medium"
                           >
-                            <strong className="font-medium">
+                            <strong className="font-semibold">
                               {attr.name}:{" "}
                             </strong>
                             {attr.value}
