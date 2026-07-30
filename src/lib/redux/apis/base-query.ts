@@ -26,7 +26,9 @@ function refreshAccessToken(
   if (!pendingRefresh) {
     const refresh_token = getRefreshToken();
     if (!refresh_token) {
-      console.error("No refresh_token cookie found; cannot refresh access token.");
+      // Expected for guests / logged-out sessions — not an actual error, so
+      // this shouldn't trip Next's console.error dev overlay.
+      console.warn("No refresh_token cookie found; cannot refresh access token.");
       return Promise.resolve(false);
     }
 

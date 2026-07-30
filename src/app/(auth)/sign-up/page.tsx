@@ -100,7 +100,9 @@ export default function SignupPage() {
   const handleSignupSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
-    if (!recaptcha_token) {
+    const isProd = process.env.NEXT_PUBLIC_ENV_VARIABLE === 'prod';
+
+    if (isProd && !recaptcha_token) {
       toast.error("Please complete the reCAPTCHA.", {
         toastId: "captcha-error",
       });
@@ -117,7 +119,7 @@ export default function SignupPage() {
     try {
       await signup({
         ...formData,
-        recaptcha_token,
+        recaptcha_token: recaptcha_token || "",
         mailing_list,
       }).unwrap();
 
@@ -265,10 +267,12 @@ export default function SignupPage() {
           </div>
 
 
-          <div className="form-item recaptcha-wrapper">
-            <ReCaptcha onCaptchaChange={setRecaptcha_token} />
-          </div>
 
+          {process.env.NEXT_PUBLIC_ENV_VARIABLE === 'prod' && (
+            <div className="form-item">
+              <ReCaptcha onCaptchaChange={setRecaptcha_token} />
+            </div>
+          )}
           
            <div className="form-item form-item-radio link">
             <input

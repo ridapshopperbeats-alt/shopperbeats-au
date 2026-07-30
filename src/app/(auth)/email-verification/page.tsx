@@ -49,8 +49,8 @@ function VerifyEmailInner() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="bg-white p-4 text-center max-w-md w-full rounded-xl shadow-md">
+    <main className="min-h-screen flex items-center justify-center px-4">
+      <div className="bg-white p-4 text-center max-w-md w-full rounded-xl shadow-xl">
         <div className="flex justify-center mb-6">
           <Image
             src="/images/auth/verifyemail.jpg"
@@ -61,7 +61,7 @@ function VerifyEmailInner() {
           />
         </div>
 
-        <h5 className=" mb-40">
+        <h5 className="my-6">
           Verify your email
         </h5>
 
@@ -99,13 +99,13 @@ function VerifyEmailInner() {
                 : "Resend verification email"
             }
           </Button>
-
+         <div className=" link my-2">
           <Link
             href="/login"
-            className="text-sm text-red-600 hover:underline mt-40"
           >
             Back to login
           </Link>
+          </div>
         </div>
       </div>
     </main>
