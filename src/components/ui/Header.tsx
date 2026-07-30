@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,11 @@ import {
   Menu,
   Handbag,
   HandbagIcon,
+  HeartPulse,
+  Gamepad2,
+  Sparkles,
+  Armchair,
+  Home,
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
@@ -33,6 +38,8 @@ import Button from "../common/Button";
 import GlobalSearch from "../common/GlobalSearch";
 import CategoryNavbar from "./CategoryNavbar";
 import { addBreadcrumb } from "@/lib/redux/slices/breadcrumb-slice";
+import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
+import { useDebounceValue } from "@/lib/hooks/use-debounce";
 
 export interface MegaMenuCategory {
   name: string;
@@ -220,10 +227,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
     price?: number;
   }
 
-  // Single source of truth for what's actually on screen — each list narrows
-  // further as the user keeps typing ahead of the debounce, so keyboard
-  // bounds/selection and the rendered rows must read from these same
-  // filtered lists, not the raw API response.
   const query = searchQuery.toLowerCase();
 
   const filteredProducts: SuggestionItem[] = React.useMemo(() => {
@@ -268,24 +271,24 @@ export default function Header({ megaMenuData }: HeaderProps) {
     [filteredProducts, filteredCategories, filteredBrands],
   );
 
-  const handleSearch = () => {
-    if (
-      selectedResultIndex !== -1 &&
-      filteredResults &&
-      filteredResults[selectedResultIndex]
-    ) {
-      const selectedItem = filteredResults[selectedResultIndex];
-      setIsSearching(true);
-      router.push(selectedItem.linkHref);
-      setShowSearchResults(false);
-      setSelectedResultIndex(-1);
-    } else {
-      if (searchQuery.trim() == "") return;
-      setIsSearching(true);
-      router.push(`/search?q=${searchQuery.trim()}`);
-      setShowSearchResults(false);
-    }
-  };
+  // const handleSearch = () => {
+  //   if (
+  //     selectedResultIndex !== -1 &&
+  //     filteredResults &&
+  //     filteredResults[selectedResultIndex]
+  //   ) {
+  //     const selectedItem = filteredResults[selectedResultIndex];
+  //     setIsSearching(true);
+  //     router.push(selectedItem.linkHref);
+  //     setShowSearchResults(false);
+  //     setSelectedResultIndex(-1);
+  //   } else {
+  //     if (searchQuery.trim() == "") return;
+  //     setIsSearching(true);
+  //     router.push(`/search?q=${searchQuery.trim()}`);
+  //     setShowSearchResults(false);
+  //   }
+  // };
 
   const toggleMegaMenu = () => {
     setIsMegaMenuOpen(!isMegaMenuOpen);
