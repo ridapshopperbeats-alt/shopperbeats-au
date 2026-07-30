@@ -195,7 +195,7 @@ export default function PopularCategories() {
               className="object-cover group-hover:scale-[1.3] transition-transform duration-600 ease-in-out"
             />
 
-            <div className="banner-gradient-overlay" />
+            <div className="absolute bottom-0 left-0 w-full h-[10%] bg-linear-to-t from-[#050B1E]/80 to-transparent" />
 
             <div className="absolute left-4 bottom-3 md:p-3">
               <div className="banner-card-content">
@@ -244,7 +244,7 @@ export default function PopularCategories() {
               className="object-cover group-hover:scale-[1.3] transition-transform duration-600 ease-in-out"
             />
 
-            <div className="banner-gradient-overlay" />
+            <div className="absolute bottom-0 left-0 w-full h-[10%] bg-linear-to-t from-[#050B1E]/80 to-transparent" />
 
             <div className="absolute left-4 bottom-3 md:p-3 ">
               <div className="banner-card-content">
