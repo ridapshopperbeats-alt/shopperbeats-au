@@ -61,6 +61,9 @@ interface HeaderProps {
   megaMenuData: MegaMenuCategory[];
 }
 
+const resolveCategoryHref = (slugOrId: string) =>
+  slugOrId?.startsWith("static-") ? "/static-category" : `/category/${slugOrId}`;
+
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -722,7 +725,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                         }
                       >
                         <Link
-                          href={`/category/${cat.slug ?? cat.id}`}
+                          href={resolveCategoryHref(cat.slug ?? cat.id)}
                           prefetch={false}
                           className="category-link"
                           onClick={closeMegaMenu}
@@ -756,7 +759,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                             <div key={subCat.name} className="mega-column">
                               <Link
                                 prefetch={false}
-                                href={`/category/${subCat.slug ?? subCat.id}`}
+                                href={resolveCategoryHref(subCat.slug ?? subCat.id)}
                                 onClick={closeMegaMenu}
                               >
                                 <h5>{subCat.name}</h5>
@@ -780,14 +783,14 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                 {subCat.viewAll && (
                                   <li>
                                     <Link
-                                      href={`/category/${subCat.slug ?? subCat.id}`}
+                                      href={resolveCategoryHref(subCat.slug ?? subCat.id)}
                                       className="view-link"
                                       prefetch={false}
                                       onClick={() => {
                                         dispatch(
                                           addBreadcrumb({
                                             name: cat.name,
-                                            path: `/category/${cat.slug ?? cat.id}`,
+                                            path: resolveCategoryHref(cat.slug ?? cat.id),
                                           }),
                                         );
                                         closeMegaMenu();
