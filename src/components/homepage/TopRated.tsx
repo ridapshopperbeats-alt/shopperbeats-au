@@ -184,14 +184,14 @@ export default function TopBrands() {
 
         <button
           onClick={prevSlide}
-          className="hidden lg:flex absolute left-[-20] top-1/2 -translate-y-2/4 z-20 w-[30px] h-[30px] rounded-full bg-white border border-gray-200  items-center justify-center cursor-pointer"
+          className="hidden lg:flex @apply !absolute -left-2 top-1/2 -translate-y-1/2 !z-[999] items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed translate-x-[-12px] cursor-pointer"
         >
           <ChevronLeft size={18} />
         </button>
 
         <button
           onClick={nextSlide}
-          className="hidden lg:flex absolute right-[-20] top-1/2 -translate-y-2/4 z-20 w-[30px] h-[30px] rounded-full bg-white border border-gray-200  items-center justify-center cursor-pointer"
+          className="hidden lg:flex @apply !absolute !right-0 top-1/2 -translate-y-1/2 translate-x-1/2 !z-[999] items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
         >
           <ChevronRight size={18} />
         </button>

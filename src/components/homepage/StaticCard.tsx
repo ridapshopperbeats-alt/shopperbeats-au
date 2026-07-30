@@ -122,7 +122,7 @@ const staticProducts = [
     image:
       "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&h=600&q=80",
     brand_name: "GUESS",
-    title: "Women's Stylish Jacket",
+    title: "Men's Stylish Jacket",
     mainPrice: 119.99,
     wasPrice: 149.99,
     saveAmount: 20,
@@ -134,7 +134,7 @@ const staticProducts = [
   },
   {
     id: 9,
-    slug: "static-2",
+    slug: "static-8",
     image:
       "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=600&h=600&q=80",
     brand_name: "H&M",
@@ -278,7 +278,7 @@ export default function StaticProductCards({
         <button
           type="button"
           onClick={() => handleMobileScroll("left")}
-          className="flex absolute -left-2 top-1/2 -translate-y-1/2 z-[999] items-center justify-center w-8 h-8 bg-white text-black rounded-full border border-gray-200 shadow-md disabled:opacity-30 disabled:cursor-not-allowed"
+          className="hidden lg:flex absolute -left-2 top-1/2 -translate-y-1/2 z-[999] items-center justify-center w-8 h-8 bg-white text-black rounded-full border border-gray-200 shadow-md disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <ChevronLeft size={16} className="text-[#979797]" />
         </button>
@@ -286,7 +286,7 @@ export default function StaticProductCards({
         <button
           type="button"
           onClick={() => handleMobileScroll("right")}
-          className="flex absolute -right-2 top-1/2 -translate-y-1/2 z-[999] items-center justify-center w-8 h-8 bg-white text-black rounded-full border border-gray-200 shadow-md disabled:opacity-30 disabled:cursor-not-allowed"
+          className="hidden lg:flex absolute -right-2 top-1/2 -translate-y-1/2 z-[999] items-center justify-center w-8 h-8 bg-white text-black rounded-full border border-gray-200 shadow-md disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <ChevronRight size={16} className="text-[#979797]" />
         </button>
@@ -298,7 +298,7 @@ export default function StaticProductCards({
           {staticProducts.map((product) => (
             <div
               key={product.id}
-              className="group relative flex w-[160px] sm:w-[190px] h-[400px] sm:h-[460px] shrink-0 flex-col overflow-hidden rounded-[7px]"
+              className="group relative flex w-[160px] sm:w-[190px] h-[390px] sm:h-[460px] shrink-0 flex-col overflow-hidden rounded-[7px]"
             >
               {renderTag(product.tag)}
 
@@ -316,7 +316,7 @@ export default function StaticProductCards({
 
               <Link
                 href={`/static-product/${product.slug}`}
-                className="flex h-full flex-col no-underline"
+                className="flex h-full max-h-[450px] flex-col no-underline text-inherit"
               >
                 <div className="relative w-full h-[150px] sm:h-[180px] shrink-0 overflow-hidden rounded-t-[7px] bg-[#F5F5F5]">
                   <Image
@@ -325,20 +325,21 @@ export default function StaticProductCards({
                     fill
                     className="object-cover"
                   />
+                  <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" />
                 </div>
 
-                <div className="flex flex-1 flex-col justify-between pt-2">
-                  <div className="flex flex-col gap-[2px]">
-                    <h4 className="text-[14px] font-bold text-black">
+                <div className="flex flex-1 flex-col justify-between w-full">
+                  <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
+                    <h4 className="text-[0.75rem] md:text-[0.875rem] font-bold text-black">
                       {product.brand_name}
                     </h4>
 
-                    <p className="text-[14px] text-[#878787] line-clamp-2">
+                    <p className="text-[14px] md:text-[14px] leading-[18px] text-[#878787] font-normal line-clamp-2 min-h-[36px]">
                       {limitWords(product.title)}
                     </p>
 
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[16px] font-semibold text-[#052B56]">
+                    <div className="flex items-center gap-2 h-4 py-3">
+                      <span className="text-[16px] md:text-[20px] font-semibold text-[#052B56]">
                         ${product.mainPrice}
                       </span>
 
@@ -394,17 +395,17 @@ export default function StaticProductCards({
       <button
         type="button"
         onClick={() => handleScroll("left")}
-        className="hidden lg:flex @apply !absolute -left-5 top-1/2 -translate-y-1/2 !z-[999] items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed translate-x-[-12px];"
+        className="hidden lg:flex @apply !absolute -left-3 top-1/2 -translate-y-1/2 !z-[999] items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed translate-x-[-12px] cursor-pointer"
       >
-        <ChevronLeft size={18} className="text-[#979797]" />
+        <ChevronLeft size={18} className="text-black" />
       </button>
 
       <button
         type="button"
         onClick={() => handleScroll("right")}
-        className="hidden lg:flex @apply !absolute !right-0 top-1/2 -translate-y-1/2 translate-x-1/2 !z-[999] items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed;"
+        className="hidden lg:flex @apply !absolute !right-0 top-1/2 -translate-y-1/2 translate-x-1/2 !z-[999] items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
       >
-        <ChevronRight size={18} className="text-[#979797]" />
+        <ChevronRight size={18} className="text-black" />
       </button>
 
       <div
@@ -415,7 +416,7 @@ export default function StaticProductCards({
           return (
             <div
               key={product.id}
-              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-full max-h-[530px] flex flex-col justify-start overflow-hidden rounded-[7px]"
+              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[510px] flex flex-col justify-start overflow-hidden rounded-[7px]"
             >
               {renderTag(product.tag)}
 
@@ -435,13 +436,14 @@ export default function StaticProductCards({
                 href={`/static-product/${product.slug}`}
                 className="flex h-full flex-col no-underline"
               >
-                <div className="relative w-full h-[296px] overflow-hidden rounded-[7px] bg-[#F5F5F5]">
+                <div className="relative w-full h-[296px] shrink-0 overflow-hidden rounded-[7px] bg-[#F5F5F5]">
                   <Image
                     src={product.image}
                     alt={product.title}
                     fill
-                    className="object-cover "
+                    className="object-cover"
                   />
+                  <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" />
                 </div>
 
                 <div className="flex flex-1 flex-col justify-between">

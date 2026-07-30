@@ -19,12 +19,12 @@ const SizeGuidePopup = ({ open, onClose }: SizeGuidePopupProps) => {
 
   return (
     <>
-      <div className="popup-backdrop" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/40 z-50" onClick={onClose} />
 
-      <div className="popup-container">
+      <div className="fixed inset-0 z-50 flex items-end lg:items-center justify-center px-4">
         <div className="relative w-[calc(100%+32px)] -mx-4 lg:mx-0 lg:w-full lg:max-w-[430px] min-h-[237px] bg-white rounded-t-[24px] lg:rounded-[15px] shadow-[0px_0px_10px_0px_#00000033] overflow-hidden lg:overflow-visible px-6 lg:px-8 pt-2 lg:pt-8 pb-6 lg:pb-8">
           <div className="flex lg:hidden justify-center pb-2">
-            <span className="popup-drag-handle" />
+            <span className="w-9 h-1 rounded-full bg-[#D9D2D2]" />
           </div>
 
           <button
@@ -36,7 +36,7 @@ const SizeGuidePopup = ({ open, onClose }: SizeGuidePopupProps) => {
             <X size={18} strokeWidth={1.5} className="text-center" />
           </button>
 
-          <h3 className="text-[16px] font-bold text-black"><Pencil size={18}/> Size Guide</h3>
+          <h3 className="text-[16px] font-bold text-black"> Size Guide</h3>
 
           <div className="mt-4 overflow-x-auto">
             <table className="w-full text-[13px] text-left border border-collapse border-[#F0F0F0]">
@@ -58,10 +58,10 @@ const SizeGuidePopup = ({ open, onClose }: SizeGuidePopupProps) => {
                     <td className="py-2 px-2 font-medium text-black border border-[#F0F0F0]">
                       {row.size}
                     </td>
-                    <td className="size-guide-cell">{row.bust}</td>
-                    <td className="size-guide-cell">{row.waist}</td>
-                    <td className="size-guide-cell">{row.hip}</td>
-                    <td className="size-guide-cell">{row.length}</td>
+                    <td className="py-2 px-2 text-[#696e79] border border-[#F0F0F0]">{row.bust}</td>
+                    <td className="py-2 px-2 text-[#696e79] border border-[#F0F0F0]">{row.waist}</td>
+                    <td className="py-2 px-2 text-[#696e79] border border-[#F0F0F0]">{row.hip}</td>
+                    <td className="py-2 px-2 text-[#696e79] border border-[#F0F0F0]">{row.length}</td>
                   </tr>
                 ))}
               </tbody>

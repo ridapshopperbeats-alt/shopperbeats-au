@@ -14,62 +14,62 @@ interface NewTopCategoryItem {
 const NEW_TOP_CATEGORIES: NewTopCategoryItem[] = [
   {
     title: "Women's Clothing",
-    image: "/images/women-clothing.svg",
+    image: "/images/womentop.png",
     href: "/",
   },
   {
     title: "Fragrance",
-    image: "/images/fragrance.svg",
+    image: "/images/fragrance.png",
     href: "/",
   },
   {
     title: "Furniture",
-    image: "/images/furniture.svg",
+    image: "/images/furniture.png",
     href: "/",
   },
   {
     title: "Patio Furniture",
-    image: "/images/patioFurniture.svg",
+    image: "/images/patioFurniture.png",
     href: "/",
   },
   {
     title: "Baby & Kids",
-    image: "/images/baby-kids.svg",
+    image: "/images/baby-kids.png",
     href: "/",
   },
   {
     title: "Home Decor",
-    image: "/images/homeDecor.svg",
+    image: "/images/homeDecor.png",
     href: "/",
   },
   {
     title: "Jewelry",
-    image: "/images/jewelry.svg",
+    image: "/images/jewelry.png",
     href: "/",
   },
   {
-    image: "/images/menClothing.svg",
+    image: "/images/menClothing.png",
     title: "Men's Clothing",
     href: "/",
   },
   {
     title: "Footwear",
-    image: "/images/footwear.svg",
+    image: "/images/footwear.png",
     href: "/",
   },
   {
     title: "Watches",
-    image: "/images/watches.svg",
+    image: "/images/watches.png",
     href: "/",
   },
   {
     title: "Children Clothing",
-    image: "/images/baby-kids.svg",
+    image: "/images/baby-kids.png",
     href: "/",
   },
   {
     title: "Fashion",
-    image: "/images/women-clothing.svg",
+    image: "/images/womentop.png",
     href: "/",
   },
 ];
@@ -96,22 +96,22 @@ export default function NewTopCategories() {
         <button
           type="button"
           onClick={() => handleScroll("left")}
-          className="hidden lg:flex absolute left-[-12px] top-20 -translate-y-3 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 transition-all"
+          className="hidden lg:flex absolute left-[-12px] top-22 -translate-y-3 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 transition-all"
         >
-          <ChevronLeft size={18} className="text-[#979797]" />
+          <ChevronLeft size={18} className="text-black" />
         </button>
 
         <button
           type="button"
           onClick={() => handleScroll("right")}
-          className="hidden lg:flex absolute right-[-16px] top-20 -translate-y-3 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 transition-all"
+          className="hidden lg:flex absolute right-[-16px] top-22 -translate-y-3 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 transition-all"
         >
-          <ChevronRight size={18} className="text-[#979797]" />
+          <ChevronRight size={18} className="text-black" />
         </button>
 
         <div
           ref={sliderRef}
-          className="flex items-start gap-[16px] lg:gap-[35px] overflow-x-auto scroll-smooth no-scrollbar py-5 "
+          className="flex items-start gap-[16px] lg:gap-[35px] overflow-x-auto scroll-smooth no-scrollbar py-6"
         >
           {NEW_TOP_CATEGORIES.map((item) => (
             <Link
@@ -124,6 +124,8 @@ export default function NewTopCategories() {
                   src={item.image}
                   alt={item.title}
                   fill
+                  sizes="(max-width: 768px) 64px, 138px"
+                  quality={100}
                   loading="lazy"
                   className="object-cover transition-transform duration-800 hover:scale-[1.25] ease-in-out"
                 />

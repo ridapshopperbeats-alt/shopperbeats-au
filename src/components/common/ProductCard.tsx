@@ -172,14 +172,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
           href={`/product/${unique_code || id}`}
           className="flex h-full max-h-[450px] flex-col no-underline text-inherit"
         >
-          <div className="relative w-full overflow-hidden">
+          <div className="relative w-full aspect-[280/296] overflow-hidden">
             <Image
               src={image}
               alt={title || "Product Image"}
-              width={280}
-              height={296}
-              loading="lazy"
-              className="w-full h-auto"
+              fill
+              sizes="(min-width: 1700px) 20vw, (min-width: 1200px) 33vw, (min-width: 1024px) 40vw, 50vw"
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" />
           </div>
@@ -187,10 +186,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <div className="flex flex-1 flex-col justify-between w-full">
             <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
               <h4 className="text-[12px] md:text-[14px] font-bold text-black">
-                {brand_name || "No Brand"}
+                {brand_name || ""}
               </h4>
 
-              <p className="text-[12px] md:text-[13px] leading-4.5 text-[#878787] font-normal">
+              <p className="text-[14px] md:text-[14px] leading-[18px] text-[#878787] font-normal line-clamp-2 min-h-[36px]">
                 {limitWords(title, 7) || "MakeupKit"}
               </p>
 
@@ -200,10 +199,21 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 </span>
 
                 {showWasPrice && wasPrice && (
-                  <span className="text-[10px] md:text-[12px] font-light text-[#535766] line-through">
-                    ${formatPrice(wasPrice)}
+                  <span className="text-[9px] md:text-[12px] font-normal text-[#008F11]">
+                    {formatPrice(saveAmount)} %OFF
                   </span>
                 )}
+
+                {/* <div className="flex text-[12px] font-medium items-center leading-[18px] gap-1">
+                  {rating > 0 && (
+                    <>
+                      <StarRating rating={rating} size={13} />
+                      <span className="text-[#535766] leading-none">
+                        ({reviewCount})
+                      </span>
+                    </>
+                  )}
+                </div> */}
 
                 {saveAmount && (
                   <span className="text-[9px] md:text-[12px] font-normal text-[#008F11]">

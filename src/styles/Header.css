@@ -728,15 +728,15 @@ nav.navbar {
 
 
   .megamenuBtn {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .bottom-head ul.menu a.link {
-    font-size: 13px !important;
+    font-size: 14px !important;
   }
 
   .bottom-head ul.menu {
-    gap: 70px;
+    gap: 25px;
   }
 
 
@@ -791,6 +791,7 @@ nav.navbar {
 
   nav.navbar {
     padding-left: 13px;
+    padding-right: 13px;
   }
 
   .bottom-head ul.menu a.link,
@@ -798,16 +799,14 @@ nav.navbar {
     font-size: 13px;
   }
 
-  .bottom-head ul.menu {
-    padding-right: 4px;
-  }
-
   .bottom-head ul.menu a.link {
     font-size: 11px !important;
   }
 
   .bottom-head ul.menu {
-    gap: 10px;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
   }
 
   .mega-content {
@@ -842,8 +841,6 @@ nav.navbar {
     right: 46px;
   }
 
-  /* Only one mobile trigger (top-left hamburger) remains; the category
-     bar (Shop By Category button + its own hamburger) is desktop-only. */
   .bottom-head {
     display: none;
   }
@@ -852,14 +849,12 @@ nav.navbar {
     padding-bottom: 0;
   }
 
-  /* Off-canvas drawer: anchored to the left edge, slides in/out horizontally
-     instead of toggling display, so the open/close transform can animate. */
   .mobile-mega-menu {
     display: block;
     position: fixed;
     top: 0;
     left: 0;
-    width: 60%;
+    width: 70%;
     height: 100vh;
     overflow-y: auto;
     overscroll-behavior: contain;

@@ -27,7 +27,6 @@ import {
   getProductPrice,
 } from "@/lib/utils/price-filter";
 import { buildFilterTags } from "@/lib/utils/filter-tags";
-import Link from "next/link";
 import {
   staticCategory,
   staticFilters,

@@ -16,10 +16,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 interface ReusableSliderProps<T> {
   items: T[];
 
-  renderItem: (
-    item: T,
-    index: number
-  ) => React.ReactNode;
+  renderItem: (item: T, index: number) => React.ReactNode;
 
   effect?: "slide" | "fade";
 
@@ -43,15 +40,9 @@ interface ReusableSliderProps<T> {
 
   orientation?: "horizontal" | "vertical";
 
-  onSlideChange?: (
-    currentIndex: number,
-    currentItem: T
-  ) => void;
+  onSlideChange?: (currentIndex: number, currentItem: T) => void;
 
-  keyExtractor?: (
-    item: T,
-    index: number
-  ) => string | number;
+  keyExtractor?: (item: T, index: number) => string | number;
 
   className?: string;
 
@@ -62,12 +53,6 @@ interface ReusableSliderProps<T> {
     };
   };
 
-  /**
-   * When true, slide width is not computed from `breakpoints`/`slidesToShow`.
-   * Instead each slide gets `slideClassName` and its width is left to CSS
-   * (e.g. media queries in globals.css) — the slider just measures the
-   * rendered width to drive dragging/looping.
-   */
   autoResponsive?: boolean;
 
   slideClassName?: string;
@@ -98,7 +83,7 @@ function SliderComponent<T>(
     arrows = true,
     pauseOnHover = true,
     centered = false,
-    gap = 20,
+    gap = 30,
     orientation = "horizontal",
     onSlideChange,
     keyExtractor,
@@ -107,7 +92,7 @@ function SliderComponent<T>(
     autoResponsive = false,
     slideClassName = "",
   }: ReusableSliderProps<T>,
-  ref: React.Ref<ReusableSliderRef>
+  ref: React.Ref<ReusableSliderRef>,
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
   const measureSlideRef = useRef<HTMLDivElement | null>(null);
@@ -124,13 +109,6 @@ function SliderComponent<T>(
 
   const axisProp = isVertical ? "clientHeight" : "clientWidth";
 
-  // -----------------------------
-  // RESPONSIVE BREAKPOINTS
-  // Resolved from the *measured container size* instead of a
-  // Swiper-managed window listener, so the slider stays responsive
-  // to its own box (e.g. inside a sidebar) rather than the viewport.
-  // -----------------------------
-
   const responsiveBreakpoints = useMemo(
     () =>
       breakpoints || {
@@ -142,7 +120,7 @@ function SliderComponent<T>(
         1280: { slidesPerView: 5, spaceBetween: 24 },
         1536: { slidesPerView: slidesToShow, spaceBetween: gap },
       },
-    [breakpoints, slidesToShow, gap]
+    [breakpoints, slidesToShow, gap],
   );
 
   const sortedBreakpointKeys = useMemo(
@@ -150,7 +128,7 @@ function SliderComponent<T>(
       Object.keys(responsiveBreakpoints)
         .map(Number)
         .sort((a, b) => a - b),
-    [responsiveBreakpoints]
+    [responsiveBreakpoints],
   );
 
   const activeConfig: BreakpointConfig = useMemo(() => {
@@ -252,24 +230,9 @@ function SliderComponent<T>(
 
   const startIndex = isLoopEnabled ? cloneCount : 0;
 
-  // Reset current/isTransitioning synchronously during render when
-  // startIndex/items.length/isFade change, instead of inside a useEffect
-  // body. This is React's official "adjust state during render" pattern:
-  // a useState (not a ref, which cannot be read/written during render)
-  // tracks the previous key. The transition is re-enabled on the next
-  // frame by the effect below, whose setState call happens inside the rAF
-  // callback (not directly in the effect body), plus the
-  // isTransitioning-watching effect further down also re-enables it — so
-  // behavior is unchanged.
-  const startResetKey = `${startIndex}|${items.length}|${isFade}`;
-  const [prevStartResetKey, setPrevStartResetKey] = useState(startResetKey);
-  if (prevStartResetKey !== startResetKey) {
-    setPrevStartResetKey(startResetKey);
+  useEffect(() => {
     setIsTransitioning(false);
     setCurrent(startIndex);
-  }
-
-  useEffect(() => {
     const raf = requestAnimationFrame(() => setIsTransitioning(true));
     return () => cancelAnimationFrame(raf);
   }, [startIndex, items.length, isFade]);
@@ -284,7 +247,8 @@ function SliderComponent<T>(
       ? (containerSize - spaceBetween * (slidesPerView - 1)) / slidesPerView
       : containerSize;
 
-  const centerOffset = centered && !isFade ? (containerSize - slideSize) / 2 : 0;
+  const centerOffset =
+    centered && !isFade ? (containerSize - slideSize) / 2 : 0;
 
   const trackOffset = -(current * (slideSize + spaceBetween)) + centerOffset;
 
@@ -297,6 +261,11 @@ function SliderComponent<T>(
     setCurrent(nextIndex);
   }, []);
 
+  const maxNonLoopCurrent = Math.max(
+    0,
+    Math.floor(slides.length - slidesPerView),
+  );
+
   const handleNext = useCallback(() => {
     if (isFade) {
       setCurrent((c) => {
@@ -306,8 +275,18 @@ function SliderComponent<T>(
       });
       return;
     }
-    goTo(current + 1);
-  }, [isFade, infinite, items.length, current, goTo]);
+    goTo(
+      isLoopEnabled ? current + 1 : Math.min(current + 1, maxNonLoopCurrent),
+    );
+  }, [
+    isFade,
+    infinite,
+    items.length,
+    isLoopEnabled,
+    current,
+    maxNonLoopCurrent,
+    goTo,
+  ]);
 
   const handlePrev = useCallback(() => {
     if (isFade) {
@@ -437,7 +416,7 @@ function SliderComponent<T>(
 
   const canGoNext = isFade
     ? infinite || current < items.length - 1
-    : isLoopEnabled || current < slides.length - slidesPerView;
+    : isLoopEnabled || current < maxNonLoopCurrent;
 
   return (
     <div
@@ -461,7 +440,7 @@ function SliderComponent<T>(
         onDragStart={(e) => e.preventDefault()}
       >
         <div
-          className="flex "
+          className="flex slider-track"
           style={{
             height: "100%",
             flexDirection: isVertical ? "column" : "row",
@@ -469,9 +448,7 @@ function SliderComponent<T>(
             transform: isFade
               ? undefined
               : `translate${isVertical ? "Y" : "X"}(${trackOffset + dragOffset}px)`,
-            transition: isTransitioning
-              ? `transform ${speed}ms ease`
-              : "none",
+            transition: isTransitioning ? `transform ${speed}ms ease` : "none",
           }}
           onTransitionEnd={handleTransitionEnd}
         >
@@ -480,10 +457,10 @@ function SliderComponent<T>(
             const itemKey = keyExtractor
               ? keyExtractor(item, index)
               : (itemRecord?.id as string | number | undefined) ||
-              (itemRecord?._id as string | number | undefined) ||
-              (itemRecord?.slug as string | number | undefined) ||
-              (itemRecord?.url as string | number | undefined) ||
-              `${index}-${isClone ? "clone" : "real"}`;
+                (itemRecord?._id as string | number | undefined) ||
+                (itemRecord?.slug as string | number | undefined) ||
+                (itemRecord?.url as string | number | undefined) ||
+                `${index}-${isClone ? "clone" : "real"}`;
 
             const isActive = isFade && i === current;
             const isMeasureTarget =
@@ -493,23 +470,24 @@ function SliderComponent<T>(
               <div
                 key={`${itemKey}-${i}`}
                 ref={isMeasureTarget ? measureSlideRef : undefined}
-                className={`h-full flex-shrink-0 ${autoResponsive && !isFade ? slideClassName : ""
-                  }`}
+                className={`h-full flex-shrink-0 ${
+                  autoResponsive && !isFade ? slideClassName : ""
+                }`}
                 style={
                   isFade
                     ? {
-                      position: "absolute",
-                      inset: 0,
-                      opacity: isActive ? 1 : 0,
-                      transition: `opacity ${speed}ms ease`,
-                      pointerEvents: isActive ? "auto" : "none",
-                    }
+                        position: "absolute",
+                        inset: 0,
+                        opacity: isActive ? 1 : 0,
+                        transition: `opacity ${speed}ms ease`,
+                        pointerEvents: isActive ? "auto" : "none",
+                      }
                     : autoResponsive
                       ? undefined
                       : {
-                        width: isVertical ? "100%" : `${slideSize}px`,
-                        height: isVertical ? `${slideSize}px` : "100%",
-                      }
+                          width: isVertical ? "100%" : `${slideSize}px`,
+                          height: isVertical ? `${slideSize}px` : "100%",
+                        }
                 }
               >
                 <div className="w-full h-full" style={{ height: "100%" }}>
@@ -525,7 +503,7 @@ function SliderComponent<T>(
         <>
           <button
             onClick={handlePrev}
-            className="handlePrev !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)]"
+            className="handlePrev !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)] cursor-pointer"
             disabled={!canGoPrev}
             aria-label="Previous slide"
           >
@@ -534,11 +512,11 @@ function SliderComponent<T>(
 
           <button
             onClick={handleNext}
-            className="handleNext !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)] ml-20"
+            className="handleNext !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)] ml-20 cursor-pointer"
             disabled={!canGoNext}
             aria-label="Next slide"
           >
-            <ChevronRight size={20}  />
+            <ChevronRight size={20} color="#1D1B20" />
           </button>
         </>
       )}
@@ -546,12 +524,10 @@ function SliderComponent<T>(
   );
 }
 
-const ReusableSlider = forwardRef(
-  SliderComponent
-) as <T>(
+const ReusableSlider = forwardRef(SliderComponent) as <T>(
   props: ReusableSliderProps<T> & {
     ref?: React.Ref<ReusableSliderRef>;
-  }
+  },
 ) => React.ReactElement;
 
 export default ReusableSlider;

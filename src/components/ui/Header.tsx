@@ -16,6 +16,8 @@ import {
   ChevronDown,
   ChevronRight,
   Menu,
+  Handbag,
+  HandbagIcon,
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
@@ -52,6 +54,11 @@ export interface MegaMenuCategory {
 interface HeaderProps {
   megaMenuData: MegaMenuCategory[];
 }
+
+const resolveCategoryHref = (slugOrId: string) =>
+  slugOrId?.startsWith("static-")
+    ? "/static-category"
+    : `/category/${slugOrId}`;
 
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -193,6 +200,91 @@ export default function Header({ megaMenuData }: HeaderProps) {
       ...prev,
       [linkName]: !prev[linkName],
     }));
+  };
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounceValue(searchQuery, 1000);
+  const { data: searchResults, isLoading: isSearchLoading } =
+    useGetSearchSuggestionsQuery(debouncedSearchQuery, {
+      skip: !debouncedSearchQuery,
+    });
+
+  useEffect(() => {}, [searchResults]);
+
+  interface SuggestionItem {
+    id: string;
+    type: "product" | "category" | "brand";
+    displayLabel: string;
+    linkHref: string;
+    thumbnailUrl?: string | null;
+    price?: number;
+  }
+
+  // Single source of truth for what's actually on screen — each list narrows
+  // further as the user keeps typing ahead of the debounce, so keyboard
+  // bounds/selection and the rendered rows must read from these same
+  // filtered lists, not the raw API response.
+  const query = searchQuery.toLowerCase();
+
+  const filteredProducts: SuggestionItem[] = React.useMemo(() => {
+    return (searchResults?.products || [])
+      .filter((p) => p.title?.toLowerCase().includes(query))
+      .map((p) => ({
+        id: p.id,
+        type: "product" as const,
+        displayLabel: p.title,
+        linkHref: `/product/${p.slug}`,
+        thumbnailUrl: p.thumbnail_url
+          ? applyImageVariant(p.thumbnail_url, "public")
+          : p.thumbnail_url,
+        price: p.price,
+      }));
+  }, [searchResults, query]);
+
+  const filteredCategories: SuggestionItem[] = React.useMemo(() => {
+    return (searchResults?.categories || [])
+      .filter((c) => c.name?.toLowerCase().includes(query))
+      .map((c) => ({
+        id: c.id,
+        type: "category" as const,
+        displayLabel: c.name,
+        linkHref: `/category/${c.slug}`,
+      }));
+  }, [searchResults, query]);
+
+  const filteredBrands: SuggestionItem[] = React.useMemo(() => {
+    return (searchResults?.brands || [])
+      .filter((b) => b.name?.toLowerCase().includes(query))
+      .map((b) => ({
+        id: b.id,
+        type: "brand" as const,
+        displayLabel: b.name,
+        linkHref: `/brand/${b.slug}`,
+      }));
+  }, [searchResults, query]);
+
+  const filteredResults: SuggestionItem[] = React.useMemo(
+    () => [...filteredProducts, ...filteredCategories, ...filteredBrands],
+    [filteredProducts, filteredCategories, filteredBrands],
+  );
+
+  const handleSearch = () => {
+    if (
+      selectedResultIndex !== -1 &&
+      filteredResults &&
+      filteredResults[selectedResultIndex]
+    ) {
+      const selectedItem = filteredResults[selectedResultIndex];
+      setIsSearching(true);
+      router.push(selectedItem.linkHref);
+      setShowSearchResults(false);
+      setSelectedResultIndex(-1);
+    } else {
+      if (searchQuery.trim() == "") return;
+      setIsSearching(true);
+      router.push(`/search?q=${searchQuery.trim()}`);
+      setShowSearchResults(false);
+    }
   };
 
   const toggleMegaMenu = () => {
@@ -409,7 +501,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
               iconSrc="/images/wishlist.svg"
               alt="wishlist"
               className="wishlist"
-              count={wishlistData?.total_items ?? wishlistData?.items?.length ?? 0}
+              count={
+                wishlistData?.total_items ?? wishlistData?.items?.length ?? 0
+              }
             />
 
             <CartPopup isVisible={showCartCard} />
@@ -465,7 +559,11 @@ export default function Header({ megaMenuData }: HeaderProps) {
             >
               <Menu size={20} />
               Shop By Category{" "}
-              <ChevronDown size={16} className="inline-block" aria-hidden="true" />
+              <ChevronDown
+                size={16}
+                className="inline-block"
+                aria-hidden="true"
+              />
             </Button>
             <div
               id="megaMenu"
@@ -489,7 +587,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                         }
                       >
                         <Link
-                          href={`/category/${cat.slug ?? cat.id}`}
+                          href={resolveCategoryHref(cat.slug ?? cat.id)}
                           prefetch={false}
                           className="category-link"
                           onClick={closeMegaMenu}
@@ -522,7 +620,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
                             <div key={subCat.name} className="mega-column">
                               <Link
                                 prefetch={false}
-                                href={`/category/${subCat.slug ?? subCat.id}`}
+                                href={resolveCategoryHref(
+                                  subCat.slug ?? subCat.id,
+                                )}
                                 onClick={closeMegaMenu}
                               >
                                 <h5>{subCat.name}</h5>
@@ -546,14 +646,18 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                 {subCat.viewAll && (
                                   <li>
                                     <Link
-                                      href={`/category/${subCat.slug ?? subCat.id}`}
+                                      href={resolveCategoryHref(
+                                        subCat.slug ?? subCat.id,
+                                      )}
                                       className="view-link"
                                       prefetch={false}
                                       onClick={() => {
                                         dispatch(
                                           addBreadcrumb({
                                             name: cat.name,
-                                            path: `/category/${cat.slug ?? cat.id}`,
+                                            path: resolveCategoryHref(
+                                              cat.slug ?? cat.id,
+                                            ),
                                           }),
                                         );
                                         closeMegaMenu();
@@ -574,8 +678,84 @@ export default function Header({ megaMenuData }: HeaderProps) {
             </div>
           </div>
 
-          <CategoryNavbar />
+          <nav className={`navbar `} id="menu">
+            <ul className="menu">
+              <li>
+                <Link
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="#"
+                >
+                  <Home size={16} className="inline-block text-center" />
+                  Home & Garden
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="/category/home-garden"
+                >
+                  <Armchair size={16} className="inline-block " />
+                  Furniture
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="link flex items-center  xl:gap-2 hover:text-red-500"
+                  href="#"
+                >
+                  <HandbagIcon size={16} className="inline-block" />
+                  Fashion & Accessories
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="#"
+                >
+                  <HeartPulse size={16} className="inline-block " />
+                  Health & Beauty
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="#"
+                >
+                  <Armchair size={16} className="inline-block " />
+                  Outdoor & Patio
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="#"
+                >
+                  <Gamepad2 size={16} className="inline-block " />
+                  Best Sellers
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  href="/product-listing/whats-on-sale"
+                >
+                  <Sparkles size={16} className="inline-block " />
+                  What&apos;s On Sale
+                </Link>
+              </li>
+            </ul>
+          </nav>
         </div>
+
+        <div
+          className={`fixed inset-0 bg-black/40 z-998 transition-opacity duration-300 ${
+            isMobileNavOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
+          }`}
+          onClick={() => setIsMobileNavOpen(false)}
+        />
 
         <div
           className={`${isMobileNavOpen ? "active" : ""} mobile-mega-menu`}
