@@ -30,9 +30,15 @@ export function useVariantSelection(variants: Variant[] = []) {
 
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
 
+  // Sentinel (not the initial selectedAttributes/variants reference) so the
+  // derive-selectedVariant block below runs once on mount too — otherwise the
+  // guard's reference check is trivially false on the first render (both
+  // sides point at the same object) and the default variant never gets
+  // derived until a manual attribute change creates a new reference.
   const [lastDerivedAttributes, setLastDerivedAttributes] =
-    useState(selectedAttributes);
-  const [lastDerivedVariants, setLastDerivedVariants] = useState(variants);
+    useState<SelectedAttributes | null>(null);
+  const [lastDerivedVariants, setLastDerivedVariants] =
+    useState<Variant[] | null>(null);
 
   if (
     variants.length > 0 &&
