@@ -97,7 +97,7 @@ ul.social {
 }
 
 .footer-container {
-  @apply px-[30px] lg:px-[100px];
+  @apply px-[20px] lg:px-[100px];
 }
 
 .footer-menu-row {
@@ -129,7 +129,7 @@ ul.social {
 }
 
 .footer-copyright-mobile {
-  @apply pt-4  block sm:hidden w-full px-4;
+  @apply pt-4  block sm:hidden w-full ;
   color: #FFF;
   text-align: center;
   font-family: Montserrat, sans-serif;

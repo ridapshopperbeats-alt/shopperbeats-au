@@ -6,6 +6,7 @@ import StoreProvider from "../lib/redux/store-provider";
 import { SEOProvider } from "@/contexts/SEOContext";
 import GlobalLoader from "@/components/ui/loaders/GlobalLoader";
 import RouteChangeLoader from "@/components/ui/loaders/RouteChangeLoader";
+import { SITE_URL } from "@/lib/utils/site-url";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,8 +25,48 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "ShopperBeats",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "ShopperBeats",
+    template: "%s | ShopperBeats",
+  },
   description: "Shopperbeats - Your One-Stop Online Shop",
+  keywords: [
+    "ShopperBeats",
+    "online shopping",
+    "online store",
+    "furniture",
+    "fashion",
+    "home and garden",
+    "electronics",
+    "kids toys",
+    "health and beauty",
+    "sport & outdoor",
+    "mobile"
+  ],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "ShopperBeats",
+    title: "ShopperBeats",
+    description: "Shopperbeats - Your One-Stop Online Shop",
+    images: [
+      {
+        url: "/images/logo.svg",
+        alt: "ShopperBeats",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ShopperBeats",
+    description: "Shopperbeats - Your One-Stop Online Shop",
+    images: ["/images/logo.svg"],
+  },
 };
 
 export default function RootLayout({

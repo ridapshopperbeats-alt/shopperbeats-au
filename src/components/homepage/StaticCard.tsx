@@ -325,7 +325,7 @@ export default function StaticProductCards({
                     fill
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" />
+                  {/* <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" /> */}
                 </div>
 
                 <div className="flex flex-1 flex-col justify-between w-full">
@@ -443,7 +443,7 @@ export default function StaticProductCards({
                     fill
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" />
+                  {/* <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" /> */}
                 </div>
 
                 <div className="flex flex-1 flex-col justify-between">
