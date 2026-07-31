@@ -68,9 +68,6 @@ export default function SecureCheckout() {
     skip: !isAuthenticated,
   });
 
-  // Reference data added via the static cart (e.g. "Add to cart" on pages not
-  // wired to the real cart API yet) — merged in here so checkout shows and
-  // totals the same items the cart page shows, for now.
   const { items: staticCartItems } = useStaticCart();
 
   const router = useRouter();
@@ -700,15 +697,6 @@ export default function SecureCheckout() {
     }
   });
 
-  // Wraps the validated submit handler with a synchronous ref-based lock:
-  // state updates like isProcessingPayment only take effect on the next
-  // render, so a fast double-click/Enter can invoke handlePayNowValidated a
-  // second time before that re-render happens. A ref is read/written
-  // immediately, so it blocks re-entry regardless of render timing. Kept
-  // out of the callback passed to handleSubmit itself since reading a ref
-  // from inside a function handed to another function isn't safe to do
-  // during render (only relevant for functions that are called during
-  // render, but this one is just a stricter lint rule playing it safe).
   const handlePayNow = async (e?: React.FormEvent) => {
     if (isSubmittingRef.current) return;
     isSubmittingRef.current = true;

@@ -207,6 +207,11 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
       );
     });
 
+  const estimatedDeliveryRange = getEstimatedDeliveryRange(
+    product?.ships_from_location,
+    product?.handling_time_days || 0,
+  );
+
   const productTabItems = [{ key: "description", label: "Description" }];
 
   const handleTabClick = (tab: string, index: number) => {
@@ -377,10 +382,6 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
     setIsCartDrawerOpen(true);
   };
 
-  // Adapts the local-storage-backed static cart item shape to the CartItem
-  // shape CartCheckoutDrawer expects (the same drawer the real product page
-  // uses) — field names line up closely, this just fills in the couple that
-  // differ in type (numbers vs strings) or don't exist on the static item.
   const toDrawerCartItem = (item: StaticCartItem): CartItem => ({
     id: item.id,
     product_id: item.product_id,
@@ -881,12 +882,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 <p className="font-bold text-[#1D265F] text-[14px]">
                   Delivery Fee - ${formatPrice(shippingCharge)}{" "}
                   <span className="text-[14px] font-normal text-[#1A2553] leading-[20px]">
-                    (
-                    {getEstimatedDeliveryRange(
-                      product.ships_from_location,
-                      product.handling_time_days || 0,
-                    )}
-                    )
+                    ({estimatedDeliveryRange})
                   </span>
                 </p>
               )}

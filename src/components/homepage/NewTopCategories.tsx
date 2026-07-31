@@ -81,14 +81,14 @@ export default function NewTopCategories() {
     if (!sliderRef.current) return;
 
     sliderRef.current.scrollBy({
-      left: direction === "left" ? -500 : 500,
+      left: direction === "left" ? -300 : 300,
       behavior: "smooth",
     });
   };
 
   return (
     <div className="w-full container">
-      <h2 className="text-center text-[20px] lg:text-[24px] font-bold leading-6 mx-auto lg:pt-4">
+      <h2 className="text-center text-[1.25rem] lg:text-[1.5rem] font-bold leading-6 mx-auto lg:pt-4">
         Top Categories
       </h2>
 
@@ -131,7 +131,7 @@ export default function NewTopCategories() {
                 />
               </div>
 
-              <p className="text-[11px] md:text-[12px] font-bold leading-[100%] tracking-[0%] text-center capitalize text-[#2B2B2B] line-clamp-2">
+              <p className="text-[0.6875rem] md:text-[0.75rem] font-bold leading-[100%] tracking-[0%] text-center capitalize text-[#2B2B2B] line-clamp-2">
                 {item.title}
               </p>
             </Link>

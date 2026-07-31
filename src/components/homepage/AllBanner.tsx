@@ -184,14 +184,12 @@ export default function PopularCategories() {
       {/* TOP */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-3 lg:pt-4">
         {topCategories.map((item) => (
-          <div
-            key={item.id}
-            className="banner-card group"
-          >
+          <div key={item.id} className="banner-card banner-card-top group">
             <Image
               src={item.image}
               alt={item.title}
               fill
+              loading="lazy"
               className="object-cover group-hover:scale-[1.3] transition-transform duration-600 ease-in-out"
             />
 
@@ -199,11 +197,11 @@ export default function PopularCategories() {
 
             <div className="absolute left-4 bottom-3 md:p-3">
               <div className="banner-card-content">
-                <h3 className="banner-card-title">
+                <h3 className="text-white text-[0.8125rem] md:text-[1.125rem] font-bold leading-[100%]">
                   {item.title}
                 </h3>
 
-                <button className="flex items-center gap-2 text-white text-[10px] md:text-[12px] font-medium cursor-pointer">
+                <button className="flex items-center gap-2 text-white text-[0.625rem] md:text-[0.75rem] font-medium cursor-pointer">
                   Shop Now
                   <ArrowRight size={14} />
                 </button>
@@ -233,14 +231,12 @@ export default function PopularCategories() {
         }`}
       >
         {bottomCategories.map((item) => (
-          <div
-            key={item.id}
-            className="banner-card group"
-          >
+          <div key={item.id} className="banner-card banner-card-bottom group">
             <Image
               src={item.image}
               alt={item.title}
               fill
+              loading="lazy"
               className="object-cover group-hover:scale-[1.3] transition-transform duration-600 ease-in-out"
             />
 
@@ -248,11 +244,11 @@ export default function PopularCategories() {
 
             <div className="absolute left-4 bottom-3 md:p-3 ">
               <div className="banner-card-content">
-                <h3 className="banner-card-title">
+                <h3 className="text-white text-[0.8125rem] md:text-[1.125rem] font-bold leading-[100%]">
                   {item.title}
                 </h3>
 
-                <button className="flex items-center gap-2 text-white text-[10px] md:text-[12px] font-medium cursor-pointer">
+                <button className="flex items-center gap-2 text-white text-[0.625rem] md:text-[0.75rem] font-medium cursor-pointer">
                   Shop Now
                   <ArrowRight size={14} />
                 </button>

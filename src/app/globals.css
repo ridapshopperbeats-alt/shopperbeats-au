@@ -1302,9 +1302,7 @@ input[type="radio"] {
   @apply w-full max-w-[145px] md:max-w-[368px] flex flex-col gap-[6px];
 }
 
-.banner-card-title {
-  @apply text-white text-[13px] md:text-[18px] font-bold leading-[100%];
-}
+
 
 .banner-gradient-overlay {
   @apply absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/70;
