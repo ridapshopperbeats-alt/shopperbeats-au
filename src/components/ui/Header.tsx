@@ -91,7 +91,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
         const { latitude, longitude } = position.coords;
 
         try {
-
           const data = await triggerReverseGeocode({
             lat: latitude,
             lng: longitude,
@@ -519,9 +518,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 >
                   <Image
                     src={
-                      profileImage?.trim()
-                        ? profileImage
-                        : "/images/user.svg"
+                      profileImage?.trim() ? profileImage : "/images/user.svg"
                     }
                     alt="account"
                     className="rounded-full object-cover"
@@ -612,10 +609,11 @@ export default function Header({ megaMenuData }: HeaderProps) {
                     activeCategory === (cat.slug ?? cat.id) && (
                       <div
                         key={cat.id}
-                        className={`mega-content ${activeCategory === (cat.slug ?? cat.id)
+                        className={`mega-content ${
+                          activeCategory === (cat.slug ?? cat.id)
                             ? "active"
                             : ""
-                          }`}
+                        }`}
                         id={cat.id}
                       >
                         <div className="mega-cat">
@@ -695,9 +693,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center xl:gap-2 hover:text-red-500"
-                  href="/category/home-garden"
+                  href="#"
                 >
-                  <Armchair size={16} className="inline-block " />
+                  <Armchair size={16} className="inline-block" />
                   Furniture
                 </Link>
               </li>
@@ -715,7 +713,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <HeartPulse size={16} className="inline-block " />
+                  <HeartPulse size={16} className="inline-block" />
                   Health & Beauty
                 </Link>
               </li>
@@ -724,7 +722,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <Armchair size={16} className="inline-block " />
+                  <Armchair size={16} className="inline-block" />
                   Outdoor & Patio
                 </Link>
               </li>
@@ -733,7 +731,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <Gamepad2 size={16} className="inline-block " />
+                  <Gamepad2 size={16} className="inline-block" />
                   Best Sellers
                 </Link>
               </li>
@@ -741,9 +739,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center xl:gap-2 hover:text-red-500"
-                  href="/product-listing/whats-on-sale"
+                  href="#"
                 >
-                  <Sparkles size={16} className="inline-block " />
+                  <Sparkles size={16} className="inline-block" />
                   What&apos;s On Sale
                 </Link>
               </li>

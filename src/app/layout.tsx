@@ -39,6 +39,10 @@ export const metadata: Metadata = {
     "fashion",
     "home and garden",
     "electronics",
+    "kids toys",
+    "health and beauty",
+    "sport & outdoor",
+    "mobile"
   ],
   robots: {
     index: true,
