@@ -129,7 +129,7 @@ ul.social {
 }
 
 .footer-copyright-mobile {
-  @apply pt-4 pb-4 block sm:hidden w-full px-4;
+  @apply pt-4  block sm:hidden w-full px-4;
   color: #FFF;
   text-align: center;
   font-family: Montserrat, sans-serif;
@@ -175,7 +175,7 @@ ul.social {
 
 @media screen and (max-width: 991px) {
   footer {
-    @apply pt-[50px] px-0 pb-[70px];
+    @apply pt-[50px] px-0;
   }
 }
 

@@ -194,13 +194,6 @@ export const staticMegaMenuCategories: Category[] = [
       "https://images.unsplash.com/photo-1558877385-81a1c7e67d72?auto=format&fit=crop&w=400&h=400&q=80",
     subcategories: [
       {
-        id: "static-action-figures",
-        name: "Action Figures",
-        slug: "static-action-figures",
-        icon_url:
-          "https://images.unsplash.com/photo-1608889175638-9e58e2f0e2c5?auto=format&fit=crop&w=200&h=200&q=80",
-      },
-      {
         id: "static-board-games",
         name: "Board Games",
         slug: "static-board-games",

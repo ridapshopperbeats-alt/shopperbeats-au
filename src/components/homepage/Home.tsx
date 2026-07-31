@@ -1,22 +1,22 @@
 import SingleBanner from "./Banner";
 import TopCategories from "./TopCategories";
-import {
-  getBestSellers,
-  getTrendingProducts,
-  transformProductData,
-} from "@/lib/utils/main-utils";
+// import {
+//   getBestSellers,
+//   getTrendingProducts,
+//   transformProductData,
+// } from "@/lib/utils/main-utils";
 import PopularCategories from "./AllBanner";
 import TopBrands from "./TopRated";
 import StaticProductCards from "./StaticCard";
 
 const Home = async () => {
-  const [bestSellers, trending] = await Promise.all([
-    getBestSellers().catch(() => []),
-    getTrendingProducts().catch(() => []),
-  ]);
+  // const [bestSellers, trending] = await Promise.all([
+  //   getBestSellers().catch(() => []),
+  //   getTrendingProducts().catch(() => []),
+  // ]);
 
-  const products = transformProductData(bestSellers);
-  const trendingProducts = transformProductData(trending);
+  // const products = transformProductData(bestSellers);
+  // const trendingProducts = transformProductData(trending);
 
   return (
     <TopCategories>

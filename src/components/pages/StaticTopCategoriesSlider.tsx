@@ -32,7 +32,7 @@ export default function StaticTopCategoriesSlider({
     if (!sliderRef.current) return;
 
     sliderRef.current.scrollBy({
-      left: direction === "left" ? -500 : 500,
+      left: direction === "left" ? -300 : 300,
       behavior: "smooth",
     });
   };

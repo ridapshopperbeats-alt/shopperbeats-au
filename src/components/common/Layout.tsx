@@ -18,7 +18,7 @@ export default function Layout({
   footerMenuData,
 }: LayoutProps) {
   return (
-    <div className="pb-[62px] md:pb-0">
+    <div className="pb-[45px] md:pb-0">
       <Header megaMenuData={megaMenuData} />
       {children}
       <Footer footerMenuData={footerMenuData} />
