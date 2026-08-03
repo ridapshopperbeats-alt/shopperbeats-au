@@ -783,7 +783,7 @@ export default function SecureCheckout() {
 
   return (
     <div className="lg:py-7">
-      <h1 className="font-montserrat font-extrabold text-xl md:text-2xl leading-none tracking-normal text-center capitalize text-black mb-6">
+      <h1 className="font-montserrat font-extrabold text-xl md:text-2xl leading-none tracking-normal text-center capitalize text-black py-4">
         Secure Checkout
       </h1>
       <div className="container flex flex-col xl:flex-row items-start justify-center gap-6 mx-auto">
@@ -824,7 +824,7 @@ export default function SecureCheckout() {
                 {/* Desktop (lg and up) — mirrors the mobile/md layout's spacing & structure */}
                 <div className="hidden lg:flex lg:flex-col lg:h-full">
                   {!isAuthenticated && (
-                    <p className="text-center py-4 px-4 text-[15px] font-semibold text-black">
+                    <p className="text-center  px-4 text-[15px] font-semibold text-black">
                       Already have an account?{" "}
                       <Link
                         href={`/login?redirect=${encodeURIComponent(pathname)}`}
@@ -959,7 +959,7 @@ export default function SecureCheckout() {
                 {/* Mobile/md (below lg, <1024px) — compact Figma layout */}
                 <div className="lg:hidden flex flex-col h-full">
                   {!isAuthenticated && (
-                    <p className="text-center py-4 px-4 text-[15px] font-semibold text-black">
+                    <p className="text-center  px-4 text-[15px] font-semibold text-black">
                       Already have an account?{" "}
                       <Link
                         href={`/login?redirect=${encodeURIComponent(pathname)}`}
@@ -1083,7 +1083,7 @@ export default function SecureCheckout() {
 
           <div className="flex lg:hidden justify-center">
             <Button
-              className="btn btn-red btn-filled btn-sharp w-full"
+              className="global-btn"
               type="submit"
               form="checkout-form"
               disabled={isCreatingOrder || isProcessingPayment}

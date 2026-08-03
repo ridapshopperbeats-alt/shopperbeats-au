@@ -934,7 +934,7 @@ const Cart = () => {
                 </div>
               )}
 
-              {cart.taxes &&
+              {/* {cart.taxes &&
                 cart.taxes.length > 0 &&
                 cart.taxes.map((tax) => (
                   <div
@@ -948,7 +948,7 @@ const Cart = () => {
                       ${formatPrice(Number.parseFloat(tax.amount))}
                     </p>
                   </div>
-                ))}
+                ))} */}
 
               {appliedPromoCode && discountAmount > 0 && (
                 <div className="flex items-center justify-between">
