@@ -343,7 +343,7 @@ export default function StaticProductCards({
                         ${product.mainPrice}
                       </span>
 
-                      <span className="fluid-text-2xs line-through text-[#535766]">
+                      <span className="text-[12px] lg:text-[10px] line-through text-[#535766]">
                         ${product.wasPrice}
                       </span>
 

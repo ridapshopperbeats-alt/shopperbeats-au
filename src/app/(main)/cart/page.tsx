@@ -846,7 +846,7 @@ const Cart = () => {
                           </span>
 
                           {showWasPrice && (
-                            <span className="fluid-text-sm text-[#726969] line-through leading-[normal] capitalize">
+                            <span className="fluid-text-sm text-[#726969] line-through leading-[normal] capitalize font-semibold">
                               ${formatPrice(wasPrice)}
                             </span>
                           )}
@@ -863,7 +863,7 @@ const Cart = () => {
 
                     <div className="col-span-2 flex justify-start items-center">
                       <div className="flex flex-col items-start">
-                        <span className="text-[#fd151b] font-medium fluid-text-sm leading-[normal] capitalize">
+                        <span className="text-[#fd151b] font-medium fluid-text-sm font-semibold leading-[normal] capitalize">
                           ${formatPrice(item.final_price ?? itemSubtotal)}
                         </span>
                         {removeLink}

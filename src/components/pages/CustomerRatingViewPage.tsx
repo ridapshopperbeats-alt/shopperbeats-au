@@ -78,6 +78,36 @@ const STORE_REVIEWS: DisplayReview[] = [
     verified: false,
     reviewer_profile_image: null,
   },
+    {
+    id: "store-review-4",
+    name: " work",
+    rating: 5,
+    date: "02 Jul 2026",
+    comment:
+      "Reliable seller, this is my third order and everything arrived as described.",
+    verified: false,
+    reviewer_profile_image: null,
+  },
+    {
+    id: "store-review-5",
+    name: "Sophia here",
+    rating: 5,
+    date: "02 Jul 2026",
+    comment:
+      "Reliable seller, this is my third order and everything arrived as described.",
+    verified: false,
+    reviewer_profile_image: null,
+  },
+    {
+    id: "store-review-6",
+    name: "Sophia work",
+    rating: 5,
+    date: "02 Jul 2026",
+    comment:
+      "Reliable seller, this is my third order and everything arrived as described.",
+    verified: false,
+    reviewer_profile_image: null,
+  },
 ];
 
 const QUESTIONS: {
@@ -113,7 +143,7 @@ const QUESTIONS: {
 const TABS = ["Product Reviews", "Store Reviews", "Questions"] as const;
 type Tab = (typeof TABS)[number];
 
-const REVIEWS_PAGE_SIZE = 4;
+const REVIEWS_PAGE_SIZE = 2;
 
 interface CustomerRatingViewPageProps {
   reviews?: Review[];
@@ -416,7 +446,7 @@ export default function CustomerRatingViewPage({
             </p>
           )}
 
-          {/* <div className="flex justify-center py-6">
+          <div className="flex justify-center">
             {isQuestionsTab
               ? canToggleQuestions && (
                   <button
@@ -456,7 +486,7 @@ export default function CustomerRatingViewPage({
                     {hasMoreReviews ? "View More Reviews" : "View Less Reviews"}
                   </button>
                 )}
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

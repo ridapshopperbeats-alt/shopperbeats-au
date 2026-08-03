@@ -812,7 +812,7 @@ export default function SecureCheckout() {
 
         {/* ORDER SUMMARY */}
         <div className="w-full xl:!w-[570px] xl:shrink-0 order-2 flex flex-col gap-4 xl:sticky xl:top-32 h-auto">
-          <div className="order-summary w-full xl:!w-full  h-auto bg-white opacity-100 rounded-[8px] shadow-[0px_0px_14px_0px_#00000014]">
+          <div className="w-full xl:!w-full  h-auto bg-white opacity-100 rounded-[8px] shadow-[0px_0px_14px_0px_#00000014]">
             {isLoading ? (
               <div
                 style={{
