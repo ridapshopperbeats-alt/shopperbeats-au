@@ -43,6 +43,22 @@
   --color-sb-charcoal-2: var(--sb-charcoal-2);
 }
 
+/* Fluid typography: override Tailwind's default font-size scale so every
+   text-xs/sm/base/lg/xl/2xl/3xl usage project-wide scales smoothly with
+   viewport width instead of being a fixed size. The floor (first clamp
+   value) matches Tailwind's original fixed size exactly, so nothing shifts
+   at the sizes already in use today — it only grows gently on wider
+   screens. Line-heights are intentionally left untouched. */
+@theme {
+  --text-xs: clamp(0.75rem, 1.5vw, 0.875rem); /* 12px -> 14px */
+  --text-sm: clamp(0.875rem, 1.5vw, 1rem); /* 14px -> 16px */
+  --text-base: clamp(1rem, 1.5vw, 1.125rem); /* 16px -> 18px */
+  --text-lg: clamp(1.125rem, 2vw, 1.25rem); /* 18px -> 20px */
+  --text-xl: clamp(1.25rem, 2.5vw, 1.5rem); /* 20px -> 24px */
+  --text-2xl: clamp(1.5rem, 3vw, 1.75rem); /* 24px -> 28px */
+  --text-3xl: clamp(1.875rem, 3.5vw, 2.25rem); /* 30px -> 36px */
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
