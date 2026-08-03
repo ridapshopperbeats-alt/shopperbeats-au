@@ -51,7 +51,7 @@ export default function StaticProductCarousel({
           slideClassName=""
           keyExtractor={(product) => product.unique_code || product.id || ""}
           renderItem={(product) => (
-            <div className="w-[180px] h-[340px] md:w-[270px] md:h-[450px]">
+            <div className="w-[180px] h-[380px] md:w-[270px] md:h-[460px]">
               <StaticProductCard {...product} />
             </div>
           )}

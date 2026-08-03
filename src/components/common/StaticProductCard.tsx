@@ -94,7 +94,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <>
-      <div className="group relative w-full h-full max-h-[450px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
+      <div className="group relative w-full h-full max-h-[400px] md:max-h-[460px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
         <button
           onClick={handleWishlistButtonClick}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
@@ -110,7 +110,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
         </button>
         <Link
           href={`/static-product/${unique_code || id}`}
-          className="flex h-full max-h-[450px] flex-col no-underline text-inherit"
+          className="flex h-full max-h-[400px] md:max-h-[460px] flex-col no-underline text-inherit"
         >
           <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden">
             <Image
@@ -179,6 +179,8 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                   </p>
                 </div>
               )}
+
+              <p className="text-[13px] font-normal text-[#FF4400]">Extra 10% Off with Code: SHBS10</p>
             </div>
 
             <div className="w-full px-2 lg:px-3 flex justify-center mt-2">
