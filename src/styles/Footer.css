@@ -109,7 +109,7 @@ ul.social {
 }
 
 .footer-section-title {
-  @apply text-white font-bold leading-[28px] text-[clamp(1rem,2vw,1.25rem)];
+  @apply text-white font-bold leading-[28px] text-[clamp(1.2rem,2vw,1.25rem)];
 }
 
 .footer-newsletter-title {
