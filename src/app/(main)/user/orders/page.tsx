@@ -269,7 +269,7 @@ export default function MyOrdersPage() {
   return (
     <div>
       {allOrders.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-3 text-[20px] sm:text-[24px] font-bold leading-[100%] justify-between pb-5">
+        <div className="flex flex-wrap items-center gap-3 fluid-text-xl font-bold leading-[100%] justify-between pb-5">
           <h4>Orders ({effectiveTotal})</h4>
 
           <div className="product-sort">
@@ -277,7 +277,7 @@ export default function MyOrdersPage() {
 
             <Select value={sortOrdersBy} onValueChange={handleSortChange}>
               <SelectTrigger className="!border !border-gray-500 focus:ring-0 focus:ring-offset-0 shadow-none w-[140px] rounded-[14px]">
-                <SelectValue placeholder="Select" className="text-black text-[12px]" />
+                <SelectValue placeholder="Select" className="text-black fluid-text-xs" />
               </SelectTrigger>
 
               <SelectContent
@@ -286,7 +286,7 @@ export default function MyOrdersPage() {
               >
                 <SelectItem
                   value="oldest"
-                  className="px-3 py-2 not-visited:cursor-pointer rounded-none  text-[12px] "
+                  className="px-3 py-2 not-visited:cursor-pointer rounded-none fluid-text-xs"
                 >
                   Date
                 </SelectItem>
@@ -473,7 +473,7 @@ export default function MyOrdersPage() {
 
               {order.available_actions.includes("cancel") && (
                 <button
-                  className={`cursor-pointer transition-colors text-[16px] font-semibold text-[#726969] hover:text-[#FD151B] underline ${
+                  className={`cursor-pointer transition-colors fluid-text-sm font-semibold text-[#726969] hover:text-[#FD151B] underline ${
                     isCancelling ? "cursor-not-allowed" : ""
                   }`}
                   onClick={() => !isCancelling && handleCancelClick(order.id)}
@@ -484,7 +484,7 @@ export default function MyOrdersPage() {
 
               {order.available_actions.includes("return") && (
                 <button
-                  className="cursor-pointer transition-colors hover:text-[#FD151B] "
+                  className="cursor-pointer transition-colors hover:text-[#FD151B] fluid-text-sm"
                   onClick={() => handleReturnClick(order.id)}
                 >
                   Return

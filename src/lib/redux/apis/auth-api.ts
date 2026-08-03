@@ -146,8 +146,16 @@ export const authApi = createApi({
         try {
           await queryFulfilled;
           dispatch(setAuthenticated(true));
-        } catch {
-          dispatch(setAuthenticated(false));
+        } catch (err) {
+          // Only a definitive 401/403 (or a session base-query already gave
+          // up on, i.e. tokens were cleared) means the user is actually
+          // logged out. A transient failure (network blip, 5xx, timeout)
+          // isn't proof of that — flipping isAuthenticated to false here
+          // would hide the user's data even though their session is fine.
+          const status = (err as { error?: { status?: number | string } })?.error?.status;
+          if (status === 401 || status === 403) {
+            dispatch(setAuthenticated(false));
+          }
         }
       },
     }),

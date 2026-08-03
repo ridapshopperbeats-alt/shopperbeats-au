@@ -293,7 +293,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
               {!formData.useShippingAddressAsBilling && (
                 <div className="delivery-details billing-address-block">
                   <div className="form-item">
-                    <h5>Billing Address</h5>
+                    <p className="payment-method-name">Billing Address</p>
                   </div>
                   <div className="form-item select-field">
                     <Input
@@ -310,7 +310,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                   </div>
                   <div className="form-fields dflex">
                     <div className="form-item">
-                      <label htmlFor="billingFirstName">First name*</label>
                       <Input
                         id="billingFirstName"
                         type="text"
@@ -322,7 +321,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                       />
                     </div>
                     <div className="form-item">
-                      <label htmlFor="billingLastName">Last name*</label>
                       <Input
                         id="billingLastName"
                         type="text"
@@ -335,7 +333,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     </div>
                   </div>
                   <div className="form-item">
-                    <label htmlFor="billingCompany">Company (optional)</label>
                     <Input
                       id="billingCompany"
                       type="text"
@@ -346,7 +343,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     />
                   </div>
                   <div className="form-item">
-                    <label htmlFor="billingAddress">Address*</label>
                     <AddressAutocomplete
                       id="billingAddress"
                       placeholder="Address"
@@ -394,7 +390,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                       placeholder="Apartment, suite, etc. (optional)"
                       value={formData.billingApartment}
                       onChange={handleChange}
-                      label="Apartment, suite, etc. (optional)"
                     />
                   </div>
                   <div className="form-fields dflex">
@@ -404,7 +399,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                         type="text"
                         name="billingCity"
                         placeholder="City"
-                        label="City*"
                         value={formData.billingCity}
                         onChange={(e) => {
                           handleChange(e);
@@ -419,7 +413,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                         type="text"
                         name="billingState"
                         placeholder="State"
-                        label="State*"
                         value={formData.billingState}
                         onChange={(e) => {
                           handleChange(e);
@@ -428,7 +421,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                         error={formErrors.billingState}
                       />
                     </div>
-                    <div className="form-item my-6">
+                    <div className="form-item">
                       <Input
                         id="billingPostcode"
                         onWheel={(e) => e.currentTarget.blur()}
@@ -450,7 +443,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                       type="tel"
                       name="billingPhone"
                       placeholder="Phone"
-                      label="Phone*"
                       value={formData.billingPhone}
                       onChange={handlePhoneChange}
                       maxLength={12}

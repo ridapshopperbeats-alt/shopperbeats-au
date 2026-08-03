@@ -416,7 +416,7 @@ const Cart = () => {
 
   const secureCheckoutSection = (
     <div className="order-3">
-      <div className="flex items-center justify-center gap-1.5 text-xs text-[#657689] mt-4 text-[12px] font-medium leading-5">
+      <div className="flex items-center justify-center gap-1.5 text-[#657689] mt-4 fluid-text-xs font-medium leading-5">
         <ShieldCheck /> Guaranteed Safe &amp; Secured Checkout
       </div>
 
@@ -445,7 +445,7 @@ const Cart = () => {
   // ---------------- RENDER ----------------
   return (
     <div className="container">
-      <h4 className="mb-4 lg:pt-7 text-[24px] text-center lg:text-start font-extrabold leading-[100%]">
+      <h4 className="mb-4 lg:pt-7 fluid-text-xl text-center lg:text-start font-extrabold leading-[100%]">
         Your Shopping Cart
       </h4>
 
@@ -458,7 +458,7 @@ const Cart = () => {
               : undefined
           }
         >
-          <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#D9D2D2] text-[16px] leading-[100%] font-medium shrink-0">
+          <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#D9D2D2] fluid-text-base leading-[100%] font-medium shrink-0">
             <div className="col-span-6 text-base">Item</div>
             <div className="col-span-2 text-base text-center">Qty.</div>
             <div className="col-span-2 text-base">Item Price</div>
@@ -488,7 +488,7 @@ const Cart = () => {
 
               const itemInfo = (
                 <>
-                  <h3 className="text-[12px] lg:text-[14px] font-semibold leading-[100%]  text-black mb-0.5 lg:mb-1.5 ">
+                  <h3 className="fluid-text-xs font-semibold leading-[100%]  text-black mb-0.5 lg:mb-1.5 ">
                     {item.is_active ? (
                       <Link
                         href={getCartItemHref(item)}
@@ -503,19 +503,19 @@ const Cart = () => {
                   </h3>
 
                   {!item.is_active ? (
-                    <p className="text-[12px] leading-tight lg:leading-[100%] font-bold text-[#fd151b] mb-0.5 lg:mb-1.5">
+                    <p className="fluid-text-xs leading-tight lg:leading-[100%] font-bold text-[#fd151b] mb-0.5 lg:mb-1.5">
                       Not Available Currently
                     </p>
                   ) : item.available_stock !== undefined &&
                     item.available_stock <= 0 ? (
-                    <p className="text-[12px] leading-tight lg:leading-[100%] font-bold text-[#fd151b] mb-0.5 lg:mb-1.5">
+                    <p className="fluid-text-xs leading-tight lg:leading-[100%] font-bold text-[#fd151b] mb-0.5 lg:mb-1.5">
                       Out of Stock
                     </p>
                   ) : (
-                    <p className="flex items-center flex-wrap gap-1.5 text-[11px] lg:text-[12px] lg:leading-[100%] font-bold text-[#01295F] mb-0.5 lg:mb-1.5">
+                    <p className="flex items-center flex-wrap gap-1.5 fluid-text-11-12 lg:leading-[100%] font-bold text-[#01295F] mb-0.5 lg:mb-1.5">
                       <span className="">In Stock</span>
                       {item.promoCode && (
-                        <span className="text-[#049950] text-[12px] font-medium leading-[100%] capitalize">
+                        <span className="text-[#049950] fluid-text-xs font-medium leading-[100%] capitalize">
                           Code Applied - {" "}
                           <span className="font-bold">
                             ({item.promoCode}){" "} {item.discount_percentage}% Off
@@ -525,7 +525,7 @@ const Cart = () => {
                       {item.saleBadge && (
                         <span className="inline-flex items-center justify-center gap-1 w-[108px] h-[19px] rounded-[5px] bg-[#01295F] p-0.5">
                           <ThumbsUp className="w-[11.853px] h-[11.289px] fill-white" />
-                          <span className="text-white font-montserrat text-[12px] font-medium leading-[18px] capitalize">
+                          <span className="text-white font-montserrat fluid-text-xs font-medium leading-[18px] capitalize">
                             {item.saleBadge}
                           </span>
                         </span>
@@ -533,19 +533,19 @@ const Cart = () => {
                     </p>
                   )}
                   {item.shipping_cost === 0 && (
-                    <p className="text-[12px] lg:text-[14px] leading-[12px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
+                    <p className="fluid-text-xs leading-[12px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
                       Eligible For FREE Shipping
                     </p>
                   )}
                   {item.handling_time_days === 1 ? (
-                    <p className="text-[12px] lg:text-[14px] leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
+                    <p className="fluid-text-xs leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
                       {item.delivery_prefix}{" "}
                       <strong className="font-semibold text-black">
                         Next Business Day
                       </strong>
                     </p>
                   ) : (
-                    <p className="text-[12px] lg:text-[14px] leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
+                    <p className="fluid-text-xs leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
                       {item.delivery_prefix}{" "}
                       {/* <strong className="font-semibold text-black"> */}
                         1-{item.handling_time_days} Business Days
@@ -559,7 +559,7 @@ const Cart = () => {
                         {item.variant_attributes.map((attr) => (
                           <p
                             key={attr.name}
-                            className="text-[12px] lg:text-[14px] leading-[100%] text-black mb-1 font-medium"
+                            className="fluid-text-xs leading-[100%] text-black mb-1 font-medium"
                           >
                             <strong className="font-semibold">
                               {attr.name}:{" "}
@@ -729,7 +729,7 @@ const Cart = () => {
               const removeLink = (
                 <Link
                   href="#"
-                  className={`lg:text-[14px] text-[12px] leading-[100%] underline mt-1 ${!item.is_active ? "text-[#fd151b] font-bold" : "text-[#726969]"}`}
+                  className={`fluid-text-xs leading-[21px] font-medium underline mt-1 ${!item.is_active ? "text-[#fd151b]" : "text-[#726969]"}`}
                   onClick={() =>
                     handleRemoveItem(item.product_id, item.variant_id)
                   }
@@ -781,11 +781,11 @@ const Cart = () => {
                       {qtySelector}
 
                       <div className="flex flex-col items-end leading-tight">
-                        <span className="text-[#fd151b] font-semibold text-[16px] leading-tight">
+                        <span className="text-[#fd151b] font-semibold fluid-text-base leading-tight">
                           ${formatPrice(item.final_price ?? itemSubtotal)}
                         </span>
                         {showWasPrice && (
-                          <span className="text-[12px] lg:text-[16px] leading-[100%] text-[#726969] line-through">
+                          <span className="fluid-text-12-16 leading-[100%] text-[#726969] line-through">
                             ${formatPrice(wasPrice)}
                           </span>
                         )}
@@ -794,7 +794,7 @@ const Cart = () => {
                     </div>
 
                     {item.promoCode && (
-                      <span className="inline-flex mt-1.5 bg-[#01295F] text-white text-[10px] leading-[100%] font-semibold w-[88px] h-[20px] rounded-[4px] text-center items-center justify-center">
+                      <span className="inline-flex mt-1.5 bg-[#01295F] text-white fluid-text-2xs leading-[100%] font-semibold w-[88px] h-[20px] rounded-[4px] text-center items-center justify-center">
                         SALE 20% OFF
                       </span>
                     )}
@@ -841,12 +841,12 @@ const Cart = () => {
                     <div className="col-span-2 flex justify-start items-center">
                       <div className="flex flex-col items-start">
                         <div className="flex flex-row lg:flex-col xl:flex-row items-start xl:items-center gap-2 lg:gap-0 xl:gap-2">
-                          <span className="text-[16px] font-semibold text-[#FD151B]">
+                          <span className="fluid-text-sm font-semibold text-[#FD151B] leading-[normal] capitalize">
                             ${formatPrice(mainPrice)}
                           </span>
 
                           {showWasPrice && (
-                            <span className="text-[16px] text-[#726969] line-through">
+                            <span className="fluid-text-sm text-[#726969] line-through leading-[normal] capitalize">
                               ${formatPrice(wasPrice)}
                             </span>
                           )}
@@ -863,7 +863,7 @@ const Cart = () => {
 
                     <div className="col-span-2 flex justify-start items-center">
                       <div className="flex flex-col items-start">
-                        <span className="text-[#fd151b] font-semibold text-[16px]">
+                        <span className="text-[#fd151b] font-medium fluid-text-sm leading-[normal] capitalize">
                           ${formatPrice(item.final_price ?? itemSubtotal)}
                         </span>
                         {removeLink}
@@ -882,12 +882,12 @@ const Cart = () => {
         >
           <div className="bg-white rounded-[8px] shadow-[0px_0px_14px_rgba(0,0,0,0.08)] p-6 flex flex-col">
             <div className="flex items-center justify-between mb-5">
-              <h5 className="text-[18px] font-bold leading-[100%] text-black">
+              <h5 className="fluid-text-base font-bold leading-[normal] text-black">
                 Order Summary
               </h5>
               <Link
                 href="/login"
-                className="text-[12px] lg:text-[16px] font-semibold text-black underline"
+                className="fluid-text-12-16 font-semibold text-black underline leading-[normal]"
               >
                 Sign in
               </Link>
@@ -907,7 +907,7 @@ const Cart = () => {
                     .reduce((a, i) => a + i.quantity, 0)}{" "}
                   Items)
                 </span>
-                <p className="text-[14px] lg:text-[16px] font-semibold text-[#FD151B]">
+                <p className="fluid-text-sm font-semibold text-[#FD151B] leading-[normal] capitalize">
                   ${formatPrice(cart.subtotal ?? cart.items_total)}
                 </p>
               </div>
@@ -917,7 +917,7 @@ const Cart = () => {
                   <span className="cart-summary-label">
                     Total Savings
                   </span>
-                  <p className="text-[14px] lg:text-[16px] font-semibold text-[#16a249]">
+                  <p className="fluid-text-sm font-semibold text-[#16a249] leading-[normal] capitalize">
                     -${formatPrice(totalSaveAmount)}
                   </p>
                 </div>
@@ -928,7 +928,7 @@ const Cart = () => {
                   <span className="cart-summary-label">
                     Shipping
                   </span>
-                  <p className="text-[14px] lg:text-[16px] font-semibold text-black">
+                  <p className="fluid-text-sm font-semibold text-black leading-[normal] capitalize">
                     ${formatPrice(cart.shipping || 0)}
                   </p>
                 </div>
@@ -952,16 +952,16 @@ const Cart = () => {
 
               {appliedPromoCode && discountAmount > 0 && (
                 <div className="flex items-center justify-between">
-                  <span className="text-[14px] lg:text-[16px] leading-[100%] text-[#726969]">
+                  <span className="fluid-text-sm leading-[100%] text-[#726969]">
                     Coupon Discount ({appliedPromoCode})
                     <button
                       onClick={handleRemovePromo}
-                      className="ml-4 text-[#fd151b] text-[12px] lg:text-[16px] hover:underline"
+                      className="ml-4 text-[#fd151b] fluid-text-12-16 hover:underline"
                     >
                       Remove
                     </button>
                   </span>
-                  <p className="text-[14px] lg:text-[16px] font-semibold text-[#16a249]">
+                  <p className="fluid-text-sm font-semibold text-[#16a249]">
                     -${formatPrice(discountAmount)}
                   </p>
                 </div>
@@ -978,7 +978,7 @@ const Cart = () => {
                   className="flex-1 min-w-0 h-auto! p-0! bg-transparent! border-0! rounded-none! shadow-none! ring-0! outline-none text-sm placeholder:text-[#726969] font-medium"
                 />
                 <button
-                  className="text-[#01295f] text-[12px] font-medium  cursor-pointer disabled:opacity-50"
+                  className="text-[#01295f] fluid-text-xs font-medium  cursor-pointer disabled:opacity-50"
                   onClick={handleApplyPromoCode}
                   disabled={isApplyingPromo}
                 >
@@ -999,12 +999,12 @@ const Cart = () => {
             </div>
 
             <div className="flex items-center justify-between py-4 xl:border-t border-[#e5e5e5] mt-4">
-              <strong className="text-[18px] leading-[100%] font-bold text-black">
+              <strong className="fluid-text-base leading-[normal] font-semibold text-black capitalize">
                 Total (Incl. GST)
               </strong>
               <div className="flex flex-col items-end gap-1">
                 {totalSaveAmount > 0 && (
-                  <p className="text-[14px] lg:text-[16px] font-semibold leading-[100%] text-[#726969] line-through">
+                  <p className="fluid-text-sm font-semibold leading-[normal] text-[#726969] line-through">
                     $
                     {formatPrice(
                       (newTotalPrice !== null
@@ -1013,7 +1013,7 @@ const Cart = () => {
                     )}
                   </p>
                 )}
-                <p className="text-[20px] lg:text-[18px] leading-[100%] font-semibold text-[#fd151b]">
+                <p className="fluid-text-base lg:text-[18px] leading-[normal] font-semibold text-[#fd151b]">
                   $
                   {formatPrice(
                     newTotalPrice !== null ? newTotalPrice : cart.total_price,
@@ -1023,7 +1023,7 @@ const Cart = () => {
             </div>
 
             <div className="pb-4 order-1 xl:order-2">
-              <p className="text-[14px] lg:text-[16px] leading-[100%] font-medium text-black mb-2">
+              <p className="fluid-text-sm leading-[normal] font-medium text-black mb-2">
                 Deliver To
               </p>
               <div className="flex items-center border border-[#15112b2b] rounded-[5px] pl-5 pr-1.5 h-11 w-[430px] md:w-auto max-w-full">
@@ -1066,7 +1066,7 @@ const Cart = () => {
 
             <Link href="/check-out" className="mt-auto order-1 xl:order-2">
               <Button
-                className="bg-linear-to-r from-[#FF676B] to-[#FD151B] h-[46px] rounded-[74px] text-[#F6F6F6] text-[16px] font-semibold leadiing-5 w-full shadow-md shadow-[#0E35BF]/25 cursor-pointer"
+                className="bg-linear-to-r from-[#FF676B] to-[#FD151B] h-[46px] rounded-[74px] text-[#F6F6F6] fluid-text-base font-semibold leadiing-5 w-full shadow-md shadow-[#0E35BF]/25 cursor-pointer"
                 debounceDelay={500}
               >
                 Checkout

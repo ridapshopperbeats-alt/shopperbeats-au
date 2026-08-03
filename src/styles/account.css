@@ -13,7 +13,7 @@
 }
 
 .profile-page .sidebar ul li a {
-    font-size: 18px;
+    font-size: clamp(0.875rem, 2vw, 1.125rem);
     color: var(--black);
     font-weight: bold;
     padding: 8px 10px;
@@ -76,12 +76,20 @@
 }
 .order-detail h5 {
     margin-bottom: 12px;
-    font-size: 16px;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+}
+
+.order-item h5 {
+    font-weight: 700;
+    font-size: 1.125rem;
+    line-height: normal;
 }
 
 .order-item p {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: capitalize;
 }
 
 .order-action {
@@ -132,7 +140,7 @@
 .upload-box p {
     color: var(--gray);
     margin-top: 4px;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 1.5vw, 0.875rem);
     line-height: 1;
 }
 
@@ -153,7 +161,7 @@
 
 .order-summery .summary-row p span {
     display: block;
-    font-size: 14px;
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
     margin-top: 5px;
 }
 .summary-row {
@@ -164,14 +172,14 @@
 /* Manage Address css */
 .edit {
     color: var(--secondary);
-    font-size: 16px;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
     font-weight: 500;
     display: block;
     text-decoration: underline;
 }
 
 .address-block a {
-    font-size: 16px;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
 }
 
 .address-block .edit {
@@ -203,7 +211,7 @@
 }
 
 .address-block h6 {
-    font-size: 16px;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
     font-weight: 600;
     margin: 13px 0;
 }
@@ -224,7 +232,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 14px;
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
     font-weight: medium !important;
 }
 
@@ -258,6 +266,7 @@
     border-bottom: 1px solid #ddd;
     padding: 15px;
     vertical-align: top;
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
 }
 
 .item-info {
@@ -272,7 +281,7 @@
 } */
 
 .cart-table td h3 {
-    font-size: 16px;
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
     font-weight: 500;
     margin-bottom: 8px;
 }
@@ -289,7 +298,7 @@
     margin-bottom: 8px;
     color: var(--gray);
     font-weight: 500;
-    font-size: 14px;
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
 }
 
 .item-info .product-size,
@@ -310,7 +319,7 @@
 }
 
 .wishlist-content .cart-table td .old-price {
-    font-size: 16px;
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
 }
 
 .wishlist-content .cart-table thead {
@@ -319,12 +328,12 @@
 
 .wishlist-content .cart-table thead th {
     border-bottom: none;
-    font-size: 18px;
+    font-size: clamp(0.875rem, 2vw, 1.125rem);
     font-weight: bold;
 }
 
 .wishlist-content .cart-table p {
-    font-size: 16px !important;
+    font-size: clamp(1rem, 1.5vw, 1.125rem) !important;
     font-weight: 600;
     margin-top: 0;
 }
@@ -346,7 +355,7 @@
 }
 
 .wishlist-content .variant-attributes p {
-    font-size: 14px !important;
+    font-size: clamp(0.875rem, 1.5vw, 1rem) !important;
     color: var(--black);
     font-weight: 500;
 }
@@ -357,21 +366,29 @@
 
 /* Wishlist css */
 .password-content p {
+    color: #000;
+    font-family: Montserrat, sans-serif;
     font-weight: 500;
+    font-style: normal;
+    line-height: normal;
     margin-bottom: 5px;
-    font-size: 14px;
+    font-size: 0.875rem; 
 }
 
 .password-content ul {
     padding-left: 20px;
     margin-bottom: 20px;
+
+
 }
 
 .password-content ul li {
     list-style: disc;
     color: var(--gray);
     font-weight: 500;
-    font-size: 14px;
+    font-size: 0.875rem; 
+    font-style: normal;
+    line-height: normal;
 }
 .fixed.ordermodal {
     background: rgba(0, 0, 0, .65);
@@ -418,37 +435,12 @@
         width: 20%;
     }
 
-    .wishlist-content .cart-table thead th {
-        font-size: 14px;
-    }
-   .wishlist-content .cart-table td .old-price {
-    font-size: 14px;
-}
-    .cart-table td {
-        font-size: 14px;
-    }
-
-    .wishlist-content .cart-table p {
-        font-size: 14px !important;
-    }
-
-    .cart-table td h3 {
-        font-size: 14px;
-    }
-
-    .cart-table td h3 {
-        font-size: 14px;
-    }
-
     .wishlist-content .btn-action {
         display: block;
     }
-    .wishlist-content .cart-table td h3 {
-    font-size: 14px;
-}
     .wishlist-content .btn-action button.btn {
         margin-bottom: 8px;
-        font-size: 14px;
+        font-size: clamp(0.875rem, 1.5vw, 1rem);
         padding: 8px 20px;
     }
 
@@ -457,7 +449,6 @@
     }
 
     .profile-page .sidebar ul li a {
-        font-size: 14px;
         padding: 8px 4px;
     }
 
@@ -489,7 +480,6 @@
     }
 
     .cart-table td {
-        font-size: 16px;
         display: block;
         position: relative;
         padding: 45px 0 15px;
@@ -501,15 +491,11 @@
         position: absolute;
         top: 12px;
         color: var(--black);
-        font-size: 18px;
+        font-size: clamp(1rem, 2vw, 1.125rem);
     }
 
     td.item-info {
         display: flex;
-    }
-
-    .wishlist-content .cart-table p {
-        font-size: 16px !important;
     }
 
     .wishlist-content .btn-action {
@@ -540,7 +526,7 @@ td.item-info {
     flex-direction: column;
 }
 .content h4 {
-    font-size: 18px;
+    font-size: clamp(1rem, 2vw, 1.125rem);
 }
 
 .product-sort select {

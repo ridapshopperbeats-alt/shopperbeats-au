@@ -410,8 +410,13 @@ button.zip {
   @apply py-1 text-xs;
 }
 
-.delivery-checkbox-label {
-  @apply flex items-center gap-2 mt-5 text-sm font-medium leading-5 tracking-normal text-[#4f4f4f];
+.delivery-checkbox-label,
+.form-item .delivery-checkbox-label {
+  @apply flex items-center gap-2 mt-5 text-sm font-normal leading-5 tracking-normal text-[#4f4f4f];
+  font-family: var(--font-montserrat);
+}
+.delivery-checkbox-label2 {
+  @apply flex items-center gap-2 mt-5 text-sm font-normal leading-5 tracking-normal text-[#4f4f4f];
   font-family: var(--font-montserrat);
 }
 
@@ -471,7 +476,7 @@ button.zip {
 }
 
 .payment-method-name {
-  @apply flex items-center gap-2 text-sm font-bold leading-none;
+  @apply flex items-center gap-2 text-sm font-bold leading-[normal] capitalize;
 }
 
 .checkout-form .payment-logos {
@@ -483,7 +488,7 @@ button.zip {
 }
 
 .billing-toggle-row {
-  @apply py-2 flex items-center gap-2 text-sm font-medium text-[#4f4f4f];
+  @apply py-2 flex items-center gap-2 text-sm font-normal text-[#4f4f4f];
 }
 
 .billing-address-block {

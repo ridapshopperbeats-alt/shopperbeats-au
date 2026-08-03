@@ -7,7 +7,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 24px;
+    font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.5rem);
     font-weight: 600;
     padding: 30px;
     min-height: 40vh;
@@ -39,7 +39,7 @@
 
 
   .cart-table td h3 {
-    font-size: 16px;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
     font-weight: 600;
     margin-bottom: 8px;
     max-width: 475px;
@@ -61,7 +61,7 @@
     margin-bottom: 8px;
     color: var(--gray);
     font-weight: 500;
-    font-size: 14px;
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
   }
 
   .item-info .product-size,
@@ -80,7 +80,7 @@
     left: 9px;
     top: 1px;
     background: transparent;
-    font-size: 24px;
+    font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.5rem);
     cursor: pointer;
   }
 
@@ -89,7 +89,7 @@
     right: 12px;
     top: 2px;
     background: transparent;
-    font-size: 24px;
+    font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.5rem);
     cursor: pointer;
   }
 
@@ -122,12 +122,12 @@
     align-items: center;
     justify-content: center;
     gap: 3px;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 1.5vw, 0.875rem);
     padding: 0 8px;
   }
 
   .cart-table td .old-price {
-    font-size: 16px;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
   }
 
   .cart-table td .product-price {
@@ -143,7 +143,7 @@
 
   .product-off .sale-tag {
     height: 28px;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 1.5vw, 0.875rem);
     width: 70px;
     padding: 4px 3px;
   }
@@ -173,7 +173,7 @@
     background: transparent;
     font-weight: 500;
     color: var(--primary);
-    font-size: 12px;
+    font-size: clamp(0.75rem, 1.5vw, 0.875rem);
   }
 
   .savings {
@@ -194,15 +194,15 @@
 
   .total-row strong {
     font-weight: 600;
-    font-size: 18px;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
   }
 
   .total-row .price {
-    font-size: 18px;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
   }
 
   .paymnet-method h5 {
-    font-size: 16px;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
     font-weight: 600;
     margin-bottom: 8px;
     text-transform: capitalize;
@@ -232,14 +232,6 @@
   @media screen and (max-width: 1199px) {
     .order-summary {
       padding: 20px;
-    }
-
-    .total-row strong {
-      font-size: 16px;
-    }
-
-    .total-row .price {
-      font-size: 16px;
     }
 
     .payment-img {
@@ -387,23 +379,23 @@
 }
 
 .cart-drawer-item-name {
-  @apply font-montserrat font-semibold text-[14px] leading-[100%] tracking-[0%] capitalize text-black max-w-[296px] line-clamp-2;
+  @apply font-montserrat font-semibold text-[clamp(0.875rem,1.5vw,1rem)] leading-[100%] tracking-[0%] capitalize text-black max-w-[296px] line-clamp-2;
 }
 
 .cart-drawer-item-handling {
-  @apply font-montserrat font-medium text-[12px] leading-[100%] tracking-[0%] capitalize text-[#726969] max-w-[238px];
+  @apply font-montserrat font-medium text-[clamp(0.75rem,1.5vw,0.875rem)] leading-[100%] tracking-[0%] capitalize text-[#726969] max-w-[238px];
 }
 
 .cart-drawer-item-attr-label {
-  @apply font-montserrat font-semibold text-[12px] leading-[100%] tracking-[0%] capitalize text-[#000000] max-w-[179px];
+  @apply font-montserrat font-semibold text-[clamp(0.75rem,1.5vw,0.875rem)] leading-[100%] tracking-[0%] capitalize text-[#000000] max-w-[179px];
 }
 
 .cart-drawer-item-attr-value {
-  @apply font-montserrat font-medium text-[12px] leading-[100%] tracking-[0%] capitalize text-[#000000] ml-5;
+  @apply font-montserrat font-medium text-[clamp(0.75rem,1.5vw,0.875rem)] leading-[100%] tracking-[0%] capitalize text-[#000000] ml-5;
 }
 
 .cart-drawer-item-attr-value-sm {
-  @apply font-montserrat font-medium text-[12px] leading-[100%] tracking-[0%] capitalize text-[#000000] ml-2;
+  @apply font-montserrat font-medium text-[clamp(0.75rem,1.5vw,0.875rem)] leading-[100%] tracking-[0%] capitalize text-[#000000] ml-2;
 }
 
 .cart-drawer-qty-row {
@@ -411,7 +403,7 @@
 }
 
 .cart-drawer-qty-left {
-  @apply flex items-center gap-2 text-[12px] text-black;
+  @apply flex items-center gap-2 text-[clamp(0.75rem,1.5vw,0.875rem)] text-black;
 }
 
 .cart-drawer-qty-stepper {
@@ -419,7 +411,7 @@
 }
 
 .cart-drawer-qty-btn {
-  @apply w-4 h-4 flex items-center justify-center text-[13px] leading-none disabled:opacity-40 cursor-pointer;
+  @apply w-4 h-4 flex items-center justify-center text-[clamp(0.8125rem,1.5vw,0.875rem)] leading-none disabled:opacity-40 cursor-pointer;
 }
 
 .cart-drawer-qty-value {
@@ -427,11 +419,11 @@
 }
 
 .cart-drawer-remove-btn {
-  @apply text-[12px] text-[#726969] underline cursor-pointer;
+  @apply text-[clamp(0.75rem,1.5vw,0.875rem)] text-[#726969] underline cursor-pointer;
 }
 
 .cart-drawer-price-row {
-  @apply text-[12px] text-black;
+  @apply text-[clamp(0.75rem,1.5vw,0.875rem)] text-black;
 }
 
 .cart-drawer-price-value {
@@ -447,11 +439,11 @@
 }
 
 .cart-drawer-shipping-label {
-  @apply font-['Inter'] font-normal text-[14px] leading-[100%] tracking-[0%] text-[#878787];
+  @apply font-['Inter'] font-normal text-[clamp(0.875rem,1.5vw,1rem)] leading-[100%] tracking-[0%] text-[#878787];
 }
 
 .cart-drawer-shipping-value {
-  @apply font-montserrat font-normal text-[14px] leading-[100%] tracking-[0%] capitalize text-black;
+  @apply font-montserrat font-normal text-[clamp(0.875rem,1.5vw,1rem)] leading-[100%] tracking-[0%] capitalize text-black;
 }
 
 .cart-drawer-subtotal-row {
@@ -459,7 +451,7 @@
 }
 
 .cart-drawer-subtotal-text {
-  @apply font-montserrat font-semibold text-[14px] leading-[100%] tracking-[0%] capitalize text-black;
+  @apply font-montserrat font-semibold text-[clamp(0.875rem,1.5vw,1rem)] leading-[100%] tracking-[0%] capitalize text-black;
 }
 
 .cart-drawer-actions {
@@ -471,5 +463,5 @@
 }
 
 .cart-drawer-checkout-btn {
-  @apply w-full sm:w-[159px] h-[46px] opacity-100 rounded-[73px] bg-[linear-gradient(137.27deg,#FF676B_19.41%,#FD151B_65.49%)] shadow-[0px_4px_4px_0px_#0E35BF40] text-white text-[14px] font-semibold cursor-pointer;
+  @apply w-full sm:w-[159px] h-[46px] opacity-100 rounded-[73px] bg-[linear-gradient(137.27deg,#FF676B_19.41%,#FD151B_65.49%)] shadow-[0px_4px_4px_0px_#0E35BF40] text-white text-[clamp(0.875rem,1.5vw,1rem)] font-semibold cursor-pointer;
 }

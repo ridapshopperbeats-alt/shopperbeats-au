@@ -80,7 +80,7 @@ export default function ReturnForm() {
                     <div className="flex justify-end mt-[18px]">
                         <button className="btn btn-red btn-filled btn-sharp cursor-pointer ">Confirm Your Return</button>
                     </div>
-                    <div className="flex justify-end  font-[500] text-[16px] text-[#726969]">
+                    <div className="flex justify-end  font-[500] fluid-text-base text-[#726969]">
                         Return By <span className="font-[700] text-[#726969] ml-2">Dec,10,2026</span>
                     </div>
                 </div>
