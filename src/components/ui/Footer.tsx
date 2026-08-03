@@ -213,7 +213,7 @@ export default function Footer({
                   key={section.title}
                 >
                   <h5
-                    className="footer-section-title footer-accordion-toggle"
+                    className="footer-section-title footer-accordion-toggle [font-variant:all-small-caps]"
                     onClick={() => toggleSection(section.title)}
                   >
                     {section.title}
@@ -246,7 +246,7 @@ export default function Footer({
 
             {/* Newsletter */}
             <div className="footer-block footer-newsletter">
-              <h5 className="text-[16px] md:text-[20px] text-white leading-[28px]" style={{fontWeight:"700"}}>JOIN OUR MAILING LIST</h5>
+              <h5 className="fluid-text-sm text-white leading-[28px] font-extrabold leading-[normal]">JOIN OUR MAILING LIST</h5>
               <p className="footer-newsletter-desc">
                 Enter your email to get $10 off and free shipping
               </p>

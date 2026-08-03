@@ -25,7 +25,7 @@ footer h4 {
 }
 
 .footer-block ul a {
-  @apply text-[var(--white)] text-[16px] inline-block p-0 leading-[29px] font-normal no-underline;
+  @apply text-[var(--white)] text-[clamp(0.875rem,1.5vw,1rem)] inline-block p-0 leading-[29px] font-normal no-underline;
 }
 
 .footer-block ul a:hover {
@@ -93,7 +93,7 @@ ul.social {
 }
 
 .footer-highlight-text {
-  @apply text-[16px] lg:text-[18px] font-bold leading-[22px] text-black;
+  @apply text-[clamp(0.875rem,2vw,1.125rem)] font-bold leading-[normal] text-black;
 }
 
 .footer-container {
@@ -109,7 +109,7 @@ ul.social {
 }
 
 .footer-section-title {
-  @apply text-white font-bold leading-[28px] text-[20px];
+  @apply text-white font-bold leading-[28px] text-[clamp(1rem,2vw,1.25rem)];
 }
 
 .footer-newsletter-title {
@@ -117,7 +117,7 @@ ul.social {
 }
 
 .footer-newsletter-desc {
-  @apply mt-[10px];
+  @apply mt-[10px] text-[0.75rem] font-normal leading-[normal] text-[#FFFFFF];
 }
 
 .footer-bottom-bar {
@@ -133,7 +133,7 @@ ul.social {
   color: #FFF;
   text-align: center;
   font-family: Montserrat, sans-serif;
-  font-size: 12px;
+  font-size: clamp(0.65625rem, 1vw, 0.75rem);
   font-style: normal;
   font-weight: 400;
   line-height: 1.4;
@@ -142,7 +142,6 @@ ul.social {
 
 @media screen and (max-width: 360px) {
   .footer-copyright-mobile {
-    font-size: 10.5px;
     line-height: 1.5;
   }
 }
@@ -151,13 +150,6 @@ ul.social {
   @apply bg-[var(--white)] w-[54px] h-[27px] rounded-[2px] p-[2px];
 }
 
-
-@media screen and (max-width: 1400px) {
-  .footer-block ul a {
-    @apply text-sm;
-  }
-
-}
 
 @media screen and (max-width: 1199px) {
   .footer-block {
@@ -211,7 +203,6 @@ ul.social {
     min-width: 0;
     color: #000;
     font-family: Montserrat, sans-serif;
-    font-size: 14px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -231,7 +222,7 @@ ul.social {
   .footer-newsletter-title {
     color: #FFF;
     font-family: Montserrat, sans-serif;
-    font-size: 16px;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -241,7 +232,7 @@ ul.social {
     align-self: stretch;
     color: #FFF;
     font-family: Montserrat, sans-serif;
-    font-size: 13px;
+    font-size: clamp(0.8125rem, 1.5vw, 0.875rem);
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -281,7 +272,7 @@ ul.social {
   }
 
   .footer-menu-block .footer-section-title {
-    @apply mb-0 text-base font-semibold cursor-pointer;
+    @apply mb-0 font-semibold cursor-pointer;
     display: flex;
     padding: 14px 0;
     justify-content: space-between;

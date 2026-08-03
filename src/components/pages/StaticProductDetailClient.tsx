@@ -158,7 +158,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
       return (
         <div key={attrName} className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <label className=" text-[14px]  font-bold text-[#1D265F]">
+            <label className=" fluid-text-sm  font-bold text-[#1D265F]">
               {attrLabel}
               {selectedAttributes[attrName] && (
                 <span> : {selectedAttributes[attrName]}</span>
@@ -169,7 +169,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
               <button
                 type="button"
                 onClick={() => setShowSizeGuide(true)}
-                className="inline-flex items-center gap-1 whitespace-nowrap underline text-[14px] font-bold leading-[14px] text-[#0B38D7] cursor-pointer"
+                className="inline-flex items-center gap-1 whitespace-nowrap underline fluid-text-sm font-bold leading-[14px] text-[#0B38D7] cursor-pointer"
               >
                 <Pencil size={16} className="shrink-0" />
                 Size Guide
@@ -190,7 +190,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                   onClick={() => handleAttributeChange(attrName, item.value)}
                   aria-label={item.value}
                   title={item.value}
-                  className={`w-auto px-2 h-10 rounded-[8px] border cursor-pointer text-[14px] font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                  className={`w-auto px-2 h-10 rounded-[8px] border cursor-pointer fluid-text-sm font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
                     isSelected
                       ? "border-[#FD151B] text-[#FD151B]"
                       : "border-[#CCCCCC] text-[#1D265F]/50"
@@ -474,11 +474,11 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                         </Button>
                       )} */}
                     </div>
-                    <h5 className="text-[14px] lg:text-[20px] font-medium text-black leading-[20px] lg:leading-[30px]">
+                    <h5 className="fluid-text-14-20 font-medium text-black leading-[20px] lg:leading-[30px]">
                       {productTitle || "Product Title"}
                     </h5>
 
-                    <p className="mt-1 font-bold text-[12px] lg:text-[14px] leading-[18px] text-[#162DC3]">
+                    <p className="mt-1 font-bold fluid-text-12-14 leading-[18px] text-[#162DC3]">
                       <Link href={`/brand/${product.brand_slug}`}>
                         <span className="text-[#535766]">By</span>{" "}
                         {product.brand_name || "Brand Name"}
@@ -489,14 +489,14 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 <div className="border-t border-[#ECECEC]" />
                 <div className="flex flex-col gap-[15px] lg:gap-5 lg:py-3">
                   <div className="flex items-baseline gap-3 flex-wrap leading-[18px]">
-                    <span className="text-[20px] lg:text-[36px] leading-[20px] font-bold text-[#FD151B]">
+                    <span className="fluid-text-20-36 leading-[20px] font-bold text-[#FD151B]">
                       ${formatPrice(mainPrice)}
                     </span>
-                    <span className="text-[14px] lg:text-[24px]  font-medium text-[#535766] line-through self-center">
+                    <span className="fluid-text-14-24  font-medium text-[#535766] line-through self-center">
                       ${formatPrice(wasPrice)}
                     </span>
                   </div>
-                  <span className="text-[12px] lg:text-[14px] leading-[16px] lg:leading-[26px] font-semibold">
+                  <span className="fluid-text-12-14 leading-[16px] lg:leading-[26px] font-semibold">
                     <span className="bg-[#EEF8F0] inline-flex w-[84px] h-[30px] text-center items-center justify-center  text-[#267A03]  font-bold  rounded-[5px]">
                       You Save :
                     </span>
@@ -510,7 +510,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 {hasRealColors && (
                   <div className="lg:py-2 flex flex-col gap-[12px]">
                     <div>
-                      <div className="flex text-[13px] lg:text-[14px] font-bold text-[#1D265F] leading-[24px] items-center justify-between mb-2">
+                      <div className="flex fluid-text-13-14 font-bold text-[#1D265F] leading-[24px] items-center justify-between mb-2">
                         <span>
                           Color :{" "}
                           <span>
@@ -551,7 +551,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                             <Button
                               onClick={() => setShowPopup(true)}
                               type="button"
-                              className="text-[12px] lg:text-[14px] ml-auto font-bold text-[#0B38D7] underline cursor-pointer shrink-0 inline-flex items-center gap-1 leading-[18px]"
+                              className="fluid-text-12-14 ml-auto font-bold text-[#0B38D7] underline cursor-pointer shrink-0 inline-flex items-center gap-1 leading-[18px]"
                             >
                               More{" "}
                               <ChevronDownIcon className="shrink-0" size={13} />
@@ -580,7 +580,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 {!hasRealColors && remainingAttributeFields}
 
                 {!isOutOfStock && (
-                  <div className="lg:hidden text-[13px] leading-[18px]">
+                  <div className="lg:hidden fluid-text-13-14 leading-[18px]">
                     <p className="font-bold text-[#1D265F]">
                       Delivery Fee - ${formatPrice(shippingCharge)}
                     </p>
@@ -604,7 +604,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                         stroke="#FFFFFF"
                       />
                       <div className="flex flex-col leading-[16px]">
-                        <span className="text-[12px] font-bold text-[#1D265F]">
+                        <span className="fluid-text-xs font-bold text-[#1D265F]">
                           Deliver To{" "}
                           {mounted
                             ? selectedLocation
@@ -624,7 +624,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                     <button
                       type="button"
                       onClick={() => setShowLocationPopup(true)}
-                      className="text-[14px] font-bold text-[#0B38D7]  cursor-pointer shrink-0"
+                      className="fluid-text-sm font-bold text-[#0B38D7]  cursor-pointer shrink-0"
                     >
                       Change
                     </button>
@@ -647,7 +647,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                         stockValue !== null &&
                         stockValue > 0 &&
                         stockValue < 10 ? (
-                        <span className="text-[12px]  font-bold text-[#FD151B]">
+                        <span className="fluid-text-xs  font-bold text-[#FD151B]">
                           <Clock
                             size={16}
                             className="inline-flex mb-1 font-bold"
@@ -681,7 +681,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                         >
                           &minus;
                         </button>
-                        <span className="text-[14px] font-bold text-black">
+                        <span className="fluid-text-sm font-bold text-black">
                           {quantity}
                         </span>
                         <button
@@ -746,7 +746,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                     );
                   })()}
                 </div>
-                <div className="lg:hidden flex mx-auto text-[12px] gap-1 text-center font-medium text-[#657689] leading-[20px] ">
+                <div className="lg:hidden flex mx-auto fluid-text-xs gap-1 text-center font-medium text-[#657689] leading-[20px] ">
                   <ShieldCheck size={20} /> Guaranteed Safe & Secured Checkout
                 </div>
                 <div className="lg:hidden flex flex-wrap gap-2 justify-center">
@@ -775,10 +775,10 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 </div>
                 {productFeatures.length > 0 && (
                   <div className="hidden lg:flex flex-col lg:pt-2">
-                    <span className="text-[16px] font-bold leading-[19px] text-[#333333]">
+                    <span className="fluid-text-base font-bold leading-[19px] text-[#333333]">
                       Features :
                     </span>
-                    <ul className="list-disc pl-5 mt-2 flex flex-col gap-2 text-[14px] leading-[24px] text-[#333333]">
+                    <ul className="list-disc pl-5 mt-2 flex flex-col gap-2 fluid-text-sm leading-[24px] text-[#333333]">
                       {productFeatures.slice(0, 6).map((feature, index) => (
                         <li key={index}>{feature}</li>
                       ))}
@@ -817,7 +817,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                     </h6>
                     <div className="product-content">
                       <div
-                        className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black"
+                        className="product-description-content font-normal fluid-text-sm leading-[30px] tracking-[0px] align-middle text-black"
                         style={{ textAlign: "left", marginTop: "15px" }}
                       >
                         {renderContent(product.description)}
@@ -841,7 +841,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                       role="tab"
                       aria-selected={activeTab === key}
                       tabIndex={activeTab === key ? 0 : -1}
-                      className={`flex items-center justify-center h-[45px] px-6 rounded-[30px] border border-[#ECECEC] cursor-pointer whitespace-nowrap transition-colors font-bold text-[14px] leading-[17px] tracking-[0px] text-center align-middle ${
+                      className={`flex items-center justify-center h-[45px] px-6 rounded-[30px] border border-[#ECECEC] cursor-pointer whitespace-nowrap transition-colors font-bold fluid-text-sm leading-[17px] tracking-[0px] text-center align-middle ${
                         activeTab === key
                           ? "bg-[#FD151B] text-white shadow-[5px_5px_15px_0px_rgba(0,0,0,0.05)]"
                           : "bg-white text-[#000000]"
@@ -866,7 +866,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                           </h6>
                           <div className="product-content">
                             <div
-                              className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black"
+                              className="product-description-content font-normal fluid-text-sm leading-[30px] tracking-[0px] align-middle text-black"
                               style={{ textAlign: "left", marginTop: "15px" }}
                             >
                               {renderContent(product.description)}
@@ -894,15 +894,15 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
           <div className="hidden lg:flex flex-col gap-5 w-full lg:w-[300px] lg:shrink-0 xl:w-[381px] lg:sticky lg:top-32 lg:self-start">
             <div className="w-full lg:min-h-[489px] border border-[#F8F8F8] shadow shadow-[#000000]/10 rounded-[7px] p-5 flex flex-col gap-4">
               <div className="flex items-baseline gap-3 flex-wrap">
-                <span className="text-[36px] leading-[18px] font-bold text-[#FD151B]">
+                <span className="fluid-text-20-36 leading-[18px] font-bold text-[#FD151B]">
                   ${formatPrice(mainPrice)}
                 </span>
               </div>
 
               {!isOutOfStock && (
-                <p className="font-bold text-[#1D265F] text-[14px]">
+                <p className="font-bold text-[#1D265F] fluid-text-sm">
                   Delivery Fee - ${formatPrice(shippingCharge)}{" "}
-                  <span className="text-[14px] font-normal text-[#1A2553] leading-[20px]">
+                  <span className="fluid-text-sm font-normal text-[#1A2553] leading-[20px]">
                     ({estimatedDeliveryRange})
                   </span>
                 </p>
@@ -940,7 +940,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                   <button
                     type="button"
                     onClick={() => setShowLocationPopup(true)}
-                    className="text-[14px] font-bold text-[#0B38D7]  cursor-pointer shrink-0"
+                    className="fluid-text-sm font-bold text-[#0B38D7]  cursor-pointer shrink-0"
                   >
                     Change
                   </button>
@@ -965,7 +965,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                       stockValue !== null &&
                       stockValue > 0 &&
                       stockValue < 10 ? (
-                      <span className="text-[12px] font-bold text-[#FD151B]">
+                      <span className="fluid-text-xs font-bold text-[#FD151B]">
                         <Clock
                           size={16}
                           className="inline-flex mb-1 font-bold"
@@ -999,7 +999,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                       >
                         &minus;
                       </button>
-                      <span className="text-[14px] font-bold text-black">
+                      <span className="fluid-text-sm font-bold text-black">
                         {quantity}
                       </span>
                       <button
@@ -1066,7 +1066,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 })()}
               </div>
 
-              <div className=" flex mx-auto items-center gap-2 text-[12px] text-center font-medium text-[#657689] leading-[20px]  ">
+              <div className=" flex mx-auto items-center gap-2 fluid-text-xs text-center font-medium text-[#657689] leading-[20px]  ">
                 <ShieldCheck /> Guaranteed Safe & Secured Checkout
               </div>
 

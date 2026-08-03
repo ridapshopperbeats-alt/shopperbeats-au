@@ -91,7 +91,7 @@ export default function TopBrands() {
     <section className="container ">
       {/* Heading */}
       <div className="flex items-center justify-between ">
-        <h2 className="text-[18px] md:text-[32px]  font-extrabold text-[#1E1E1E]">
+        <h2 className="fluid-text-18-32  font-extrabold text-[#1E1E1E]">
           Top Brands
         </h2>
 
@@ -99,7 +99,7 @@ export default function TopBrands() {
           href="/brand"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1 text-[13px] text-[#FD151B]  font-bold"
+          className="flex items-center gap-1 fluid-text-13-14 text-[#FD151B]  font-bold"
         >
           See All Brands
           <ChevronRight size={13} />
@@ -123,11 +123,11 @@ export default function TopBrands() {
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,11,30,0.1)_0%,rgba(5,11,30,0.65)_100%)]" />
 
             <div className="absolute left-4 bottom-3 w-[226px] flex flex-col ">
-              <h3 className="text-white text-[13px] font-bold">
+              <h3 className="text-white fluid-text-13-14 font-bold">
                 {brand.title}
               </h3>
 
-              <p className="text-white text-[10px] font-medium">
+              <p className="text-white fluid-text-2xs font-medium">
                 {brand.subtitle}
               </p>
             </div>
@@ -170,11 +170,11 @@ export default function TopBrands() {
               <div className="banner-gradient-overlay" />
 
               <div className="absolute p-6 w-[226px] flex flex-col ">
-                <h3 className="text-white text-[24px] font-extrabold">
+                <h3 className="text-white fluid-text-xl font-extrabold">
                   {brand.title}
                 </h3>
 
-                <p className="text-white text-[14px] font-semibold">
+                <p className="text-white fluid-text-sm font-semibold">
                   {brand.subtitle}
                 </p>
               </div>
