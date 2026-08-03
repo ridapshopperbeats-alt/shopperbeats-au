@@ -152,7 +152,7 @@
   .order-summary {
     width: 30%;
     background: var(--white);
-    padding: 30px;
+    padding: 20px;
     box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.08);
     border-radius: 8px;
     height: 100%;

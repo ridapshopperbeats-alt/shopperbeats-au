@@ -298,7 +298,7 @@ export default function StaticProductCards({
           {staticProducts.map((product) => (
             <div
               key={product.id}
-              className="group relative flex w-[160px] sm:w-[190px] h-[390px] sm:h-[460px] shrink-0 flex-col overflow-hidden rounded-[7px]"
+              className="group relative flex w-[160px] sm:w-[190px] h-[380px] sm:h-[400px] shrink-0 flex-col overflow-hidden rounded-[7px]"
             >
               {renderTag(product.tag)}
 
@@ -316,7 +316,7 @@ export default function StaticProductCards({
 
               <Link
                 href={`/static-product/${product.slug}`}
-                className="flex h-full max-h-[450px] flex-col no-underline text-inherit"
+                className="flex h-full max-h-[400px] flex-col no-underline text-inherit"
               >
                 <div className="relative w-full h-[150px] sm:h-[180px] shrink-0 overflow-hidden rounded-t-[7px] bg-[#F5F5F5]">
                   <Image
@@ -416,7 +416,7 @@ export default function StaticProductCards({
           return (
             <div
               key={product.id}
-              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[510px] flex flex-col justify-start overflow-hidden rounded-[7px]"
+              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[495px] flex flex-col justify-start overflow-hidden rounded-[7px]"
             >
               {renderTag(product.tag)}
 
@@ -490,7 +490,7 @@ export default function StaticProductCards({
                     </div>
                   </div>
 
-                  <div className="w-full px-2  flex justify-center mt-2">
+                  <div className="w-full px-2  flex justify-center">
                     <button
                       type="button"
                       onClick={(e) => {

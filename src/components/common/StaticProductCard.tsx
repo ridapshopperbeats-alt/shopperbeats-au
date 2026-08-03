@@ -15,12 +15,46 @@ import { useStaticWishlist } from "@/lib/hooks/useStaticWishlist";
 import type { StaticProduct } from "@/lib/utils/staticStorage";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 import StarRating from "./StarRating";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import StarIcon from "@mui/icons-material/Star";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
 
 function limitWords(text: string | undefined, limit = 6) {
   if (!text) return "";
   const words = text.split(" ");
   return words.length > limit ? words.slice(0, limit).join(" ") + "..." : text;
 }
+
+const renderTag = (tag: string | undefined) => {
+  switch (tag) {
+    case "hotseller":
+      return (
+        <div className="absolute bg-[#01295F] text-white w-[70px] h-[18px] md:w-[90px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
+          <ThumbUpIcon sx={{ fontSize: { xs: "10px", md: "11px" } }} />
+          Bestseller
+        </div>
+      );
+
+    case "new":
+      return (
+        <div className="absolute bg-[#787FFF] text-white w-[60px] h-[18px] md:w-[60px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
+          <StarIcon sx={{ fontSize: { xs: "10px", md: "11px" } }} />
+          New
+        </div>
+      );
+
+    case "bestseller":
+      return (
+        <div className="absolute top-[10px] left-[10px] z-10 flex h-[18px] w-[80px] items-center justify-center gap-1 rounded-[5px] bg-[#FFB30F] text-[10px] font-medium leading-[18px] text-white md:h-[19px] md:w-[80px] md:text-[12px]">
+          <WhatshotIcon sx={{ fontSize: { xs: "10px", md: "11px" } }} />
+          Hotseller
+        </div>
+      );
+
+    default:
+      return null;
+  }
+};
 
 const StaticProductCard: React.FC<ProductCardProps> = ({
   image,
@@ -42,6 +76,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
   ships_from_location,
   handling_time_days,
   shippingCharge,
+  tags,
 }) => {
   const { addToCart } = useStaticCart();
   const { toggleItem, isWishlisted: checkWishlisted } = useStaticWishlist();
@@ -94,7 +129,9 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <>
-      <div className="group relative w-full h-full max-h-[450px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
+      <div className="group relative w-full h-full max-h-[400px] md:max-h-[460px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
+        {renderTag(tags?.[0])}
+
         <button
           onClick={handleWishlistButtonClick}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
@@ -110,7 +147,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
         </button>
         <Link
           href={`/static-product/${unique_code || id}`}
-          className="flex h-full max-h-[450px] flex-col no-underline text-inherit"
+          className="flex h-full max-h-[400px] md:max-h-[460px] flex-col no-underline text-inherit"
         >
           <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden">
             <Image
@@ -179,6 +216,8 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                   </p>
                 </div>
               )}
+
+              <p className="text-[13px] font-normal text-[#FF4400]">Extra 10% Off with Code: SHBS10</p>
             </div>
 
             <div className="w-full px-2 lg:px-3 flex justify-center mt-2">

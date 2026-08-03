@@ -1083,7 +1083,7 @@ export default function SecureCheckout() {
 
           <div className="flex lg:hidden justify-center">
             <Button
-              className="btn btn-red btn-filled btn-sharp w-full"
+              className="global-btn"
               type="submit"
               form="checkout-form"
               disabled={isCreatingOrder || isProcessingPayment}

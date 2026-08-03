@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import StarRating from "../common/StarRating";
 import {
@@ -73,7 +73,8 @@ const STORE_REVIEWS: DisplayReview[] = [
     name: "Sophia Turner",
     rating: 5,
     date: "02 Jul 2026",
-    comment: "Reliable seller, this is my third order and everything arrived as described.",
+    comment:
+      "Reliable seller, this is my third order and everything arrived as described.",
     verified: false,
     reviewer_profile_image: null,
   },
@@ -125,6 +126,33 @@ export default function CustomerRatingViewPage({
   const [sortBy, setSortBy] = useState("latest");
   const [visibleCount, setVisibleCount] = useState(REVIEWS_PAGE_SIZE);
 
+  const tabsScrollRef = useRef<HTMLDivElement>(null);
+  const dragState = useRef({ startX: 0, scrollLeft: 0, moved: false });
+  const [isDraggingTabs, setIsDraggingTabs] = useState(false);
+
+  const handleTabsMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = tabsScrollRef.current;
+    if (!el) return;
+    setIsDraggingTabs(true);
+    dragState.current = {
+      startX: e.pageX - el.offsetLeft,
+      scrollLeft: el.scrollLeft,
+      moved: false,
+    };
+  };
+
+  const handleTabsMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = tabsScrollRef.current;
+    if (!isDraggingTabs || !el) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    const walk = x - dragState.current.startX;
+    if (Math.abs(walk) > 5) dragState.current.moved = true;
+    el.scrollLeft = dragState.current.scrollLeft - walk;
+  };
+
+  const stopTabsDragging = () => setIsDraggingTabs(false);
+
   const productReviews = (reviews ?? []).map(normalizeReview);
 
   const visibleTabs = TABS;
@@ -166,19 +194,31 @@ export default function CustomerRatingViewPage({
 
   return (
     <div>
-      <div className="flex flex-col lg:flex-row lg:flex-wrap lg:items-center lg:justify-between gap-4 mb-2 lg:mb-6">
+      <div className="flex flex-col xl:flex-row xl:flex-wrap xl:items-center xl:justify-between gap-3 mb-2 lg:gap-4 lg:mb-4 xl:mb-6">
         <h2 className="text-[14px] lg:text-[26px] leading-[18px] font-bold">
           <span className="text-[#FD151B]">Customer ratings</span>{" "}
           <span className="text-[#012A62]">&amp; reviews</span>
         </h2>
 
-        <div className="flex flex-col gap-3 w-full lg:w-auto lg:flex-1 lg:min-w-0 md:flex-row md:items-center md:justify-between">
-          <div className="no-scrollbar flex justify-center items-center gap-2 overflow-x-auto whitespace-nowrap">
+        <div className="flex flex-row items-center justify-between xl:gap-3 w-full xl:w-auto xl:flex-1 xl:min-w-0">
+          <div
+            ref={tabsScrollRef}
+            onMouseDown={handleTabsMouseDown}
+            onMouseMove={handleTabsMouseMove}
+            onMouseUp={stopTabsDragging}
+            onMouseLeave={stopTabsDragging}
+            className={`no-scrollbar flex justify-start items-center gap-2 overflow-x-auto whitespace-nowrap select-none ${
+              isDraggingTabs ? "cursor-grabbing" : "cursor-grab"
+            }`}
+          >
             {visibleTabs.map((tab) => (
               <button
                 key={tab}
                 type="button"
-                onClick={() => handleTabClick(tab)}
+                onClick={() => {
+                  if (dragState.current.moved) return;
+                  handleTabClick(tab);
+                }}
                 className={` shrink-0 h-[38px] px-5 rounded-full text-[10px] lg:text-[13px] font-semibold border items-center justify-center cursor-pointer whitespace-nowrap transition-colors ${
                   currentTab === tab
                     ? "bg-[#FD151B] border-[#FD151B] text-white"
@@ -296,14 +336,12 @@ export default function CustomerRatingViewPage({
                     </div>
 
                     <p className="mt-1 text-[13px] text-[#0F0F0F]">
-                      <span className="font-semibold">Q:</span>{" "}
-                      {item.question}
+                      <span className="font-semibold">Q:</span> {item.question}
                     </p>
 
                     {item.answer && (
                       <p className="mt-1 text-[13px] text-[#696e79]">
-                        <span className="font-semibold">A:</span>{" "}
-                        {item.answer}
+                        <span className="font-semibold">A:</span> {item.answer}
                       </p>
                     )}
                   </div>
