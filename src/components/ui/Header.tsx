@@ -792,7 +792,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                       onClick={() => setIsMobileNavOpen(false)}
                       className="flex-1"
                     >
-                      <h5 className="!text-[14px] font-bold">{cat.name}</h5>
+                      <h5 className="fluid-text-sm! font-bold">{cat.name}</h5>
                     </Link>
 
                     <span
@@ -838,7 +838,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                 onClick={() => setIsMobileNavOpen(false)}
                                 className="flex-1"
                               >
-                                <h6 className="text-[12px] font-medium">
+                                <h6 className="fluid-text-xs font-medium">
                                   {subCat.name}
                                 </h6>
                               </Link>

@@ -30,7 +30,7 @@ const Home = async () => {
               link="#"
             />
           )} */}
-          <StaticProductCards heading="Best Sellers" viewAllHref="#" />
+          <StaticProductCards heading="bestseller" viewAllHref="#" />
         </div>
 
         <PopularCategories />

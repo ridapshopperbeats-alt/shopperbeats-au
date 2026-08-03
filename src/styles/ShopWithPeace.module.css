@@ -26,7 +26,7 @@
 }
 
 .heroTitle {
-  @apply font-medium text-[32px] md:text-[40px] lg:text-[52px] xl:text-[96px] leading-[93%] tracking-[-4%] max-w-[722px] mx-auto lg:mx-0;
+  @apply font-medium text-[clamp(2rem,7vw,6rem)] leading-[93%] tracking-[-4%] max-w-[722px] mx-auto lg:mx-0;
 }
 
 .heroTitleLine1 {
@@ -38,11 +38,11 @@
 }
 
 .heroSubtitle {
-  @apply mt-4 lg:mt-2 text-[20px] lg:text-[28px] xl:text-[36px] font-medium text-[#002962] leading-none;
+  @apply mt-4 lg:mt-2 text-[clamp(1.25rem,3vw,2.25rem)] font-medium text-[#002962] leading-none;
 }
 
 .heroDescription {
-  @apply mt-2 max-w-[1024px] h-[120px] md:h-[50px] lg:h-[100px] text-[14px] xl:text-[20px] leading-[30px] tracking-[-4%] font-normal text-[#161C2D];
+  @apply mt-2 max-w-[1024px] h-[120px] md:h-[50px] lg:h-[100px] text-[clamp(0.875rem,1.5vw,1.25rem)] leading-[30px] tracking-[-4%] font-normal text-[#161C2D];
 }
 
 /* Money back guarantee section */
@@ -63,7 +63,7 @@
 }
 
 .mbgTitle {
-  @apply font-montserrat font-bold text-[32px] md:text-[40px] lg:text-[48px] leading-[1.2] tracking-[-1.8px];
+  @apply font-montserrat font-bold text-[clamp(2rem,4vw,3rem)] leading-[1.2] tracking-[-1.8px];
 }
 
 .mbgTitleBlue {
@@ -75,7 +75,7 @@
 }
 
 .mbgSubtitle {
-  @apply mt-3 text-[16px] lg:text-[18px] font-normal leading-[32px] tracking-[-0.2px] text-[#161C2D] text-left;
+  @apply mt-3 text-[clamp(1rem,1.5vw,1.125rem)] font-normal leading-[32px] tracking-[-0.2px] text-[#161C2D] text-left;
 }
 
 .mbgListWrapper {
@@ -87,15 +87,15 @@
 }
 
 .mbgListItem {
-  @apply font-bold text-[15px] lg:text-[16px] leading-[30px] tracking-[-0.5px] text-[#161C2D];
+  @apply font-bold text-[clamp(0.9375rem,1vw,1rem)] leading-[30px] tracking-[-0.5px] text-[#161C2D];
 }
 
 .mbgParagraph {
-  @apply mt-2 text-[16px] xl:text-[18px] font-normal leading-[28px] max-w-[695px] tracking-[-0.2px] text-[#161C2D] text-left;
+  @apply mt-2 text-[clamp(1rem,1.5vw,1.125rem)] font-normal leading-[28px] max-w-[695px] tracking-[-0.2px] text-[#161C2D] text-left;
 }
 
 .mbgBoldParagraph {
-  @apply mt-1 font-bold text-[16px] xl:text-[18px] leading-[28px] tracking-[-0.2px] text-[#161C2D] text-left;
+  @apply mt-1 font-bold text-[clamp(1rem,1.5vw,1.125rem)] leading-[28px] tracking-[-0.2px] text-[#161C2D] text-left;
 }
 
 .mbgImageWrapper {
@@ -124,7 +124,7 @@
 }
 
 .returnsTitle {
-  @apply font-bold text-[32px] sm:text-[40px] lg:text-[48px] leading-[1.2] lg:leading-[58px] tracking-[-1.8px] text-left;
+  @apply font-bold text-[clamp(2rem,4vw,3rem)] leading-[1.2] lg:leading-[58px] tracking-[-1.8px] text-left;
 }
 
 .returnsTitleExtra {
@@ -136,7 +136,7 @@
 }
 
 .returnsSubtitle {
-  @apply mt-4 text-[16px] sm:text-[18px] font-normal leading-[32px] tracking-[-0.2px] text-[#161C2D] text-left;
+  @apply mt-4 text-[clamp(1rem,1.5vw,1.125rem)] font-normal leading-[32px] tracking-[-0.2px] text-[#161C2D] text-left;
 }
 
 .returnsStepsWrapper {
@@ -144,7 +144,7 @@
 }
 
 .returnsStep {
-  @apply font-bold text-[15px] sm:text-[16px] leading-[24px] sm:leading-[30px] tracking-[-0.5px] text-[#161C2D];
+  @apply font-bold text-[clamp(0.9375rem,1vw,1rem)] leading-[24px] sm:leading-[30px] tracking-[-0.5px] text-[#161C2D];
 }
 
 .returnsNoteWrapper {
@@ -152,11 +152,11 @@
 }
 
 .returnsNote {
-  @apply text-[16px] sm:text-[18px] font-normal leading-[24px] tracking-[-0.2px] text-[#161C2D];
+  @apply text-[clamp(1rem,1.5vw,1.125rem)] font-normal leading-[24px] tracking-[-0.2px] text-[#161C2D];
 }
 
 .returnsWarrantyButton {
-  @apply mt-4 text-[16px] sm:text-[18px] font-bold leading-[32px] tracking-[-0.2px] text-[#FD151B] underline;
+  @apply mt-4 text-[clamp(1rem,1.5vw,1.125rem)] font-bold leading-[32px] tracking-[-0.2px] text-[#FD151B] underline;
 }
 
 /* Customer support section */
@@ -169,7 +169,7 @@
 }
 
 .supportTitle {
-  @apply font-bold text-[32px] md:text-[40px] lg:text-[44px] xl:text-[48px] leading-[117%] tracking-[-0.03em] text-left;
+  @apply font-bold text-[clamp(2rem,4vw,3rem)] leading-[117%] tracking-[-0.03em] text-left;
 }
 
 .supportTitleBlue {
@@ -209,15 +209,15 @@
 }
 
 .supportText {
-  @apply text-[16px] md:text-[17px] xl:text-[18px] font-normal leading-[117%] tracking-[-0.03em] text-[#161C2D];
+  @apply text-[clamp(1rem,1.5vw,1.125rem)] font-normal leading-[117%] tracking-[-0.03em] text-[#161C2D];
 }
 
 .supportTextSpaced {
-  @apply mt-5 text-[16px] md:text-[17px] xl:text-[18px] font-normal leading-[30px] tracking-[-0.03em] text-[#161C2D];
+  @apply mt-5 text-[clamp(1rem,1.5vw,1.125rem)] font-normal leading-[30px] tracking-[-0.03em] text-[#161C2D];
 }
 
 .supportSubheading {
-  @apply mt-6 text-[28px] lg:text-[32px] xl:text-[36px] font-medium leading-[30px] tracking-[-0.03em] text-black;
+  @apply mt-6 text-[clamp(1.75rem,2.5vw,2.25rem)] font-medium leading-[30px] tracking-[-0.03em] text-black;
 }
 
 /* Tracked delivery section */
@@ -242,15 +242,15 @@
 }
 
 .deliveryTitle {
-  @apply font-montserrat font-bold text-[32px] md:text-[40px] xl:text-[48px] leading-[1.2] xl:leading-[58px] tracking-[-1.8px];
+  @apply font-montserrat font-bold text-[clamp(2rem,4vw,3rem)] leading-[1.2] xl:leading-[58px] tracking-[-1.8px];
 }
 
 .deliverySubtitle {
-  @apply mt-2 font-montserrat font-normal text-[16px] xl:text-[18px] leading-[26px] xl:leading-[32px] tracking-[-0.2px] text-[#161C2D];
+  @apply mt-2 font-montserrat font-normal text-[clamp(1rem,1.5vw,1.125rem)] leading-[26px] xl:leading-[32px] tracking-[-0.2px] text-[#161C2D];
 }
 
 .deliveryParagraph {
-  @apply font-montserrat font-normal text-[16px] xl:text-[18px] leading-[26px] xl:leading-[32px] tracking-[-0.2px] text-[#161C2D];
+  @apply font-montserrat font-normal text-[clamp(1rem,1.5vw,1.125rem)] leading-[26px] xl:leading-[32px] tracking-[-0.2px] text-[#161C2D];
 }
 
 .deliveryListWrapper {
@@ -262,13 +262,13 @@
 }
 
 .deliveryListItem {
-  @apply font-montserrat font-bold text-[15px] xl:text-[16px] leading-[26px] xl:leading-[30px] tracking-[-0.5px] text-[#161C2D];
+  @apply font-montserrat font-bold text-[clamp(0.9375rem,1vw,1rem)] leading-[26px] xl:leading-[30px] tracking-[-0.5px] text-[#161C2D];
 }
 
 .deliveryFootnote {
-  @apply w-full xl:w-[935px] mt-1 font-montserrat font-normal text-[16px] xl:text-[18px] leading-[26px] xl:leading-[32px] tracking-[-0.2px] text-[#161C2D];
+  @apply w-full xl:w-[935px] mt-1 font-montserrat font-normal text-[clamp(1rem,1.5vw,1.125rem)] leading-[26px] xl:leading-[32px] tracking-[-0.2px] text-[#161C2D];
 }
 
 .deliveryTagline {
-  @apply mt-2 font-montserrat font-bold text-[16px] xl:text-[18px] leading-[26px] xl:leading-[32px] tracking-[-0.2px] text-[#161C2D];
+  @apply mt-2 font-montserrat font-bold text-[clamp(1rem,1.5vw,1.125rem)] leading-[26px] xl:leading-[32px] tracking-[-0.2px] text-[#161C2D];
 }

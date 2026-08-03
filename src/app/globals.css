@@ -128,6 +128,58 @@ body {
   @apply text-[clamp(0.9375rem,1.5vw,1.0625rem)]; /* 15px -> 17px */
 }
 
+.fluid-text-15-16 {
+  @apply text-[clamp(0.9375rem,1vw,1rem)]; /* 15px -> 16px */
+}
+
+.fluid-text-section-title {
+  @apply text-[clamp(2rem,4vw,3rem)]; /* 32px -> 48px */
+}
+
+.fluid-text-16-20 {
+  @apply text-[clamp(1rem,2vw,1.25rem)]; /* 16px -> 20px */
+}
+
+.fluid-text-14-26 {
+  @apply text-[clamp(0.875rem,3vw,1.625rem)]; /* 14px -> 26px */
+}
+
+.fluid-text-18-32 {
+  @apply text-[clamp(1.125rem,4vw,2rem)]; /* 18px -> 32px */
+}
+
+.fluid-text-13-18 {
+  @apply text-[clamp(0.8125rem,2.5vw,1.125rem)]; /* 13px -> 18px */
+}
+
+.fluid-text-20-24 {
+  @apply text-[clamp(1.25rem,2.5vw,1.5rem)]; /* 20px -> 24px */
+}
+
+.fluid-text-14-20 {
+  @apply text-[clamp(0.875rem,2vw,1.25rem)]; /* 14px -> 20px */
+}
+
+.fluid-text-12-14 {
+  @apply text-[clamp(0.75rem,1.5vw,0.875rem)]; /* 12px -> 14px */
+}
+
+.fluid-text-20-36 {
+  @apply text-[clamp(1.25rem,4vw,2.25rem)]; /* 20px -> 36px */
+}
+
+.fluid-text-14-24 {
+  @apply text-[clamp(0.875rem,3vw,1.5rem)]; /* 14px -> 24px */
+}
+
+.fluid-text-9-10 {
+  @apply text-[clamp(0.5625rem,1vw,0.625rem)]; /* 9px -> 10px */
+}
+
+.fluid-text-12-13 {
+  @apply text-[clamp(0.75rem,1vw,0.8125rem)]; /* 12px -> 13px */
+}
+
 .visually-hidden {
   @apply sr-only;
 }

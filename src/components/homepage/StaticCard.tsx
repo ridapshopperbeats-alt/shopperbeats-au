@@ -186,24 +186,24 @@ const renderTag = (tag: string) => {
   switch (tag) {
     case "hotseller":
       return (
-        <div className="absolute bg-[#01295F] text-white w-[70px] h-[18px] md:w-[90px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
-          <ThumbUpIcon sx={{ fontSize: { xs: "10px", md: "11px" } }} />
+        <div className="absolute bg-[#01295F] text-white w-[70px] h-[18px] md:w-[90px] md:h-[19px] top-[10px] left-[10px] fluid-text-2xs font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
+          <ThumbUpIcon sx={{ fontSize: "clamp(0.625rem, 1vw, 0.6875rem)" }} />
           Bestseller
         </div>
       );
 
     case "new":
       return (
-        <div className="absolute bg-[#787FFF] text-white w-[60px] h-[18px] md:w-[60px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
-          <StarIcon sx={{ fontSize: { xs: "10px", md: "11px" } }} />
+        <div className="absolute bg-[#787FFF] text-white w-[60px] h-[18px] md:w-[60px] md:h-[19px] top-[10px] left-[10px] fluid-text-2xs font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
+          <StarIcon sx={{ fontSize: "clamp(0.625rem, 1vw, 0.6875rem)" }} />
           New
         </div>
       );
 
     case "bestseller":
       return (
-        <div className="absolute top-[10px] left-[10px] z-10 flex h-[18px] w-[80px] items-center justify-center gap-1 rounded-[5px] bg-[#FFB30F] text-[10px] font-medium leading-[18px] text-white md:h-[19px] md:w-[80px] md:text-[12px]">
-          <WhatshotIcon sx={{ fontSize: { xs: "10px", md: "11px" } }} />
+        <div className="absolute top-[10px] left-[10px] z-10 flex h-[18px] w-[80px] items-center justify-center gap-1 rounded-[5px] bg-[#FFB30F] fluid-text-2xs font-medium leading-[18px] text-white md:h-[19px] md:w-[80px]">
+          <WhatshotIcon sx={{ fontSize: "clamp(0.625rem, 1vw, 0.6875rem)" }} />
           Hotseller
         </div>
       );
@@ -261,13 +261,13 @@ export default function StaticProductCards({
   return (
     <div className="relative">
       <div className="flex items-center justify-between ">
-        <h2 className="font-bold text-[18px] md:text-[32px] tracking-normal capitalize">
+        <h2 className="font-bold fluid-text-18-32 tracking-normal leading-4.5 capitalize">
           {heading}
         </h2>
 
         <Link
           href={viewAllHref}
-          className="flex items-center gap-1 font-bold text-[13px] tracking-normal text-[#F51721] no-underline"
+          className="flex items-center gap-1 font-bold fluid-text-13-14 tracking-normal text-[#F51721] no-underline"
         >
           View All
           <ChevronRight size={16} className="text-[#F51721]" />
@@ -330,29 +330,29 @@ export default function StaticProductCards({
 
                 <div className="flex flex-1 flex-col justify-between w-full">
                   <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
-                    <h4 className="text-[0.75rem] md:text-[0.875rem] font-bold text-black">
+                    <h4 className="fluid-text-xs font-bold text-black">
                       {product.brand_name}
                     </h4>
 
-                    <p className="text-[14px] md:text-[14px] leading-[18px] text-[#878787] font-normal line-clamp-2 min-h-[36px]">
+                    <p className="fluid-text-sm leading-[18px] text-[#878787] font-normal line-clamp-2 min-h-[36px]">
                       {limitWords(product.title)}
                     </p>
 
                     <div className="flex items-center gap-2 h-4 py-3">
-                      <span className="text-[16px] md:text-[20px] font-semibold text-[#052B56]">
+                      <span className="fluid-text-16-20 font-semibold text-[#052B56]">
                         ${product.mainPrice}
                       </span>
 
-                      <span className="text-[10px] line-through text-[#535766]">
+                      <span className="fluid-text-2xs line-through text-[#535766]">
                         ${product.wasPrice}
                       </span>
 
-                      <span className="text-[9px] text-[#008F11]">
+                      <span className="fluid-text-9-10 text-[#008F11]">
                         {product.saveAmount}% OFF
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1 text-[12px]">
+                    <div className="flex items-center gap-1 fluid-text-xs">
                       <StarRating rating={product.rating} size={13} />
                       <span className="text-[#535766]">
                         ({product.reviewCount})
@@ -360,7 +360,7 @@ export default function StaticProductCards({
                     </div>
 
                     {!product.isOutOfStock && (
-                      <div className="text-[11px] text-[#535252]">
+                      <div className="fluid-text-11-12 text-[#535252]">
                         <p>Delivery Fee - ${product.shippingCharge}</p>
                         <p className="font-medium">
                           Estimated delivery between Thu, 06 Aug - Wed, 12 Aug
@@ -368,7 +368,7 @@ export default function StaticProductCards({
                       </div>
                     )}
 
-                    <p className="font-normal text-[11px] leading-[16px] text-[#ff4400]">
+                    <p className="font-normal fluid-text-11-12 leading-[16px] text-[#ff4400]">
                       Extra 10% Off with Code: SHBS10
                     </p>
                   </div>
@@ -380,7 +380,7 @@ export default function StaticProductCards({
                         e.preventDefault();
                         handleAddToCart(product);
                       }}
-                      className="w-full h-[30px] bg-[#849324] text-white text-[14px] rounded-[32px] cursor-pointer"
+                      className="w-full h-[30px] bg-[#849324] text-white fluid-text-sm rounded-[32px] cursor-pointer"
                     >
                       Add To Cart
                     </button>
@@ -448,43 +448,43 @@ export default function StaticProductCards({
 
                 <div className="flex flex-1 flex-col justify-between">
                   <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
-                    <h4 className="text-[14px] font-bold text-black">
+                    <h4 className="fluid-text-sm font-bold text-black">
                       {product.brand_name}
                     </h4>
 
-                    <p className="text-[14px]  text-[#878787]">
+                    <p className="fluid-text-sm  text-[#878787]">
                       {limitWords(product.title)}
                     </p>
 
                     <div className="flex items-center gap-2 h-4 py-3">
-                      <span className="text-[20px] font-semibold text-[#052B56]">
+                      <span className="fluid-text-lg font-semibold text-[#052B56]">
                         ${product.mainPrice}
                       </span>
 
-                      <span className="text-[12px] line-through text-[#535766]">
+                      <span className="fluid-text-xs line-through text-[#535766]">
                         ${product.wasPrice}
                       </span>
 
-                      <span className="text-[12px] text-[#008F11]">
+                      <span className="fluid-text-xs text-[#008F11]">
                         {product.saveAmount}% OFF
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1 text-[12px]">
+                    <div className="flex items-center gap-1 fluid-text-xs">
                       <StarRating rating={product.rating} size={13} />
                       <span className="text-[#535766]">
                         ({product.reviewCount})
                       </span>
                     </div>
 
-                    <div className="text-[12px] md:text-[13px] text-[#535252]">
+                    <div className="fluid-text-12-13 text-[#535252]">
                       <p>
                         FREE delivery Sun, 7 Jun
                         <br />
                         Or fastest delivery Tomorrow, 5 June
                       </p>
 
-                      <p className="font-normal text-[13px] leading-[18px] text-[#ff4400]">
+                      <p className="font-normal fluid-text-13-14 leading-[18px] text-[#ff4400]">
                         Extra 10% Off with Code: SHBS10
                       </p>
                     </div>
@@ -497,7 +497,7 @@ export default function StaticProductCards({
                         e.preventDefault();
                         handleAddToCart(product);
                       }}
-                      className="w-full h-[30px] bg-[#849324] text-white text-[14px] rounded-[32px] cursor-pointer"
+                      className="w-full h-[30px] bg-[#849324] text-white fluid-text-sm rounded-[32px] cursor-pointer"
                     >
                       Add To Cart
                     </button>

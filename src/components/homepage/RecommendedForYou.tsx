@@ -55,7 +55,7 @@ export default function RecommendedForYou({
   return (
     <ProductCarousel
       title={
-        <div className="text-[14px] lg:text-[26px] leading-[18px] font-bold text-[#FD151B]">
+        <div className="fluid-text-14-26 leading-[18px] font-bold text-[#FD151B]">
           Products <span className="text-[#012A62]">related to this item</span>
         </div>
       }

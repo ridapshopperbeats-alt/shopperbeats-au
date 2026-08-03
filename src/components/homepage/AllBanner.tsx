@@ -170,12 +170,12 @@ export default function PopularCategories() {
       {/* Heading */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-[18px] md:text-[32px] font-bold text-black">
+          <h2 className="fluid-text-18-32 font-bold text-black">
             Popular Categories
           </h2>
         </div>
 
-        <button className="flex items-center gap-2 text-[13px] text-[#FD151B] font-bold cursor-pointer">
+        <button className="flex items-center gap-2 fluid-text-13-14 text-[#FD151B] font-bold cursor-pointer">
           View All
           <ChevronRight size={13} />
         </button>
@@ -197,11 +197,11 @@ export default function PopularCategories() {
 
             <div className="absolute left-4 bottom-3 md:p-3">
               <div className="banner-card-content">
-                <h3 className="text-white text-[0.8125rem] md:text-[1.125rem] font-bold leading-[100%]">
+                <h3 className="text-white fluid-text-13-18 font-bold leading-[100%]">
                   {item.title}
                 </h3>
 
-                <button className="flex items-center gap-2 text-white text-[0.625rem] md:text-[0.75rem] font-medium cursor-pointer">
+                <button className="flex items-center gap-2 text-white fluid-text-2xs font-medium cursor-pointer">
                   Shop Now
                   <ArrowRight size={14} />
                 </button>
@@ -244,11 +244,11 @@ export default function PopularCategories() {
 
             <div className="absolute left-4 bottom-3 md:p-3 ">
               <div className="banner-card-content">
-                <h3 className="text-white text-[0.8125rem] md:text-[1.125rem] font-bold leading-[100%]">
+                <h3 className="text-white fluid-text-13-18 font-bold leading-[100%]">
                   {item.title}
                 </h3>
 
-                <button className="flex items-center gap-2 text-white text-[0.625rem] md:text-[0.75rem] font-medium cursor-pointer">
+                <button className="flex items-center gap-2 text-white fluid-text-2xs font-medium cursor-pointer">
                   Shop Now
                   <ArrowRight size={14} />
                 </button>
