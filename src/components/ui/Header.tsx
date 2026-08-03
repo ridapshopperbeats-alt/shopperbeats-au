@@ -498,48 +498,52 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 </div>
               )}
             </div>
-            <HeaderIcon
-              href="/user/wishlist"
-              iconSrc="/images/wishlist.svg"
-              alt="wishlist"
-              className="wishlist"
-              count={
-                wishlistData?.total_items ?? wishlistData?.items?.length ?? 0
-              }
-            />
+            <div className="hidden lg:flex lg:items-center">
+              <HeaderIcon
+                href="/user/wishlist"
+                iconSrc="/images/wishlist.svg"
+                alt="wishlist"
+                className="wishlist"
+                count={
+                  wishlistData?.total_items ?? wishlistData?.items?.length ?? 0
+                }
+              />
 
-            <CartPopup isVisible={showCartCard} />
+              <CartPopup isVisible={showCartCard} />
 
-            <div className={`header-link account`}>
-              {isAuthenticated ? (
-                <Link
-                  href="/user/personal-information"
-                  className="relative inline-block !p-0"
-                >
-                  <Image
-                    src={
-                      profileImage?.trim() ? profileImage : "/images/user.svg"
-                    }
-                    alt="account"
-                    className="rounded-full object-cover"
-                    fill
-                  />
+              <div className={`header-link account`}>
+                {isAuthenticated ? (
+                  <Link
+                    href="/user/personal-information"
+                    className="relative inline-block !p-0"
+                  >
+                    <Image
+                      src={
+                        profileImage?.trim()
+                          ? profileImage
+                          : "/images/user.svg"
+                      }
+                      alt="account"
+                      className="rounded-full object-cover"
+                      fill
+                    />
 
-                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
-                </Link>
-              ) : (
-                <Link
-                  href={`/login?redirect=${encodeURIComponent("/user/personal-information")}`}
-                  className="group"
-                >
-                  <Image
-                    src="/images/user.svg"
-                    alt="account"
-                    width={20}
-                    height={20}
-                  />
-                </Link>
-              )}
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/login?redirect=${encodeURIComponent("/user/personal-information")}`}
+                    className="group"
+                  >
+                    <Image
+                      src="/images/user.svg"
+                      alt="account"
+                      width={20}
+                      height={20}
+                    />
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -781,13 +785,20 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
               return (
                 <div key={cat.id} className="new-mega-column">
-                  <div
-                    className="mobile-main-category"
-                    onClick={() => toggleSubCategory(cat.id)}
-                  >
-                    <h5 className="!text-[14px] font-bold">{cat.name}</h5>
+                  <div className="mobile-main-category">
+                    <Link
+                      href={resolveCategoryHref(cat.slug ?? cat.id)}
+                      prefetch={false}
+                      onClick={() => setIsMobileNavOpen(false)}
+                      className="flex-1"
+                    >
+                      <h5 className="!text-[14px] font-bold">{cat.name}</h5>
+                    </Link>
 
-                    <span>
+                    <span
+                      className="cursor-pointer shrink-0 pl-2"
+                      onClick={() => toggleSubCategory(cat.id)}
+                    >
                       <svg
                         width="14"
                         height="14"
@@ -818,15 +829,26 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
                         return (
                           <div key={subCat.id} className="mobile-subcategory">
-                            <div
-                              className="mobile-subcategory-title"
-                              onClick={() => toggleSubSubCategory(subCat.id)}
-                            >
-                              <h6 className="text-[12px] font-medium">
-                                {subCat.name}
-                              </h6>
+                            <div className="mobile-subcategory-title">
+                              <Link
+                                href={resolveCategoryHref(
+                                  subCat.slug ?? subCat.id,
+                                )}
+                                prefetch={false}
+                                onClick={() => setIsMobileNavOpen(false)}
+                                className="flex-1"
+                              >
+                                <h6 className="text-[12px] font-medium">
+                                  {subCat.name}
+                                </h6>
+                              </Link>
 
-                              <span>
+                              <span
+                                className="cursor-pointer shrink-0 pl-2"
+                                onClick={() =>
+                                  toggleSubSubCategory(subCat.id)
+                                }
+                              >
                                 <svg
                                   width="12"
                                   height="12"

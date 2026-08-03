@@ -157,23 +157,23 @@
 }
 
 .wishlist-table-header {
-    @apply hidden md:grid md:grid-cols-12 items-center gap-4 bg-gray-100 p-4 font-semibold text-sm rounded-md mb-3;
+    @apply hidden lg:grid lg:grid-cols-12 items-center gap-4 bg-gray-100 p-4 font-semibold text-sm rounded-md mb-3;
 }
 
 .wishlist-col-product {
-    @apply md:col-span-4 text-black leading-[normal] font-[700] text-lg capitalize;
+    @apply lg:col-span-4 text-black leading-[normal] font-[700] text-lg capitalize;
 }
 
 .wishlist-col-span-2 {
-    @apply md:col-span-2 text-black leading-[normal] font-[700] text-lg capitalize;
+    @apply lg:col-span-2 text-black leading-[normal] font-[700] text-lg capitalize;
 }
 
 .wishlist-card {
-    @apply grid grid-cols-1 md:grid-cols-12 gap-4 border-b border-gray-300 p-4 mb-4 rounded-lg bg-white;
+    @apply grid grid-cols-1 lg:grid-cols-12 gap-4 border-b border-gray-300 p-4 mb-4 rounded-lg bg-white;
 }
 
 .wishlist-item-media {
-    @apply flex items-center gap-3 md:col-span-4;
+    @apply flex items-center gap-3 lg:col-span-4;
 }
 
 .wishlist-item-image {
@@ -185,31 +185,31 @@
 }
 
 .wishlist-cell {
-    @apply grid grid-cols-2 md:block md:col-span-2 items-center;
+    @apply grid grid-cols-2 lg:block lg:col-span-2 items-center;
 }
 
 .wishlist-date-cell {
-    @apply grid grid-cols-2 md:block md:col-span-2 items-center font-bold text-sm text-black;
+    @apply grid grid-cols-2 lg:block lg:col-span-2 items-center font-bold text-sm text-black;
 }
 
 .wishlist-action-cell {
-    @apply grid grid-cols-2 md:flex md:flex-col gap-2 md:col-span-2 items-start;
+    @apply grid grid-cols-2 lg:flex lg:flex-col gap-2 lg:col-span-2 items-start;
 }
 
 .wishlist-mobile-label {
-    @apply font-semibold md:hidden;
+    @apply font-semibold lg:hidden;
 }
 
 .wishlist-action-mobile-label {
-    @apply font-semibold md:hidden pt-3;
+    @apply font-semibold lg:hidden pt-3;
 }
 
 .wishlist-price {
-    @apply font-[600] text-right md:text-left text-[#FD151B] leading-[normal] capitalize;
+    @apply font-[600] text-right lg:text-left text-[#FD151B] leading-[normal] capitalize;
 }
 
 .wishlist-align-cell {
-    @apply text-right md:text-left text-black font-[600] leading-[normal];
+    @apply text-right lg:text-left text-black font-[600] leading-[normal];
 }
 
 .wishlist-out-of-stock {

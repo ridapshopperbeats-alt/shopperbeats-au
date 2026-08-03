@@ -58,7 +58,12 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
   const dispatch = useDispatch();
 
   const { postcode, suburb, updatePostcode } = useGlobalPostcode();
-  const { addToCart, items: cartItems, updateQuantity, removeItem } = useStaticCart();
+  const {
+    addToCart,
+    items: cartItems,
+    updateQuantity,
+    removeItem,
+  } = useStaticCart();
   const { toggleItem, isWishlisted: checkWishlisted } = useStaticWishlist();
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
 
@@ -405,8 +410,14 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
   });
 
   const drawerCartItems = cartItems.map(toDrawerCartItem);
-  const drawerSubtotal = cartItems.reduce((acc, item) => acc + item.subtotal, 0);
-  const drawerShippingCost = cartItems.reduce((acc, item) => acc + item.shipping_cost, 0);
+  const drawerSubtotal = cartItems.reduce(
+    (acc, item) => acc + item.subtotal,
+    0,
+  );
+  const drawerShippingCost = cartItems.reduce(
+    (acc, item) => acc + item.shipping_cost,
+    0,
+  );
   const drawerHasShippableItem = cartItems.some((item) => item.is_shippable);
 
   const handleBuyNow = () => {
@@ -457,6 +468,11 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                             <span className="badge-text">LOW STOCK</span>
                           </div>
                         )}
+                      {/* {product.tags && product.tags.length > 0 && (
+                        <Button className="bg-[#01295F] text-white text-[10px] md:text-[12px] font-medium px-2 py-1 rounded-[5px] capitalize">
+                          {product.tags[0]}
+                        </Button>
+                      )} */}
                     </div>
                     <h5 className="text-[14px] lg:text-[20px] font-medium text-black leading-[20px] lg:leading-[30px]">
                       {productTitle || "Product Title"}
@@ -730,10 +746,10 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                     );
                   })()}
                 </div>
-                <div className="lg:hidden flex mx-auto text-[12px] text-center font-medium text-[#657689] leading-[20px] ">
-                  <ShieldCheck /> Guaranteed Safe & Secured Checkout
+                <div className="lg:hidden flex mx-auto text-[12px] gap-1 text-center font-medium text-[#657689] leading-[20px] ">
+                  <ShieldCheck size={20} /> Guaranteed Safe & Secured Checkout
                 </div>
-                <div className="lg:hidden flex flex-wrap gap-2">
+                <div className="lg:hidden flex flex-wrap gap-2 justify-center">
                   {[
                     "visa",
                     "payment",
@@ -742,12 +758,17 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                     "afterpay",
                     "zip",
                   ].map((img) => (
-                    <div className="pdp-qty-box" key={img}>
+                    <div
+                      key={img}
+                      className=" rounded h-[15px] flex items-center justify-center bg-white"
+                    >
                       <Image
                         src={`/images/${img}.svg`}
                         alt={img}
-                        width={50}
-                        height={25}
+                        width={38}
+                        height={15}
+                        loading="lazy"
+                        className="object-contain"
                       />
                     </div>
                   ))}
@@ -1050,7 +1071,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
               </div>
 
               <div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 justify-center">
                   {[
                     "visa",
                     "payment",
@@ -1059,12 +1080,17 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                     "afterpay",
                     "zip",
                   ].map((img) => (
-                    <div className="pdp-qty-box-lg" key={img}>
+                    <div
+                      key={img}
+                      className=" rounded h-[15px] flex items-center justify-center bg-white"
+                    >
                       <Image
                         src={`/images/${img}.svg`}
                         alt={img}
-                        width={50}
-                        height={25}
+                        width={38}
+                        height={15}
+                        loading="lazy"
+                        className="object-contain"
                       />
                     </div>
                   ))}
@@ -1120,7 +1146,9 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
         localQtyMap={{}}
         isUpdating={false}
         isRemoving={false}
-        onIncrement={(item) => updateQuantity(item.product_id, item.quantity + 1)}
+        onIncrement={(item) =>
+          updateQuantity(item.product_id, item.quantity + 1)
+        }
         onDecrement={(item) => {
           if (item.quantity <= 1) return;
           updateQuantity(item.product_id, item.quantity - 1);
