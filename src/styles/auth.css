@@ -2,7 +2,7 @@
 
 
 .auth-title {
-    @apply text-[30px] font-bold leading-[normal] text-center text-[var(--black)];
+    @apply text-[clamp(1.5rem,3vw,1.875rem)] font-bold leading-[normal] text-center text-[var(--black)];
 }
 
 .input-rounded {
@@ -14,10 +14,10 @@
 }
 
 .auth-form-title {
-    @apply text-[30px] font-bold;
+    @apply text-[clamp(1.5rem,3vw,1.875rem)] font-bold;
 }
 .remember-me {
-  @apply text-black font-medium text-[16px] leading-[normal];
+  @apply text-black font-medium text-[clamp(0.875rem,1.5vw,1rem)] leading-[normal];
 }
 .checkbox-input {
   @apply appearance-none w-[18px] h-[18px] shrink-0 rounded-[4px] border-2 border-[#B7BAB4] bg-[rgba(183,186,180,0.00)] cursor-pointer;
@@ -53,7 +53,7 @@
 }
 
 .password-content p {
-    @apply font-medium mb-[5px] text-sm;
+    @apply font-medium mb-[5px] text-sm leading-[normal];
 }
 
 .user-form-wrapper .flex label {
@@ -69,7 +69,7 @@
 }
 
 .link span {
-    @apply text-[16px] font-medium leading-[normal];
+    @apply text-[clamp(0.875rem,1.5vw,1rem)] font-medium leading-[normal];
 }
 
 .link span a {
@@ -153,7 +153,7 @@
 
 /* wishlist page css */
 .wishlist-title {
-    @apply font-[700] text-2xl leading-[normal] mb-5 capitalize;
+    @apply font-bold text-2xl leading-[normal] mb-5 capitalize;
 }
 
 .wishlist-table-header {
@@ -181,7 +181,7 @@
 }
 
 .wishlist-item-name {
-    @apply font-black text-base leading-[normal] font-[700] capitalize not-italic mb-5 text-left;
+    @apply font-black text-base leading-[normal] font-semibold capitalize not-italic mb-5 text-left;
 }
 
 .wishlist-cell {
@@ -209,15 +209,15 @@
 }
 
 .wishlist-align-cell {
-    @apply text-right md:text-left text-black font-[600] leading-[normal];
+    @apply text-right md:text-left text-black font-semibold leading-[normal];
 }
 
 .wishlist-out-of-stock {
-    @apply text-[#FD151B] font-[600] leading-[normal] capitalize;
+    @apply text-[#FD151B] font-semibold leading-[normal] capitalize;
 }
 
 .wishlist-in-stock {
-    @apply text-[#16A249] font-[600] leading-[normal] capitalize;
+    @apply text-[#16A249] font-semibold leading-[normal] capitalize;
 }
 
 .wishlist-action-buttons {

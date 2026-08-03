@@ -783,7 +783,7 @@ export default function SecureCheckout() {
 
   return (
     <div className="lg:py-7">
-      <h1 className="font-montserrat font-extrabold text-xl md:text-2xl leading-none tracking-normal text-center capitalize text-black mb-6">
+      <h1 className="font-extrabold text-xl md:text-2xl leading-[normal] tracking-[normal] text-center capitalize text-black mb-6">
         Secure Checkout
       </h1>
       <div className="container flex flex-col xl:flex-row items-start justify-center gap-6 mx-auto">
@@ -824,11 +824,11 @@ export default function SecureCheckout() {
                 {/* Desktop (lg and up) — mirrors the mobile/md layout's spacing & structure */}
                 <div className="hidden lg:flex lg:flex-col lg:h-full">
                   {!isAuthenticated && (
-                    <p className="text-center py-4 px-4 text-[15px] font-semibold text-black">
+                    <p className="text-center py-4 px-4 fluid-text-sm font-semibold text-black leading-[normal]">
                       Already have an account?{" "}
                       <Link
                         href={`/login?redirect=${encodeURIComponent(pathname)}`}
-                        className="text-[#fd151b] font-bold no-underline"
+                        className="text-[#fd151b] font-semibold underline leading-[normal] hover:underline"
                       >
                         Sign in
                       </Link>
@@ -840,7 +840,7 @@ export default function SecureCheckout() {
                       Order Summary
                     </h6>
                     <Link href="/cart" className="">
-                      <button className="text-sm font-semibold text-black underline">
+                      <button className="text-sm font-semibold text-black underline leading-[normal]">
                         Edit Cart
                       </button>
                     </Link>
@@ -887,8 +887,8 @@ export default function SecureCheckout() {
                                 className="w-14 h-14 rounded-[4px] object-cover shrink-0"
                               />
                             )}
-                            <div className="flex-1 min-w-0">
-                              <p className="text-[12px] w-full max-w-[300px] font-semibold text-black line-clamp-2">
+                            <div className="flex-1 min-w-0 alihn-items-center justify-between flex gap-2">
+                              <p className="text-12px w-full max-w-[300px] font-semibold text-black line-clamp-2">
                                 {item.product_name}
                               </p>
                               {isUnavailable && (
@@ -899,7 +899,7 @@ export default function SecureCheckout() {
                                     "Not available for this location"}
                                 </span>
                               )}
-                              <p className="text-right text-sm font-semibold text-black mt-1">
+                              <p className="text-right text-sm font-semibold text-black my-4">
                                 {item.quantity} ×{" "}
                                 {showWasPrice && (
                                   <span className="price old-price">
@@ -927,7 +927,7 @@ export default function SecureCheckout() {
                   <div className="px-4 py-4 flex flex-col gap-3 bg-white">
                     <div className="flex items-center justify-between">
                       <p className="checkout-total-value">Delivery</p>
-                      <p className="text-[14px] font-semibold mr-[5px]">
+                      <p className="fluid-text-sm font-semibold mr-[5px]">
                         ${formatPrice(effectiveShipping)}
                       </p>
                     </div>
@@ -936,7 +936,7 @@ export default function SecureCheckout() {
                       0 && (
                       <div className="flex items-center justify-between">
                         <p className="checkout-total-value">Savings</p>
-                        <p className="text-[14px] font-semibold mr-[5px] text-[#16A249]">
+                        <p className="fluid-text-sm font-semibold mr-[5px] text-[#16A249]">
                           -$
                           {formatPrice(
                             totalSaveAmount + (promoData?.discount_amount || 0),
@@ -950,7 +950,7 @@ export default function SecureCheckout() {
                     <p className="checkout-total-label">
                       Total (incl. GST)
                     </p>
-                    <p className="price text-base">
+                    <p className="price text-lg font-semibold leading-[normal]">
                       ${formatPrice(finalTotal)}
                     </p>
                   </div>
@@ -959,7 +959,7 @@ export default function SecureCheckout() {
                 {/* Mobile/md (below lg, <1024px) — compact Figma layout */}
                 <div className="lg:hidden flex flex-col h-full">
                   {!isAuthenticated && (
-                    <p className="text-center py-4 px-4 text-[15px] font-semibold text-black">
+                    <p className="text-center py-4 px-4 fluid-text-15 font-semibold text-black">
                       Already have an account?{" "}
                       <Link
                         href={`/login?redirect=${encodeURIComponent(pathname)}`}
@@ -1058,7 +1058,7 @@ export default function SecureCheckout() {
                       0 && (
                       <div className="flex items-center justify-between">
                         <p className="checkout-total-value">Savings</p>
-                        <p className="text-[14px] font-semibold leading-[100%] text-[#16A249]">
+                        <p className="fluid-text-sm font-semibold leading-[100%] text-[#16A249]">
                           -$
                           {formatPrice(
                             totalSaveAmount + (promoData?.discount_amount || 0),

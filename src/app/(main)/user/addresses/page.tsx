@@ -151,7 +151,7 @@ export default function AddressesPage() {
           ref={formRef}
           className={`transition-all duration-500`}
         >
-          <h4 className="text-lg text-[24px] font-bold my-1">{editingAddress ? "Edit Address" : "Add Address"}</h4>
+          <h4 className="fluid-text-xl font-bold my-1">{editingAddress ? "Edit Address" : "Add Address"}</h4>
 
           <AddressForm
             editingAddress={editingAddress}

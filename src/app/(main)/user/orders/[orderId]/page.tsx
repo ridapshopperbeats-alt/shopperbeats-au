@@ -136,8 +136,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
       {/* Header */}
       <div className="flex flex-wrap items-center gap-3 order-action justify-between pb-5">
         <h4
-          className="text-[20px] sm:text-[24px] leading-[100%]"
-          style={{ fontWeight: "800" }}
+          className="fluid-text-xl leading-[normal] font-bold capitalize"
         >
           Order Detail
         </h4>
@@ -293,7 +292,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                     <Link
                       href={`/product/${product.unique_code || product.product_id}`}
                     >
-                      <h3 className="cursor-pointer hover:text-red-600 transition-colors">
+                      <h3 className="cursor-pointer hover:text-red-600 transition-colors capitalize leading-[normal]">
                         {product.name}
                       </h3>
                     </Link>

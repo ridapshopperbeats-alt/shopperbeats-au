@@ -58,7 +58,7 @@ export default function ChangePasswordPage() {
     <div className="wishlist-content">
       <h4 className="text-heading-lg my-2">Change Password</h4>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="form-item text-[14px] font-montserrat">
+        <div className="form-item fluid-text-base font-montserrat my-2">
           <label htmlFor="current_password">Current Password</label>
           <div className="password-input">
             <input
@@ -82,7 +82,7 @@ export default function ChangePasswordPage() {
           )}
         </div>
 
-        <div className="form-item text-[14px] font-montserrat">
+        <div className="form-item fluid-text-sm font-montserrat">
           <label htmlFor="new_password">New Password</label>
           <div className="password-input">
             <input
@@ -104,7 +104,7 @@ export default function ChangePasswordPage() {
           {formErrors.new_password && (
             <p className="error">{formErrors.new_password}</p>
           )}
-          <div className="password-content mt-[20px]">
+          <div className="password-content my-4">
             <p>Your password must have:</p>
             <ul>
               <li>Minimum character requirements (e.g., 8-24 characters)</li>
@@ -113,7 +113,7 @@ export default function ChangePasswordPage() {
           </div>
         </div>
 
-        <div className="form-item text-[14px] font-montserrat">
+        <div className="form-item fluid-text-sm font-montserrat">
           <label htmlFor="confirm_password">Confirm New Password</label>
           <div className="password-input">
             <input

@@ -150,7 +150,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
 
   return (
     <div className="">
-      <h4 className="mb-7.5 text-[16px] lg:text-[24px]  leading-[100%]" style={{fontWeight:"700"}}>Add Review</h4>
+      <h4 className="mb-7.5 fluid-text-heading leading-[100%]" style={{fontWeight:"700"}}>Add Review</h4>
 
       <table className="cart-table order-table">
         <tbody>
