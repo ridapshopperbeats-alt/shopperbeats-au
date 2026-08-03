@@ -500,7 +500,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                     <span className="bg-[#EEF8F0] inline-flex w-[84px] h-[30px] text-center items-center justify-center  text-[#267A03]  font-bold  rounded-[5px]">
                       You Save :
                     </span>
-                    <span className="ml-2 text-[#267A03]">
+                    <span className="ml-2 text-[#267A03] font-bold">
                       $ {formatPrice(saveAmount)} (
                       {discountPercentage.toFixed(0)}% Off )
                     </span>

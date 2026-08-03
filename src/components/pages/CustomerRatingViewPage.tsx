@@ -389,53 +389,104 @@ export default function CustomerRatingViewPage({
               onWheel={(e) => e.stopPropagation()}
             >
               {visibleReviews.map((review) => (
-                <div key={review.id} className="flex items-start gap-3 py-3">
-                  <Image
-                    src={
-                      review.reviewer_profile_image ||
-                      "/images/default_user_icon.jpg"
-                    }
-                    alt={review.name}
-                    width={54}
-                    height={54}
-                    className="rounded-full w-10 h-10 object-cover shrink-0"
-                  />
+                <div key={review.id} className="py-3">
+                  {/* Mobile / tablet (below lg): compact layout with avatar + product image */}
+                  <div className="lg:hidden flex items-start gap-3">
+                    <Image
+                      src={
+                        review.reviewer_profile_image ||
+                        "/images/default_user_icon.jpg"
+                      }
+                      alt={review.name}
+                      width={54}
+                      height={54}
+                      className="rounded-full w-10 h-10 object-cover shrink-0"
+                    />
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center justify-between gap-2 lg:flex-nowrap">
-                      <div className="order-1 flex flex-wrap items-center gap-2 lg:gap-6">
-                        <span className="font-semibold text-[13px] lg:text-[16px] leading-[13px] capitalize text-[#0F0F0F]">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-semibold text-[13px] leading-[13px] capitalize text-[#0F0F0F]">
                           {review.name}
                         </span>
 
-                        <div className="shrink-0">
-                          <StarRating rating={review.rating} size={13} />
-                        </div>
+                        <span className="shrink-0 text-[12px] text-[#696e79]">
+                          {review.date}
+                        </span>
+                      </div>
+
+                      <div className="mt-1 flex items-center gap-2">
+                        <StarRating rating={review.rating} size={13} />
 
                         {review.verified && (
-                          <span className="whitespace-nowrap font-normal text-[12px] lg:text-[14px] leading-[18px] capitalize text-[#00AD34]">
+                          <span className="whitespace-nowrap font-normal text-[12px] leading-[18px] capitalize text-[#00AD34]">
                             Verified Purchase
                           </span>
                         )}
                       </div>
 
-                      <span className="order-2 text-[12px] text-[#696e79] lg:ml-auto">
-                        {review.date}
-                      </span>
+                      <p className="mt-1 text-[13px] text-[#696e79]">
+                        {review.comment}
+                      </p>
                     </div>
 
-                    <p className="mt-1 text-[13px] text-[#696e79]">
-                      {review.comment}
-                    </p>
+                    <Image
+                      src={getReviewImage(review)}
+                      alt="Reviewed product"
+                      width={75}
+                      height={75}
+                      className="rounded-[6px] w-14 h-14 object-cover shrink-0"
+                    />
                   </div>
 
-                  <Image
-                    src={getReviewImage(review)}
-                    alt="Reviewed product"
-                    width={75}
-                    height={75}
-                    className="rounded-[6px] w-14 h-14 object-cover shrink-0"
-                  />
+                  {/* Desktop (lg and up): original layout with avatar + product image */}
+                  <div className="hidden lg:flex items-start gap-3">
+                    <Image
+                      src={
+                        review.reviewer_profile_image ||
+                        "/images/default_user_icon.jpg"
+                      }
+                      alt={review.name}
+                      width={54}
+                      height={54}
+                      className="rounded-full w-10 h-10 object-cover shrink-0"
+                    />
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-6">
+                          <span className="font-semibold text-[16px] leading-[13px] capitalize text-[#0F0F0F]">
+                            {review.name}
+                          </span>
+
+                          <div className="shrink-0">
+                            <StarRating rating={review.rating} size={13} />
+                          </div>
+
+                          {review.verified && (
+                            <span className="whitespace-nowrap font-normal text-[14px] leading-[18px] capitalize text-[#00AD34]">
+                              Verified Purchase
+                            </span>
+                          )}
+                        </div>
+
+                        <span className="text-[12px] text-[#696e79] ml-auto">
+                          {review.date}
+                        </span>
+                      </div>
+
+                      <p className="mt-1 text-[13px] text-[#696e79]">
+                        {review.comment}
+                      </p>
+                    </div>
+
+                    <Image
+                      src={getReviewImage(review)}
+                      alt="Reviewed product"
+                      width={75}
+                      height={75}
+                      className="rounded-[6px] w-14 h-14 object-cover shrink-0"
+                    />
+                  </div>
                 </div>
               ))}
             </div>
