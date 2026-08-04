@@ -70,8 +70,6 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
   defaultVariantId,
   variants = [],
   unique_code,
-  wishlistItems = [],
-  vendor_id,
   stock,
   ships_from_location,
   handling_time_days,

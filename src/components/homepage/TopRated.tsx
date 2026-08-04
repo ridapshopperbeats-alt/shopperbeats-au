@@ -170,11 +170,11 @@ export default function TopBrands() {
               <div className="banner-gradient-overlay" />
 
               <div className="absolute p-6 w-[226px] flex flex-col ">
-                <h3 className="text-white fluid-text-xl font-extrabold">
+                <h3 className="text-white text-[13px] md:text-[18px] font-bold">
                   {brand.title}
                 </h3>
 
-                <p className="text-white fluid-text-sm font-semibold">
+                <p className="text-white text-[10px] md:text-[12px] font-medium">
                   {brand.subtitle}
                 </p>
               </div>

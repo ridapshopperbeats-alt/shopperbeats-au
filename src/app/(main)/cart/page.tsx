@@ -781,7 +781,7 @@ const Cart = () => {
                       {qtySelector}
 
                       <div className="flex flex-col items-end leading-tight">
-                        <span className="text-[#fd151b] font-semibold fluid-text-base leading-tight">
+                        <span className="text-[#fd151b] font-bold fluid-text-base leading-tight">
                           ${formatPrice(item.final_price ?? itemSubtotal)}
                         </span>
                         {showWasPrice && (

@@ -104,7 +104,7 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
             </div>
           )}
 
-          <div className="form-item select-field">
+          <div className="form-item">
             <Input
               type="text"
               name="country"
