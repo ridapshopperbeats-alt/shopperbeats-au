@@ -1,8 +1,9 @@
 @reference "tailwindcss";
 
 .checkout-form input::placeholder {
-  @apply font-medium text-sm leading-none tracking-normal;
+  @apply font-medium leading-none tracking-normal;
   font-family: var(--font-montserrat);
+  font-size: 16px !important;
 }
 
 .checkout-wrapper {
@@ -64,8 +65,9 @@ button.zip {
 }
 
 .delivery-details input::placeholder {
-  @apply font-medium text-sm leading-5 tracking-normal text-[#4f4f4f];
+  @apply font-medium leading-5 tracking-normal text-[#4f4f4f];
   font-family: var(--font-montserrat);
+  font-size: 16px !important;
 }
 
 .checkout-form .payment-card.active {

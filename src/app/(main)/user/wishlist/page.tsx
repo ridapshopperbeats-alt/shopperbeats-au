@@ -135,7 +135,7 @@ export default function WishlistPage() {
 
   return (
     <div className="wishlist-content">
-      <h4 className="wishlist-title">Wishlist</h4>
+      <h4 className="wishlist-title fluid-text-xl">Wishlist</h4>
       <div className="wishlist-table-header">
         <div className="wishlist-col-product">Product</div>
         <div className="wishlist-col-span-2">Price</div>
