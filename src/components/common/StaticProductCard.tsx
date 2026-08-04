@@ -29,7 +29,7 @@ const renderTag = (tag: string | undefined) => {
   switch (tag) {
     case "hotseller":
       return (
-        <div className="absolute bg-[#01295F] text-white w-[70px] h-[18px] md:w-[90px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
+        <div className="absolute bg-[#01295F] text-white w-[80px] h-[18px] md:w-[90px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
           <ThumbUpIcon sx={{ fontSize: { xs: "10px", md: "11px" } }} />
           Bestseller
         </div>
@@ -37,7 +37,7 @@ const renderTag = (tag: string | undefined) => {
 
     case "new":
       return (
-        <div className="absolute bg-[#787FFF] text-white w-[60px] h-[18px] md:w-[60px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
+        <div className="absolute bg-[#787FFF] text-white w-[50px] h-[18px] md:w-[60px] md:h-[19px] top-[10px] left-[10px] text-[10px] md:text-[12px] font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
           <StarIcon sx={{ fontSize: { xs: "10px", md: "11px" } }} />
           New
         </div>
@@ -45,7 +45,7 @@ const renderTag = (tag: string | undefined) => {
 
     case "bestseller":
       return (
-        <div className="absolute top-[10px] left-[10px] z-10 flex h-[18px] w-[80px] items-center justify-center gap-1 rounded-[5px] bg-[#FFB30F] text-[10px] font-medium leading-[18px] text-white md:h-[19px] md:w-[80px] md:text-[12px]">
+        <div className="absolute top-[10px] left-[10px] z-10 flex h-[18px] w-[70px] items-center justify-center gap-1 rounded-[5px] bg-[#FFB30F] text-[10px] font-medium leading-[18px] text-white md:h-[19px] md:w-[80px] md:text-[12px]">
           <WhatshotIcon sx={{ fontSize: { xs: "10px", md: "11px" } }} />
           Hotseller
         </div>
@@ -177,7 +177,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 </span>
 
                 {showWasPrice && wasPrice && (
-                  <span className="text-[10px] md:text-[12px] font-light text-[#535766] line-through">
+                  <span className="text-[11px] font-light text-[#535766] line-through">
                     ${formatPrice(wasPrice)}
                   </span>
                 )}
@@ -217,7 +217,9 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 </div>
               )}
 
-              <p className="text-[13px] font-normal text-[#FF4400]">Extra 10% Off with Code: SHBS10</p>
+              <p className="text-[12px] md:text-[13px] font-normal text-[#FF4400]">
+                Extra 10% Off with Code: SHBS10
+              </p>
             </div>
 
             <div className="w-full px-2 lg:px-3 flex justify-center mt-2">
