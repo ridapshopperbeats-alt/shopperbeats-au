@@ -221,7 +221,7 @@ const StaticProductDisplay: React.FC<StaticProductDisplayProps> = ({
             <button
               type="button"
               onClick={() => setShowMobileSort(true)}
-              className="flex-1 flex items-center justify-center gap-2 py-3 font-montserrat font-normal text-[16px] leading-[18px] tracking-[0%] capitalize text-[#001325A3] cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 py-3 font-montserrat font-normal md:text-[16px] leading-[18px] tracking-[0%] capitalize text-[#001325A3] cursor-pointer"
             >
               <Image
                 src="/images/sortBy.svg"

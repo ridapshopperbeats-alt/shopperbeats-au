@@ -246,7 +246,7 @@ export default function Footer({
 
             {/* Newsletter */}
             <div className="footer-block footer-newsletter">
-              <h5 className="fluid-text-sm text-white leading-[28px] font-extrabold leading-[normal]">JOIN OUR MAILING LIST</h5>
+              <h5 className="text-[16px] font-extrabold text-white leading-[28px] leading-[normal]">JOIN OUR MAILING LIST</h5>
               <p className="footer-newsletter-desc">
                 Enter your email to get $10 off and free shipping
               </p>
