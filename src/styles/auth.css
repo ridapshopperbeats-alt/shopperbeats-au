@@ -153,7 +153,7 @@
 
 /* wishlist page css */
 .wishlist-title {
-    @apply font-bold text-2xl leading-[normal] mb-5 capitalize;
+    @apply font-bold text-[24px] leading-[normal] mb-5 capitalize;
 }
 
 .wishlist-table-header {
@@ -165,7 +165,7 @@
 }
 
 .wishlist-col-span-2 {
-    @apply lg:col-span-2 text-black leading-[normal] font-[700] text-lg capitalize;
+    @apply lg:col-span-2 text-black leading-[normal] font-[700]  capitalize;
 }
 
 .wishlist-card {
@@ -181,7 +181,7 @@
 }
 
 .wishlist-item-name {
-    @apply font-black text-base leading-[normal] font-semibold capitalize not-italic mb-5 text-left;
+    @apply font-black  leading-[normal] font-semibold capitalize not-italic mb-5 text-left;
 }
 
 .wishlist-cell {
