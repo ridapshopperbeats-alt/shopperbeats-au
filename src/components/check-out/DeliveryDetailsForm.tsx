@@ -26,7 +26,7 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
       <div className="delivery-card-box">
         <div className="delivery-details ">
           <div className="mb-5 delivery-option-row">
-            <label className="flex items-center gap-2 font-bold fluid-text-sm leading-[20px] text-black">
+            <label className="flex items-center gap-2 font-bold fluid-text-12-16 leading-[20px] text-black">
               <input
                 type="radio"
                 name="deliveryOption"

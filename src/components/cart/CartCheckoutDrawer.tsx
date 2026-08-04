@@ -70,7 +70,7 @@ export default function CartCheckoutDrawer({
             aria-label="Close cart"
             className="cart-drawer-close-btn"
           >
-            <span className="cart-drawer-close-icon-wrapper">
+            <span>
               <X className="cart-drawer-close-icon" strokeWidth={3} />
             </span>
           </button>
@@ -125,18 +125,18 @@ export default function CartCheckoutDrawer({
                       ? "Leaves Warehouse In Next Business Day"
                       : `Leaves Warehouse In 1-${item.handling_time_days ?? 2} Business Days`}
                   </p>
-                  {size && (
+                  {/* {size && ( */}
                     <p className="cart-drawer-item-attr-label">
                       Size :
-                      <span className="cart-drawer-item-attr-value"> {size || "N/A"}</span>
+                      <span className="cart-drawer-item-attr-value"> {size || "S"}</span>
                     </p>
-                  )}
-                  {colour && (
+                  {/* )} */}
+                  {/* {colour && ( */}
                     <p className="cart-drawer-item-attr-label">
                       Colour :
-                      <span className="cart-drawer-item-attr-value-sm">{colour || "N/A"}</span>
+                      <span className="cart-drawer-item-attr-value-sm">{colour || "Red"}</span>
                     </p>
-                  )}
+                  {/* )} */}
 
                   <div className="cart-drawer-qty-row">
                     <div className="cart-drawer-qty-left">
@@ -162,6 +162,16 @@ export default function CartCheckoutDrawer({
                       </div>
                     </div>
 
+                   
+                  </div>
+
+                  <div className="cart-drawer-price-remove-row">
+                    <p className="cart-drawer-price-row">
+                      <span className="cart-drawer-item-attr-label">Price : </span>
+                      <span className="cart-drawer-price-value">
+                        ${formatPrice(item.final_price ?? mainPrice)}kk
+                      </span>
+                    </p>
                     <button
                       type="button"
                       onClick={() => onRemove(item.product_id, item.variant_id)}
@@ -170,13 +180,6 @@ export default function CartCheckoutDrawer({
                       Remove
                     </button>
                   </div>
-
-                  <p className="cart-drawer-price-row">
-                    <span className="cart-drawer-item-attr-label">Price : </span>
-                    <span className="cart-drawer-price-value">
-                      ${formatPrice(item.final_price ?? mainPrice)}
-                    </span>
-                  </p>
                 </div>
               </div>
             );

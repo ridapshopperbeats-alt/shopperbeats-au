@@ -412,8 +412,17 @@ button.zip {
 
 .delivery-checkbox-label,
 .form-item .delivery-checkbox-label {
-  @apply flex items-center gap-2 mt-5 text-sm font-normal leading-5 tracking-normal text-[#4f4f4f];
+  @apply flex items-center gap-2 mt-5 leading-5 tracking-normal text-[#4F4F4F];
   font-family: var(--font-montserrat);
+  font-size: clamp(0.875rem, 0.875rem, 0.875rem);
+  font-weight: 500;
+}
+
+@media screen and (min-width: 768px) {
+  .delivery-checkbox-label,
+  .form-item .delivery-checkbox-label {
+    font-weight: 400;
+  }
 }
 .delivery-checkbox-label2 {
   @apply flex items-center gap-2 mt-5 text-sm font-normal leading-5 tracking-normal text-[#4f4f4f];
@@ -457,7 +466,7 @@ button.zip {
 }
 
 .payment-subtext {
-  @apply text-[#4f4f4f] text-sm font-normal leading-5;
+  @apply text-[#4f4f4f]  text-[0.875rem] font-normal leading-5;
   font-family: var(--font-montserrat);
 }
 
@@ -476,7 +485,7 @@ button.zip {
 }
 
 .payment-method-name {
-  @apply flex items-center gap-2 text-sm font-bold leading-[normal] capitalize;
+  @apply flex items-center gap-2 text-[0.875rem] font-bold leading-[normal] capitalize;
 }
 
 .checkout-form .payment-logos {
@@ -488,7 +497,21 @@ button.zip {
 }
 
 .billing-toggle-row {
-  @apply py-2 flex items-center gap-2 text-sm font-normal text-[#4f4f4f];
+  @apply py-2 flex items-center gap-2 text-[#4f4f4f];
+  font-size: clamp(0.875rem, 0.875rem, 0.875rem);
+  font-weight: 500;
+}
+
+@media screen and (max-width: 767px) {
+  .billing-toggle-row {
+    font-weight: 500;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .billing-toggle-row {
+    font-weight: 400;
+  }
 }
 
 .billing-address-block {
