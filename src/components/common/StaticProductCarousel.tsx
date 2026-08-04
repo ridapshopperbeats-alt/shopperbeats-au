@@ -17,7 +17,7 @@ export default function StaticProductCarousel({
   link,
 }: StaticProductCarouselProps) {
   return (
-    <div className="w-full">
+    <div className="w-full px-[10px]">
       <div className="flex justify-between gap-4">
         <div className="w-full">
           <div className="flex flex-col gap-1 w-full my-1">
@@ -51,7 +51,7 @@ export default function StaticProductCarousel({
           slideClassName=""
           keyExtractor={(product) => product.unique_code || product.id || ""}
           renderItem={(product) => (
-            <div className="w-[180px] h-[380px] md:w-[270px] md:h-[460px]">
+            <div className="w-[180px] h-[380px] md:w-[271px] md:h-[460px]">
               <StaticProductCard {...product} />
             </div>
           )}
