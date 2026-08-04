@@ -190,7 +190,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                   onClick={() => handleAttributeChange(attrName, item.value)}
                   aria-label={item.value}
                   title={item.value}
-                  className={`w-auto px-2 h-10 rounded-[8px] border cursor-pointer fluid-text-sm font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                  className={`w-10 px-2 h-10 rounded-[8px] border cursor-pointer fluid-text-sm font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
                     isSelected
                       ? "border-[#FD151B] text-[#FD151B]"
                       : "border-[#CCCCCC] text-[#1D265F]/50"
