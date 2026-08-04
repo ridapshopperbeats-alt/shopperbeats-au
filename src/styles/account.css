@@ -372,7 +372,6 @@
     font-style: normal;
     line-height: normal;
     margin-bottom: 5px;
-    font-size: 0.875rem; 
 }
 
 .password-content ul {
@@ -386,7 +385,6 @@
     list-style: disc;
     color: var(--gray);
     font-weight: 500;
-    font-size: 0.875rem; 
     font-style: normal;
     line-height: normal;
 }

@@ -314,7 +314,7 @@ input[type="password"],
 input[type="date"],
 input[type="tel"],
 textarea {
-  @apply !text-base px-[10px] border border-[var(--lightgray)] bg-[var(--white)] h-[41px] w-full shadow-none !rounded-[5px] !font-medium leading-normal;
+  @apply  px-[10px] border border-[var(--lightgray)] bg-[var(--white)] h-[41px] w-full shadow-none !rounded-[5px] !font-medium leading-normal;
   font-style: medium;
 }
 
@@ -372,7 +372,7 @@ input[type="password"]::-ms-clear {
 }
 
 .form-item label {
-  @apply block my-4 font-medium text-base leading-[normal];
+  @apply block my-4 font-medium  leading-[normal];
 }
 
 .password-input {
@@ -402,7 +402,7 @@ input[type="password"]::-ms-clear {
 }
 
 .btn {
-  @apply inline-block font-semibold text-center cursor-pointer rounded-[100px] text-base text-[var(--primary)] px-5 py-[12.5px] !leading-[21px] capitalize;
+  @apply inline-block font-semibold text-center cursor-pointer rounded-[100px]  text-[var(--primary)] px-5 py-[12.5px] !leading-[21px] capitalize;
 }
 
 .btn-white {
