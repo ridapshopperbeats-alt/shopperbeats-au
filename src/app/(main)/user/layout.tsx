@@ -14,13 +14,11 @@ export default function UserLayout({
 }) {
   const pathname = usePathname();
   const isPersonalInformation = pathname === "/user/personal-information";
-  const isReviewPage = pathname.endsWith("/review");
-  const usesPlainWrapper = isPersonalInformation || isReviewPage;
 
   const getPageTitle = () => {
     switch (pathname) {
       case "/user/personal-information":
-        return "Personal Information";
+        return "My Profile";
       case "/user/orders":
         return "My Orders";
       case "/user/addresses":
@@ -36,32 +34,48 @@ export default function UserLayout({
     }
   };
 
+  const getPageSubtitle = () => {
+    switch (pathname) {
+      case "/user/personal-information":
+        return "Manage your personal information and account preferences";
+      default:
+        return undefined;
+    }
+  };
+
   return (
     <div>
-      <Banner
-        title={getPageTitle()}
-        image={
-          <Image
-            src="/images/profile/profile-banner.svg"
-            alt="Profile Banner"
-            width={1920}
-            height={218}
-            priority
-            fetchPriority="high"
-          />
-        }
-      />
+        <Banner
+          title={getPageTitle()}
+          subtitle={getPageSubtitle()}
+          titleClassName={
+            isPersonalInformation
+              ? "font-montserrat text-[32px]! font-semibold! leading-[24px]! text-[#01295F]!"
+              : undefined
+          }
+          subtitleClassName={
+            isPersonalInformation
+              ? "font-montserrat text-[16px]! font-semibold! leading-[19.5px]! text-[#6A7282]!"
+              : undefined
+          }
+          image={
+            <Image
+              src="/images/Group 1261155781.png"
+              alt="Profile Banner"
+              width={1920}
+              height={218}
+              priority
+              fetchPriority="high"
+            />
+          }
+        />
       <div className="py-7">
         <div className="container">
           <div className="flex flex-col md:flex-row gap-6 justify-center">
             <Sidebar links={sidebarLinks} variant="account" />
 
             <div
-              className={
-                usesPlainWrapper
-                  ? "flex w-full max-w-[1118px] justify-center"
-                  : "content shadow-[0px_0px_14px_rgba(0,0,0,0.08)] w-full lg:w-85-imp"
-              }
+              className="flex w-full max-w-[1118px] justify-center"
               style={{ marginTop: "0" }}
             >
               <Suspense fallback={<div>Loading...</div>}>
