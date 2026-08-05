@@ -51,7 +51,7 @@ export default function UserLayout({
       <div className="py-7">
         <div className="container">
           <div className="flex flex-col md:flex-row gap-6">
-            <Sidebar links={sidebarLinks} extraClass="w-full max-w-[400px]" textStyle={{ fontSize: "clamp(16px, 2vw, 18px)", fontWeight: "700", color: "#000000", }} />
+            <Sidebar links={sidebarLinks} variant="account" />
 
             <div className="content shadow-[0px_0px_14px_rgba(0,0,0,0.08)] w-full lg:w-85-imp" style={{ marginTop: "0" }}>
               <Suspense fallback={<div>Loading...</div>}>

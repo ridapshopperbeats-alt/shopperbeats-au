@@ -2,7 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ComponentType } from "react";
+import {
+  User,
+  Package,
+  MapPin,
+  Heart,
+  Lock,
+  LogOut,
+  CircleX,
+} from "lucide-react";
 
 interface SidebarLink {
   href: string;
@@ -16,7 +25,23 @@ interface SidebarProps {
   onChange?: (label: string) => void;
   style?: CSSProperties;
   textStyle?: CSSProperties;
+  variant?: "tabs" | "account";
+  title?: string;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
+
+const ACCOUNT_ICONS: Record<
+  string,
+  ComponentType<{ size?: number; className?: string }>
+> = {
+  "Personal Information": User,
+  "My Orders": Package,
+  "Manage Address": MapPin,
+  Wishlist: Heart,
+  "Change Password": Lock,
+  Logout: LogOut,
+};
 
 export default function Sidebar({
   links,
@@ -25,58 +50,104 @@ export default function Sidebar({
   extraClass,
   style,
   textStyle,
+  title = "My Account",
+  isOpen = false,
+  onClose,
 }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <div
-      className={`bg-white w-full md:max-w-[260px] lg:max-w-[280px] overflow-x-auto pt-4  rounded-[8px] xl:p-4 scrollbar-hide [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:display-none
-        ${extraClass || ""} 
-      `}
-      style={style}
-    >
-      {/* Mobile Horizontal Scroll */}
-      <ul className="flex md:flex-col gap-1 lg:gap-4 w-full">
-        {links.map((link) => {
-          const isActive =
-            active === link.label || pathname.startsWith(link.href);
+    <>
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 lg:hidden ${
+          isOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+        onClick={onClose}
+      />
 
-          return (
-            <li
-              key={link.href}
-              className="flex-1 md:w-full flex justify-center"
-            >
-              <Link
-                href={link.href}
-                scroll={false}
-                style={textStyle}
-                className={`
-            flex md:block items-center justify-center
-            w-full
-            px-3 md:px-2
-           md:py-1
-            text-center
-            text-[14px]
-            leading-[20px]
-            transition-colors
-            duration-200 
-            ${isActive
-                    ? "bg-[#FD151B] text-white"
-                    : "text-[rgba(0,0,0,0.56)] hover:text-black"
-                  }
-          `}
-                onClick={() => onChange?.(link.label)}
-              >
-                <span
-                  className={` inline-block whitespace-nowrap md:flex items-center justify-center w-fit ${isActive ? "bg-[#FD151B] text-white px-3 py-2 " : ""}`}
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 right-0 z-50 h-screen w-[250px] bg-white border-l border-[#E5E7EB] shadow-[0_0_8px_2px_#4B4B4B1A] transform transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        } lg:static lg:h-[310px] lg:w-[250px] lg:translate-x-0 lg:rounded-[14px] lg:border lg:border-[#E5E7EB] ${
+          extraClass || ""
+        }`}
+        style={style}
+      >
+        <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#E5E7EB]">
+          <span className="font-extrabold text-[12px] uppercase tracking-[1.2px] text-[#99A1AF]">
+            {title}
+          </span>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="lg:hidden cursor-pointer text-[#99A1AF]"
+          >
+            <CircleX size={18} />
+          </button>
+        </div>
+
+        <ul className="flex flex-col gap-1 p-2">
+          {links.map((link) => {
+            const isActive =
+              active === link.label || pathname.startsWith(link.href);
+
+            const isLogout = link.label === "Logout";
+
+            const Icon = ACCOUNT_ICONS[link.label];
+
+            return (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  scroll={false}
+                  style={textStyle}
+                  onClick={() => {
+                    onChange?.(link.label);
+                    onClose?.();
+                  }}
+                  className={`flex items-center justify-between gap-3 rounded-[10px] px-3 py-2.5 transition-colors duration-200 ${
+                    isActive ? "bg-[#FEF2F2]" : ""
+                  }`}
                 >
-                  {link.label}
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+                  <span className="flex items-center gap-3">
+                    {Icon && (
+                      <Icon
+                        size={16}
+                        className={
+                          isActive || isLogout
+                            ? "text-[#FD151B]"
+                            : "text-[#99A1AF]"
+                        }
+                      />
+                    )}
+
+                    <span
+                      className={`text-[14px] ${
+                        isActive
+                          ? "font-semibold text-[#FD151B]"
+                          : isLogout
+                          ? "font-medium text-[#FD151B]"
+                          : "font-medium text-[#4A5565]"
+                      }`}
+                    >
+                      {link.label}
+                    </span>
+                  </span>
+
+                  {isActive && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FD151B] shrink-0" />
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </>
   );
 }
