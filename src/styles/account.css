@@ -24,12 +24,12 @@
     color: var(--white);
 }
 
-.content {
+/* .content {
     width: 80%;
     background: var(--white);
     padding: 20px;
     border-radius: 8px;
-}
+} */
 
 .profile-img {
     position: relative;

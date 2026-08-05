@@ -13,6 +13,7 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const isPersonalInformation = pathname === "/user/personal-information";
 
   const getPageTitle = () => {
     switch (pathname) {
@@ -50,10 +51,17 @@ export default function UserLayout({
       />
       <div className="py-7">
         <div className="container">
-          <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex flex-col md:flex-row gap-6 justify-center">
             <Sidebar links={sidebarLinks} variant="account" />
 
-            <div className="content shadow-[0px_0px_14px_rgba(0,0,0,0.08)] w-full lg:w-85-imp" style={{ marginTop: "0" }}>
+            <div
+              className={
+                isPersonalInformation
+                  ? "flex w-full max-w-[1118px] justify-center"
+                  : "content shadow-[0px_0px_14px_rgba(0,0,0,0.08)] w-full lg:w-85-imp"
+              }
+              style={{ marginTop: "0" }}
+            >
               <Suspense fallback={<div>Loading...</div>}>
                 {children}
               </Suspense>

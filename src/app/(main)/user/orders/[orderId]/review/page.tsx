@@ -7,14 +7,20 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
 
-
 import "../../../../../../styles/Checkout.css";
 import "../../../../../../styles/Cart.css";
 import "../../../../../../styles/Product.css";
-import { useAddReviewMutation, useGetOrderByIdQuery } from "@/lib/redux/apis/order-api";
+import {
+  useAddReviewMutation,
+  useGetOrderByIdQuery,
+} from "@/lib/redux/apis/order-api";
 import { useUploadAnyImageMutation } from "@/lib/redux/apis/products-api";
-import { findOrderProduct, getOrderProductImage, getReviewProductId } from "@/lib/utils/order-products";
-import { Star } from "lucide-react";
+import {
+  findOrderProduct,
+  getOrderProductImage,
+  getReviewProductId,
+} from "@/lib/utils/order-products";
+import { ChevronLeft, Star } from "lucide-react";
 import Button from "@/components/common/Button";
 import { getStaticOrder, isStaticOrderId } from "@/lib/mock/static-orders";
 
@@ -29,10 +35,11 @@ export default function ReviewForm({ params }: ReviewPageProps) {
   const productIdParam = searchParams.get("product_id");
 
   const isStatic = isStaticOrderId(orderId);
-  const { data: fetchedOrder, isLoading, isError } = useGetOrderByIdQuery(
-    orderId,
-    { skip: isStatic },
-  );
+  const {
+    data: fetchedOrder,
+    isLoading,
+    isError,
+  } = useGetOrderByIdQuery(orderId, { skip: isStatic });
   const order = isStatic ? getStaticOrder(orderId) : fetchedOrder;
   const [addReview] = useAddReviewMutation();
   const [uploadImage] = useUploadAnyImageMutation();
@@ -122,12 +129,14 @@ export default function ReviewForm({ params }: ReviewPageProps) {
     }
   };
 
-
   if ((!isStatic && isError) || !order) {
     return (
       <div>
         <p>Order not found.</p>
-        <Link href="/user/orders" className="btn btn-red btn-filled btn-sharp mt-20">
+        <Link
+          href="/user/orders"
+          className="btn btn-red btn-filled btn-sharp mt-20"
+        >
           Back to Orders
         </Link>
       </div>
@@ -150,7 +159,20 @@ export default function ReviewForm({ params }: ReviewPageProps) {
 
   return (
     <div className="">
-      <h4 className="mb-7.5 fluid-text-heading leading-[100%]" style={{fontWeight:"700"}}>Add Review</h4>
+      <div>
+        <Link
+          href="/user/orders"
+          className="font-semibold text-[12px] leading-[18px] text-[#99a1af] inline-flex"
+        >
+          <ChevronLeft size={16} /> Back to My Orders
+        </Link>
+      </div>
+      <h4
+        className="mb-7.5 fluid-text-heading leading-[100%]"
+        style={{ fontWeight: "700" }}
+      >
+        Add Review
+      </h4>
 
       <table className="cart-table order-table">
         <tbody>
@@ -283,9 +305,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
               size={24}
               onClick={() => handleStarClick(val)}
               className={
-                rating >= val
-                  ? "fill-[#FFCB45] text-[#FFCB45]"
-                  : "text-black"
+                rating >= val ? "fill-[#FFCB45] text-[#FFCB45]" : "text-black"
               }
               style={{ cursor: "pointer", marginRight: "5px" }}
             />
