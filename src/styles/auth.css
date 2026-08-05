@@ -153,7 +153,7 @@
 
 /* wishlist page css */
 .wishlist-title {
-    @apply font-bold text-[24px] leading-[normal] mb-5 capitalize;
+    @apply font-bold leading-[normal] mb-5 capitalize;
 }
 
 .wishlist-table-header {

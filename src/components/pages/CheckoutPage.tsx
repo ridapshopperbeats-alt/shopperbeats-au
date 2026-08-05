@@ -840,7 +840,7 @@ export default function SecureCheckout() {
                       Order Summary
                     </h6>
                     <Link href="/cart" className="">
-                      <button className="text-sm font-semibold text-black underline leading-[normal]">
+                      <button className="fluid-text-xs font-semibold text-black underline leading-[normal]">
                         Edit Cart
                       </button>
                     </Link>
@@ -926,8 +926,8 @@ export default function SecureCheckout() {
 
                   <div className="px-4 py-4 flex flex-col gap-3 bg-white">
                     <div className="flex items-center justify-between">
-                      <p className="checkout-total-value">Delivery</p>
-                      <p className="fluid-text-sm font-semibold mr-[5px]">
+                      <p className="checkout-total-value text-[0.875rem]">Delivery</p>
+                      <p className="text-[0.875rem] font-semibold mr-[5px]">
                         ${formatPrice(effectiveShipping)}
                       </p>
                     </div>
@@ -935,8 +935,8 @@ export default function SecureCheckout() {
                     {totalSaveAmount + (promoData?.discount_amount || 0) >
                       0 && (
                       <div className="flex items-center justify-between">
-                        <p className="checkout-total-value">Savings</p>
-                        <p className="fluid-text-sm font-semibold mr-[5px] text-[#16A249]">
+                        <p className="checkout-total-value text-[0.875rem]">Savings</p>
+                        <p className="text-[0.875rem] font-semibold mr-[5px] text-[#16A249]">
                           -$
                           {formatPrice(
                             totalSaveAmount + (promoData?.discount_amount || 0),
@@ -950,7 +950,7 @@ export default function SecureCheckout() {
                     <p className="checkout-total-label">
                       Total (incl. GST)
                     </p>
-                    <p className="price text-lg font-semibold leading-[normal]">
+                    <p className="price text-[1.125rem] font-semibold leading-[normal]">
                       ${formatPrice(finalTotal)}
                     </p>
                   </div>
@@ -959,7 +959,7 @@ export default function SecureCheckout() {
                 {/* Mobile/md (below lg, <1024px) — compact Figma layout */}
                 <div className="lg:hidden flex flex-col h-full">
                   {!isAuthenticated && (
-                    <p className="text-center py-4 px-4 fluid-text-15 font-semibold text-black">
+                    <p className="text-center py-4 px-4 fluid-text-13-16 font-semibold text-black">
                       Already have an account?{" "}
                       <Link
                         href={`/login?redirect=${encodeURIComponent(pathname)}`}
@@ -976,7 +976,7 @@ export default function SecureCheckout() {
                     </h6>
                     <a
                       href="/cart"
-                      className="text-sm font-semibold text-black"
+                      className="fluid-text-xs font-semibold text-black"
                     >
                       Edit Cart
                     </a>
@@ -1048,7 +1048,7 @@ export default function SecureCheckout() {
 
                   <div className="px-4 py-4 flex flex-col gap-3 bg-white">
                     <div className="flex items-center justify-between">
-                      <p className="checkout-total-value">Delivery</p>
+                      <p className="checkout-total-value text-[0.875rem]">Delivery</p>
                       <p className="price text-sm">
                         ${formatPrice(effectiveShipping)}
                       </p>
@@ -1057,7 +1057,7 @@ export default function SecureCheckout() {
                     {totalSaveAmount + (promoData?.discount_amount || 0) >
                       0 && (
                       <div className="flex items-center justify-between">
-                        <p className="checkout-total-value">Savings</p>
+                        <p className="checkout-total-value text-[0.875rem]">Savings</p>
                         <p className="fluid-text-sm font-semibold leading-[100%] text-[#16A249]">
                           -$
                           {formatPrice(
@@ -1072,7 +1072,7 @@ export default function SecureCheckout() {
                     <p className="checkout-total-label">
                       Total (incl. GST)
                     </p>
-                    <p className="price text-base">
+                    <p className="price text-[1.125rem]">
                       ${formatPrice(finalTotal)}
                     </p>
                   </div>
