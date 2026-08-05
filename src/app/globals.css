@@ -1468,3 +1468,8 @@ input[type="radio"] {
 .tab-content-image {
   @apply w-full max-w-[1300px] h-[260px] object-cover;
 }
+
+.review-input::placeholder {
+  font-size: 12px;
+  color: #BBBBBB;
+}

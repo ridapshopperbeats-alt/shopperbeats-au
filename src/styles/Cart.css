@@ -345,9 +345,7 @@
 .cart-drawer-title {
   @apply font-montserrat
          font-bold
-         text-[clamp(1.25rem,2vw,1.25rem)]
          sm:font-black
-         sm:text-[clamp(1.25rem,2vw,1.25rem)]
          leading-none
          tracking-normal
          text-left
@@ -355,6 +353,7 @@
          capitalize
          text-black
          whitespace-nowrap;
+  font-size: clamp(1.25rem, 2vw, 1.25rem);
 }
 .cart-drawer-close-btn {
   @apply flex items-center justify-center w-[11.9px] h-[12px] text-[#000000] sm:absolute sm:right-5 sm:w-auto sm:h-auto sm:text-[#D3D3D3] cursor-pointer;
@@ -389,23 +388,28 @@
 }
 
 .cart-drawer-item-name {
-  @apply font-montserrat font-semibold text-[clamp(0.75rem,0.693rem+0.286vw,0.875rem)] leading-[normal] tracking-[0%] capitalize text-black max-w-[296px] line-clamp-2;
+  @apply font-montserrat font-semibold leading-[normal] tracking-[0%] capitalize text-black max-w-[296px] line-clamp-2;
+  font-size: clamp(0.75rem, 0.693rem + 0.286vw, 0.875rem);
 }
 
 .cart-drawer-item-handling {
-  @apply font-montserrat font-medium  text-[clamp(0.75rem,1vw,0.75rem)] leading-[normal] tracking-[0%] capitalize text-[#726969] max-w-[238px];
+  @apply font-montserrat font-medium leading-[normal] tracking-[0%] capitalize text-[#726969] max-w-[238px];
+  font-size: clamp(0.75rem, 1vw, 0.75rem);
 }
 
 .cart-drawer-item-attr-label {
-  @apply font-montserrat font-semibold text-[clamp(0.75rem,1vw,0.75rem)] leading-[normal] tracking-[0%] capitalize text-[#000000] max-w-[179px];
+  @apply font-montserrat font-semibold leading-[normal] tracking-[0%] capitalize text-[#000000] max-w-[179px];
+  font-size: clamp(0.75rem, 1vw, 0.75rem);
 }
 
 .cart-drawer-item-attr-value {
-  @apply font-montserrat font-medium text-[clamp(0.75rem,1vw,0.75rem)] leading-[normal] tracking-[0%] capitalize text-[#000000] ml-5;
+  @apply font-montserrat font-medium leading-[normal] tracking-[0%] capitalize text-[#000000] ml-5;
+  font-size: clamp(0.75rem, 1vw, 0.75rem);
 }
 
 .cart-drawer-item-attr-value-sm {
-  @apply font-montserrat font-medium text-[clamp(0.75rem,1.5vw,0.875rem)] leading-[normal] tracking-[0%] capitalize text-[#000000] ml-2;
+  @apply font-montserrat font-medium leading-[normal] tracking-[0%] capitalize text-[#000000] ml-2;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
 }
 
 .cart-drawer-qty-row {
@@ -413,7 +417,8 @@
 }
 
 .cart-drawer-qty-left {
-  @apply flex items-center gap-2 text-[clamp(0.75rem,1.5vw,0.875rem)] text-black;
+  @apply flex items-center gap-2 text-black;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
 }
 
 .cart-drawer-qty-stepper {
@@ -421,7 +426,8 @@
 }
 
 .cart-drawer-qty-btn {
-  @apply w-4 h-4 flex items-center justify-center text-[clamp(0.8125rem,1.5vw,0.875rem)] leading-none disabled:opacity-40 cursor-pointer;
+  @apply w-4 h-4 flex items-center justify-center leading-none disabled:opacity-40 cursor-pointer;
+  font-size: clamp(0.8125rem, 1.5vw, 0.875rem);
 }
 
 .cart-drawer-qty-value {
@@ -429,7 +435,8 @@
 }
 
 .cart-drawer-remove-btn {
-  @apply text-[clamp(0.75rem,1.5vw,0.875rem)] text-[#726969] underline cursor-pointer font-semibold;
+  @apply text-[#726969] underline cursor-pointer font-semibold;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
 }
 
 .cart-drawer-price-remove-row {
@@ -437,11 +444,13 @@
 }
 
 .cart-drawer-price-row {
-  @apply text-[clamp(0.75rem,1.5vw,0.875rem)] text-black;
+  @apply text-black;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
 }
 
 .cart-drawer-price-value {
-  @apply text-[#FD151B] font-semibold ml-5 text-[clamp(0.75rem,1.5vw,0.875rem)];
+  @apply text-[#FD151B] font-semibold ml-5;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
 }
 
 .cart-drawer-footer {
@@ -453,11 +462,13 @@
 }
 
 .cart-drawer-shipping-label {
-  @apply font-['Inter'] font-normal text-[clamp(0.875rem,1.5vw,1rem)] leading-[100%] tracking-[0%] text-[#878787];
+  @apply font-['Inter'] font-normal leading-[100%] tracking-[0%] text-[#878787];
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
 }
 
 .cart-drawer-shipping-value {
-  @apply font-montserrat font-normal text-[clamp(0.875rem,1.5vw,1rem)] leading-[100%] tracking-[0%] capitalize text-black;
+  @apply font-montserrat font-normal leading-[100%] tracking-[0%] capitalize text-black;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
 }
 
 .cart-drawer-subtotal-row {
@@ -465,7 +476,8 @@
 }
 
 .cart-drawer-subtotal-text {
-  @apply font-montserrat font-semibold text-[clamp(0.875rem,1.5vw,1rem)] leading-[100%] tracking-[0%] capitalize text-black;
+  @apply font-montserrat font-semibold leading-[100%] tracking-[0%] capitalize text-black;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
 }
 
 .cart-drawer-actions {
@@ -477,5 +489,6 @@
 }
 
 .cart-drawer-checkout-btn {
-  @apply w-full sm:w-[159px] h-[46px] opacity-100 rounded-[73px] bg-[linear-gradient(137.27deg,#FF676B_19.41%,#FD151B_65.49%)] shadow-[0px_4px_4px_0px_#0E35BF40] text-white text-[clamp(0.875rem,1.5vw,1rem)] font-semibold cursor-pointer;
+  @apply w-full sm:w-[159px] h-[46px] opacity-100 rounded-[73px] bg-[linear-gradient(137.27deg,#FF676B_19.41%,#FD151B_65.49%)] shadow-[0px_4px_4px_0px_#0E35BF40] text-white font-semibold cursor-pointer;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
 }

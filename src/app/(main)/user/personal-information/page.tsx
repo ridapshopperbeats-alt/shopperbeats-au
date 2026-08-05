@@ -41,10 +41,6 @@ function isAllowedImageFile(file: File): boolean {
 
 export default function PersonalInformationPage() {
   const { isAuthenticated, authChecked } = useSelector((state: RootState) => state.auth);
-  // Wait for the app's session check (getUserDetails, which also drives the
-  // access-token refresh on a hard reload) to settle before firing this
-  // query — otherwise it races that check, 401s with a stale/empty token,
-  // and blanks the form instead of waiting for the refreshed token.
   const { data: personalData } = useGetPersonalDataQuery(undefined, {
     skip: !authChecked || !isAuthenticated,
   });
