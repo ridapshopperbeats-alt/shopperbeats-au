@@ -14,6 +14,8 @@ export default function UserLayout({
 }) {
   const pathname = usePathname();
   const isPersonalInformation = pathname === "/user/personal-information";
+  const isReviewPage = pathname.endsWith("/review");
+  const usesPlainWrapper = isPersonalInformation || isReviewPage;
 
   const getPageTitle = () => {
     switch (pathname) {
@@ -56,7 +58,7 @@ export default function UserLayout({
 
             <div
               className={
-                isPersonalInformation
+                usesPlainWrapper
                   ? "flex w-full max-w-[1118px] justify-center"
                   : "content shadow-[0px_0px_14px_rgba(0,0,0,0.08)] w-full lg:w-85-imp"
               }

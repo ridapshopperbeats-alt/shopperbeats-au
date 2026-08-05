@@ -7,9 +7,6 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
 
-import "../../../../../../styles/Checkout.css";
-import "../../../../../../styles/Cart.css";
-import "../../../../../../styles/Product.css";
 import {
   useAddReviewMutation,
   useGetOrderByIdQuery,
@@ -20,13 +17,17 @@ import {
   getOrderProductImage,
   getReviewProductId,
 } from "@/lib/utils/order-products";
-import { ChevronLeft, Star } from "lucide-react";
-import Button from "@/components/common/Button";
+import { Check, ChevronLeft, Clock3, ImagePlus, Star, X } from "lucide-react";
 import { getStaticOrder, isStaticOrderId } from "@/lib/mock/static-orders";
+import StatusBanner from "@/components/common/Tooltip";
+import { Card } from "@/components/common/Card";
+import { Input } from "@/components/common/input";
 
 interface ReviewPageProps {
   params: Promise<{ orderId: string }>;
 }
+
+const COMMENT_MAX_LENGTH = 500;
 
 export default function ReviewForm({ params }: ReviewPageProps) {
   const { orderId } = use(params);
@@ -71,6 +72,10 @@ export default function ReviewForm({ params }: ReviewPageProps) {
 
   const handleStarClick = (value: number) => {
     setRating(value);
+  };
+
+  const handleClose = () => {
+    router.push(`/user/orders/${orderId}`);
   };
 
   const handleSubmit = async () => {
@@ -157,225 +162,222 @@ export default function ReviewForm({ params }: ReviewPageProps) {
     );
   }
 
+  const variantTags: string[] = product.variant_attributes?.length
+    ? product.variant_attributes.map((attr) => attr.value)
+    : ([product.size, product.color].filter(Boolean) as string[]);
+
+  const fieldInputClass =
+    "w-full rounded-xl border border-gray-200 bg-[#F9FAFB] px-4 py-3 text-[12px] text-black placeholder:text-[12px]! placeholder:text-[#BBBBBB]! placeholder:opacity-100";
+
   return (
-    <div className="">
-      <div>
-        <Link
-          href="/user/orders"
-          className="font-semibold text-[12px] leading-[18px] text-[#99a1af] inline-flex"
-        >
-          <ChevronLeft size={16} /> Back to My Orders
-        </Link>
-      </div>
-      <h4
-        className="mb-7.5 fluid-text-heading leading-[100%]"
-        style={{ fontWeight: "700" }}
+    <div className="flex flex-col gap-4 w-full max-w-[1118px]">
+      <Link
+        href="/user/orders"
+        className="inline-flex items-center gap-1 text-[12px] font-semibold leading-[18px] text-[#99a1af]"
       >
-        Add Review
-      </h4>
+        <ChevronLeft size={16} /> Back to My Orders
+      </Link>
 
-      <table className="cart-table order-table">
-        <tbody>
-          <tr>
-            <td className="item-info">
-              <Image
-                src={productImageSrc}
-                alt={product.title || product.name || "Product"}
-                className="cursor-pointer"
-                width={137}
-                height={137}
-              />
-              <div>
-                <h3>{product.title || product.name}</h3>
+      <StatusBanner
+        icon={Clock3}
+        text="Reviewing order"
+        highlightText={`#${order.order_number || order.id}`}
+        suffixText="Delivered on 10 August 2026."
+      />
 
-                {product.variant_attributes?.length ? (
-                  product.variant_attributes.map((attr, i) => (
-                    <p key={i}>
-                      <strong>{attr.name}:</strong> {attr.value}
-                    </p>
-                  ))
-                ) : (
-                  <>
-                    {product.size && (
-                      <p>
-                        <strong>Size:</strong> {product.size}
-                      </p>
-                    )}
-                    {product.color && (
-                      <p>
-                        <strong>Colour:</strong> {product.color}
-                      </p>
-                    )}
-                  </>
-                )}
+      <Card className=" gap-5 p-6">
+        <div className="flex w-full items-start gap-4">
+          <Image
+            src={productImageSrc}
+            alt={product.title || product.name || "Product"}
+            className="shrink-0 rounded-lg object-cover"
+            width={62}
+            height={62}
+          />
 
-                <p className="mt-2">
-                  <strong>Quantity:</strong> {product.quantity}
-                </p>
-                <p className="mt-2">
-                  <strong>Order:</strong> {order.order_number || order.id}
-                </p>
+          <div className="flex flex-col gap-2">
+            <h3 className="text-[13px] leading-[16px] font-bold text-black">
+              {product.title || product.name}
+            </h3>
+
+            {variantTags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {variantTags.map((tag, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center rounded-[30px] bg-[#f3f4f6] px-2.5 py-1 text-[10px] font-medium text-[#99a1af]"
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            )}
 
-      <div className="form-item mt-7.5">
-        <div
-          className="label-text"
-          style={{ fontWeight: 600, marginBottom: "8px" }}
-        >
-          Add Image (Optional)
+            {/* <p className="text-[13px] text-black">
+              <span className="font-semibold">Quantity:</span>{" "}
+              {product.quantity}
+            </p> */}
+            {/* <p className="text-[13px] text-black">
+              <span className="font-semibold">Order:</span>{" "}
+              {order.order_number || order.id}
+            </p> */}
+          </div>
         </div>
 
-        <label htmlFor="image-upload" className="upload-box relative">
-          <input
-            id="image-upload"
-            type="file"
-            accept="image/*"
-            multiple
-            hidden
-            onChange={handleFileChange}
-          />
+        <div className="h-px w-full bg-gray-100" />
 
-          <Image
-            src="/images/profile/imageUpload.svg"
-            alt="Add"
-            fill
-            className="object-contain"
-          />
-        </label>
-
-        {images.length > 0 && (
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "15px",
-              marginTop: "15px",
-            }}
-          >
-            {images.map((img, idx) => (
-              <div key={idx} style={{ position: "relative" }}>
-                <Image
-                  src={URL.createObjectURL(img)}
-                  alt="preview"
-                  width={80}
-                  height={80}
-                  loading="lazy"
-                  style={{
-                    borderRadius: "8px",
-                    border: "1px solid #ddd",
-                    objectFit: "contain",
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => removeImage(idx)}
-                  style={{
-                    position: "absolute",
-                    top: "-8px",
-                    right: "-8px",
-                    background: "red",
-                    color: "white",
-                    borderRadius: "50%",
-                    width: "24px",
-                    height: "24px",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  &times;
-                </button>
-              </div>
+        <div className="w-full">
+          <span className="mb-2 block text-[11px] font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]">
+            Your Rating
+          </span>
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((val) => (
+              <Star
+                key={val}
+                size={24}
+                onClick={() => handleStarClick(val)}
+                className={`cursor-pointer ${
+                  rating >= val
+                    ? "fill-[#FFCB45] text-[#FFCB45]"
+                    : "text-gray-300"
+                }`}
+              />
             ))}
           </div>
-        )}
-      </div>
-
-      <div className="form-item">
-        <label>
-          Overall Rating<span className="text-red-500">*</span>
-        </label>
-        <div className="fa-stars flex items-center">
-          {[1, 2, 3, 4, 5].map((val) => (
-            <Star
-              key={val}
-              size={24}
-              onClick={() => handleStarClick(val)}
-              className={
-                rating >= val ? "fill-[#FFCB45] text-[#FFCB45]" : "text-black"
-              }
-              style={{ cursor: "pointer", marginRight: "5px" }}
-            />
-          ))}
         </div>
-      </div>
 
-      <div className="form-item">
-        <label>Display Name</label>
-        <input
-          type="text"
-          value={reviewerName}
-          onChange={(e) => setReviewerName(e.target.value)}
-          placeholder="Your name (optional)"
-        />
-      </div>
-
-      <div className="form-item">
-        <label>
-          Review Headline<span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          value={headline}
-          onChange={(e) => setHeadline(e.target.value)}
-        />
-      </div>
-
-      <div className="form-item">
-        <label>
-          Comments<span className="text-red-500">*</span>
-        </label>
-        <textarea
-          value={comments}
-          onChange={(e) => setComments(e.target.value)}
-          className="rounded-15px-imp"
-        />
-      </div>
-
-      <div className="flex items-center gap-8">
-        {[
-          { id: 1, value: "yes", label: "Yes, i would recommend this product" },
-          {
-            id: 2,
-            value: "no",
-            label: "No, i would not recommend this product",
-          },
-        ].map((item) => (
+        <div className="w-full">
           <label
-            key={item.id}
-            className="flex items-center gap-2 cursor-pointer"
-            style={{ display: "flex" }}
+            htmlFor="review-title"
+            className="mb-2 block text-[11px] font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]"
           >
-            <input type="radio" name="recommend" value={item.value} />
-            <span className="text-sm text-gray-800">{item.label}</span>
+            Review Title
           </label>
-        ))}
-      </div>
+          <input
+            id="review-title"
+            type="text"
+            value={headline}
+            onChange={(e) => setHeadline(e.target.value)}
+            placeholder="e.g. Perfect fit, great quality!"
+            className="review-input"
+          />
+        </div>
 
-      <div className="flex justify-end">
-        <Button
-          type="button"
-          className="btn btn-red btn-filled btn-sharp mt-10 lg:mt-0"
-          onClick={handleSubmit}
-          isLoading={isSubmitting}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Submitting..." : "Submit Review"}
-        </Button>
-      </div>
+        <div className="w-full">
+          <label
+            htmlFor="review-comments"
+            className="mb-2 block text-[11px] font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]"
+          >
+            Your Review
+          </label>
+          <textarea
+            id="review-comments"
+            data-slot="input"
+            value={comments}
+            onChange={(e) => setComments(e.target.value)}
+            maxLength={COMMENT_MAX_LENGTH}
+            placeholder="Tell others what you think about this product — fit, quality, packaging, delivery experience..."
+            className={`${fieldInputClass} max-h-[100px] lg:max-h-[40px]`}
+          />
+          <span className="mt-1 block text-right text-[11px] text-[#D1D5DC]">
+            {comments.length}/{COMMENT_MAX_LENGTH}
+          </span>
+        </div>
+
+        <div className="w-full">
+          <span className="mb-2 block text-[11px] font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]">
+            Add Photos (Optional)
+          </span>
+
+          <label
+            htmlFor="image-upload"
+            className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3"
+          >
+            <input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              multiple
+              hidden
+              onChange={handleFileChange}
+            />
+
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-400">
+              <ImagePlus size={18} />
+            </span>
+
+            <span className="flex flex-col">
+              <span className="text-[13px] font-bold text-[#6A7282]">
+                Upload Photos
+              </span>
+              <span className="text-[10px] leading-[15px] text-[#D1D5DC]">
+                JPG, PNG up to 5MB each · Max 5 photos
+              </span>
+            </span>
+          </label>
+
+          {images.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-3">
+              {images.map((img, idx) => (
+                <div key={idx} className="relative">
+                  <Image
+                    src={URL.createObjectURL(img)}
+                    alt="preview"
+                    width={80}
+                    height={80}
+                    loading="lazy"
+                    className="rounded-lg border border-gray-200 object-contain"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(idx)}
+                    aria-label="Remove image"
+                    className="absolute -right-2 -top-2 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[#FD151B] text-white"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center gap-8">
+          {/* {[
+            {
+              id: 1,
+              value: "yes",
+              label: "Yes, i would recommend this product",
+            },
+            {
+              id: 2,
+              value: "no",
+              label: "No, i would not recommend this product",
+            },
+          ].map((item) => (
+            <label
+              key={item.id}
+              className="flex cursor-pointer items-center gap-2"
+            >
+              <input type="radio" name="recommend" value={item.value} />
+              <span className="text-sm text-gray-800">{item.label}</span>
+            </label>
+          ))} */}
+        </div>
+      </Card>
+
+      <StatusBanner
+        cancelText="Cancel"
+        submitText="Submit Review"
+        SubmitIcon={Check}
+        onSubmitText="Submitting..."
+        onSubmit={handleSubmit}
+        onCancel={handleClose}
+        isLoading={isSubmitting}
+        disabled={isSubmitting}
+        text="0 of 1 items rated"
+        className="h-[70px]"
+      />
     </div>
   );
 }
