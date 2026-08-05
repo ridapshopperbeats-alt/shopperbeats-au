@@ -72,9 +72,9 @@ export default function Sidebar({
       {/* Sidebar */}
       <Card
          className={`fixed top-0 right-0 z-50 h-screen w-[250px] overflow-hidden border-0 bg-white shadow-[0_0_8px_2px_#4B4B4B1A] transform transition-transform duration-300 ease-in-out ${
-         className={`fixed top-0 right-0 z-50 h-screen w-[250px] overflow-hidden border-0 bg-white shadow-[0_0_8px_2px_#4B4B4B1A] transform transition-transform duration-300 ease-in-out ${
+         
           isOpen ? "translate-x-0" : "translate-x-full"
-        } lg:static lg:h-[320px] lg:w-[250px] lg:translate-x-0 lg:rounded-[14px] ${
+        
         } lg:static lg:h-[320px] lg:w-[250px] lg:translate-x-0 lg:rounded-[14px] ${
           extraClass || ""
         }`}

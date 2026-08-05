@@ -9,7 +9,7 @@ import { formatPrice } from "@/lib/utils/main-utils";
 
 import { ProductCardProps } from "@/types/product";
 
-import { Heart } from "lucide-react";
+import { Check, Heart } from "lucide-react";
 import { useStaticCart } from "@/lib/hooks/useStaticCart";
 import { useStaticWishlist } from "@/lib/hooks/useStaticWishlist";
 import type { StaticProduct } from "@/lib/utils/staticStorage";
@@ -76,11 +76,14 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
   shippingCharge,
   tags,
 }) => {
-  const { addToCart } = useStaticCart();
+  const { items: cartItems, addToCart } = useStaticCart();
   const { toggleItem, isWishlisted: checkWishlisted } = useStaticWishlist();
 
   const productKey = String(unique_code || id);
   const isWishlisted = checkWishlisted(productKey);
+  const isInCart = cartItems.some(
+    (cartItem) => cartItem.product_id === `static-${productKey}`,
+  );
 
   const currentVariant = variants.find((v) => v.id === defaultVariantId);
 
@@ -147,7 +150,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
           href={`/static-product/${unique_code || id}`}
           className="flex h-full max-h-[400px] md:max-h-[460px] flex-col no-underline text-inherit"
         >
-          <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden">
+          <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden rounded-t-[8px] bg-[rgba(233,233,233,0.60)]">
             <Image
               src={image}
               alt={title || "Product Image"}
@@ -157,6 +160,14 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
               className="object-cover"
             />
             {/* <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" /> */}
+
+            {isOutOfStock && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="rounded-full bg-white px-3 py-1.5 text-[12px] font-medium text-[#535252] shadow-md">
+                  Out of Stock
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-1 flex-col justify-between w-full">
@@ -196,24 +207,26 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 </div>
               )}
 
-              {!isOutOfStock && (
-                <div className="text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
-                  <p className="font-normal">
-                    {shippingCharge === 0
-                      ? "Delivery Fee - $0"
-                      : `Delivery Fee - $${formatPrice(shippingCharge)}`}
-                  </p>
+              <div className="min-h-[54px] text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
+                {!isOutOfStock && (
+                  <>
+                    <p className="font-normal">
+                      {shippingCharge === 0
+                        ? "Delivery Fee - $0"
+                        : `Delivery Fee - $${formatPrice(shippingCharge)}`}
+                    </p>
 
-                  <p className="font-normal">
-                    <span className="font-medium">
-                      {getEstimatedDeliveryRange(
-                        ships_from_location,
-                        handling_time_days || 0,
-                      )}
-                    </span>
-                  </p>
-                </div>
-              )}
+                    <p className="font-normal">
+                      <span className="font-medium">
+                        {getEstimatedDeliveryRange(
+                          ships_from_location,
+                          handling_time_days || 0,
+                        )}
+                      </span>
+                    </p>
+                  </>
+                )}
+              </div>
 
               <p className="text-[12px] md:text-[13px] font-normal text-[#FF4400]">
                 Extra 10% Off with Code: SHBS10
@@ -224,9 +237,22 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
               <button
                 onClick={handleAddToCartClick}
                 disabled={isOutOfStock}
-                className="w-full h-[30px] bg-[#849324] text-white text-[14px] font-medium rounded-[32px] flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className={
+                  isInCart && !isOutOfStock
+                    ? "w-full h-[30px] bg-white text-[#849324] text-[12px] font-medium rounded-[32px] border border-[#849324] flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                    : "w-full h-[30px] bg-[#849324] text-white text-[12px] font-medium rounded-[32px] flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                }
               >
-                {isOutOfStock ? "Out of Stock" : "Add To Cart"}
+                {isOutOfStock ? (
+                  "Out of Stock"
+                ) : isInCart ? (
+                  <>
+                    <Check size={14} />
+                    Add To Cart
+                  </>
+                ) : (
+                  "Add To Cart"
+                )}
               </button>
             </div>
           </div>
