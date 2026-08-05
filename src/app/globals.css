@@ -305,15 +305,15 @@ input:disabled {
 
 /* form   */
 
-input[type="text"],
-input[type="email"],
-input[type="number"],
-input[type="search"],
+input[type="text"]:not([data-slot="input"]),
+input[type="email"]:not([data-slot="input"]),
+input[type="number"]:not([data-slot="input"]),
+input[type="search"]:not([data-slot="input"]),
 select,
-input[type="password"],
-input[type="date"],
-input[type="tel"],
-textarea {
+input[type="password"]:not([data-slot="input"]),
+input[type="date"]:not([data-slot="input"]),
+input[type="tel"]:not([data-slot="input"]),
+textarea:not([data-slot="input"]) {
   @apply  px-[10px] border border-[var(--lightgray)] bg-[var(--white)] h-[41px] w-full shadow-none !rounded-[5px] !font-medium leading-normal;
   font-style: medium;
 }
@@ -1467,4 +1467,9 @@ input[type="radio"] {
 
 .tab-content-image {
   @apply w-full max-w-[1300px] h-[260px] object-cover;
+}
+
+.review-input::placeholder {
+  font-size: 12px;
+  color: #BBBBBB;
 }

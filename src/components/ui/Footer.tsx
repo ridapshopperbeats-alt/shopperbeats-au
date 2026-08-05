@@ -122,7 +122,7 @@ export default function Footer({
   return (
     <div className="page-footer">
       <div className="pt-9">
-        <div className="footer-highlights-wrapper shadow-[0px_0px_4px_1px_#C7C7C740]">
+        <div className="footer-highlights-wrapper">
           <div className="footer-highlights-grid">
             {footerHighlights.map((item) => (
               <div key={item.img} className="group footer-highlight-item">

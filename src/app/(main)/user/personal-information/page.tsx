@@ -15,6 +15,8 @@ import { handleAustralianPhoneNumberChange, handleUSPhoneNumberChange, toYYYYMMD
 import { toast } from "react-toastify";
 import Button from "@/components/common/Button";
 import { Input } from "@/components/common/input";
+import { Card } from "@/components/common/Card";
+import { CameraIcon } from "@/components/common/Svg";
 
 const personalInfoSchema = yup.object().shape({
   first_name: nameField("First Name"),
@@ -39,10 +41,6 @@ function isAllowedImageFile(file: File): boolean {
 
 export default function PersonalInformationPage() {
   const { isAuthenticated, authChecked } = useSelector((state: RootState) => state.auth);
-  // Wait for the app's session check (getUserDetails, which also drives the
-  // access-token refresh on a hard reload) to settle before firing this
-  // query — otherwise it races that check, 401s with a stale/empty token,
-  // and blanks the form instead of waiting for the refreshed token.
   const { data: personalData } = useGetPersonalDataQuery(undefined, {
     skip: !authChecked || !isAuthenticated,
   });
@@ -117,7 +115,7 @@ export default function PersonalInformationPage() {
     }
   };
 
-   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -149,114 +147,131 @@ export default function PersonalInformationPage() {
   };
 
   return (
-    <div>
-      <div className="profile-page">
-        <div className="">
-          <div className="profile-img mb-10">
-            <Image src={imagePreview} alt="Profile" width={200} height={200} loading="lazy" className="avatar" />
-            <label htmlFor="profile_image" className="edit-icon" style={{ cursor: "pointer" }}>
-              <Image src="/images/profile/edit.svg" alt="Edit Profile" width={24} height={24} loading="lazy" />
-            </label>
+    <Card className="mx-auto w-[377px] h-auto shrink-0 border-[1.167px] p-6 gap-6 sm:w-full sm:max-w-[1118px] sm:border">
+      <div className="flex items-center gap-4">
+        <div className="relative h-14 w-14 shrink-0">
+          <Image
+            src={imagePreview}
+            alt="Profile"
+            width={56}
+            height={56}
+            loading="lazy"
+            className="h-14 w-14 rounded-full object-cover"
+          />
+          <label
+            htmlFor="profile_image"
+            className="absolute right-0 bottom-0 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[#F3F4F6] bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.10),0_2px_4px_-2px_rgba(0,0,0,0.10)]"
+          >
+            <CameraIcon />
+          </label>
+          <Input
+            type="file"
+            id="profile_image"
+            name="profile_image"
+            accept="image/jpeg,image/png,image/svg+xml,image/gif,image/webp"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        </div>
+        <div>
+          <h2 className="font-[Montserrat] text-[clamp(0.8125rem,0.8125rem,0.8125rem)] font-semibold leading-[19.5px] text-[#101828]">
+            Personal Information
+          </h2>
+          <p className="font-[Montserrat] text-[clamp(0.6875rem,0.6875rem,0.6875rem)] font-normal leading-[16.5px] text-[#99A1AF]">
+            Manage your account details below
+          </p>
+        </div>
+      </div>
+
+      <hr className="-mx-6 w-[calc(100%+3rem)] border-t border-[#E0E0E0]" />
+
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="flex w-full flex-col gap-4">
+        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1">
             <Input
-              type="file"
-              id="profile_image"
-              name="profile_image"
-              accept="image/jpeg,image/png,image/svg+xml,image/gif,image/webp"
-              onChange={handleImageChange}
-              className="hidden"
+              id="first_name"
+              label="First Name*"
+              error={formErrors.first_name}
+              type="text"
+              name="first_name"
+              placeholder="First name"
+              value={formData.first_name}
+              onChange={handleChange}
             />
           </div>
 
-          <form onSubmit={handleSubmit(handleFormSubmit)}>
-            <div className="form-fields">
-              <div className="form-item">
-                <Input
-                  id="first_name"
-                  label="First Name*"
-                  error={formErrors.first_name}
-                  type="text"
-                  name="first_name"
-                  placeholder="First name"
-                  className="rounded-[32px]"
-                  value={formData.first_name}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-item">
-                <Input
-                  id="last_name"
-                  label="Last Name*"
-                  error={formErrors.last_name}
-                  type="text"
-                  name="last_name"
-                  placeholder="Last name"
-                  className="rounded-[32px]"
-                  value={formData.last_name}
-                  onChange={handleChange}
-                />
-
-              </div>
-            </div>
-
-            <div className="form-item">
-              <Input
-                id="email"
-                label="Email*"
-                type="email"
-                error={formErrors.email}
-                name="email"
-                placeholder="Enter Email"
-                value={formData.email}
-                disabled
-              />
-            </div>
-
-            <div className="form-item">
-              <Input
-                id="phonenumber"
-                type="tel"
-                label="Phone Number*"
-                name="phonenumber"
-                placeholder="e.g. 1234567890 or +11234567890" 
-                value={formData.phonenumber}
-                onChange={handlePhoneChange}
-                inputMode="numeric"
-                pattern="[0-9+]*"
-                error={formErrors.phonenumber}
-              />
-            </div>
-
-            <div className="form-item">
-              <Input
-                id="date_of_birth"
-                type="date"
-                label="Date of Birth (Optional)"
-                name="date_of_birth"
-                value={toYYYYMMDD(formData.date_of_birth)}
-                onChange={handleChange}
-                min="1900-01-01"
-                max="2025-12-31"
-              />
-
-            </div>
-
-
-            <div className="flex justify-center w-full">
-              <Button
-                type="submit"
-                disabled={isUpdating}
-                isLoading={isUpdating}
-                className="btn btn-red btn-filled btn-sharp w-30 flex items-center justify-center mt-[10px]"
-                debounceDelay={500}
-              >
-                {isUpdating ? "Saving..." : "Update"}
-              </Button>
-            </div>
-
-          </form>
+          <div className="flex flex-col gap-1">
+            <Input
+              id="last_name"
+              label="Last Name*"
+              error={formErrors.last_name}
+              type="text"
+              name="last_name"
+              placeholder="Last name"
+              value={formData.last_name}
+              onChange={handleChange}
+            />
+          </div>
         </div>
-      </div>
-    </div>
+
+        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1">
+            <Input
+              id="email"
+              label="Email Address*"
+              type="email"
+              error={formErrors.email}
+              name="email"
+              placeholder="Enter Email"
+              value={formData.email}
+              disabled
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <Input
+              id="phonenumber"
+              type="tel"
+              label="Phone Number*"
+              name="phonenumber"
+              placeholder="e.g. 1234567890 or +11234567890"
+              value={formData.phonenumber}
+              onChange={handlePhoneChange}
+              inputMode="numeric"
+              pattern="[0-9+]*"
+              error={formErrors.phonenumber}
+            />
+          </div>
+        </div>
+
+        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1">
+            <Input
+              id="date_of_birth"
+              type="date"
+              label="Date of Birth (Optional)"
+              name="date_of_birth"
+              value={toYYYYMMDD(formData.date_of_birth)}
+              onChange={handleChange}
+              min="1900-01-01"
+              max="2025-12-31"
+            />
+          </div>
+        </div>
+
+        <hr className="w-full border-t-[1px] border-[#E0E0E0]" />
+        <div className="flex w-full justify-end">
+          <Button
+            type="submit"
+            disabled={isUpdating}
+            isLoading={isUpdating}
+            className="flex items-center justify-center rounded-[30px]! bg-sb-red px-6 py-2.5 text-center font-montserrat text-[clamp(0.8125rem,0.8125rem,0.8125rem)] font-bold leading-[19.5px] text-white disabled:opacity-50"
+            debounceDelay={500}
+          >
+            {isUpdating ? "Saving..." : "Update Information"}
+          </Button>
+        </div>
+      </form>
+    </Card>
   );
 }
