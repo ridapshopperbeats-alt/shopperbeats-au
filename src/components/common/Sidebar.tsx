@@ -70,9 +70,9 @@ export default function Sidebar({
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 z-50 h-screen w-[250px] bg-white border-l border-[#E5E7EB] shadow-[0_0_8px_2px_#4B4B4B1A] transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 z-50 h-screen w-[250px] overflow-hidden bg-white border-l border-[#E5E7EB] shadow-[0_0_8px_2px_#4B4B4B1A] transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
-        } lg:static lg:h-[310px] lg:w-[250px] lg:translate-x-0 lg:rounded-[14px] lg:border lg:border-[#E5E7EB] ${
+        } lg:static lg:h-[320px] lg:w-[250px] lg:translate-x-0 lg:rounded-[14px] lg:border lg:border-[#E5E7EB] ${
           extraClass || ""
         }`}
         style={style}
@@ -91,7 +91,7 @@ export default function Sidebar({
           </button>
         </div>
 
-        <ul className="flex flex-col gap-1 p-2">
+        <ul className="flex flex-col gap-[2px] p-2">
           {links.map((link) => {
             const isActive =
               active === link.label || pathname.startsWith(link.href);
