@@ -12,6 +12,7 @@ import {
   LogOut,
   CircleX,
 } from "lucide-react";
+import { Card } from "@/components/common/Card";
 
 interface SidebarLink {
   href: string;
@@ -69,15 +70,15 @@ export default function Sidebar({
       />
 
       {/* Sidebar */}
-      <div
-        className={`fixed top-0 right-0 z-50 h-screen w-[250px] bg-white border-l border-[#E5E7EB] shadow-[0_0_8px_2px_#4B4B4B1A] transform transition-transform duration-300 ease-in-out ${
+      <Card
+        className={`fixed top-0 right-0 z-50 h-screen w-[250px] gap-3 shadow-[0_0_8px_2px_#4B4B4B1A] transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
-        } lg:static lg:h-[310px] lg:w-[250px] lg:translate-x-0 lg:rounded-[14px] lg:border lg:border-[#E5E7EB] ${
+        } lg:static lg:h-[310px] lg:w-[238px] lg:translate-x-0 lg:rounded-[14px] ${
           extraClass || ""
         }`}
         style={style}
       >
-        <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#E5E7EB]">
+        <div className="flex w-full items-center justify-between px-4 py-3.5 border-b border-[#E5E7EB]">
           <span className="font-extrabold text-[12px] uppercase tracking-[1.2px] text-[#99A1AF]">
             {title}
           </span>
@@ -91,7 +92,7 @@ export default function Sidebar({
           </button>
         </div>
 
-        <ul className="flex flex-col gap-1 p-2">
+        <ul className="flex w-full flex-col gap-1 p-2">
           {links.map((link) => {
             const isActive =
               active === link.label || pathname.startsWith(link.href);
@@ -147,7 +148,7 @@ export default function Sidebar({
             );
           })}
         </ul>
-      </div>
+      </Card>
     </>
   );
 }
