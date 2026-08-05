@@ -151,7 +151,7 @@ export default function PersonalInformationPage() {
   };
 
   return (
-    <Card className="mx-auto w-full max-w-[1118px] p-6 gap-6">
+    <Card className="mx-auto w-[377px] h-auto shrink-0 border-[1.167px] p-6 gap-6 sm:w-full sm:max-w-[1118px] sm:border">
       <div className="flex items-center gap-4">
         <div className="relative h-14 w-14 shrink-0">
           <Image
@@ -178,12 +178,16 @@ export default function PersonalInformationPage() {
           />
         </div>
         <div>
-          <h2 className="text-base font-semibold text-gray-900">Personal Information</h2>
-          <p className="text-sm text-gray-400">Manage your account details below</p>
+          <h2 className="font-[Montserrat] text-[clamp(0.8125rem,0.8125rem,0.8125rem)] font-semibold leading-[19.5px] text-[#101828]">
+            Personal Information
+          </h2>
+          <p className="font-[Montserrat] text-[clamp(0.6875rem,0.6875rem,0.6875rem)] font-normal leading-[16.5px] text-[#99A1AF]">
+            Manage your account details below
+          </p>
         </div>
       </div>
 
-      <hr className="w-full border-gray-100" />
+      <hr className="-mx-6 w-[calc(100%+3rem)] border-t border-[#E0E0E0]" />
 
       <form onSubmit={handleSubmit(handleFormSubmit)} className="flex w-full flex-col gap-4">
         <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
@@ -259,14 +263,13 @@ export default function PersonalInformationPage() {
           </div>
         </div>
 
-        <hr className="w-full border-gray-100" />
-
+        <hr className="w-full border-t-[1px] border-[#E0E0E0]" />
         <div className="flex w-full justify-end">
           <Button
             type="submit"
             disabled={isUpdating}
             isLoading={isUpdating}
-            className="flex items-center justify-center rounded-full bg-[#EE2C39] px-6 py-2.5 text-sm font-medium text-white disabled:opacity-50"
+            className="flex items-center justify-center rounded-[30px]! bg-sb-red px-6 py-2.5 text-center font-montserrat text-[clamp(0.8125rem,0.8125rem,0.8125rem)] font-bold leading-[19.5px] text-white disabled:opacity-50"
             debounceDelay={500}
           >
             {isUpdating ? "Saving..." : "Update Information"}
