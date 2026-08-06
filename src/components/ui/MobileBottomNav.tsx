@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Home, Heart, ShoppingCart, User } from "lucide-react";
 import { useGetWishlistQuery, useGetCartQuery } from "@/lib/redux/apis/cart-api";
@@ -10,6 +11,7 @@ import { useStaticCart } from "@/lib/hooks/useStaticCart";
 import { useStaticWishlist } from "@/lib/hooks/useStaticWishlist";
 import { RootState } from "@/lib/redux/store";
 import { CartItem } from "@/types/cart";
+import MobileAccountSheet from "./MobileAccountSheet";
 
 const ACTIVE_COLOR = "#FD151B";
 const INACTIVE_COLOR = "#001325A3";
@@ -18,6 +20,7 @@ export default function MobileBottomNav() {
   const pathname = usePathname();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { postcode } = useGlobalPostcode();
+  const [isAccountSheetOpen, setIsAccountSheetOpen] = useState(false);
 
   const { data: wishlistData } = useGetWishlistQuery(undefined, {
     skip: !isAuthenticated,
@@ -82,35 +85,60 @@ export default function MobileBottomNav() {
   ];
 
   return (
-    <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 h-[50px] flex items-stretch bg-white border-t border-[#EAEAEA] shadow-[0px_0px_16.1px_0px_#8E8E8E40] w-auto">
-      {navItems.map((item) => {
-        const Icon = item.icon;
-        const color = item.isActive ? ACTIVE_COLOR : INACTIVE_COLOR;
+    <>
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 h-[50px] flex items-stretch bg-white border-t border-[#EAEAEA] shadow-[0px_0px_16.1px_0px_#8E8E8E40] w-auto">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const color = item.isActive ? ACTIVE_COLOR : INACTIVE_COLOR;
+          const content = (
+            <>
+              <span className="relative inline-flex">
+                <Icon size={16} color={color} />
 
-        return (
-          <Link
-            key={item.key}
-            href={item.href}
-            className="relative flex-1 flex flex-col items-center justify-center gap-1 py-2"
-          >
-            <span className="relative inline-flex">
-              <Icon size={16} color={color} />
+                {item.count > 0 && (
+                  <span className="absolute -top-1.5 -right-2 flex items-center justify-center min-w-[14px] h-[14px] px-[3px] rounded-full bg-[#FD151B] text-white text-[9px] leading-none">
+                    {item.count}
+                  </span>
+                )}
+              </span>
 
-              {item.count > 0 && (
-                <span className="absolute -top-1.5 -right-2 flex items-center justify-center min-w-[14px] h-[14px] px-[3px] rounded-full bg-[#FD151B] text-white text-[9px] leading-none">
-                  {item.count}
-                </span>
-              )}
-            </span>
+              <span
+                className="leading-[100%] tracking-[0%] font-medium text-[10px] text-[#001325]/64"
+              >
+                {item.label}
+              </span>
+            </>
+          );
 
-            <span
-              className="leading-[100%] tracking-[0%] font-medium text-[10px] text-[#001325]/64"
+          if (item.key === "account" && isAuthenticated) {
+            return (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => setIsAccountSheetOpen(true)}
+                className="relative flex-1 flex flex-col items-center justify-center gap-1 py-2 cursor-pointer"
+              >
+                {content}
+              </button>
+            );
+          }
+
+          return (
+            <Link
+              key={item.key}
+              href={item.href}
+              className="relative flex-1 flex flex-col items-center justify-center gap-1 py-2"
             >
-              {item.label}
-            </span>
-          </Link>
-        );
-      })}
-    </nav>
+              {content}
+            </Link>
+          );
+        })}
+      </nav>
+
+      <MobileAccountSheet
+        isOpen={isAccountSheetOpen}
+        onClose={() => setIsAccountSheetOpen(false)}
+      />
+    </>
   );
 }
