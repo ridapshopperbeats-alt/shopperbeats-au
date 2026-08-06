@@ -5,9 +5,10 @@ import { cn } from "@/lib/utils"
 interface InputProps extends React.ComponentProps<"input"> {
   label?: string
   error?: string | null
+  labelClassName?: string
 }
 
-function Input({ className, type, label, error, id, ...props }: Readonly<InputProps>) {
+function Input({ className, type, label, error, id, labelClassName, ...props }: Readonly<InputProps>) {
   const isRequired = !!label?.endsWith("*")
   const labelText = isRequired ? label!.slice(0, -1) : label
 
@@ -29,7 +30,7 @@ const inputEl = (
   return (
     <>
       {label && (
-        <label htmlFor={id} className="text-[#272727] text-[clamp(0.75rem,0.75rem,0.75rem)] font-medium leading-[16.5px]">
+        <label htmlFor={id} className={cn("text-[#272727] text-[clamp(0.75rem,0.75rem,0.75rem)] font-medium leading-[16.5px]", labelClassName)}>
           {labelText}
           {isRequired && (
             <span className="font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-medium leading-[16.5px] text-[#FD151B]">
