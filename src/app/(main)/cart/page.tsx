@@ -488,7 +488,7 @@ const Cart = () => {
 
               const itemInfo = (
                 <>
-                  <h3 className="fluid-text-xs font-semibold leading-[100%]  text-black mb-0.5 lg:mb-1.5 ">
+                  <h3 className="fluid-text-xs font-semibold leading-[18px] text-black mb-0.5 lg:mb-1.5 ">
                     {item.is_active ? (
                       <Link
                         href={getCartItemHref(item)}
@@ -615,7 +615,7 @@ const Cart = () => {
                     -
                   </Button>
                   <div className="relative flex items-center justify-center w-8 h-full shrink-0">
-                    <Input
+                    <input
                       type="number"
                       onWheel={(e) => e.currentTarget.blur()}
                       min="1"
@@ -970,7 +970,7 @@ const Cart = () => {
 
             <div className="pt-4">
               <div className="flex items-center border border-[#15112b2b] rounded-[5px] pl-5 pr-1.5 h-11 w-[430px] md:w-auto max-w-full overflow-hidden">
-                <Input
+                <input
                   type="text"
                   placeholder="Promo Code"
                   value={promoCodeInput}
