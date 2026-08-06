@@ -141,19 +141,19 @@ export default function WishlistPage() {
 
   return (
     <div className="flex w-full flex-col gap-6">
-      <Card className="w-full flex-row items-center justify-between gap-4 p-4">
-        <div>
-          <h4 className="font-montserrat text-[clamp(0.875rem,0.875rem,0.875rem)] font-bold leading-[19.5px] text-[#211E22]">
+      <Card className="w-full flex-row items-center justify-between gap-2 sm:gap-4 p-3 sm:p-4">
+        <div className="min-w-0">
+          <h4 className="font-montserrat text-[clamp(0.875rem,0.875rem,0.875rem)] font-bold leading-[19.5px] text-[#211E22] whitespace-nowrap">
             My Wishlist
           </h4>
-          <p className="font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-normal leading-[16.5px] text-[#99A1AF]">
+          <p className="font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-normal leading-[16.5px] text-[#99A1AF] whitespace-nowrap">
             {items.length} items saved
           </p>
         </div>
 
         <Button
           onClick={handleAddAllToCart}
-          className="flex items-center justify-center gap-2 rounded-full bg-sb-red px-5 py-2.5 text-sm font-medium text-white"
+          className="flex shrink-0 items-center justify-center gap-1.5 sm:gap-2 rounded-full bg-sb-red px-3.5 sm:px-5 py-2 sm:py-2.5 text-[0.75rem] sm:text-sm font-medium text-white whitespace-nowrap"
           debounceDelay={500}
         >
           <ShoppingBag size={16} />
@@ -166,7 +166,7 @@ export default function WishlistPage() {
           <p className="text-sm text-gray-400">Your wishlist is empty.</p>
         </Card>
       ) : (
-        <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid w-full grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {items.map((item) => (
             <div
               key={item.id}

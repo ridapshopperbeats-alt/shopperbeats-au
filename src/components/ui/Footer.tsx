@@ -121,7 +121,7 @@ export default function Footer({
 
   return (
     <div className="page-footer">
-      <div className="pt-9">
+      <div className="pt-0">
         <div className="footer-highlights-wrapper">
           <div className="footer-highlights-grid">
             {footerHighlights.map((item) => (

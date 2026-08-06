@@ -18,7 +18,7 @@
   --sb-charcoal: #333333;
   --sb-gray-mid: #575757;
   --sb-charcoal-2: #211E22;
-}
+  --sb-gray-light: #99A1AF;}
 
 @theme inline {
   --color-background: var(--background);
