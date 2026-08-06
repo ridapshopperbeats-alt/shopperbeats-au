@@ -17,7 +17,8 @@ export default function UserLayout({
   const usesCardLayout =
     isPersonalInformation ||
     pathname === "/user/logout" ||
-    pathname === "/user/wishlist";
+    pathname === "/user/wishlist" ||
+    pathname === "/user/orders";
 
   const getPageTitle = () => {
     switch (pathname) {

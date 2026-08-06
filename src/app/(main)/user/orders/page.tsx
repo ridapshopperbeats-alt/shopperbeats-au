@@ -22,7 +22,7 @@ import "../../../../styles/Product.css";
 
 import Image from "next/image";
 import { useCancelOrderMutation, useListOrdersQuery } from "@/lib/redux/apis/order-api";
-import { formatPrice, formatReadableDate } from "@/lib/utils/main-utils";
+import { formatPrice } from "@/lib/utils/main-utils";
 import { getOrderProductImage, getReviewProductId, mapOrderProducts } from "@/lib/utils/order-products";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
@@ -31,29 +31,74 @@ import CancelOrderPopup from "@/components/common/CancelOrderPopup";
 import ReturnOrderPopup from "@/components/common/ReturnOrderPopup";
 import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
 import Pagination from "@/components/common/Pagination";
+import { Card } from "@/components/common/Card";
+import { StatusBadge, BadgeColor } from "@/components/common/StatusBadge";
 import { STATIC_ORDERS } from "@/lib/mock/static-orders";
+import { Truck, Eye, ChevronUp, ChevronDown, ArrowUpDown, XCircle, RotateCcw, ChevronRight, Star, RefreshCw } from "lucide-react";
 
-const ORDER_STATUS_LABELS: Record<string, string> = {
-  confirmed: "Confirmed",
-  shipped: "Shipped",
-  delivered: "Delivered",
-  cancelled: "Cancelled",
-  pending: "Pending",
-  "in progress": "In Progress",
-  "return requested": "Return Requested",
+enum OrderStatusCode {
+  Confirmed = "confirmed",
+  Shipped = "shipped",
+  Delivered = "delivered",
+  Cancelled = "cancelled",
+  Pending = "pending",
+  InProgress = "in progress",
+  ReturnRequested = "return requested",
+}
+
+const ORDER_STATUS_LABELS: Record<OrderStatusCode, string> = {
+  [OrderStatusCode.Confirmed]: "Confirmed",
+  [OrderStatusCode.Shipped]: "Shipped",
+  [OrderStatusCode.Delivered]: "Delivered",
+  [OrderStatusCode.Cancelled]: "Cancelled",
+  [OrderStatusCode.Pending]: "Pending",
+  [OrderStatusCode.InProgress]: "In Progress",
+  [OrderStatusCode.ReturnRequested]: "Return Requested",
 };
 
-const getOrderStatusLabel = (order: OrderItem) => {
+const IN_TRANSIT_CODES = [
+  OrderStatusCode.Confirmed,
+  OrderStatusCode.Shipped,
+  OrderStatusCode.Pending,
+  OrderStatusCode.InProgress,
+];
+
+const ORDER_STATUS_COLORS: Record<OrderStatusCode, BadgeColor> = {
+  [OrderStatusCode.Confirmed]: BadgeColor.Blue,
+  [OrderStatusCode.Shipped]: BadgeColor.Blue,
+  [OrderStatusCode.Pending]: BadgeColor.Blue,
+  [OrderStatusCode.InProgress]: BadgeColor.Blue,
+  [OrderStatusCode.Delivered]: BadgeColor.Green,
+  [OrderStatusCode.Cancelled]: BadgeColor.Red,
+  [OrderStatusCode.ReturnRequested]: BadgeColor.Orange,
+};
+
+const getOrderStatusCode = (order: OrderItem): OrderStatusCode => {
   const hasReturnRequested = order?.returns?.some(
     (r: OrderReturn) => r?.status?.toLowerCase() === "requested",
   );
 
-  const key = hasReturnRequested
-    ? "return requested"
-    : (order?.status || "").toLowerCase();
+  if (hasReturnRequested) return OrderStatusCode.ReturnRequested;
 
-  return ORDER_STATUS_LABELS[key] ?? order?.status ?? "N/A";
+  const key = (order?.status || "").toLowerCase();
+  return (Object.values(OrderStatusCode) as string[]).includes(key)
+    ? (key as OrderStatusCode)
+    : OrderStatusCode.Pending;
 };
+
+const getOrderStatusLabel = (order: OrderItem) =>
+  ORDER_STATUS_LABELS[getOrderStatusCode(order)] ?? order?.status ?? "N/A";
+
+const getOrderStatusColor = (order: OrderItem): BadgeColor =>
+  ORDER_STATUS_COLORS[getOrderStatusCode(order)] ?? BadgeColor.Blue;
+
+const isInTransitOrder = (order: OrderItem) =>
+  IN_TRANSIT_CODES.includes(getOrderStatusCode(order));
+
+const isDeliveredOrder = (order: OrderItem) =>
+  getOrderStatusCode(order) === OrderStatusCode.Delivered;
+
+type OrderTab = "all" | "transit" | "delivered";
 
 export default function MyOrdersPage() {
   const router = useRouter();
@@ -69,6 +114,20 @@ export default function MyOrdersPage() {
   const CHUNK_SIZE = 20;
 
   const [sortOrdersBy, setSortOrdersBy] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<OrderTab>("all");
+  const [collapsedOrders, setCollapsedOrders] = useState<Set<string>>(new Set());
+
+  const toggleOrderCollapse = (orderId: string) => {
+    setCollapsedOrders((prev) => {
+      const next = new Set(prev);
+      if (next.has(orderId)) {
+        next.delete(orderId);
+      } else {
+        next.add(orderId);
+      }
+      return next;
+    });
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const [uiLimit, setUiLimit] = useState(10);
@@ -266,193 +325,268 @@ export default function MyOrdersPage() {
       </div>
     );
 
+  const transitCount = allOrders.filter(isInTransitOrder).length;
+  const deliveredCount = allOrders.filter(isDeliveredOrder).length;
+
+  const displayedOrders =
+    activeTab === "transit"
+      ? allOrders.filter(isInTransitOrder)
+      : activeTab === "delivered"
+        ? allOrders.filter(isDeliveredOrder)
+        : allOrders;
+
+  const TABS: { key: OrderTab; label: string; count: number }[] = [
+    { key: "all", label: "All Orders", count: allOrders.length },
+    { key: "transit", label: "In Transit", count: transitCount },
+    { key: "delivered", label: "Delivered", count: deliveredCount },
+  ];
+
   return (
-    <div>
-      {allOrders.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-3 fluid-text-xl font-bold leading-[100%] justify-between pb-5">
-          <h4>Orders ({effectiveTotal})</h4>
-
-          <div className="product-sort">
-            <span>Sort by:</span>
-
-            <Select value={sortOrdersBy} onValueChange={handleSortChange}>
-              <SelectTrigger className="!border !border-gray-500 focus:ring-0 focus:ring-offset-0 shadow-none w-[140px] rounded-[14px]">
-                <SelectValue placeholder="Select" className="text-black fluid-text-xs" />
-              </SelectTrigger>
-
-              <SelectContent
-                position="popper"
-                className=" bg-white rounded-[10px] !ring-gray-200 w-[100px] p-0 overflow-hidden "
-              >
-                <SelectItem
-                  value="oldest"
-                  className="px-3 py-2 not-visited:cursor-pointer rounded-none fluid-text-xs"
+    <div className="flex w-full flex-col gap-6">
+      {allOrders.length > 0 && (
+        <>
+          <Card className="w-full flex-row flex-wrap items-center justify-between gap-3 p-4">
+            <div className="inline-flex items-center gap-1 rounded-full bg-[#F5F5F5] p-1">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`inline-flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 transition-colors ${
+                    activeTab === tab.key
+                      ? "bg-white text-center font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-semibold leading-[18px] text-[#FD151B] shadow-sm"
+                      : "text-center font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-semibold leading-[18px] text-[#6A7282] hover:text-black"
+                  }`}
                 >
-                  Date
-                </SelectItem>
-              </SelectContent>
-            </Select>
+                  {tab.label}
+                  <span
+                    className={`flex shrink-0 flex-col items-center justify-center rounded-full ${
+                      activeTab === tab.key
+                        ? "w-[17.917px] h-[19px] px-1.5 py-0.5 bg-[#FEF2F2] text-center  text-[clamp(0.625rem,0.625rem,0.625rem)] font-semibold leading-[18px] text-[#FD151B]"
+                        : "w-[17.9px] h-[19px] px-1.5 py-0.5 bg-[#E5E7EB] text-center text-[clamp(0.625rem,0.625rem,0.625rem)] font-bold leading-[15px] text-[#6A7282]"
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <div className="product-sort flex items-center gap-2">
+              <ArrowUpDown size={14} className="text-[#99A1AF]" />
+              <span className="text-[#99A1AF] font-medium text-[clamp(0.75rem,0.75rem,0.75rem)] leading-[16.5px]">Sort by:</span>
+
+              <Select value={sortOrdersBy} onValueChange={handleSortChange}>
+                <SelectTrigger className="inline-flex w-auto items-center justify-start gap-2 rounded-[23px] border border-[#E5E7EB] bg-[#F9FAFB] py-[7.5px] pr-[38px] pl-[12.066px] shadow-none focus:ring-0 focus:ring-offset-0">
+                  <SelectValue placeholder="Select" className="!text-[#99A1AF] font-medium leading-[16px] fluid-text-xs" />
+                </SelectTrigger>
+
+                <SelectContent
+                  position="popper"
+                  className=" bg-white rounded-[23px] !ring-gray-200 w-[100px] p-0 overflow-hidden "
+                >
+                  <SelectItem
+                    value="oldest"
+                    className="px-3 py-2 not-visited:cursor-pointer rounded-none fluid-text-xs text-[#99A1AF] font-medium leading-[16px]"
+                  >
+                    Delivery Date
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </Card>
+
+          <div className="flex items-center gap-2 fluid-text-sm">
+            <span className="font-bold fluid-text-xs font-bold text-[#211E22] leading-[19px]">
+              Orders <span className="text-sb-red">({effectiveTotal})</span>
+            </span>
+            <ChevronRight size={14} className="text-[#D1D5DC] ml-[-5px]" />
+            <span className="text-[#99A1AF] text-[0.75rem] font-normal leading-[18px] capitalize">
+              {TABS.find((t) => t.key === activeTab)?.label}
+            </span>
           </div>
-        </div>
-      ) : (
-        <div className="w-full flex justify-center py-20">
-          <p>No orders yet</p>
-        </div>
+        </>
       )}
 
-      {allOrders.map((order) => (
-        <div key={order.id} className="order-block">
-          <div className="order-detail grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 gap-5">
-            <div className="order-detail-item">
-              <h5 className="order-detail-label">
-                Order Number
-              </h5>
-              <p className="order-detail-value">
-                {order.order_number || order.id}
-              </p>
-            </div>
-            <div className="order-detail-item">
-              <h5 className="order-detail-label">
-                Order Date
-              </h5>
-              <p className="order-detail-value">
-                {formatReadableDate(order.created_at)}
-              </p>
-            </div>
-            <div className="order-detail-item">
-              <h5 className="order-detail-label">
-                Total Payment
-              </h5>
-              <p className="order-detail-value">
-                {order.totalPayment}
-              </p>
-            </div>
-
-            <div className="order-detail-item">
-              <h5 className="order-detail-label">
-                Payment Method
-              </h5>
-              <p className="order-detail-value">
-                {order.paymentMethod}
-              </p>
-            </div>
-
-            <div className="order-detail-item">
-              <h5 className="order-detail-label">
-                Order Status
-              </h5>
-
-              <p className="order-detail-label">
-                {getOrderStatusLabel(order)}
-              </p>
-            </div>
-
-            <div className="order-detail-item">
-              <h5 className="order-detail-label">
-                {order.status === Status.DELIVERED
-                  ? "Delivered on"
-                  : "Estimated Delivery Date"}
-              </h5>
-              <p className="order-detail-value">
-                {order.estimated_delivery_date
-                  ? new Date(order.estimated_delivery_date).toLocaleDateString(
-                      "en-AU",
-                      {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      },
-                    )
-                  : "Not Available"}
-              </p>
-            </div>
+      {allOrders.length === 0 && (
+        <Card className="w-full p-6 border">
+          <div className="w-full flex justify-center py-20">
+            <p>No orders yet</p>
           </div>
-          <div>
-            {order.products.map((product, idx) => (
-              <div
-                key={product.id ?? product.item_id ?? idx}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 border-b border-gray-200 py-2"
-              >
-                <div className="flex items-center gap-4">
-                  <Link
-                    href={`/product/${product.unique_code || product.product_id || product.id}`}
-                    className="shrink-0"
-                  >
-                    <Image
-                      width={137}
-                      height={137}
-                      src={getOrderProductImage(product)}
-                      alt={product.title || product.name}
-                      className="w-[90px] h-[90px] sm:w-[137px] sm:h-[137px] object-contain cursor-pointer"
-                    />
-                  </Link>
+        </Card>
+      )}
 
-                  <div>
-                    <Link
-                      href={`/product/${product.unique_code || product.product_id || product.id}`}
-                    >
-                      <p className="cursor-pointer hover:text-red-600 transition-colors font-bold">
-                        {product.title}
-                      </p>
-                    </Link>
+      {displayedOrders.length === 0 && allOrders.length > 0 && (
+        <Card className="w-full p-6 border">
+          <div className="w-full flex justify-center py-20">
+            <p>No orders in this category</p>
+          </div>
+        </Card>
+      )}
 
-                    <div>
-                      {product.variant_attributes?.map((attr, i) => (
-                        <p key={i} className="field-value-sm">
-                          <strong className="font-semibold">{attr.name}:</strong>{" "}
-                          {attr.value}
-                        </p>
-                      ))}
-
-                      <p className="field-value-sm">
-                        <strong className="font-semibold">Quantity:</strong>{" "}
-                        {product.quantity}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center flex-wrap gap-3 sm:shrink-0">
-                  {order.status?.toLowerCase() === "delivered" && (
-                    <Link
-                      href={`/user/orders/${order.id}/review?product_id=${encodeURIComponent(
-                        getReviewProductId(product),
-                      )}`}
-                      className="btn btn-red btn-filled btn-sharp"
-                    >
-                      Add Review
-                    </Link>
-                  )}
-
-                  {order.tracking_link?.trim() && (
-                    <Link
-                      href={order.tracking_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-red btn-filled btn-sharp"
-                    >
-                      Track Order
-                    </Link>
-                  )}
-                </div>
+      {displayedOrders.map((order) => (
+        <Card key={order.id} className="w-full border p-6 gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 w-full">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 flex-1">
+              <div className="flex flex-col gap-1">
+                <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">Order ID</span>
+                <span className="text-[0.75rem] font-bold text-[#211E22] leading-[18px]">
+                  #{order.order_number || order.id}
+                </span>
               </div>
-            ))}
-          </div>
 
-          <div className="flex items-center justify-between flex-wrap gap-4 pb-5">
-            <div className="flex items-center">
+              <div className="flex flex-col gap-1">
+                <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">Total Payment</span>
+                <span className="text-[0.75rem] font-bold text-[#211E22] leading-[18px]">{order.totalPayment}</span>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">Payment Method</span>
+                <span className="text-[0.75rem] font-bold text-[#211E22] leading-[18px]">{order.paymentMethod}</span>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">Estimated Delivery Date</span>
+                  {/* {order.status === Status.DELIVERED
+                    ? "Delivered On"
+                    : "Estimated Delivery Date"} */}
+                <span className="text-[0.75rem] font-bold text-[#211E22] leading-[18px]">
+                  {order.estimated_delivery_date
+                    ? new Date(order.estimated_delivery_date).toLocaleDateString(
+                        "en-AU",
+                        {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        },
+                      )
+                    : "Not Available"}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <StatusBadge
+                label={getOrderStatusLabel(order)}
+                color={getOrderStatusColor(order)}
+              />
+
               <button
-                className="btn btn-red btn-outline btn-rounded cursor-pointer"
-                onClick={() => router.push(`/user/orders/${order.id}`)}
+                type="button"
+                onClick={() => toggleOrderCollapse(order.id)}
+                className="cursor-pointer text-[#99A1AF] hover:text-black"
+                aria-label={collapsedOrders.has(order.id) ? "Expand order" : "Collapse order"}
               >
-                View Order Details
+                {collapsedOrders.has(order.id) ? (
+                  <ChevronDown size={18} />
+                ) : (
+                  <ChevronUp size={18} />
+                )}
               </button>
             </div>
 
-            <div className="flex items-center gap-4 flex-wrap">
+          </div>
+
+          <hr className="-mx-6 w-[calc(100%+3rem)] border-t border-[#F9FAFB]" />
+
+          {!collapsedOrders.has(order.id) && (
+            <div className="w-full">
+              {order.products.map((product, idx) => (
+                <div
+                  key={product.id ?? product.item_id ?? idx}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 border-b border-gray-100 py-3 last:border-b-0 last:mb-0"
+                >
+                  <div className="flex items-center gap-4">
+                    <Link
+                      href={`/product/${product.unique_code || product.product_id || product.id}`}
+                      className="shrink-0"
+                    >
+                      <Image
+                        width={137}
+                        height={137}
+                        src={getOrderProductImage(product)}
+                        alt={product.title || product.name}
+                        className="h-[74px] w-[74px] shrink-0 self-stretch rounded-lg border border-[#F3F4F6] bg-gray-300 bg-cover bg-center object-cover cursor-pointer"
+                      />
+                    </Link>
+
+                    <div>
+                      <Link
+                        href={`/product/${product.unique_code || product.product_id || product.id}`}
+                      >
+                        <p className="cursor-pointer hover:text-red-600 transition-colors font-semibold fluid-text-xs text-#211E22] leading-[18px]">
+                          {product.title}
+                        </p>
+                      </Link>
+
+                      <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                        {product.variant_attributes?.map((attr, i) => (
+                          <StatusBadge
+                            key={i}
+                            label={`${attr.name}: ${attr.value}`}
+                            color={BadgeColor.Gray}
+                            showDot={false}
+                          />
+                        ))}
+
+                        <StatusBadge
+                          label={`Qty: ${product.quantity}`}
+                          color={BadgeColor.Gray}
+                          showDot={false}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="sm:text-right shrink-0 sm:ml-4">
+                    <p className="text-[0.625rem] text-[#99A1AF] font-normal leading-[15px] capitalize">Price</p>
+                    <p className="fluid-text-xs font-bold text-[#211E22] leading-[19px]">
+                      {(order.totalPayment.split(" ")[0] || "").trim()}{" "}
+                      {formatPrice(product.total_price ?? product.unit_price)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="-mx-6 -mb-6 flex w-[calc(100%+3rem)] h-[69.75px] shrink-0 items-center justify-between flex-wrap gap-4 rounded-b-2xl border-t border-[#F3F4F6] bg-[#F9FAFB] px-6 py-4">
+            <div className="flex items-center gap-3 flex-wrap">
+              {order.status?.toLowerCase() === "delivered" && (
+                <Link
+                  href={`/user/orders/${order.id}/review?product_id=${encodeURIComponent(
+                    getReviewProductId(order.products[0]),
+                  )}`}
+                  className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] bg-[#FD151B] px-5 py-2 text-center font-montserrat text-[0.75rem] font-bold leading-[18.75px] text-white"
+                >
+                  <Star size={16} />
+                  Add Review
+                </Link>
+              )}
+
+              {order.tracking_link?.trim() && (
+                <Link
+                  href={order.tracking_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-[138.067px] h-[34.75px] shrink-0 items-center gap-2 rounded-[24px] bg-[#FD151B] px-5 py-2 text-center font-montserrat text-[0.75rem] font-bold leading-[18.75px] text-white"
+                >
+                  <Truck size={16} />
+                  Track Order
+                </Link>
+              )}
+
+              <button
+                className="flex w-[183.25px] h-[36.75px] shrink-0 items-center gap-2 rounded-[24px] border border-[#FD151B] bg-white px-5 py-2 cursor-pointer text-center font-montserrat text-[0.75rem] font-semibold leading-[18.75px] text-[#FD151B]"
+                onClick={() => router.push(`/user/orders/${order.id}`)}
+              >
+                <Eye size={16} />
+                View Order Details
+              </button>
+
               {order.status?.toLowerCase() === "delivered" && (
                 <button
-                  className="btn btn-red btn-outline btn-rounded cursor-pointer"
+                  className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] bg-[#FD151B] px-5 py-2 cursor-pointer text-center font-montserrat text-[0.75rem] font-bold leading-[18.75px] text-white"
                   onClick={() =>
                     handleDownloadInvoice(order.id, order.order_number)
                   }
@@ -464,35 +598,39 @@ export default function MyOrdersPage() {
               {(order.available_actions.includes("retry") ||
                 order.available_actions.includes("retry_payment")) && (
                 <button
-                  className="btn btn-red btn-filled btn-sharp"
+                  className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] bg-[#FD151B] px-5 py-2 cursor-pointer text-center font-montserrat text-[0.75rem] font-bold leading-[18.75px] text-white"
                   onClick={() => handleRetryPaymentClick(order.id)}
                 >
                   Retry Payment
                 </button>
               )}
+            </div>
 
+            <div className="flex items-center gap-4 flex-wrap">
               {order.available_actions.includes("cancel") && (
                 <button
-                  className={`cursor-pointer transition-colors fluid-text-sm font-semibold text-[#726969] hover:text-[#FD151B] underline ${
+                  className={`inline-flex cursor-pointer items-center gap-1.5 transition-colors text-[0.75rem] font-medium text-[#99A1AF] leading-[18px] hover:text-[#FD151B] ${
                     isCancelling ? "cursor-not-allowed" : ""
                   }`}
                   onClick={() => !isCancelling && handleCancelClick(order.id)}
                 >
+                  <XCircle size={12} />
                   Cancel Order
                 </button>
               )}
 
               {order.available_actions.includes("return") && (
                 <button
-                  className="cursor-pointer transition-colors hover:text-[#FD151B] fluid-text-sm"
+                  className="inline-flex cursor-pointer items-center gap-1.5 transition-colors hover:text-[#FD151B] text-[0.75rem] font-medium text-[#99A1AF] leading-[18px]"
                   onClick={() => handleReturnClick(order.id)}
                 >
+                  <RefreshCw size={12} />
                   Return
                 </button>
               )}
             </div>
           </div>
-        </div>
+        </Card>
       ))}
 
       {allOrders.length < uiLimit && allOrders.length < effectiveTotal && (
@@ -537,7 +675,7 @@ export default function MyOrdersPage() {
           />
         </Elements>
       )}
-      <div className="product-search bg-white mt-40">
+      <div className="product-search bg-white">
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
