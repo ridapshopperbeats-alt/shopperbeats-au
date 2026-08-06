@@ -1,246 +1,182 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { ShoppingBag } from "lucide-react";
 import { toast } from "react-toastify";
+
 import Button from "@/components/common/Button";
-import "../../../../styles/Cart.css";
-import "../../../../styles/auth.css";
-import { formatPrice, formatReadableDate } from "@/lib/utils/main-utils";
-import { useStaticWishlist } from "@/lib/hooks/useStaticWishlist";
-import {
-  addStaticWishlistItemToCart,
-  type StaticWishlistItem,
-} from "@/lib/utils/staticStorage";
+import { Card } from "@/components/common/Card";
+import StaticProductCard from "@/components/common/StaticProductCard";
+import { useStaticCart } from "@/lib/hooks/useStaticCart";
+import { ProductCardProps } from "@/types/product";
 
-function formatDateDDMMYY(date: string): string {
-  const d = new Date(date);
-  const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = String(d.getFullYear()).slice(-2);
-  return `${day}/${month}/${year}`;
-}
-
-// ---------------- DUMMY DATA (static, for now) ----------------
-const DUMMY_WISHLIST_ITEMS = [
+// ---------------- DUMMY DATA (static, for now — mirrors homepage StaticCard.tsx) ----------------
+const STATIC_WISHLIST_PRODUCTS: ProductCardProps[] = [
   {
-    product_id: "prod-1",
-    variant_id: undefined as string | undefined,
-    sku: "SKU001",
-    product_name:
-      "Saint Laurent Classic Biker Leather Jacket (Black) — Signature Biker Silhouette In Supple Lambskin",
-    price: 1290,
-    created_at: "2026-06-15T10:00:00.000Z",
-    is_active: true,
-    available_stock: 15,
-    images: [
-      {
-        image_url:
-          "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&q=80",
-      },
-    ],
+    id: "wishlist-1",
+    unique_code: "wishlist-1",
+    image:
+      "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&q=80",
+    brand_name: "Terractive",
+    title: "Stretchie Tank Top - Super-Soft, Sweat-Wicking & Stretchy",
+    mainPrice: 89,
+    wasPrice: 249,
+    showWasPrice: true,
+    saveAmount: 64,
+    rating: 4.5,
+    reviewCount: 128,
+    stock: 15,
+    shippingCharge: 0,
+    tags: ["hotseller"],
   },
   {
-    product_id: "prod-2",
-    variant_id: "var-2",
-    sku: "SKU002",
-    product_name:
-      "GUCCI Ace Sneaker (Tan Leather, Gold Buckle) — Low-Top Lace-Up Sneaker With Signature",
-    price: 450,
-    created_at: "2026-07-01T10:00:00.000Z",
-    is_active: true,
-    available_stock: 5,
-    images: [
-      {
-        image_url:
-          "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&q=80",
-      },
-    ],
+    id: "wishlist-2",
+    unique_code: "wishlist-2",
+    image:
+      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&q=80",
+    brand_name: "Glow",
+    title: "Glow Makeup Essentials Kit - Glow With Beauty Essentials",
+    mainPrice: 119,
+    wasPrice: 299,
+    showWasPrice: true,
+    saveAmount: 60,
+    rating: 4.5,
+    reviewCount: 76,
+    stock: 24,
+    shippingCharge: 0,
+    tags: ["new"],
   },
   {
-    product_id: "prod-3",
-    variant_id: undefined as string | undefined,
-    sku: "SKU003",
-    product_name: "Classic Leather Wallet",
-    price: 89.99,
-    created_at: "2026-07-10T10:00:00.000Z",
-    is_active: true,
-    available_stock: 0,
-    images: [
-      {
-        image_url:
-          "https://images.unsplash.com/photo-1627123424574-724758594e93?w=400&q=80",
-      },
-    ],
+    id: "wishlist-3",
+    unique_code: "wishlist-3",
+    image:
+      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&q=80",
+    brand_name: "ShopperBeats",
+    title: "Rose Gold Minimal Watch - Timeless Style With Luxury Touch",
+    mainPrice: 199,
+    wasPrice: 499,
+    showWasPrice: true,
+    saveAmount: 60,
+    rating: 4.5,
+    reviewCount: 54,
+    stock: 8,
+    shippingCharge: 0,
+    tags: ["bestseller"],
+  },
+  {
+    id: "wishlist-4",
+    unique_code: "wishlist-4",
+    image:
+      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&q=80",
+    brand_name: "ShopperBeats",
+    title: "Luxury Quilted Chain Bag - Elegant Bags For Modern Looks",
+    mainPrice: 79,
+    wasPrice: 199,
+    showWasPrice: true,
+    saveAmount: 60,
+    rating: 4.5,
+    reviewCount: 32,
+    stock: 0,
+    shippingCharge: 0,
+  },
+  {
+    id: "wishlist-5",
+    unique_code: "wishlist-5",
+    image:
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=400&q=80",
+    brand_name: "Terractive",
+    title: "Stretchie Tank Top - Super-Soft, Sweat-Wicking & Stretchy",
+    mainPrice: 89,
+    wasPrice: 249,
+    showWasPrice: true,
+    saveAmount: 64,
+    rating: 4.5,
+    reviewCount: 128,
+    stock: 15,
+    shippingCharge: 0,
+    tags: ["hotseller"],
+  },
+  {
+    id: "wishlist-6",
+    unique_code: "wishlist-6",
+    image:
+      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&q=80",
+    brand_name: "ShopperBeats",
+    title: "Rose Gold Minimal Watch - Timeless Style With Luxury Touch",
+    mainPrice: 199,
+    wasPrice: 499,
+    showWasPrice: true,
+    saveAmount: 60,
+    rating: 4.5,
+    reviewCount: 54,
+    stock: 8,
+    shippingCharge: 0,
+    tags: ["bestseller"],
   },
 ];
 
 export default function WishlistPage() {
-  const router = useRouter();
+  const { addToCart } = useStaticCart();
 
-  const [wishlistItems, setWishlistItems] = useState(DUMMY_WISHLIST_ITEMS);
-  const { items: staticWishlistItems, removeItem: removeStaticWishlistItemById } =
-    useStaticWishlist();
-  const combinedWishlistItems = useMemo(
-    () => [
-      ...(wishlistItems as unknown as StaticWishlistItem[]),
-      ...staticWishlistItems,
-    ],
-    [wishlistItems, staticWishlistItems],
-  );
-  const [cartProductIds, setCartProductIds] = useState<string[]>([]);
-  const [isRemoving, setIsRemoving] = useState(false);
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const items = STATIC_WISHLIST_PRODUCTS;
 
-  const isInCart = (productId: string) => cartProductIds.includes(productId);
+  const handleAddAllToCart = () => {
+    const inStockItems = items.filter((item) => (item.stock ?? 0) > 0);
 
-  const handleAddToCart = async (item: StaticWishlistItem) => {
-    if (item.product_id.startsWith("static-")) {
-      addStaticWishlistItemToCart(item);
-      setCartProductIds((prev) => [...prev, item.product_id]);
-      toast.success("Added to cart");
-      return;
-    }
-    setIsAddingToCart(true);
-    setTimeout(() => {
-      setCartProductIds((prev) => [...prev, item.product_id]);
-      toast.success("Added to cart");
-      setIsAddingToCart(false);
-    }, 300);
-  };
-
-  const handleRemove = async (productId: string) => {
-    if (productId.startsWith("static-")) {
-      removeStaticWishlistItemById(productId);
-      toast.success("Removed from wishlist");
-      return;
-    }
-    setIsRemoving(true);
-    setTimeout(() => {
-      setWishlistItems((prev) =>
-        prev.filter((item) => item.product_id !== productId),
-      );
-      toast.success("Removed from wishlist");
-      setIsRemoving(false);
-    }, 300);
-  };
-
-  if (!combinedWishlistItems.length)
-    return (
-      <div className="wishlist-content">
-        <h4>Wishlist</h4>
-        <p>Your wishlist is empty.</p>
-      </div>
+    inStockItems.forEach((item) =>
+      addToCart({
+        id: String(item.unique_code || item.id),
+        image: item.image,
+        brand_name: item.brand_name || "No Brand",
+        title: item.title || "",
+        mainPrice: item.mainPrice || 0,
+        wasPrice: item.wasPrice || 0,
+        saveAmount: item.saveAmount || 0,
+        shippingCharge: item.shippingCharge || 0,
+        isOutOfStock: false,
+      }),
     );
 
+    toast.success(`Added ${inStockItems.length} item(s) to cart`);
+  };
+
   return (
-    <div className="wishlist-content">
-      <h4 className="wishlist-title fluid-text-xl">Wishlist</h4>
-      <div className="wishlist-table-header">
-        <div className="wishlist-col-product">Product</div>
-        <div className="wishlist-col-span-2">Price</div>
-        <div className="wishlist-col-span-2">Date Added</div>
-        <div className="wishlist-col-span-2">Stock Status</div>
-        <div className="wishlist-col-span-2 flex items-center justify-center">
-          Action
-        </div>      </div>
+    <div className="flex w-full flex-col gap-6">
+      <Card className="w-full flex-row items-center justify-between gap-4 p-4">
+        <div>
+          <h4 className="font-montserrat text-[clamp(0.875rem,0.875rem,0.875rem)] font-bold leading-[19.5px] text-[#211E22]">
+            My Wishlist
+          </h4>
+          <p className="font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-normal leading-[16.5px] text-[#99A1AF]">
+            {items.length} items saved
+          </p>
+        </div>
 
-      <div className="wishlist-container">
-        {combinedWishlistItems.map((item) => {
-          const outOfStock =
-            !item.is_active ||
-            (item.available_stock !== undefined &&
-              item.available_stock <= 0);
+        <Button
+          onClick={handleAddAllToCart}
+          className="flex items-center justify-center gap-2 rounded-full bg-sb-red px-5 py-2.5 text-sm font-medium text-white"
+          debounceDelay={500}
+        >
+          <ShoppingBag size={16} />
+          Add All to Cart
+        </Button>
+      </Card>
 
-          return (
+      {items.length === 0 ? (
+        <Card className="w-full items-center p-10 text-center">
+          <p className="text-sm text-gray-400">Your wishlist is empty.</p>
+        </Card>
+      ) : (
+        <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {items.map((item) => (
             <div
-              key={item.product_id}
-              className="wishlist-card"
+              key={item.id}
+              className="w-full [&>div]:max-h-none! [&>div]:h-auto! [&_a]:max-h-none! [&_a]:h-auto!"
             >
-              <div className="wishlist-item-media">
-                <div
-                  className="wishlist-item-image"
-                  style={{
-                    backgroundImage: `url(${item.images?.[0]?.image_url || "/images/image-coming-soon.jpg"
-                      })`,
-                  }}
-                />
-
-                <span className="wishlist-item-name">
-                  {item.product_name}
-                </span>
-              </div>
-
-              <div className="wishlist-cell">
-                <span className="wishlist-mobile-label">Price</span>
-
-                <p className="wishlist-price">
-                  ${formatPrice(item.price)}
-                </p>
-              </div>
-
-              <div className="wishlist-date-cell">
-                <span className="wishlist-mobile-label">
-                  Date Added
-                </span>
-
-                <span className="wishlist-align-cell">
-                  {formatReadableDate(item.created_at)}
-                </span>
-              </div>
-
-              <div className="wishlist-cell">
-                <span className="wishlist-mobile-label">Stock</span>
-
-                <div className="wishlist-align-cell">
-                  {outOfStock ? (
-                    <span className="wishlist-out-of-stock">
-                      Out of Stock
-                    </span>
-                  ) : (
-                    <span className="wishlist-in-stock">
-                      In Stock
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="wishlist-action-cell">
-                <span className="wishlist-action-mobile-label">
-                  Action
-                </span>
-
-                <div className="wishlist-action-buttons">
-                  <Button
-                    disabled={isAddingToCart}
-                    onClick={() =>
-                      isInCart(item.product_id)
-                        ? router.push("/cart")
-                        : handleAddToCart(item)
-                    }
-                    className="wishlist-add-to-cart-btn"
-                  >
-                    {isInCart(item.product_id)
-                      ? "Go to Cart"
-                      : "Add to Cart"}
-                  </Button>
-
-                  <Button
-                    className="wishlist-remove-btn"
-                    disabled={isRemoving}
-                    isLoading={isRemoving}
-                    onClick={() =>
-                      handleRemove(item.product_id)
-                    }
-                  >
-                    Remove
-                  </Button>
-                </div>
-              </div>
+              <StaticProductCard {...item} />
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

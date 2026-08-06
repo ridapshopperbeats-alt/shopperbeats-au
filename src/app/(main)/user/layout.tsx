@@ -14,6 +14,10 @@ export default function UserLayout({
 }) {
   const pathname = usePathname();
   const isPersonalInformation = pathname === "/user/personal-information";
+  const usesCardLayout =
+    isPersonalInformation ||
+    pathname === "/user/logout" ||
+    pathname === "/user/wishlist";
 
   const getPageTitle = () => {
     switch (pathname) {
@@ -38,6 +42,10 @@ export default function UserLayout({
     switch (pathname) {
       case "/user/personal-information":
         return "Manage your personal information and account preferences";
+         case "/user/logout":
+        return "We hope to see you again soon";
+          case "/user/wishlist":
+        return "Your saved fashion favourites, all in one place.";
       default:
         return undefined;
     }
@@ -49,12 +57,12 @@ export default function UserLayout({
           title={getPageTitle()}
           subtitle={getPageSubtitle()}
           titleClassName={
-            isPersonalInformation
+            pathname
               ? "font-montserrat text-[32px]! font-semibold! leading-[24px]! text-[#01295F]!"
               : undefined
           }
           subtitleClassName={
-            isPersonalInformation
+            pathname
               ? "font-montserrat text-[16px]! font-semibold! leading-[19.5px]! text-[#6A7282]!"
               : undefined
           }
@@ -75,7 +83,11 @@ export default function UserLayout({
             <Sidebar links={sidebarLinks} variant="account" />
 
             <div
-              className="flex w-full max-w-[1118px] justify-center"
+              className={
+                usesCardLayout
+                  ? "flex w-full max-w-[1118px] justify-center"
+                  : "content shadow-[0px_0px_14px_rgba(0,0,0,0.08)] w-full lg:w-85-imp"
+              }
               style={{ marginTop: "0" }}
             >
               <Suspense fallback={<div>Loading...</div>}>
