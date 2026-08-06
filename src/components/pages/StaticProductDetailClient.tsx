@@ -190,7 +190,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                   onClick={() => handleAttributeChange(attrName, item.value)}
                   aria-label={item.value}
                   title={item.value}
-                  className={`w-10 px-2 h-10 rounded-[8px] border cursor-pointer fluid-text-sm font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                  className={`min-w-10 px-2 h-10 rounded-[8px] border cursor-pointer whitespace-nowrap fluid-text-sm font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
                     isSelected
                       ? "border-[#FD151B] text-[#FD151B]"
                       : "border-[#CCCCCC] text-[#1D265F]/50"
@@ -598,10 +598,9 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <MapPin
-                        size={20}
-                        className="shrink-0 text-[#FD151B]"
-                        fill="#FD151B"
-                        stroke="#FFFFFF"
+                        size={15}
+                        strokeWidth={2.5}
+                        className="text-[#FD151B]"
                       />
                       <div className="flex flex-col leading-[16px]">
                         <span className="fluid-text-xs font-bold text-[#1D265F]">
@@ -887,7 +886,9 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
             </div>
 
             {(product.reviews?.length ?? 0) > 0 && (
-              <CustomerRatingViewPage reviews={product.reviews} />
+              <div className="hidden xl:block">
+                <CustomerRatingViewPage reviews={product.reviews} />
+              </div>
             )}
           </div>
 
@@ -912,12 +913,11 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
 
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-start gap-2">
                     <MapPin
-                      size={20}
-                      className="shrink-0 text-[#FD151B]"
-                      fill="#FD151B"
-                      stroke="#FFFFFF"
+                      size={16}
+                      strokeWidth={2.5}
+                      className="text-[#FD151B]"
                     />
                     <div className="flex flex-col leading-[18px]">
                       <span className="pdp-field-label">Deliver To</span>

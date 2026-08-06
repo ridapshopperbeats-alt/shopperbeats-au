@@ -293,7 +293,7 @@ export default function StaticProductCards({
 
         <div
           ref={mobileSliderRef}
-          className="flex gap-3 overflow-x-auto scroll-smooth no-scrollbar pt-2"
+          className="flex gap-3 overflow-x-auto scroll-smooth no-scrollbar pt-3 md:pt-5 lg:pt-2"
         >
           {staticProducts.map((product) => (
             <div
@@ -410,13 +410,13 @@ export default function StaticProductCards({
 
       <div
         ref={sliderRef}
-        className="hidden lg:flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pt-3"
+        className="hidden lg:flex gap-6 overflow-x-auto scroll-smooth no-scrollbar lg:pt-6"
       >
         {staticProducts.map((product) => {
           return (
             <div
               key={product.id}
-              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[495px] flex flex-col justify-start overflow-hidden rounded-[7px]"
+              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[515px] flex flex-col justify-start overflow-hidden rounded-[7px]"
             >
               {renderTag(product.tag)}
 
@@ -484,13 +484,13 @@ export default function StaticProductCards({
                         Or fastest delivery Tomorrow, 5 June
                       </p>
 
-                      <p className="font-normal fluid-text-13-14 leading-[18px] text-[#ff4400]">
+                      <p className="mt-1 font-normal fluid-text-13-14 leading-[18px] text-[#ff4400]">
                         Extra 10% Off with Code: SHBS10
                       </p>
                     </div>
                   </div>
 
-                  <div className="w-full px-2  flex justify-center">
+                  <div className="w-full px-2 mt-3 flex justify-center">
                     <button
                       type="button"
                       onClick={(e) => {

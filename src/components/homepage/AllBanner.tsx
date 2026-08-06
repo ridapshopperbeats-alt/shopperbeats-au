@@ -168,7 +168,7 @@ export default function PopularCategories() {
   return (
     <div className="container">
       {/* Heading */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pt-4 md:pt-1 lg:pt-2">
         <div>
           <h2 className="fluid-text-18-32 font-bold text-black">
             Popular Categories
@@ -182,7 +182,7 @@ export default function PopularCategories() {
       </div>
 
       {/* TOP */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-3 lg:pt-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-3 md:pt-2 lg:pt-3">
         {topCategories.map((item) => (
           <div key={item.id} className="banner-card banner-card-top group">
             <Image
@@ -227,7 +227,7 @@ export default function PopularCategories() {
       {/* BOTTOM */}
       <div
         className={`grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 mt-4 ${
-          showAll ? "grid" : "hidden lg:grid"
+          showAll ? "grid" : "hidden lg:grid lg:mb-1"
         }`}
       >
         {bottomCategories.map((item) => (

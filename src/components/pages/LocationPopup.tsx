@@ -153,6 +153,7 @@ export default function LocationPopup({
           <h3 className="text-[16px] lg:text-[20px] font-bold text-black text-center shrink-0">
             Choose Your Location
           </h3>
+          <div className="border-b border-[#DBDBDB] mt-2 lg:mt-3 shrink-0 -mx-5 lg:-mx-6" />
 
           <div className="flex flex-col flex-1 min-h-0 lg:flex-none w-full lg:max-w-[400px] lg:h-[301px] rounded-[10px] border border-[#F5F5F5] overflow-hidden mx-auto mt-3 lg:mt-4">
             <p className="text-[12px] lg:text-[13px] text-[#696e79] px-4 py-3 lg:py-4 border-b border-[#F5F5F5] shrink-0 text-start">

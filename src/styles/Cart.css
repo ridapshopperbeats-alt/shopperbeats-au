@@ -376,15 +376,15 @@
 }
 
 .cart-drawer-item-image-wrapper {
-  @apply shrink-0 w-[70px] h-[70px] rounded-[8px] sm:rounded-none overflow-hidden;
+  @apply shrink-0 w-[136px] h-[136px] rounded-[8px] sm:rounded-none overflow-hidden;
 }
 
 .cart-drawer-item-image {
-  @apply w-[70px] h-[70px] object-cover;
+  @apply w-[136px] h-[136px] object-cover;
 }
 
 .cart-drawer-item-details {
-  @apply flex-1 min-w-0 flex flex-col gap-2;
+  @apply flex-1 min-w-0 flex flex-col gap-1;
 }
 
 .cart-drawer-item-name {
@@ -450,7 +450,6 @@
 
 .cart-drawer-price-value {
   @apply text-[#FD151B] font-semibold ml-5;
-  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
 }
 
 .cart-drawer-footer {
@@ -463,12 +462,12 @@
 
 .cart-drawer-shipping-label {
   @apply font-['Inter'] font-normal leading-[100%] tracking-[0%] text-[#878787];
-  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  fontsize: clamp(0.875rem, 1.5vw, 1rem);
 }
 
 .cart-drawer-shipping-value {
   @apply font-montserrat font-normal leading-[100%] tracking-[0%] capitalize text-black;
-  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-size: clamp(0.875rem, 1.5vw, 0.875rem);
 }
 
 .cart-drawer-subtotal-row {
@@ -477,7 +476,7 @@
 
 .cart-drawer-subtotal-text {
   @apply font-montserrat font-semibold leading-[100%] tracking-[0%] capitalize text-black;
-  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-size: clamp(0.875rem, 1.5vw, 0.875rem);
 }
 
 .cart-drawer-actions {
