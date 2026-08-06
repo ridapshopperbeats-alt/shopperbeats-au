@@ -352,7 +352,7 @@ export default function MyOrdersPage() {
                   key={tab.key}
                   type="button"
                   onClick={() => setActiveTab(tab.key)}
-                  className={`inline-flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 transition-colors ${
+                  className={`inline-flex shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 transition-colors ${
                     activeTab === tab.key
                       ? "bg-white text-center font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-semibold leading-[18px] text-[#FD151B] shadow-sm"
                       : "text-center font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-semibold leading-[18px] text-[#6A7282] hover:text-black"
@@ -378,7 +378,11 @@ export default function MyOrdersPage() {
 
               <Select value={sortOrdersBy} onValueChange={handleSortChange}>
                 <SelectTrigger className="inline-flex w-auto items-center justify-start gap-2 rounded-[23px] border border-[#E5E7EB] bg-[#F9FAFB] py-[7.5px] pr-[38px] pl-[12.066px] shadow-none focus:ring-0 focus:ring-offset-0">
-                  <SelectValue placeholder="Select" className="!text-[#99A1AF] font-medium leading-[16px] fluid-text-xs" />
+                  <SelectValue
+                    placeholder="Select"
+                    className="!text-[#99A1AF] font-medium leading-[16px] fluid-text-xs"
+                    style={{ color: "#99A1AF" }}
+                  />
                 </SelectTrigger>
 
                 <SelectContent
@@ -425,9 +429,29 @@ export default function MyOrdersPage() {
       )}
 
       {displayedOrders.map((order) => (
-        <Card key={order.id} className="w-full border p-6 gap-4">
-          <div className="flex flex-wrap items-center justify-between gap-4 w-full">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 flex-1">
+        <Card key={order.id} className="w-full border p-4 sm:p-6 gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 w-full">
+            <div className="flex w-full items-center justify-between gap-3 sm:hidden">
+              <StatusBadge
+                label={getOrderStatusLabel(order)}
+                color={getOrderStatusColor(order)}
+              />
+
+              <button
+                type="button"
+                onClick={() => toggleOrderCollapse(order.id)}
+                className="cursor-pointer text-[#99A1AF] hover:text-black"
+                aria-label={collapsedOrders.has(order.id) ? "Expand order" : "Collapse order"}
+              >
+                {collapsedOrders.has(order.id) ? (
+                  <ChevronDown size={18} />
+                ) : (
+                  <ChevronUp size={18} />
+                )}
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 flex-1 w-full">
               <div className="flex flex-col gap-1">
                 <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">Order ID</span>
                 <span className="text-[0.75rem] font-bold text-[#211E22] leading-[18px]">
@@ -465,7 +489,7 @@ export default function MyOrdersPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-3">
               <StatusBadge
                 label={getOrderStatusLabel(order)}
                 color={getOrderStatusColor(order)}
@@ -487,7 +511,7 @@ export default function MyOrdersPage() {
 
           </div>
 
-          <hr className="-mx-6 w-[calc(100%+3rem)] border-t border-[#F9FAFB]" />
+          <hr className="-mx-4 sm:-mx-6 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] border-t border-[#F9FAFB]" />
 
           {!collapsedOrders.has(order.id) && (
             <div className="w-full">
@@ -514,7 +538,7 @@ export default function MyOrdersPage() {
                       <Link
                         href={`/product/${product.unique_code || product.product_id || product.id}`}
                       >
-                        <p className="cursor-pointer hover:text-red-600 transition-colors font-semibold fluid-text-xs text-#211E22] leading-[18px]">
+                        <p className="cursor-pointer hover:text-red-600 transition-colors font-semibold fluid-text-xs text-[#211E22] leading-[18px]">
                           {product.title}
                         </p>
                       </Link>
@@ -550,7 +574,7 @@ export default function MyOrdersPage() {
             </div>
           )}
 
-          <div className="-mx-6 -mb-6 flex w-[calc(100%+3rem)] h-[69.75px] shrink-0 items-center justify-between flex-wrap gap-4 rounded-b-2xl border-t border-[#F3F4F6] bg-[#F9FAFB] px-6 py-4">
+          <div className="-mx-4 sm:-mx-6 -mb-4 sm:-mb-6 flex w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] h-auto sm:h-[69.75px] shrink-0 flex-col items-start sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 rounded-b-2xl border-t border-[#F3F4F6] bg-[#F9FAFB] px-4 sm:px-6 py-4">
             <div className="flex items-center gap-3 flex-wrap">
               {order.status?.toLowerCase() === "delivered" && (
                 <Link
@@ -675,7 +699,7 @@ export default function MyOrdersPage() {
           />
         </Elements>
       )}
-      <div className="product-search bg-white">
+      <div className="w-full bg-white [&>div]:pt-0">
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

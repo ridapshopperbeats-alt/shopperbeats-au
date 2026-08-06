@@ -32,7 +32,7 @@ function SelectValue({
   return (
     <SelectPrimitive.Value
       data-slot="select-value"
-      className={cn("data-placeholder:text-[#99A1AF]", className)}
+      className={cn("data-placeholder:text-[#99A1AF]!", className)}
       {...props}
     />
   )
