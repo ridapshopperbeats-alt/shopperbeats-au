@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { ChevronDown, X } from "lucide-react";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { useGetOrderByIdQuery, useGetReturnOptionsQuery, useReturnOrderMutation, useReturnOrderItemMutation } from "@/lib/redux/apis/order-api";
 import AddressForm from "@/components/common/AddressForm";
 import { Address, AddressFormValues } from "@/types/address";
 
-import { APIProduct, ReturnOption, ReturnOrderPopupProps } from "@/types/order";
+import { ReturnOption, ReturnOrderPopupProps } from "@/types/order";
 import { toast } from "react-toastify";
 import { formatPrice } from "@/lib/utils/main-utils";
 import { returnMessageSchema } from "@/lib/validations/form-schemas";
@@ -124,108 +125,133 @@ if (prevOrderForAddress !== order) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 top-20 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white w-full max-w-3xl max-h-[70vh] rounded-2xl shadow-2xl flex flex-col rounded-[8px]">
-
-        <div className="px-4 py-5 flex justify-between items-center">
-          <h6 className="text-[20px] lg:text-[24px]  font-semibold text-black">
-            {isLoadingOrder ? "Loading..." : itemId && product ? `Return Item: ${product.name}` : `Return Order`}
-          </h6>
+    <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/50 p-4">
+      <div className="flex w-full max-w-lg max-h-[85vh] flex-col overflow-hidden rounded-2xl border-t-4 border-[#FD151B] bg-white shadow-xl">
+        <div className="flex items-start justify-between gap-4 p-6 pb-0">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-[1rem] font-bold text-[#211E22]">
+              {isLoadingOrder
+                ? "Loading..."
+                : itemId && product
+                  ? `Return Item: ${product.name}`
+                  : "Return Order"}
+            </h2>
+            {/* <p className="text-[0.8125rem] text-[#99A1AF]">
+              Please provide a reason for returning {itemId ? "this item" : "this order"}.
+            </p> */}
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl cursor-pointer"
+            className="shrink-0 cursor-pointer text-[#211E22] hover:text-[#211E22]"
+            aria-label="Close"
           >
-            ✕
+            <X size={18} />
           </button>
         </div>
 
         <div
-          className="flex-1 overflow-y-auto overscroll-contain px-4 space-y-4"
+          className="flex-1 overflow-y-auto overscroll-contain px-6 py-4 flex flex-col gap-4"
           data-lenis-prevent
           onWheel={(e) => e.stopPropagation()}
         >
-
-          <p className="text-sm text-gray-500">
-            Please provide a reason for returning {itemId ? "this item" : "this order"}.
-          </p>
-
-          <div>
-            <label htmlFor="reason" className="popup-field-label">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="reason" className="text-[0.8125rem] font-semibold text-[#6A7282]">
               Reason for return
             </label>
-            <select
-              id="reason"
-              name="reason"
-              value={formData.reason}
-              onChange={handleChange}
-              disabled={isLoadingOptions}
-              className="w-full rounded-lg border border-gray-300 px-4  text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
-            >
-              <option value="">
-                {isLoadingOptions ? "Loading..." : "Select a reason"}
-              </option>
-              {returnOptions 
-                ?.filter((option: ReturnOption) => option.is_active)
-                .map((option: ReturnOption) => (
-                  <option key={option.id} value={option.reason}>
-                    {option.reason}
-                  </option>
-                ))}
-            </select>
+            <div className="relative">
+              <select
+                id="reason"
+                name="reason"
+                value={formData.reason}
+                onChange={handleChange}
+                disabled={isLoadingOptions}
+                className="!h-auto !w-full !appearance-none !rounded-[14px] !border !border-[#E5E7EB] !bg-white !bg-none !px-4 !py-3 !pr-10 !text-[0.8125rem] !leading-normal !text-[#6A7282] focus:!border-[#FD151B] focus:outline-none focus:ring-1 focus:ring-[#FD151B]"
+              >
+                <option value="">
+                  {isLoadingOptions ? "Loading..." : "Select a reason"}
+                </option>
+                {returnOptions
+                  ?.filter((option: ReturnOption) => option.is_active)
+                  .map((option: ReturnOption) => (
+                    <option key={option.id} value={option.reason}>
+                      {option.reason}
+                    </option>
+                  ))}
+              </select>
+              <ChevronDown
+                size={16}
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#99A1AF]"
+              />
+            </div>
 
             {formErrors.reason && (
-              <p className="text-red-500 text-xs mt-1">
-                {formErrors.reason}
-              </p>
+              <p className="text-[0.75rem] text-red-600">{formErrors.reason}</p>
             )}
           </div>
 
-          <div className="">
-            <h5 className="font-semibold text-gray-800 ">
-              Pickup Address
-            </h5>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <span className="fluid-text-xs font-semibold text-[#211E22]">
+                Pickup Address
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowAddressFormModal(true)}
+                className="cursor-pointer text-[0.75rem] font-semibold text-[#FD151B] hover:underline"
+              >
+                Change Address
+              </button>
+            </div>
 
             {selectedAddress && (
-            <div className="selected-address-summary bg-gray-50 p-4 rounded-md">
-              <p className="text-sm text-gray-700">{selectedAddress.first_name} {selectedAddress.last_name}</p>
-              <p className="text-sm text-gray-700">{selectedAddress.address}</p>
-              <p className="text-sm text-gray-700">{selectedAddress.city}, {selectedAddress.state} {selectedAddress.pincode}</p>
-              <p className="text-sm text-gray-700">{selectedAddress.country}</p>
-              <p className="text-sm text-gray-700">Phone: {selectedAddress.phone_number}</p>
-            </div>
+              <div className="flex flex-col gap-1 rounded-[16px] border border-[#F3F4F6] bg-[#F9FAFB] p-4">
+                <p className="text-[0.8125rem] font-semibold text-[#211E22]">
+                  {selectedAddress.first_name} {selectedAddress.last_name}
+                </p>
+                <p className="text-[0.8125rem] text-[#726969]">{selectedAddress.address}</p>
+                <p className="text-[0.8125rem] text-[#726969]">
+                  {selectedAddress.city}, {selectedAddress.state} {selectedAddress.pincode}
+                </p>
+                <p className="text-[0.8125rem] text-[#726969]">{selectedAddress.country}</p>
+                <p className="text-[0.8125rem] text-[#726969]">Phone: {selectedAddress.phone_number}</p>
+              </div>
             )}
           </div>
 
-          <div>
-            <label htmlFor="customer_comment" className="popup-field-label">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="customer_comment" className="fluid-text-xs  font-semibold text-[#6A7282]">
               Comment (optional)
             </label>
             <textarea
               id="customer_comment"
               name="customer_comment"
-              rows={4}
+              rows={3}
               value={formData.customer_comment}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none resize-none"
+              className="!h-auto !w-full !resize-none !rounded-[16px] !border !border-[#E5E7EB] !p-3 !text-[0.8125rem] !leading-normal !text-[#6A7282] focus:!border-[#FD151B] focus:outline-none focus:ring-1 focus:ring-[#FD151B]"
               placeholder="Add additional details (if any)..."
             />
           </div>
 
           {order && (
-            <div className="bg-gray-50 rounded-xl p-5 ">
-              <h6 className="popup-section-title" style={{ marginBottom: "10px" }}>
+            <div className="flex flex-col gap-3">
+              <h6 className="text-[0.8125rem] font-bold text-[#211E22]">
                 {itemId ? "Item Refund Estimate" : "Refund Summary"}
               </h6>
 
+              <hr className="border-t border-[#E5E7EB]" />
+
               {itemId && product ? (
                 <>
-                  <div className="popup-summary-row">
-                    <span>Item Price</span>
-                    <span>{order.currency} {formatPrice(product.unit_price)} x {product.quantity}</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[0.8125rem] text-[#99A1AF]">Item Price</span>
+                    <span className="text-[0.8125rem] font-semibold text-[#211E22]">
+                      {order.currency} {formatPrice(product.unit_price)} x {product.quantity}
+                    </span>
                   </div>
-                  <div className="flex justify-between font-semibold  pt-3 mt-3 text-gray-800">
-                    <span>Estimated Refund</span>
-                    <span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[0.875rem] font-bold text-[#211E22]">Estimated Refund</span>
+                    <span className="text-[0.875rem] font-bold text-[#211E22]">
                       {order.currency}{" "}
                       {formatPrice((product.unit_price || 0) * (product.quantity || 1))}
                     </span>
@@ -233,14 +259,16 @@ if (prevOrderForAddress !== order) {
                 </>
               ) : (
                 <>
-                  <div className="popup-summary-row">
-                    <span>Order Subtotal</span>
-                    <span>{order.currency} {order.subtotal}</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[0.8125rem] text-[#99A1AF]">Order Subtotal</span>
+                    <span className="text-[0.8125rem] font-semibold text-[#211E22]">
+                      {order.currency} {formatPrice(order.subtotal)}
+                    </span>
                   </div>
 
-                  <div className="flex justify-between font-semibold  pt-3 mt-3 text-gray-800">
-                    <span>Estimated Refund</span>
-                    <span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[0.875rem] font-bold text-[#211E22]">Estimated Refund</span>
+                    <span className="text-[0.875rem] font-bold text-[#211E22]">
                       {order.currency}{" "}
                       {formatPrice(order.subtotal - order.shipping_cost)}
                     </span>
@@ -251,19 +279,17 @@ if (prevOrderForAddress !== order) {
           )}
         </div>
 
-        <div className="px-8 py-3 flex justify-end gap-4">
+        <div className="flex items-center justify-end gap-3 p-6 pt-2">
           <button
             onClick={onClose}
-            className="px-5 py-2 border border-gray-300 font-medium font-semibold text-gray-700 hover:bg-gray-100 transition rounded-[100px]"
+            className="cursor-pointer rounded-full border border-[#E5E7EB] bg-white px-6 py-2.5 text-center text-[0.8125rem] font-semibold text-[#99A1AF] hover:bg-gray-50"
           >
             Cancel
           </button>
-
           <button
             onClick={handleConfirm}
             disabled={isReturning}
-            style={{ padding: "12px 20px " }}
-            className=" btn btn-red btn-filled btn-sharp"
+            className="cursor-pointer rounded-full bg-[#FD151B] px-6 py-2.5 text-center text-[0.8125rem] font-bold text-white hover:bg-[#e11319] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isReturning ? "Submitting..." : "Submit Return"}
           </button>
@@ -272,7 +298,7 @@ if (prevOrderForAddress !== order) {
 
       {showAddressFormModal && (
         <div
-          className="fixed inset-0 flex items-center justify-center bg-black/50 z-[60] p-4"
+          className="fixed inset-0 z-[1200] flex items-start justify-center overflow-y-auto bg-black/50 p-4 py-10"
           role="button"
           tabIndex={0}
           onKeyDown={(e) => {
@@ -284,18 +310,38 @@ if (prevOrderForAddress !== order) {
           onClick={() => setShowAddressFormModal(false)}
         >
           <div
-            className="bg-white w-full max-w-xl rounded-xl shadow-lg p-6 max-h-[90vh] overflow-y-auto overscroll-contain"
+            className="flex w-full max-w-xl max-h-[90vh] flex-col overflow-hidden rounded-2xl border-t-4 border-[#FD151B] bg-white shadow-xl"
             role="presentation"
             data-lenis-prevent
             onClick={(e) => e.stopPropagation()}
             onWheel={(e) => e.stopPropagation()}
           >
-            <AddressForm
-              from={"refund"}
-              onSave={handleAddressFormSubmit}
-              onCancel={() => setShowAddressFormModal(false)}
-              isTemporaryInput={true}
-            />
+            <div className="flex items-start justify-between gap-4 p-6 pb-0">
+              <div className="flex flex-col gap-1">
+                <h2 className="text-[1rem] font-bold text-[#211E22]">
+                  Change Pickup Address
+                </h2>
+                <p className="text-[0.8125rem] text-[#99A1AF]">
+                  Enter the address you&apos;d like this return picked up from.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowAddressFormModal(false)}
+                className="shrink-0 cursor-pointer text-[#99A1AF] hover:text-[#211E22]"
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto overscroll-contain px-6 pb-6">
+              <AddressForm
+                from={"refund"}
+                onSave={handleAddressFormSubmit}
+                onCancel={() => setShowAddressFormModal(false)}
+                isTemporaryInput={true}
+              />
+            </div>
           </div>
         </div>
       )}

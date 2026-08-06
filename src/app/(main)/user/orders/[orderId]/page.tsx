@@ -20,14 +20,55 @@ import {
   useCancelOrderMutation,
   useGetOrderByIdQuery,
 } from "@/lib/redux/apis/order-api";
-import { Loader } from "lucide-react";
+import { ChevronLeft, Truck, MapPin, CheckCircle2, Loader } from "lucide-react";
 import Button from "@/components/common/Button";
+import { Card } from "@/components/common/Card";
+import { StatusBadge, BadgeColor } from "@/components/common/StatusBadge";
 import { formatPrice } from "@/lib/utils/main-utils";
 import CancelOrderPopup from "@/components/common/CancelOrderPopup";
 import ReturnOrderPopup from "@/components/common/ReturnOrderPopup";
 import ReplaceOrderPopup from "@/components/ui/ReplaceOrderPopup";
 import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
 import { getStaticOrder, isStaticOrderId } from "@/lib/mock/static-orders";
+
+const SUPPORT_PHONE = "+1 (994) 775-8686";
+
+const formatOrderDate = (date: Date | string | null | undefined): string => {
+  if (!date) return "Not Available";
+  const d = new Date(date);
+  if (Number.isNaN(d.getTime())) return "Not Available";
+  return d.toLocaleDateString("en-AU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
+
+const getStatusBadgeColor = (order: {
+  status?: string;
+  returns?: OrderReturn[];
+}): BadgeColor => {
+  const hasReturnRequested = order.returns?.some(
+    (r) => r?.status?.toLowerCase() === "requested",
+  );
+  if (hasReturnRequested) return BadgeColor.Orange;
+
+  const key = (order.status || "").toLowerCase();
+  if (key === "delivered") return BadgeColor.Green;
+  if (key === "cancelled") return BadgeColor.Red;
+  return BadgeColor.Blue;
+};
+
+const getStatusBadgeLabel = (order: {
+  status?: string;
+  returns?: OrderReturn[];
+}): string => {
+  const hasReturnRequested = order.returns?.some(
+    (r) => r?.status?.toLowerCase() === "requested",
+  );
+  if (hasReturnRequested) return "Return Requested";
+  return order.status || "N/A";
+};
 
 interface OrderDetailProps {
   params: Promise<{ orderId: string }>;
@@ -122,6 +163,8 @@ export default function OrderDetail({ params }: OrderDetailProps) {
   const snapshot = order.order_details?.customer_snapshot || {};
   const products = snapshot.products || [];
   const orderItems = order.items || [];
+  const shippingDetails = order.order_details;
+  const shippingAddress = snapshot.shipping_address;
 
   const subtotal = Number(order.subtotal) || 0;
   const shipping = Number(order.shipping_cost) || 0;
@@ -131,138 +174,93 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
   const finalTotal = subtotal - totalSavings + shipping;
 
+  const isDelivered = order.status?.toLowerCase() === "delivered";
+  const shippingName = [
+    shippingDetails?.shipping_first_name,
+    shippingDetails?.shipping_last_name,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div>
-      {/* Header */}
-      <div className="flex flex-wrap items-center gap-3 order-action justify-between pb-5">
-        <h4
-          className="fluid-text-xl leading-[normal] font-bold capitalize"
-        >
-          Order Detail
-        </h4>
-        <div className="btn-action btn-track">
-          {(order.available_actions?.includes("retry") ||
-            order.available_actions?.includes("retry_payment")) && (
-            <Button
-              className="btn btn-red btn-filled btn-sharp"
-              onClick={() => setIsRetryPopupOpen(true)}
-            >
-              Retry Payment
-            </Button>
-          )}
-          {order.tracking_link && (
-            <Link
-              href={order.tracking_link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-red btn-filled btn-sharp inline-flex items-center justify-center"
-            >
-              Track Order
-            </Link>
-          )}
-          {order.available_actions?.includes("cancel") && (
-            <Button
-              className="btn btn-link"
-              onClick={() => {
-                setSelectedItemForCancel(null);
-                setIsCancelPopupOpen(true);
-              }}
-            >
-              Cancel Order
-            </Button>
-          )}
-          {order.available_actions?.includes("return") && (
-            <Button
-              className="btn btn-link"
-              onClick={() => {
-                setSelectedItemForReturn(null);
-                setIsReturnPopupOpen(true);
-              }}
-            >
-              Return Order
-            </Button>
-          )}
-          {order.available_actions?.includes("replace") && (
-            <Button
-              className="btn btn-link"
-              onClick={() => {
-                setSelectedItemForReplace(null);
-                setIsReplacePopupOpen(true);
-              }}
-            >
-              Replace Order
-            </Button>
-          )}
-          {order.status?.toLowerCase() === "delivered" && (
-            <Button
-              className="btn btn-red btn-outline btn-sharp"
-              onClick={handleDownloadInvoice}
-            >
-              Download Invoice
-            </Button>
-          )}
-        </div>
-      </div>
+    <div className="flex w-full flex-col gap-4">
+      <Link
+        href="/user/orders"
+        className="inline-flex items-center gap-1 text-[0.75rem] font-medium text-[#99A1AF] hover:text-[#FD151B] leading-[18px]"
+      >
+        <ChevronLeft size={14} />
+        Back to My Orders
+      </Link>
 
-      {/* Order Info */}
-      <div className="order-detail bg-[#F5F5F5] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-5">
-        <div className="order-item">
-          <h5>Order Number</h5>
-          <p>{order.order_number || order.id}</p>
-        </div>
+      <Card className="w-full border p-4 sm:p-6 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 w-full">
+          <div className="grid grid-cols-3 gap-2 sm:gap-5 flex-1 w-full">
+            <div className="flex flex-col gap-1">
+              <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">Order ID</span>
+              <span className="text-[0.75rem] font-bold text-[#211E22] leading-[18px]">
+                #{order.order_number || order.id}
+              </span>
+            </div>
 
-        <div className="order-item">
-          <h5>Total Payment</h5>
-          <p>
-            {order.currency} {formatPrice(order.total_amount)}
-          </p>
-        </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">Placed On</span>
+              <span className="text-[0.75rem] font-bold text-[#211E22] leading-[18px]">
+                {formatOrderDate(order.created_at)}
+              </span>
+            </div>
 
-        <div className="order-item">
-          <h5>Payment Method</h5>
-          <p>{snapshot.payment_method?.type || "N/A"}</p>
-        </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">
+                {isDelivered ? "Delivered On" : "Estimated Delivery Date"}
+              </span>
+              <span className="text-[0.75rem] font-bold text-[#211E22] leading-[18px]">
+                {formatOrderDate(order.estimated_delivery_date)}
+              </span>
+            </div>
+          </div>
 
-        <div className="order-item">
-          <h5>Order Status</h5>
+          <div className="flex w-full flex-wrap items-center justify-between gap-3 sm:w-auto sm:justify-start">
+            <StatusBadge
+              label={getStatusBadgeLabel(order)}
+              color={getStatusBadgeColor(order)}
+            />
 
-          <div className="capitalize">
-            {order.returns?.some((r: OrderReturn) => r?.status?.toLowerCase() === "requested") ? (
-              "Return Requested"
-            ) : (
-              order.status || "N/A"
+            {order.tracking_link && (
+              <Link
+                href={order.tracking_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] bg-[#FD151B] px-5 py-2 text-center font-montserrat text-[0.75rem] font-bold leading-[18.75px] text-white"
+              >
+                <Truck size={16} />
+                Track Order
+              </Link>
+            )}
+
+            {(order.available_actions?.includes("retry") ||
+              order.available_actions?.includes("retry_payment")) && (
+              <Button
+                className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] bg-[#FD151B] px-5 py-2 text-center font-montserrat text-[0.75rem] font-bold leading-[18.75px] text-white"
+                onClick={() => setIsRetryPopupOpen(true)}
+              >
+                Retry Payment
+              </Button>
+            )}
+
+            {isDelivered && (
+              <Button
+                className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] border border-[#FD151B] bg-white px-5 py-2 text-center font-montserrat text-[0.75rem] font-semibold leading-[18.75px] text-[#FD151B]"
+                onClick={handleDownloadInvoice}
+              >
+                Download Invoice
+              </Button>
             )}
           </div>
         </div>
 
-        <div className="order-item">
-          <h5>
-            {order.status === "delivered"
-              ? "Delivered on"
-              : "Estimated Delivery"}
-          </h5>
-          <p>
-            {order.estimated_delivery_date
-              ? new Date(order.estimated_delivery_date).toLocaleDateString(
-                  "en-AU",
-                  {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  },
-                )
-              : "Not Available"}
-          </p>
-        </div>
-      </div>
+        <hr className="-mx-4 sm:-mx-6 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] border-t border-[#E5E7EB]" />
 
-      <table className="cart-table order-table">
-        <thead className="visually-hidden">
-          <tr>
-            <th scope="col">Product Information</th>
-          </tr>
-        </thead>
-        <tbody>
+        <div className="w-full">
           {products.map((product: APIProduct, idx: number) => {
             const matchingItem = orderItems.find(
               (item: OrderLineItem) => item.product_id === product.product_id,
@@ -274,8 +272,11 @@ export default function OrderDetail({ params }: OrderDetailProps) {
               product.product_id;
 
             return (
-              <tr key={idx}>
-                <td className="item-info !flex-col sm:!flex-row gap-4">
+              <div
+                key={idx}
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 border-b border-gray-100 py-3 last:border-b-0 last:mb-0"
+              >
+                <div className="flex items-center gap-4">
                   <Link
                     href={`/product/${product.unique_code || product.product_id}`}
                     className="shrink-0"
@@ -285,67 +286,81 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                       width={136}
                       src={product.image}
                       alt={product.name}
-                      className="w-[90px] h-[90px] sm:w-[136px] sm:h-[136px] object-contain cursor-pointer"
+                      className="h-[74px] w-[74px] shrink-0 self-stretch rounded-lg border border-[#F3F4F6] bg-gray-300 bg-cover bg-center object-cover cursor-pointer"
                     />
                   </Link>
+
                   <div className="w-full">
                     <Link
                       href={`/product/${product.unique_code || product.product_id}`}
                     >
-                      <h3 className="cursor-pointer hover:text-red-600 transition-colors capitalize leading-[normal]">
+                      <p className="cursor-pointer hover:text-red-600 transition-colors font-bold text-[14px] capitalize">
                         {product.name}
-                      </h3>
+                      </p>
                     </Link>
 
-                    {product?.variant_attributes?.length > 0 ? (
-                      product?.variant_attributes?.map((attr, i) => (
-                        <p key={i}>
-                          <strong>{attr.name}:</strong> {attr.value}
-                        </p>
-                      ))
-                    ) : (
-                      <>
-                        {product.size && (
-                          <p>
-                            <strong>Size:</strong> {product.size}
-                          </p>
-                        )}
-                        {product.color && (
-                          <p>
-                            <strong>Colour:</strong> {product.color}
-                          </p>
-                        )}
-                      </>
-                    )}
+                    <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                      {product.variant_attributes?.length > 0 ? (
+                        product.variant_attributes.map((attr, i) => (
+                          <StatusBadge
+                            key={i}
+                            label={`${attr.name}: ${attr.value}`}
+                            color={BadgeColor.Gray}
+                            showDot={false}
+                            className="text-[11px]"
+                          />
+                        ))
+                      ) : (
+                        <>
+                          {product.size && (
+                            <StatusBadge
+                              label={`Size: ${product.size}`}
+                              color={BadgeColor.Gray}
+                              showDot={false}
+                              className="text-[11px]"
+                            />
+                          )}
+                          {product.color && (
+                            <StatusBadge
+                              label={`Colour: ${product.color}`}
+                              color={BadgeColor.Gray}
+                              showDot={false}
+                              className="text-[11px]"
+                            />
+                          )}
+                        </>
+                      )}
 
-                    <p>
-                      <strong>Quantity:</strong> {product.quantity}
-                    </p>
+                      <StatusBadge
+                        label={`Qty: ${product.quantity}`}
+                        color={BadgeColor.Gray}
+                        showDot={false}
+                        className="text-[11px]"
+                      />
+                    </div>
 
-                    <div className="flex flex-wrap gap-2 w-full">
+                    <div className="flex flex-wrap gap-3 mt-2">
                       {(matchingItem?.available_actions?.includes("cancel") ||
                         matchingItem?.available_options?.includes(
                           "cancel",
                         )) && (
-                        <div className="mt-2 ">
-                          <Button
-                            className="order-detail-action-btn"
-                            onClick={() => {
-                              setSelectedItemForCancel({
-                                id: String(trueItemId),
-                                name: product.name,
-                              });
-                              setIsCancelItemPopupOpen(true);
-                            }}
-                          >
-                            Cancel Item
-                          </Button>
-                        </div>
+                        <button
+                          className="cursor-pointer text-[0.75rem] font-semibold text-[#99A1AF] hover:text-[#FD151B]"
+                          onClick={() => {
+                            setSelectedItemForCancel({
+                              id: String(trueItemId),
+                              name: product.name,
+                            });
+                            setIsCancelItemPopupOpen(true);
+                          }}
+                        >
+                          Cancel Item
+                        </button>
                       )}
 
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
-                        <Button
-                          className="order-detail-action-btn"
+                        <button
+                          className="cursor-pointer text-[0.75rem] font-semibold text-[#99A1AF] hover:text-[#FD151B]"
                           onClick={() => {
                             setSelectedItemForReturn({
                               id: String(trueItemId),
@@ -355,12 +370,12 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                           }}
                         >
                           Return Item
-                        </Button>
+                        </button>
                       )}
 
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
-                        <Button
-                          className="order-detail-action-btn"
+                        <button
+                          className="cursor-pointer text-[0.75rem] font-semibold text-[#99A1AF] hover:text-[#FD151B]"
                           onClick={() => {
                             setSelectedItemForReplace({
                               id: String(trueItemId),
@@ -370,7 +385,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                           }}
                         >
                           Replace Item
-                        </Button>
+                        </button>
                       )}
 
                       {(matchingItem?.available_actions?.includes("review") ||
@@ -381,70 +396,171 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                         matchingItem?.available_options?.includes(
                           "add_review",
                         )) && (
-                        <div className="">
-                          <Link
-                            href={`/user/orders/${order.id}/review?product_id=${product.product_id}`}
-                          >
-                            <Button className="order-detail-action-btn">
-                              Add Review
-                            </Button>
-                          </Link>
-                        </div>
+                        <Link
+                          href={`/user/orders/${order.id}/review?product_id=${product.product_id}`}
+                          className="cursor-pointer text-[0.75rem] font-semibold text-[#FD151B] hover:underline"
+                        >
+                          Add Review
+                        </Link>
                       )}
 
                       {product.status === "cancelled" && (
-                        <p className="text-red-600 text-sm font-medium">
+                        <p className="text-[0.75rem] font-semibold text-red-600">
                           Cancelled
                         </p>
                       )}
                     </div>
                   </div>
-                </td>
-              </tr>
+                </div>
+
+                <div className="sm:text-right shrink-0 sm:ml-4">
+                  <p className="text-[12px] text-[#9CA3AF]">Price</p>
+                  <p className="text-[14px] font-bold text-black">
+                    {order.currency} {formatPrice(product.total_price)}
+                  </p>
+                </div>
+              </div>
             );
           })}
-        </tbody>
-      </table>
-
-      <div className="order-summery mt-5">
-        <div className="summary-row border-b border-gray-200 pb-2">
-          <p>Subtotal ({products.length} Items)</p>
-          <p className="price">
-            {order.currency} {formatPrice(order.subtotal)}
-          </p>
         </div>
+      </Card>
 
-        <div className="summary-row  border-b border-gray-200 pb-2">
-          <p>Total Savings</p>
-          <p className="savings">
-            -{order.currency}{" "}
-            {formatPrice(
-              (Number(order.total_saving) || 0) +
-                (Number(order.discount_amount) || 0),
+      <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
+        <Card className="w-full border p-4 sm:p-6 gap-4">
+          <h3 className="text-[0.875rem] font-bold text-[#211E22]">Price Breakdown</h3>
+
+          <div className="flex w-full flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[0.75rem] text-[#99A1AF]">Subtotal</span>
+              <span className="text-[0.75rem] font-semibold text-[#211E22]">
+                {order.currency} {formatPrice(subtotal)}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-[0.75rem] text-[#99A1AF]">Shipping</span>
+              <span className="text-[0.75rem] font-semibold text-[#211E22]">
+                {shipping > 0 ? `${order.currency} ${formatPrice(shipping)}` : "Free"}
+              </span>
+            </div>
+
+            {totalSavings > 0 && (
+              <div className="flex items-center justify-between">
+                <span className="text-[0.75rem] text-[#99A1AF]">Discount Applied</span>
+                <span className="text-[0.75rem] font-semibold text-[#1AAE4A]">
+                  - {order.currency} {formatPrice(totalSavings)}
+                </span>
+              </div>
             )}
-          </p>
-        </div>
+          </div>
 
-        <div className="flex-wrap justify-between flex gap-2 border-b border-gray-200 pb-2">
-          <p>
-            Delivery Details
-            <br />
-            <span className="flex flex-wrap">
-              Address: {snapshot.shipping_address.address},{" "}
-              {snapshot.shipping_address.city}
+          <hr className="-mx-4 sm:-mx-6 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] border-t border-[#E5E7EB]" />
+
+          <div className="flex w-full items-center justify-between">
+            <span className="text-[0.875rem] font-bold text-[#211E22]">Total Paid</span>
+            <span className="text-[0.875rem] font-bold text-[#FD151B]">
+              {order.currency} {formatPrice(finalTotal)}
             </span>
-          </p>
-          <p className="price">
-            {order.currency} {formatPrice(order.shipping_cost)}
-          </p>
-        </div>
+          </div>
 
-        <div className="justify-between py-[16px] flex flex-wrap gap-2 bg-[#f5f5f5] pl-4">
-          <strong>Total (Incl. GST)</strong>
-          <p className="price">
-            {order.currency} {formatPrice(finalTotal)}
-          </p>
-        </div>
+          <div className="flex w-full items-center gap-3 rounded-[14px] border border-[#F3F4F6] bg-[#F9FAFB] px-4 py-3">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#E9F9EF] text-[#1AAE4A]">
+              <CheckCircle2 size={14} />
+            </span>
+            <div>
+              <p className="text-[0.75rem] font-semibold text-[#211E22]">
+                {snapshot.payment_method?.type || "N/A"}
+              </p>
+              <p className="text-[0.6875rem] text-[#99A1AF]">
+                Paid on {formatOrderDate(order.created_at)}
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="w-full border p-4 sm:p-6 gap-4">
+          <h3 className="text-[0.875rem] font-bold text-[#211E22]">Delivery Address</h3>
+
+          <div className="flex w-full items-start gap-3">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FDECEC] text-[#FD151B]">
+              <MapPin size={16} />
+            </span>
+            <div>
+              <p className="text-[0.75rem] font-bold text-[#211E22]">Home</p>
+              <p className="text-[0.75rem] text-[#726969]">
+                {shippingName ? `${shippingName}, ` : ""}
+                {shippingAddress?.address}, {shippingAddress?.city}
+                {shippingAddress?.state ? `, ${shippingAddress.state}` : ""}
+                {shippingAddress?.postal_code
+                  ? ` ${shippingAddress.postal_code}`
+                  : ""}
+              </p>
+            </div>
+          </div>
+
+          <hr className="-mx-4 sm:-mx-6 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] border-t border-[#E5E7EB]" />
+
+          <div className="flex w-full flex-col gap-2">
+            <span className="text-[0.625rem] font-semibold uppercase text-[#99A1AF]">
+              Need Help?
+            </span>
+
+            <a
+              href={`tel:${SUPPORT_PHONE.replace(/[^\d+]/g, "")}`}
+              className="text-[0.75rem] font-medium text-[#211E22] hover:text-[#FD151B]"
+            >
+              Contact Support - {SUPPORT_PHONE}
+            </a>
+            <Link
+              href="/return-and-warranty"
+              className="text-[0.75rem] font-medium text-[#211E22] hover:text-[#FD151B]"
+            >
+              Return / Refund Policy
+            </Link>
+            <Link
+              href="/contact"
+              className="text-[0.75rem] font-medium text-[#211E22] hover:text-[#FD151B]"
+            >
+              Raise a Concern
+            </Link>
+          </div>
+
+          {order.available_actions?.includes("cancel") && (
+            <button
+              className="cursor-pointer text-[0.75rem] font-semibold text-[#99A1AF] hover:text-[#FD151B]"
+              onClick={() => {
+                setSelectedItemForCancel(null);
+                setIsCancelPopupOpen(true);
+              }}
+            >
+              Cancel Order
+            </button>
+          )}
+
+          {order.available_actions?.includes("return") && (
+            <button
+              className="cursor-pointer text-[0.75rem] font-semibold text-[#99A1AF] hover:text-[#FD151B]"
+              onClick={() => {
+                setSelectedItemForReturn(null);
+                setIsReturnPopupOpen(true);
+              }}
+            >
+              Return Order
+            </button>
+          )}
+
+          {order.available_actions?.includes("replace") && (
+            <button
+              className="cursor-pointer text-[0.75rem] font-semibold text-[#99A1AF] hover:text-[#FD151B]"
+              onClick={() => {
+                setSelectedItemForReplace(null);
+                setIsReplacePopupOpen(true);
+              }}
+            >
+              Replace Order
+            </button>
+          )}
+        </Card>
       </div>
 
       <CancelOrderPopup

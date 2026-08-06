@@ -25,3 +25,53 @@ export const CameraIcon = (props: SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
+
+
+const ProfileInfoBanner = ({ children }: { children?: React.ReactNode }) => {
+  return (
+    <div
+      className="
+        w-full
+        max-w-[1934px]
+        h-[202px]
+        rounded-[15px]
+        bg-[linear-gradient(99deg,_#FFF7F3_0%,_#FFFDFC_100%)]
+      "
+    >
+      {children}
+    </div>
+  );
+};
+
+export default ProfileInfoBanner;
+
+export const GradientBanner = ({ className = "" }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1920 202"
+      className={`w-full max-w-[1934px] h-[202px] ${className}`}
+      preserveAspectRatio="none"
+      fill="none"
+    >
+      <path
+        d="M1900.82 0H15.175C1.82352 0 -9 6.78289 -9 15.15V186.85C-9 195.217 1.82352 202 15.175 202H1900.82C1914.18 202 1925 195.217 1925 186.85V15.15C1925 6.78289 1914.18 0 1900.82 0Z"
+        fill="url(#bannerGradient)"
+      />
+      <defs>
+        <linearGradient
+          id="bannerGradient"
+          x1="-9"
+          y1="0"
+          x2="1076170"
+          y2="1717260"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#FFF7F3" />
+          <stop offset="1" stopColor="#FFFDFC" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+

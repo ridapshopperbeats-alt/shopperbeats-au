@@ -106,7 +106,7 @@ const RetryPaymentForm: React.FC<RetryPaymentPopupProps> = ({ isOpen, onClose, o
   return (
     <div
       id="popupModal"
-      className="ordermodal retrypopup fixed inset-0 bg-black/50 flex items-center justify-center z-[1000]"
+      className="ordermodal retrypopup fixed inset-0 bg-black/50 flex items-center justify-center z-[1100]"
       onClick={(e) => {
         if ((e.target as HTMLElement).id === "popupModal") {
           onClose();

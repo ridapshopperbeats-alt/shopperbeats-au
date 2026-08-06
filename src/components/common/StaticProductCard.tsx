@@ -162,8 +162,8 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
             {/* <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" /> */}
 
             {isOutOfStock && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="rounded-full bg-white px-3 py-1.5 text-[12px] font-medium text-[#535252] shadow-md">
+              <div className="absolute inset-0 flex items-center justify-center bg-[#F5F5F5]/60">
+                <span className="rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-[#211E22] shadow-md">
                   Out of Stock
                 </span>
               </div>
@@ -192,8 +192,8 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 )}
 
                 {saveAmount && (
-                  <span className="text-[9px] md:text-[12px] font-normal text-[#008F11]">
-                    {formatPrice(saveAmount)} %OFF
+                  <span className="text-[9px] md:text-[12px] font-semibold text-[#008F11]">
+                    {formatPrice(saveAmount)}% OFF
                   </span>
                 )}
               </div>
@@ -229,7 +229,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
               </div>
 
               <p className="text-[12px] md:text-[13px] font-normal text-[#FF4400]">
-                Extra 10% Off with Code: SHBS10
+                Extra 10% Off With Code: SHBS10
               </p>
             </div>
 
@@ -238,13 +238,20 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 onClick={handleAddToCartClick}
                 disabled={isOutOfStock}
                 className={
-                  isInCart && !isOutOfStock
-                    ? "w-full h-[30px] bg-white text-[#849324] text-[12px] font-medium rounded-[32px] border border-[#849324] flex items-center justify-center gap-1 transition-colors cursor-pointer"
-                    : "w-full h-[30px] bg-[#849324] text-white text-[12px] font-medium rounded-[32px] flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  isOutOfStock
+                    ? "w-full h-[30px] !bg-[#F3F4F6] !text-[#9CA3AF] !opacity-100 text-[12px] font-medium rounded-[32px] flex items-center justify-center cursor-not-allowed"
+                    : isInCart
+                      ? "w-full h-[30px] bg-white text-[#849324] text-[12px] font-medium rounded-[32px] border border-[#849324] flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                      : "w-full h-[30px] bg-[#849324] text-white text-[12px] font-medium rounded-[32px] flex items-center justify-center transition-colors cursor-pointer"
+                }
+                style={
+                  isOutOfStock
+                    ? { backgroundColor: "#F3F4F6", color: "#9CA3AF", opacity: 1 }
+                    : undefined
                 }
               >
                 {isOutOfStock ? (
-                  "Out of Stock"
+                  "Out Of Stock"
                 ) : isInCart ? (
                   <>
                     <Check size={14} />
