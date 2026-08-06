@@ -78,7 +78,7 @@ export default function Logout() {
         </p>
         <Button
           onClick={handleLogBackIn}
-          className="mt-2 rounded-full bg-sb-red px-8 py-2.5 font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-bold leading-[19.5px] text-center text-white"
+          className="mt-2 rounded-full cursor-pointer bg-sb-red px-8 py-2.5 font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-bold leading-[19.5px] text-center text-white"
           debounceDelay={500}
         >
           Log Back In

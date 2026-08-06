@@ -15,8 +15,13 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { toYYYYMMDD, handleUSPhoneNumberChange } from "@/lib/utils/main-utils";
 import { addressSchema } from "@/lib/validations/form-schemas";
 
-export default function AddressForm({ editingAddress, addresses, onSave, isTemporaryInput, from }: AddressFormProps) {
-  
+export default function AddressForm({
+  editingAddress,
+  addresses,
+  onSave,
+  isTemporaryInput,
+  from,
+}: AddressFormProps) {
   const [createAddress, { isLoading: isCreating }] = useCreateAddressMutation();
 
   const [updateAddress, { isLoading: isUpdating }] = useUpdateAddressMutation();
@@ -30,11 +35,16 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
   const [addressValid, setAddressValid] = useState(false);
 
   const isTitleTaken = (title: string, excludeId?: number) =>
-    addresses?.some((addr) => addr.title === title && addr.id !== excludeId) ?? false;
+    addresses?.some((addr) => addr.title === title && addr.id !== excludeId) ??
+    false;
 
   const defaultInitialValues: AddressFormValues = useMemo(
     () => ({
-      title: !isTitleTaken("Home") ? "Home" : !isTitleTaken("Work") ? "Work" : "Others",
+      title: !isTitleTaken("Home")
+        ? "Home"
+        : !isTitleTaken("Work")
+          ? "Work"
+          : "Others",
       first_name: "",
       last_name: "",
       phone_number: "",
@@ -48,15 +58,20 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
       is_default: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [addresses]
+    [addresses],
   );
 
-  const { formData, formErrors, handleChange, handleSubmit, setFormData, setFormErrors } =
-    useFormValidation<AddressFormValues>(
-      addressSchema,
-      editingAddress || defaultInitialValues
-    );
-
+  const {
+    formData,
+    formErrors,
+    handleChange,
+    handleSubmit,
+    setFormData,
+    setFormErrors,
+  } = useFormValidation<AddressFormValues>(
+    addressSchema,
+    editingAddress || defaultInitialValues,
+  );
 
   const [prevEditingAddress, setPrevEditingAddress] = useState<
     Address | null | undefined
@@ -92,12 +107,10 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
       setAddressValid(false);
     }
   }
-  const handlePhoneChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, error } = handleUSPhoneNumberChange(
       e,
-      formData.phone_number
+      formData.phone_number,
     );
 
     setFormData((prev) => ({
@@ -109,7 +122,6 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
       phone_number: error,
     }));
   };
-
 
   const handleSave = async (data: AddressFormValues) => {
     if (!manualAddress && !autoAddress) {
@@ -139,14 +151,14 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
         }
 
         const updatePayload: Address = {
-          ...(finalData as Address), 
+          ...(finalData as Address),
           id: editingAddress.id,
           address: combinedAddress,
         };
 
         await updateAddress({
-          id: editingAddress.id, 
-          body: updatePayload, 
+          id: editingAddress.id,
+          body: updatePayload,
         }).unwrap();
 
         toast.success("Address updated!");
@@ -154,7 +166,7 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
         const isFirstAddress = !addresses || addresses.length === 0;
 
         const createPayload: Address = {
-          ...(finalData as Address), 
+          ...(finalData as Address),
           address: combinedAddress,
           is_default: isFirstAddress ? true : finalData.is_default,
         };
@@ -168,7 +180,7 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
       setAutoAddress("");
       setAddressValid(false);
       setFormData(defaultInitialValues);
-      setResetKey(prev => prev + 1);
+      setResetKey((prev) => prev + 1);
     } catch (error) {
       let message = "Failed to save address.";
       if (typeof error === "object" && error !== null && "data" in error) {
@@ -182,9 +194,9 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
   };
 
   return (
-    <form className="mt-[20px]" onSubmit={handleSubmit(handleSave)}>
-      <div className="form-fields">
-        <div className="form-item">
+    <form className="pt-[10px]" onSubmit={handleSubmit(handleSave)}>
+      <div className="form-fields flex-col gap-y-4 sm:flex-row sm:gap-y-0">
+        <div className="form-item mb-0!">
           <Input
             id="first_name"
             label="First Name*"
@@ -194,9 +206,10 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
             placeholder="First name"
             value={formData.first_name}
             onChange={handleChange}
+            labelClassName="text-[#4A5565]"
           />
         </div>
-        <div className="form-item">
+        <div className="form-item mb-0!">
           <Input
             id="last_name"
             label="Last Name*"
@@ -206,41 +219,46 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
             placeholder="Last name"
             value={formData.last_name}
             onChange={handleChange}
+            labelClassName="text-[#4A5565]"
           />
         </div>
       </div>
 
-      <div className="form-item">
+      <div className="form-item ">
         <Input
           id="phone_number"
           label="Phone Number*"
           error={formErrors.phone_number}
           type="tel"
           name="phone_number"
-          placeholder="e.g. 1234567890 or +11234567890" 
+          placeholder="e.g. 1234567890 or +11234567890"
           value={formData.phone_number}
           onChange={handlePhoneChange}
           inputMode="numeric"
+          labelClassName="text-[#4A5565]"
           pattern="[0-9+]*"
         />
       </div>
 
-      {from != "refund" && <div className="form-item">
-        <Input
-          id="date_of_birth"
-          label="Date of Birth (Optional)"
-          error={formErrors.date_of_birth}
-          type="date"
-          name="date_of_birth"
-          value={toYYYYMMDD(formData.date_of_birth)}
-          onChange={handleChange}
-          min="1900-01-01"
-          max="2025-12-31"
-        />
-      </div>}
+      {from != "refund" && (
+        <div className="form-item">
+          <Input
+            id="date_of_birth"
+            label="Date of Birth (Optional)"
+            error={formErrors.date_of_birth}
+            type="date"
+            name="date_of_birth"
+            value={toYYYYMMDD(formData.date_of_birth)}
+            onChange={handleChange}
+            min="1900-01-01"
+            max="2025-12-31"
+            labelClassName="text-[#4A5565]"
+          />
+        </div>
+      )}
 
       <div className="form-item">
-        <label htmlFor="address-autocomplete">Address Line*</label>
+        <label htmlFor="address-autocomplete" className="text-[#4A5565] text-[12px]">Address Line <span className="text-[#FF4D4F]">*</span></label>
         <AddressAutocomplete
           id="address-autocomplete"
           key={resetKey}
@@ -272,7 +290,7 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
               city: "",
               state: "",
               country: "",
-            }))
+            }));
           }}
         />
       </div>
@@ -285,6 +303,7 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
           name="address"
           placeholder="Address Line 1/ Street Address"
           value={manualAddress}
+          labelClassName="text-[#4A5565]"
           onChange={(e) => {
             const val = e.target.value;
             setManualAddress(val);
@@ -298,7 +317,7 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
         />
       </div>
 
-      <div className="form-item">
+      <div className="form-item mb-0!">
         <Input
           id="country"
           label="Country"
@@ -307,32 +326,44 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
           name="country"
           placeholder="Country"
           value={formData.country}
-          onChange={(e) => { handleChange(e); setAddressValid(false); }}
+          labelClassName="text-[#4A5565]"
+          onChange={(e) => {
+            handleChange(e);
+            setAddressValid(false);
+          }}
         />
       </div>
-      <div className="form-fields">
-        <div className="form-item">
+      <div className="form-fields flex-col  sm:flex-row sm:gap-y-0">
+        <div className="form-item mb-0!">
           <Input
             id="city"
             label="City"
             error={formErrors.city}
             type="text"
             name="city"
+            labelClassName="text-[#4A5565]"
             placeholder="City"
             value={formData.city}
-            onChange={(e) => { handleChange(e); setAddressValid(false); }}
+            onChange={(e) => {
+              handleChange(e);
+              setAddressValid(false);
+            }}
           />
         </div>
-        <div className="form-item">
+        <div className="form-item mb-0!">
           <Input
             id="state"
             label="State"
             error={formErrors.state}
             type="text"
             name="state"
+            labelClassName="text-[#4A5565]"
             placeholder="State"
             value={formData.state}
-            onChange={(e) => { handleChange(e); setAddressValid(false); }}
+            onChange={(e) => {
+              handleChange(e);
+              setAddressValid(false);
+            }}
           />
         </div>
         <div className="form-item">
@@ -343,17 +374,22 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
             type="number"
             onWheel={(e) => e.currentTarget.blur()}
             name="pincode"
+            labelClassName="text-[#4A5565]"
             placeholder="Postcode"
             value={formData.pincode}
-            onChange={(e) => { handleChange(e); setAddressValid(false); }}
+            onChange={(e) => {
+              handleChange(e);
+              setAddressValid(false);
+            }}
           />
         </div>
       </div>
       {formData.title === "Others" && (
-        <div className="form-item">
+        <div className="form-item ">
           <Input
             id="customTitle"
             label="Please Specify*"
+            labelClassName="text-[#4A5565]"
             error={formErrors.customTitle}
             name="customTitle"
             type="text"
@@ -364,8 +400,8 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
         </div>
       )}
 
-      <div className="form-fields">
-        <div className="form-item form-item-radio">
+      <div className="form-fields flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-3">
           <input
             type="radio"
             name="title"
@@ -374,12 +410,22 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
             checked={formData.title === "Home"}
             disabled={isTitleTaken("Home", editingAddress?.id)}
             onChange={handleChange}
+            className="sr-only"
           />
-          <label htmlFor="Home">
-            Home{isTitleTaken("Home", editingAddress?.id) ? " (already added)" : ""}
+          <label
+            htmlFor="Home"
+            className={`flex h-[36px] min-w-[80px] cursor-pointer items-center justify-center border pt-2 pr-5 pb-2 pl-5 text-[13px] font-semibold transition-colors ${
+              isTitleTaken("Home", editingAddress?.id)
+                ? "rounded-[10px] cursor-not-allowed border-[#E5E7EB] bg-white text-[#99A1AF] opacity-60"
+                : formData.title === "Home"
+                  ? "rounded-[21px] border-[#FD151B] bg-[#FD151B] text-white"
+                  : "rounded-[10px] border-[#E5E7EB] bg-white text-[#4A5565]"
+            }`}
+          >
+            Home
+            {isTitleTaken("Home", editingAddress?.id) ? " (already added)" : ""}
           </label>
-        </div>
-        <div className="form-item form-item-radio">
+
           <input
             type="radio"
             name="title"
@@ -388,12 +434,22 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
             checked={formData.title === "Work"}
             disabled={isTitleTaken("Work", editingAddress?.id)}
             onChange={handleChange}
+            className="sr-only"
           />
-          <label htmlFor="Work">
-            Work{isTitleTaken("Work", editingAddress?.id) ? " (already added)" : ""}
+          <label
+            htmlFor="Work"
+            className={`flex h-[36px] min-w-[80px] cursor-pointer items-center justify-center border pt-2 pr-5 pb-2 pl-5 text-[13px] font-semibold transition-colors ${
+              isTitleTaken("Work", editingAddress?.id)
+                ? "rounded-[10px] cursor-not-allowed border-[#E5E7EB] bg-white text-[#99A1AF] opacity-60"
+                : formData.title === "Work"
+                  ? "rounded-[21px] border-[#FD151B] bg-[#FD151B] text-white"
+                  : "rounded-[10px] border-[#E5E7EB] bg-white text-[#4A5565]"
+            }`}
+          >
+            Work
+            {isTitleTaken("Work", editingAddress?.id) ? " (already added)" : ""}
           </label>
-        </div>
-        <div className="form-item form-item-radio">
+
           <input
             type="radio"
             name="title"
@@ -404,29 +460,44 @@ export default function AddressForm({ editingAddress, addresses, onSave, isTempo
               handleChange(e);
               setFormData((prev) => ({ ...prev, customTitle: "" }));
             }}
+            className="sr-only"
           />
-          <label htmlFor="Others">Others</label>
+          <label
+            htmlFor="Others"
+            className={`flex h-[36px] min-w-[80px] cursor-pointer items-center justify-center border pt-2 pr-5 pb-2 pl-5 text-[13px] font-semibold transition-colors ${
+              formData.title === "Others"
+                ? "rounded-[21px] border-[#FD151B] bg-[#FD151B] text-white"
+                : "rounded-[10px] border-[#E5E7EB] bg-white text-[#4A5565]"
+            }`}
+          >
+            Others
+          </label>
         </div>
 
-        <div className="form-item form-item-radio">
+        <div className="">
           <input
             id="is_default"
             type="checkbox"
             name="is_default"
             checked={formData.is_default}
             onChange={handleChange}
+            className="h-4! w-4!"
           />
-          <label htmlFor="is_default">Set as Default Address</label>
+          <label
+            htmlFor="is_default"
+            className="text-[12px] font-medium leading-[19px] text-[#4A5565]"
+          >
+            Set as Default Address
+          </label>
         </div>
       </div>
 
-       <div className="flex justify-center w-full">
+      <div className="flex justify-center w-full">
         <Button
-          className="btn btn-red btn-filled btn-sharp w-30 mt-20"
+          className="btn btn-red btn-filled btn-sharp w-full mt-6"
           type="submit"
-          disabled={isTemporaryInput ? false : (isCreating || isUpdating)}
-          isLoading={isTemporaryInput ? false : (isCreating || isUpdating)}
-          style={{ alignItems: "center", justifyContent: "center", display: "flex", marginTop: "10px" }}
+          disabled={isTemporaryInput ? false : isCreating || isUpdating}
+          isLoading={isTemporaryInput ? false : isCreating || isUpdating}
           debounceDelay={500}
         >
           {isUpdating ? "Saving..." : "Save"}

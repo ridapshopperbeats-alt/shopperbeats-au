@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 export interface Address {
   id?: number;
   title: string;
@@ -47,6 +49,12 @@ export interface ConfirmAlertProps {
   cancelText?: string;
   onConfirm: () => void;
   onCancel: () => void;
+  icon?: LucideIcon;
+  iconClassName?: string;
+  iconWrapperClassName?: string;
+  topBarClassName?: string;
+  confirmButtonClassName?: string;
+  cancelButtonClassName?: string;
 }
 
 export interface AddressDetails {
