@@ -88,9 +88,9 @@ export default function TopBrands() {
   };
 
   return (
-    <section className="container ">
+    <section className="container">
       {/* Heading */}
-      <div className="flex items-center justify-between ">
+      <div className="flex items-center justify-between pt-3 md:pt-2 lg:pt-0 lg:mb-2 ">
         <h2 className="fluid-text-18-32  font-extrabold text-[#1E1E1E]">
           Top Brands
         </h2>
@@ -150,7 +150,7 @@ export default function TopBrands() {
       )}
 
       {/* Desktop */}
-      <div className="relative hidden lg:block pt-4">
+      <div className="relative hidden lg:block lg:mb-6">
         <div
           ref={sliderRef}
           className="flex gap-5 overflow-x-auto scroll-smooth no-scrollbar"

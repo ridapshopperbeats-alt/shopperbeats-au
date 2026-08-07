@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import StarRating from "../common/StarRating";
 import {
@@ -78,7 +78,7 @@ const STORE_REVIEWS: DisplayReview[] = [
     verified: false,
     reviewer_profile_image: null,
   },
-    {
+  {
     id: "store-review-4",
     name: " work",
     rating: 5,
@@ -88,7 +88,7 @@ const STORE_REVIEWS: DisplayReview[] = [
     verified: false,
     reviewer_profile_image: null,
   },
-    {
+  {
     id: "store-review-5",
     name: "Sophia here",
     rating: 5,
@@ -98,7 +98,7 @@ const STORE_REVIEWS: DisplayReview[] = [
     verified: false,
     reviewer_profile_image: null,
   },
-    {
+  {
     id: "store-review-6",
     name: "Sophia work",
     rating: 5,
@@ -154,7 +154,23 @@ export default function CustomerRatingViewPage({
 }: CustomerRatingViewPageProps) {
   const [activeTab, setActiveTab] = useState<Tab>(TABS[0]);
   const [sortBy, setSortBy] = useState("latest");
+  const [isMobile, setIsMobile] = useState(false);
+  const pageSize = isMobile ? 1 : REVIEWS_PAGE_SIZE;
   const [visibleCount, setVisibleCount] = useState(REVIEWS_PAGE_SIZE);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 1023px)");
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+
+    updateIsMobile();
+    mediaQuery.addEventListener("change", updateIsMobile);
+    return () => mediaQuery.removeEventListener("change", updateIsMobile);
+  }, []);
+
+  useEffect(() => {
+    setVisibleCount(pageSize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile]);
 
   const tabsScrollRef = useRef<HTMLDivElement>(null);
   const dragState = useRef({ startX: 0, scrollLeft: 0, moved: false });
@@ -191,7 +207,7 @@ export default function CustomerRatingViewPage({
 
   const handleTabClick = (tab: Tab) => {
     setActiveTab(tab);
-    setVisibleCount(REVIEWS_PAGE_SIZE);
+    setVisibleCount(pageSize);
   };
 
   const isQuestionsTab = currentTab === "Questions";
@@ -200,11 +216,11 @@ export default function CustomerRatingViewPage({
 
   const visibleReviews = activeReviews.slice(0, visibleCount);
   const hasMoreReviews = visibleCount < activeReviews.length;
-  const canToggleReviews = activeReviews.length > REVIEWS_PAGE_SIZE;
+  const canToggleReviews = activeReviews.length > pageSize;
 
   const visibleQuestions = QUESTIONS.slice(0, visibleCount);
   const hasMoreQuestions = visibleCount < QUESTIONS.length;
-  const canToggleQuestions = QUESTIONS.length > REVIEWS_PAGE_SIZE;
+  const canToggleQuestions = QUESTIONS.length > pageSize;
 
   const totalReviews = activeReviews.length;
   const averageRating =
@@ -467,11 +483,10 @@ export default function CustomerRatingViewPage({
                               Verified Purchase
                             </span>
                           )}
+                          <span className="text-[12px] text-[#696e79] ml-auto">
+                            {review.date}
+                          </span>
                         </div>
-
-                        <span className="text-[12px] text-[#696e79] ml-auto">
-                          {review.date}
-                        </span>
                       </div>
 
                       <p className="mt-1 text-[13px] text-[#696e79]">
@@ -505,11 +520,8 @@ export default function CustomerRatingViewPage({
                     onClick={() =>
                       setVisibleCount((count) =>
                         hasMoreQuestions
-                          ? Math.min(
-                              count + REVIEWS_PAGE_SIZE,
-                              QUESTIONS.length,
-                            )
-                          : REVIEWS_PAGE_SIZE,
+                          ? Math.min(count + pageSize, QUESTIONS.length)
+                          : pageSize,
                       )
                     }
                     className="h-[45px] px-8 rounded-full bg-[#FD151B] text-white font-semibold text-[14px] cursor-pointer"
@@ -525,11 +537,8 @@ export default function CustomerRatingViewPage({
                     onClick={() =>
                       setVisibleCount((count) =>
                         hasMoreReviews
-                          ? Math.min(
-                              count + REVIEWS_PAGE_SIZE,
-                              activeReviews.length,
-                            )
-                          : REVIEWS_PAGE_SIZE,
+                          ? Math.min(count + pageSize, activeReviews.length)
+                          : pageSize,
                       )
                     }
                     className="h-[45px] px-8 rounded-full bg-[#FD151B] text-white font-semibold text-[14px] cursor-pointer"

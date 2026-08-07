@@ -297,8 +297,8 @@ function SliderComponent<T>(
       });
       return;
     }
-    goTo(current - 1);
-  }, [isFade, infinite, items.length, current, goTo]);
+    goTo(isLoopEnabled ? current - 1 : Math.max(current - 1, 0));
+  }, [isFade, isLoopEnabled, current, goTo]);
 
   const handleTransitionEnd = () => {
     if (!isLoopEnabled) return;

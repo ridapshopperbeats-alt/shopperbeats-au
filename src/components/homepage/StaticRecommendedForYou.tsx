@@ -2,6 +2,7 @@ import React from "react";
 import StaticProductCarousel from "../common/StaticProductCarousel";
 import { Product } from "@/types/product";
 import { getPriceDetails, getImageUrl } from "@/lib/utils/main-utils";
+import { getStaticProductShippingCost } from "@/lib/utils/staticCategoryData";
 
 const EMPTY_VARIANTS: never[] = [];
 
@@ -38,6 +39,7 @@ export default function StaticRecommendedForYou({
       tags: product.tags,
       ships_from_location: product.ships_from_location,
       handling_time_days: product.handling_time_days,
+      shippingCharge: getStaticProductShippingCost(product),
     };
   });
 

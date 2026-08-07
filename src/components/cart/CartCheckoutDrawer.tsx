@@ -150,7 +150,7 @@ export default function CartCheckoutDrawer({
                         >
                           -
                         </button>
-                        <span className="cart-drawer-qty-value">{qty}</span>
+                        <span className="text-[12px] font-semibold">{qty}</span>
                         <button
                           type="button"
                           disabled={isUpdating}
@@ -168,7 +168,7 @@ export default function CartCheckoutDrawer({
                   <div className="cart-drawer-price-remove-row">
                     <p className="cart-drawer-price-row">
                       <span className="cart-drawer-item-attr-label">Price : </span>
-                      <span className="cart-drawer-price-value">
+                      <span className="cart-drawer-price-value text-[12px] font-semibold">
                         ${formatPrice(item.final_price ?? mainPrice)}kk
                       </span>
                     </p>
@@ -189,11 +189,11 @@ export default function CartCheckoutDrawer({
         <div className="cart-drawer-footer">
           <div className="cart-drawer-summary-row">
             <span
-              className="cart-drawer-shipping-label"
+              className="cart-drawer-shipping-label text-[14px] font-normal"
             >
               Shipping
             </span>
-            <span className="cart-drawer-shipping-value">
+            <span className="cart-drawer-shipping-value ">
               {hasShippableItem ? `$${formatPrice(shippingCost)}` : "Free"}
             </span>
           </div>

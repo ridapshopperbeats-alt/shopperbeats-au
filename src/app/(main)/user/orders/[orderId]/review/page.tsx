@@ -277,7 +277,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
             onChange={(e) => setComments(e.target.value)}
             maxLength={COMMENT_MAX_LENGTH}
             placeholder="Tell others what you think about this product — fit, quality, packaging, delivery experience..."
-            className={`${fieldInputClass} max-h-[100px] lg:max-h-[40px]`}
+            className={`${fieldInputClass} max-h-[100px] focus:outline-none focus:ring-0 bg-white`}
           />
           <span className="mt-1 block text-right text-[11px] text-[#D1D5DC]">
             {comments.length}/{COMMENT_MAX_LENGTH}

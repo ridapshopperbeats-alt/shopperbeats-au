@@ -12,6 +12,7 @@ import WhatshotIcon from "@mui/icons-material/Whatshot";
 import { useStaticCart } from "@/lib/hooks/useStaticCart";
 import { useStaticWishlist } from "@/lib/hooks/useStaticWishlist";
 import type { StaticProduct } from "@/lib/utils/staticStorage";
+import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 
 function limitWords(text: string, limit = 7) {
   const words = text.split(" ");
@@ -293,12 +294,12 @@ export default function StaticProductCards({
 
         <div
           ref={mobileSliderRef}
-          className="flex gap-3 overflow-x-auto scroll-smooth no-scrollbar pt-2"
+          className="flex gap-3 overflow-x-auto scroll-smooth no-scrollbar pt-3 md:pt-5 lg:pt-2"
         >
           {staticProducts.map((product) => (
             <div
               key={product.id}
-              className="group relative flex w-[160px] sm:w-[190px] h-[380px] sm:h-[400px] shrink-0 flex-col overflow-hidden rounded-[7px]"
+              className="group relative flex w-[160px] sm:w-[190px] h-[360px] sm:h-[380px] shrink-0 flex-col overflow-hidden rounded-[7px]"
             >
               {renderTag(product.tag)}
 
@@ -316,7 +317,7 @@ export default function StaticProductCards({
 
               <Link
                 href={`/static-product/${product.slug}`}
-                className="flex h-full max-h-[400px] flex-col no-underline text-inherit"
+                className="flex h-full max-h-[360px] sm:max-h-[380px] flex-col no-underline text-inherit"
               >
                 <div className="relative w-full h-[150px] sm:h-[180px] shrink-0 overflow-hidden rounded-t-[7px] bg-[#F5F5F5]">
                   <Image
@@ -329,16 +330,16 @@ export default function StaticProductCards({
                 </div>
 
                 <div className="flex flex-1 flex-col justify-between w-full">
-                  <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
+                  <div className="flex flex-col pt-1 ">
                     <h4 className="fluid-text-xs font-bold text-black">
                       {product.brand_name}
                     </h4>
 
-                    <p className="fluid-text-sm leading-[18px] text-[#878787] font-normal line-clamp-2 min-h-[36px]">
+                    <p className="text-[12px] leading-[18px] text-[#878787] font-normal ">
                       {limitWords(product.title)}
                     </p>
 
-                    <div className="flex items-center gap-2 h-4 py-3">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5  lg:h-4 lg:py-3">
                       <span className="fluid-text-16-20 font-semibold text-[#052B56]">
                         ${product.mainPrice}
                       </span>
@@ -360,15 +361,20 @@ export default function StaticProductCards({
                     </div>
 
                     {!product.isOutOfStock && (
-                      <div className="fluid-text-11-12 text-[#535252]">
-                        <p>Delivery Fee - ${product.shippingCharge}</p>
-                        <p className="font-medium">
-                          Estimated delivery between Thu, 06 Aug - Wed, 12 Aug
+                      <div className="flex flex-col gap-1 fluid-text-11-12 text-[#535252] mt-1 lg:mt-0">
+                        <p className="truncate">
+                          Delivery Fee - ${product.shippingCharge}
+                        </p>
+                        <p className="font-normal text-[#535766]">
+                          Estimated delivery between{" "}
+                          <span className="font-medium">
+                            {getEstimatedDeliveryRange(undefined, 0)}
+                          </span>
                         </p>
                       </div>
                     )}
 
-                    <p className="font-normal fluid-text-11-12 leading-[16px] text-[#ff4400]">
+                    <p className="font-normal fluid-text-11-12 leading-[16px] text-[#ff4400] mt-1 lg:mt-0 truncate">
                       Extra 10% Off with Code: SHBS10
                     </p>
                   </div>
@@ -410,13 +416,13 @@ export default function StaticProductCards({
 
       <div
         ref={sliderRef}
-        className="hidden lg:flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pt-3"
+        className="hidden lg:flex gap-6 overflow-x-auto scroll-smooth no-scrollbar lg:pt-6"
       >
         {staticProducts.map((product) => {
           return (
             <div
               key={product.id}
-              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[495px] flex flex-col justify-start overflow-hidden rounded-[7px]"
+              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[530px] flex flex-col justify-start overflow-hidden rounded-[7px]"
             >
               {renderTag(product.tag)}
 
@@ -436,7 +442,7 @@ export default function StaticProductCards({
                 href={`/static-product/${product.slug}`}
                 className="flex h-full flex-col no-underline"
               >
-                <div className="relative w-full h-[296px] shrink-0 overflow-hidden rounded-[7px] bg-[#F5F5F5]">
+                <div className="relative w-full h-[290px] shrink-0 overflow-hidden rounded-[7px] bg-[#F5F5F5]">
                   <Image
                     src={product.image}
                     alt={product.title}
@@ -477,20 +483,32 @@ export default function StaticProductCards({
                       </span>
                     </div>
 
-                    <div className="fluid-text-12-13 text-[#535252]">
-                      <p>
-                        FREE delivery Sun, 7 Jun
-                        <br />
-                        Or fastest delivery Tomorrow, 5 June
-                      </p>
+                    <div className="fluid-text-12-13 text-[#535252] flex flex-col">
+                      {!product.isOutOfStock && (
+                        <div className="leading-[18px] flex flex-col gap-[2px]">
+                          <p className="font-normal text-[#535252]">
+                            Delivery Fee -
+                            <span className="font-medium">
+                              ${product.shippingCharge}
+                            </span>
+                          </p>
 
-                      <p className="font-normal fluid-text-13-14 leading-[18px] text-[#ff4400]">
+                          <p className="font-normal text-[#535766]">
+                            Estimated delivery between{" "}
+                            <span className="font-medium">
+                              {getEstimatedDeliveryRange(undefined, 0)}
+                            </span>
+                          </p>
+                        </div>
+                      )}
+
+                      <p className="mt-1 font-normal fluid-text-13-14 leading-[18px] text-[#ff4400]">
                         Extra 10% Off with Code: SHBS10
                       </p>
                     </div>
                   </div>
 
-                  <div className="w-full px-2  flex justify-center">
+                  <div className="w-full px-2 flex justify-center">
                     <button
                       type="button"
                       onClick={(e) => {

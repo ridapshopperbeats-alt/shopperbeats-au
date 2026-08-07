@@ -1467,7 +1467,9 @@ export default function ProductDetailClient({
             </div>
 
             {(product.reviews?.length ?? 0) > 0 && (
-              <CustomerRatingViewPage reviews={product.reviews} />
+              <div className="hidden xl:block">
+                <CustomerRatingViewPage reviews={product.reviews} />
+              </div>
             )}
           </div>
 

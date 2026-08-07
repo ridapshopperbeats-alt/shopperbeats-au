@@ -46,7 +46,8 @@ const getEstimatedDeliveryRange = (
   const formattedStart = startDate.toLocaleDateString("en-AU", options);
   const formattedEnd = endDate.toLocaleDateString("en-AU", options);
 
-  return `Estimated delivery between ${formattedStart} - ${formattedEnd}`;
+  // return `Estimated delivery between ${formattedStart} - ${formattedEnd}`;
+  return ` ${formattedStart} - ${formattedEnd}`;
 };
 
 export default getEstimatedDeliveryRange;
