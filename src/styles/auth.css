@@ -53,7 +53,7 @@
 }
 
 .password-content p {
-    @apply font-medium mb-[5px]  leading-[normal];
+    @apply font-medium mb-[5px] text-[14px]! leading-[normal];
 }
 
 .user-form-wrapper .flex label {
@@ -61,11 +61,11 @@
 }
 
 .password-content ul {
-    @apply pl-5 mb-5;
+    @apply pl-5 mb-5 text-[14px]!;
 }
 
 .password-content ul li {
-    @apply list-disc text-[rgba(0,0,0,0.60)] font-['Montserrat']  font-medium not-italic leading-[normal];
+    @apply list-disc text-[rgba(0,0,0,0.60)] text-[14px]! font-['Montserrat']  font-medium not-italic leading-[normal];
 }
 
 .link span {

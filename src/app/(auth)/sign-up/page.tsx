@@ -9,12 +9,13 @@ import Button from "@/components/common/Button";
 import { useRouter } from "next/navigation";
 
 import Link from "next/link";
-import { useResendVerificationCodeMutation, useSignupMutation } from "@/lib/redux/apis/auth-api";
+import {
+  useResendVerificationCodeMutation,
+  useSignupMutation,
+} from "@/lib/redux/apis/auth-api";
 import { signupSchema } from "@/lib/validations/form-schemas";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { Input } from "@/components/common/input";
-
-
 
 export default function SignupPage() {
   const [signup, { isLoading }] = useSignupMutation();
@@ -31,8 +32,6 @@ export default function SignupPage() {
   const [showResendEmail, setShowResendEmail] = useState(false);
   const [cooldown, setCooldown] = useState(0);
 
-
-
   const getInitialFormValues = () => ({
     email: "",
     password: "",
@@ -40,8 +39,6 @@ export default function SignupPage() {
     first_name: "",
     last_name: "",
   });
-
-
 
   const handleResendEmail = async () => {
     if (!formData.email.trim()) {
@@ -58,7 +55,6 @@ export default function SignupPage() {
       });
       return;
     }
-
 
     try {
       await resendVerificationCode({ email: formData.email }).unwrap();
@@ -90,17 +86,15 @@ export default function SignupPage() {
     } finally {
       setIsSubmitting(false);
     }
-
   };
 
   const { formData, formErrors, handleChange, handleSubmit } =
     useFormValidation(signupSchema, getInitialFormValues());
 
-
   const handleSignupSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
-    const isProd = process.env.NEXT_PUBLIC_ENV_VARIABLE === 'prod';
+    const isProd = process.env.NEXT_PUBLIC_ENV_VARIABLE === "prod";
 
     if (isProd && !recaptcha_token) {
       toast.error("Please complete the reCAPTCHA.", {
@@ -138,12 +132,8 @@ export default function SignupPage() {
       toast.error(errorMessage, {
         toastId: "signup-error",
       });
-
     }
-
   };
-
-
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -151,11 +141,12 @@ export default function SignupPage() {
     setCooldown(0);
   }, [formData.email]);
 
-
   return (
     <div className="container">
       <div className="user-form-wrapper">
-        <h3 className="flex justify-center py-6 auth-form-title">Create an Account</h3>
+        <h3 className="flex justify-center py-6 auth-form-title">
+          Create an Account
+        </h3>
 
         <form onSubmit={handleSubmit(handleSignupSubmit)} noValidate>
           <div className="flex gap-4">
@@ -187,7 +178,6 @@ export default function SignupPage() {
                 disabled={isLoading}
                 className="w-full"
                 required
-
               />
               {formErrors.last_name && (
                 <p className="error">{formErrors.last_name}</p>
@@ -262,19 +252,20 @@ export default function SignupPage() {
             <p>Your password must have:</p>
             <ul>
               <li>Must be 8-24 characters long</li>
-              <li>Must include uppercase and lowercase letters, numbers plus at least one special character</li>
+              <li>
+                Must include uppercase and lowercase letters, numbers plus at
+                least one special character
+              </li>
             </ul>
           </div>
 
-
-
-          {process.env.NEXT_PUBLIC_ENV_VARIABLE === 'prod' && (
+          {process.env.NEXT_PUBLIC_ENV_VARIABLE === "prod" && (
             <div className="form-item">
               <ReCaptcha onCaptchaChange={setRecaptcha_token} />
             </div>
           )}
-          
-           <div className="form-item form-item-radio link">
+
+          <div className="form-item form-item-radio link">
             <input
               type="checkbox"
               id="terms"
@@ -283,13 +274,16 @@ export default function SignupPage() {
               onChange={(e) => setTermsAccepted(e.target.checked)}
               disabled={isLoading}
             />
-            <label htmlFor="terms">
+            <label htmlFor="terms" style={{ fontSize: "14px " }}>
               I Agree to all the
-              <Link href="/cms/terms-condition" target="_blank"> Terms & Conditions</Link>
+              <Link href="/cms/terms-condition" target="_blank">
+                {" "}
+                Terms & Conditions
+              </Link>
             </label>
           </div>
 
-           <div className="form-item form-item-radio link">
+          <div className="form-item form-item-radio link">
             <input
               type="checkbox"
               id="mailing_list"
@@ -298,7 +292,9 @@ export default function SignupPage() {
               onChange={(e) => setMailing_list(e.target.checked)}
               disabled={isLoading}
             />
-            <label htmlFor="mailing_list">Add me to the mailing list</label>
+            <label htmlFor="mailing_list" style={{ fontSize: "14px " }}>
+              Add me to the mailing list
+            </label>
           </div>
 
           <Button
@@ -312,7 +308,8 @@ export default function SignupPage() {
           {showResendEmail && (
             <div className="resend-email-section mt-20 p-4 border border-gray-300 rounded-lg bg-gray-50">
               <p className="text-sm text-gray-600 mb-3">
-                Your email is not verified. Click below to resend verification email.
+                Your email is not verified. Click below to resend verification
+                email.
               </p>
 
               <Button

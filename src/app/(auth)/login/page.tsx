@@ -302,7 +302,7 @@ export default function LoginPage() {
               onChange={(e) => setRememberMe(e.target.checked)}
               disabled={isLoading || isBlocked}
             />
-            <label htmlFor="remember_me">Remember me</label>
+            <label htmlFor="remember_me" className="text-[14px]!">Remember me</label>
           </div>
 
           <Button
