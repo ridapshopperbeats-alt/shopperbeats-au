@@ -51,6 +51,8 @@ export default function UserLayout({
         return "Track, manage and review your orders.";
         case "/user/change-password":
         return "Keep your account secure with a strong password.";
+        case "/user/addresses":
+        return "Save and manage your delivery addresses";
       default:
         return "Track, manage and review your orders.";
     }

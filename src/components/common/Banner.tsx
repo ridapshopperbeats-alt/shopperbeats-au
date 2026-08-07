@@ -10,7 +10,7 @@ interface BannerProps {
 
 export default function Banner({ title, subtitle, titleClassName, subtitleClassName, image }: Readonly<BannerProps>) {
   return (
-    <div className="hidden lg:flex mt-5 relative overflow-hidden h-[202px] items-center justify-center">
+    <div className="hidden lg:flex relative overflow-hidden h-[202px] items-center justify-center">
 
       <div className="absolute inset-0 -z-10 mx-auto w-full h-[202px] max-w-[1934px]">
         <div className="w-full h-full [&>*]:w-full [&>*]:h-full [&>*]:object-cover">
