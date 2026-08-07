@@ -130,7 +130,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <>
-      <div className="group relative w-full h-full max-h-[400px] md:max-h-[460px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
+      <div className="group relative w-full h-[400px] md:h-[498px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
         {renderTag(tags?.[0])}
 
         <button
@@ -148,7 +148,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
         </button>
         <Link
           href={`/static-product/${unique_code || id}`}
-          className="flex h-full max-h-[400px] md:max-h-[460px] flex-col no-underline text-inherit"
+          className="flex h-[400px] md:h-[480px] flex-col no-underline text-inherit"
         >
           <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden rounded-t-[8px] bg-[rgba(233,233,233,0.60)]">
             <Image
@@ -171,7 +171,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
           </div>
 
           <div className="flex flex-1 flex-col justify-between w-full">
-            <div className="flex flex-col  pt-1 md:pt-2">
+            <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
               <h4 className="text-[14px] font-bold text-black">
                 {brand_name || "No Brand"}
               </h4>
@@ -207,16 +207,18 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 </div>
               )}
 
-              <div className="flex flex-col gap-1 min-h-[46px] text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
+              <div className="min-h-[46px] text-[12px] md:text-[13px] leading-[18px] text-[#535252] flex flex-col">
                 {!isOutOfStock && (
-                  <>
-                    <p className="font-normal truncate">
-                      {shippingCharge === 0
-                        ? "Delivery Fee - $0"
-                        : `Delivery Fee - $${formatPrice(shippingCharge)}`}
+                  <div className="leading-[18px] flex flex-col gap-[2px]">
+                    <p className="font-normal text-[#535252]">
+                      Delivery Fee -
+                      <span className="font-medium">
+                        ${formatPrice(shippingCharge)}
+                      </span>
                     </p>
 
-                    <p className="font-normal truncate">
+                    <p className="font-normal text-[#535766]">
+                      Estimated delivery between{" "}
                       <span className="font-medium">
                         {getEstimatedDeliveryRange(
                           ships_from_location,
@@ -224,10 +226,10 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                         )}
                       </span>
                     </p>
-                  </>
+                  </div>
                 )}
 
-                <p className="font-normal text-[#FF4400] truncate">
+                <p className="mt-1 font-normal text-[#FF4400]">
                   Extra 10% Off With Code: SHBS10
                 </p>
               </div>
@@ -246,7 +248,11 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 }
                 style={
                   isOutOfStock
-                    ? { backgroundColor: "#F3F4F6", color: "#9CA3AF", opacity: 1 }
+                    ? {
+                        backgroundColor: "#F3F4F6",
+                        color: "#9CA3AF",
+                        opacity: 1,
+                      }
                     : undefined
                 }
               >
