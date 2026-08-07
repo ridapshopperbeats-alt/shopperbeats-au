@@ -1100,7 +1100,7 @@ input[type="radio"] {
 
 @media (min-width: 768px) {
   .pc-carousel .slider-track {
-    @apply !gap-3;
+    @apply !gap-5;
   }
 }
 

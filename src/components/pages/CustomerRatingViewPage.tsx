@@ -78,7 +78,7 @@ const STORE_REVIEWS: DisplayReview[] = [
     verified: false,
     reviewer_profile_image: null,
   },
-    {
+  {
     id: "store-review-4",
     name: " work",
     rating: 5,
@@ -88,7 +88,7 @@ const STORE_REVIEWS: DisplayReview[] = [
     verified: false,
     reviewer_profile_image: null,
   },
-    {
+  {
     id: "store-review-5",
     name: "Sophia here",
     rating: 5,
@@ -98,7 +98,7 @@ const STORE_REVIEWS: DisplayReview[] = [
     verified: false,
     reviewer_profile_image: null,
   },
-    {
+  {
     id: "store-review-6",
     name: "Sophia work",
     rating: 5,
@@ -483,11 +483,10 @@ export default function CustomerRatingViewPage({
                               Verified Purchase
                             </span>
                           )}
+                          <span className="text-[12px] text-[#696e79] ml-auto">
+                            {review.date}
+                          </span>
                         </div>
-
-                        <span className="text-[12px] text-[#696e79] ml-auto">
-                          {review.date}
-                        </span>
                       </div>
 
                       <p className="mt-1 text-[13px] text-[#696e79]">

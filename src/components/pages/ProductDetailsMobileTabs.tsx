@@ -21,7 +21,7 @@ export default function ProductDetailsMobileTabs({
   const [activeTab, setActiveTab] = useState<"details" | "reviews">("details");
 
   const accordionItems = [
-   { id: "description", title: "Description", content: descriptionContent },
+    { id: "description", title: "Description", content: descriptionContent },
     // { id: "delivery", title: "Delivery", content: deliveryContent },
     // { id: "Warranty and return ", title: "Warranty And Return", content: warrantyAndReturnContent },
   ];
@@ -59,7 +59,7 @@ export default function ProductDetailsMobileTabs({
       )}
 
       {activeTab === "reviews" && (
-        <div className="pt-4">
+        <div className="pt-4 pb-4">
           {reviews.length > 0 ? (
             <CustomerRatingViewPage reviews={reviews} />
           ) : (
@@ -67,6 +67,8 @@ export default function ProductDetailsMobileTabs({
           )}
         </div>
       )}
+
+      <div className="-mx-7 lg:-mx-4 border-t border-[#EAEAEA] lg:hidden  shadow-[0px_0px_16.1px_0px_#8E8E8E40]" />
     </div>
   );
 }

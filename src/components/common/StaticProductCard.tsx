@@ -176,7 +176,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 {brand_name || "No Brand"}
               </h4>
 
-              <p className="text-[14px] leading-4.5 text-[#878787] font-normal">
+              <p className="text-[13px] md:text-[14px] leading-4.5 text-[#878787] font-normal">
                 {limitWords(title, 7) || "MakeupKit"}
               </p>
 
@@ -207,16 +207,16 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 </div>
               )}
 
-              <div className="min-h-[54px] text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
+              <div className="flex flex-col gap-1 min-h-[46px] text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
                 {!isOutOfStock && (
                   <>
-                    <p className="font-normal">
+                    <p className="font-normal truncate">
                       {shippingCharge === 0
                         ? "Delivery Fee - $0"
                         : `Delivery Fee - $${formatPrice(shippingCharge)}`}
                     </p>
 
-                    <p className="font-normal">
+                    <p className="font-normal truncate">
                       <span className="font-medium">
                         {getEstimatedDeliveryRange(
                           ships_from_location,
@@ -226,11 +226,11 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                     </p>
                   </>
                 )}
-              </div>
 
-              <p className="text-[12px] md:text-[13px] font-normal text-[#FF4400]">
-                Extra 10% Off With Code: SHBS10
-              </p>
+                <p className="font-normal text-[#FF4400] truncate">
+                  Extra 10% Off With Code: SHBS10
+                </p>
+              </div>
             </div>
 
             <div className="w-full px-2 lg:px-3 flex justify-center mt-2">

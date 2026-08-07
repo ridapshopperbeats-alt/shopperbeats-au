@@ -585,11 +585,10 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                       Delivery Fee - ${formatPrice(shippingCharge)}
                     </p>
 
-                    <p className="font-normal text-[#535766]">
-                      {getEstimatedDeliveryRange(
-                        product.ships_from_location,
-                        product.handling_time_days || 0,
-                      )}
+                    <p className="font-light text-[#535766]">
+                      <span className="font-medium">
+                        {estimatedDeliveryRange}
+                      </span>
                     </p>
                   </div>
                 )}

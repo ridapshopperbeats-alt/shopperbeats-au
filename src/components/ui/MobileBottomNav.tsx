@@ -86,7 +86,7 @@ export default function MobileBottomNav() {
 
   return (
     <>
-      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 h-[50px] flex items-stretch bg-white border-t border-[#EAEAEA] shadow-[0px_0px_16.1px_0px_#8E8E8E40] w-auto">
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 h-[50px] flex items-stretch bg-white border-t border-[#EAEAEA] shadow-[0px_0px_16.1px_0px_#8E8E8E40] w-auto ">
         {navItems.map((item) => {
           const Icon = item.icon;
           const color = item.isActive ? ACTIVE_COLOR : INACTIVE_COLOR;
