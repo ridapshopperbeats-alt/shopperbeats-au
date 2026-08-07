@@ -547,7 +547,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
             </div>
           </div>
         </div>
-        <div className="bottom-head border-b border-[#D8D8D8] ">
+        <div className="bottom-head">
           <div
             className="megamenu-container"
             onMouseEnter={() => setIsMegaMenuOpen(true)}

@@ -73,7 +73,9 @@ ul.social {
 }
 
 .footer-highlights-wrapper {
-  @apply bg-white p-5 md:p-[30px];
+  @apply p-5 md:p-[30px] relative z-10;
+  background: #fff;
+  box-shadow: 0 0 4px 1px rgba(199, 199, 199, 0.25);
 }
 
 .footer-highlights-grid {
