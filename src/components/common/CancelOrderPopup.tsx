@@ -44,8 +44,9 @@ const CancelOrderPopup: React.FC<CancelOrderPopupProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="bg-black/50 fixed inset-0 flex items-center justify-center z-[1100] px-4">
-      <div className="w-full max-w-md overflow-hidden rounded-2xl border-t-4 border-[#FD151B] bg-white shadow-xl">
+    <div className="bg-black/50 fixed inset-0 flex items-end sm:items-center justify-center z-[1100] px-0 sm:px-4">
+      <div className="w-full max-w-md max-h-[90vh] sm:max-h-[85vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border-t-4 border-[#FD151B] bg-white shadow-xl">
+        <div className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-gray-300 sm:hidden" />
         <div className="flex flex-col gap-4 p-6">
           <div className="flex flex-col gap-1">
             <h2 className="text-[1rem] font-bold text-[#211E22]">
@@ -152,18 +153,18 @@ const CancelOrderPopup: React.FC<CancelOrderPopupProps> = ({
             </div>
           )}
 
-          <div className="flex items-center gap-3 pt-1">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-1">
             <Button
               type="button"
               disabled={!formData.reason}
-              className="flex-1 cursor-pointer rounded-full bg-[#FD151B] px-5 py-2.5 text-center text-[0.8125rem] font-bold text-white hover:bg-[#e11319] disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full sm:flex-1 cursor-pointer rounded-full bg-[#FD151B] px-5 py-2.5 text-center text-[0.8125rem] font-bold text-white hover:bg-[#e11319] disabled:cursor-not-allowed disabled:opacity-50"
               onClick={handleConfirm}
             >
               Confirm Cancellation
             </Button>
             <Button
               type="button"
-              className="flex-1 cursor-pointer rounded-full border border-[#E5E7EB] bg-white px-5 py-2.5 text-center text-[0.8125rem] font-semibold text-[#99A1AF] hover:bg-gray-50"
+              className="w-full sm:flex-1 cursor-pointer rounded-full border border-[#E5E7EB] bg-white px-5 py-2.5 text-center text-[0.8125rem] font-semibold text-[#99A1AF] hover:bg-gray-50"
               onClick={onClose}
             >
               Close

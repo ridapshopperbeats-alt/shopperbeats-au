@@ -18,6 +18,8 @@ import { useIsClient } from "@/lib/hooks/use-is-client";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { CheckoutFormProps } from "@/types/checkout";
+import { transform } from "next/dist/build/swc";
+import { text } from "stream/consumers";
 
 const CheckoutForm: React.FC<CheckoutFormProps> = ({
   formData,
@@ -133,8 +135,12 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
   const stripeFieldStyle = {
     base: {
-      fontSize: "16px",
-      color: "#111827",
+      fontSize: "14px",
+      fontWeight: "500",
+      color: "#000000",
+      fontFamily: "Montserrat, sans-serif",
+      textTransform: "capitalize",
+      lineHeight: "normal",
       "::placeholder": { color: "#9CA3AF" },
     },
     invalid: { color: "#DC2626" },

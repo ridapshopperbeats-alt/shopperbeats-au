@@ -47,8 +47,12 @@ export default function UserLayout({
         return "We hope to see you again soon";
           case "/user/wishlist":
         return "Your saved fashion favourites, all in one place.";
+         case "/user/orders":
+        return "Track, manage and review your orders.";
+        case "/user/change-password":
+        return "Keep your account secure with a strong password.";
       default:
-        return undefined;
+        return "Track, manage and review your orders.";
     }
   };
 

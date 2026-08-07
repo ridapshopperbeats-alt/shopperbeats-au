@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { X } from "lucide-react";
 import Button from "@/components/common/Button";
 import { useRetryPaymentMutation } from "@/lib/redux/apis/order-api";
 import { toast } from "react-toastify";
@@ -11,6 +12,9 @@ interface RetryPaymentPopupProps {
   onClose: () => void;
   orderId: string;
 }
+
+const PAYMENT_INPUT_CLASS =
+  "!h-auto !w-full !rounded-[14px] !border !border-[#E5E7EB] !bg-white !px-4 !py-3 !text-[0.8125rem] !leading-normal !text-[#211E22] focus:!border-[#FD151B] focus:outline-none focus:ring-1 focus:ring-[#FD151B] placeholder:!font-montserrat placeholder:!text-[14px] placeholder:!font-medium placeholder:!leading-normal placeholder:!capitalize placeholder:!text-black";
 
 const RetryPaymentForm: React.FC<RetryPaymentPopupProps> = ({ isOpen, onClose, orderId }) => {
   const stripe = useStripe();
@@ -103,151 +107,151 @@ const RetryPaymentForm: React.FC<RetryPaymentPopupProps> = ({ isOpen, onClose, o
     }
   };
 
-  return (
-    <div
-      id="popupModal"
-      className="ordermodal retrypopup fixed inset-0 bg-black/50 flex items-center justify-center z-[1100]"
-      onClick={(e) => {
-        if ((e.target as HTMLElement).id === "popupModal") {
-          onClose();
-        }
-      }}
-    >
-      <div className="modal-content" style={{ padding: "30px", position: "relative", maxWidth: "500px", width: "95%" }}>
-        <button
-          className="close"
-          onClick={onClose}
-          aria-label="Close modal"
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "15px",
-            fontSize: "28px",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            lineHeight: "1",
-            color: "black",
-          }}
-        >
-          ×
-        </button>
-        <h3 className="align-center pt-0">Retry Payment</h3>
-        <p className="align-center mb-20 text-gray-600">Select a payment method to complete your order.</p>
+  const paymentOptionClass = (value: string) =>
+    `flex cursor-pointer items-center justify-between gap-3 rounded-[14px] border px-4 py-3 shadow-[0_1px_3px_0_rgba(0,0,0,0.1),0_1px_2px_-1px_rgba(0,0,0,0.1)] transition-colors ${
+      paymentMethod === value
+        ? "border-[#FD151B] bg-[#FFF5F5]"
+        : "border-[#E5E7EB] bg-white hover:border-[#FD151B]/50"
+    }`;
 
-        <form onSubmit={handleSubmit} className="checkout-form mt-30">
-          <div className="h-[500px] w-[450px]">
-            <div className="payment-card" style={{ padding: "15px", border: "1px solid #ddd", borderRadius: "8px", }}>
-              <label className="flex gap-2 cursor-pointer font-bold">
+  return (
+    <div className="fixed inset-0 z-[1100] flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4">
+      <div className="flex w-full max-w-lg max-h-[90vh] sm:max-h-[85vh] flex-col overflow-hidden rounded-t-2xl sm:rounded-2xl border-t-4 border-[#FD151B] bg-white shadow-xl">
+        <div className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-gray-300 sm:hidden" />
+        <div className="flex items-start justify-between gap-4 p-6 pb-0">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-[1rem] font-bold text-[#211E22]">Retry Payment</h2>
+            <p className="text-[0.8125rem] text-[#99A1AF]">
+              Select a payment method to complete your order.
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="shrink-0 cursor-pointer text-[#99A1AF] hover:text-[#211E22]"
+            aria-label="Close"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-1 flex-col overflow-hidden">
+          <div
+            className="flex-1 overflow-y-auto overscroll-contain px-6 py-4 flex flex-col gap-3"
+            data-lenis-prevent
+            onWheel={(e) => e.stopPropagation()}
+          >
+            <label className={paymentOptionClass("CreditCard")}>
+              <span className="flex items-center gap-2 text-[0.8125rem] font-semibold text-[#211E22]">
                 <input
                   type="radio"
                   name="retryPaymentMethod"
                   value="CreditCard"
                   checked={paymentMethod === "CreditCard"}
                   onChange={() => setPaymentMethod("CreditCard")}
+                  className="accent-[#FD151B]"
                 />
                 Credit Card
-              </label>
-              <div className="payment-logos dflex" style={{marginBottom:"0px"}}>
-                <div className="payment-img"><Image src="/images/visa.svg" alt="Visa" width={40} height={24} /></div>
-                <div className="payment-img"><Image src="/images/payment.svg" alt="Mastercard" width={40} height={24} /></div>
-                <div className="payment-img"><Image src="/images/american.svg" alt="Amex" width={40} height={24} /></div>
+              </span>
+              <div className="flex items-center gap-2">
+                <Image src="/images/visa.svg" alt="Visa" width={32} height={20} />
+                <Image src="/images/payment.svg" alt="Mastercard" width={32} height={20} />
+                <Image src="/images/american.svg" alt="Amex" width={32} height={20} />
               </div>
+            </label>
 
-              {paymentMethod === "CreditCard" && (
+            {paymentMethod === "CreditCard" && (
+              <div className="flex flex-col gap-3 rounded-[14px] border border-[#F3F4F6] bg-[#F9FAFB] p-4">
+                <input
+                  type="number"
+                  name="cardNumber"
+                  placeholder="Card number"
+                  className={PAYMENT_INPUT_CLASS}
+                />
 
-                <div className=" h-[170px] gap-[10px] w-full flex flex-col">
+                <div className="grid grid-cols-2 gap-3">
                   <input
                     type="number"
-                    name="cardNumber"
-                    placeholder="Card number"
+                    name="expiryDate"
+                    placeholder="MM / YY"
+                    className={PAYMENT_INPUT_CLASS}
                   />
-
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "16px",
-                    }}
-                  >
-                    <input
-                      type="number"
-                      name="expiryDate"
-                      placeholder="Expiration date (MM / YY)"
-                    />
-
-                    <input
-                      type="number"
-                      name="securityCode"
-                      placeholder="Security code"
-                    />
-                  </div>
 
                   <input
-                    type="text"
-                    name="cardHolder"
-                    placeholder="Your Name"
+                    type="number"
+                    name="securityCode"
+                    placeholder="Security code"
+                    className={PAYMENT_INPUT_CLASS}
                   />
                 </div>
-              )}
-            </div>
 
-            <div className="payment-option mb-10" style={{ padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-              <label className="retry-popup-toggle">
-                <div className="flex gap-2">
-                  <input
-                    type="radio"
-                    name="retryPaymentMethod"
-                    value="paypal"
-                    checked={paymentMethod === "paypal"}
-                    onChange={() => setPaymentMethod("paypal")}
-                  />
-                  Paypal
-                </div>
-                <Image src="/images/paypal.svg" alt="Paypal" width={60} height={24} />
-              </label>
-            </div>
+                <input
+                  type="text"
+                  name="cardHolder"
+                  placeholder="Your Name"
+                  className={PAYMENT_INPUT_CLASS}
+                />
+              </div>
+            )}
 
-            <div className="payment-option mb-10" style={{ padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-              <label className="retry-popup-toggle">
-                <div className="flex gap-2">
-                  <input
-                    type="radio"
-                    name="retryPaymentMethod"
-                    value="afterpay"
-                    checked={paymentMethod === "afterpay"}
-                    onChange={() => setPaymentMethod("afterpay")}
-                  />
-                  Afterpay
-                </div>
-                <Image src="/images/afterpay.svg" alt="Afterpay" width={60} height={24} />
-              </label>
-            </div>
+            <label className={paymentOptionClass("paypal")}>
+              <span className="flex items-center gap-2 text-[0.8125rem] font-semibold text-[#211E22]">
+                <input
+                  type="radio"
+                  name="retryPaymentMethod"
+                  value="paypal"
+                  checked={paymentMethod === "paypal"}
+                  onChange={() => setPaymentMethod("paypal")}
+                  className="accent-[#FD151B]"
+                />
+                Paypal
+              </span>
+              <Image src="/images/paypal.svg" alt="Paypal" width={56} height={20} />
+            </label>
 
-            <div className="payment-option mb-20" style={{ padding: "15px", border: "1px solid #ddd", borderRadius: "8px" }}>
-              <label className="retry-popup-toggle">
-                <div className="flex gap-2">
-                  <input
-                    type="radio"
-                    name="retryPaymentMethod"
-                    value="zip"
-                    checked={paymentMethod === "zip"}
-                    onChange={() => setPaymentMethod("zip")}
-                  />
-                  Zippay
-                </div>
-                <Image src="/images/zip.svg" alt="Zippay" width={60} height={24} />
-              </label>
-            </div>
+            <label className={paymentOptionClass("afterpay")}>
+              <span className="flex items-center gap-2 text-[0.8125rem] font-semibold text-[#211E22]">
+                <input
+                  type="radio"
+                  name="retryPaymentMethod"
+                  value="afterpay"
+                  checked={paymentMethod === "afterpay"}
+                  onChange={() => setPaymentMethod("afterpay")}
+                  className="accent-[#FD151B]"
+                />
+                Afterpay
+              </span>
+              <Image src="/images/afterpay.svg" alt="Afterpay" width={56} height={20} />
+            </label>
+
+            <label className={paymentOptionClass("zip")}>
+              <span className="flex items-center gap-2 text-[0.8125rem] font-semibold text-[#211E22]">
+                <input
+                  type="radio"
+                  name="retryPaymentMethod"
+                  value="zip"
+                  checked={paymentMethod === "zip"}
+                  onChange={() => setPaymentMethod("zip")}
+                  className="accent-[#FD151B]"
+                />
+                Zippay
+              </span>
+              <Image src="/images/zip.svg" alt="Zippay" width={56} height={20} />
+            </label>
           </div>
 
-          <div className="flex justify-center w-full">
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 p-6 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full sm:w-auto cursor-pointer rounded-full border border-[#E5E7EB] bg-white px-6 py-2.5 text-center text-[0.8125rem] font-semibold text-[#99A1AF] hover:bg-gray-50"
+            >
+              Cancel
+            </button>
             <Button
               type="submit"
-              className="btn btn-red w-30"
               isLoading={isProcessing}
               disabled={isProcessing}
-              style={{ alignItems: "center", justifyContent: "center", display: "flex" , marginTop:"10px"}}
+              className="w-full sm:w-auto cursor-pointer rounded-full bg-[#FD151B] px-6 py-2.5 text-center text-[0.8125rem] font-bold text-white hover:bg-[#e11319] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isProcessing ? "Processing..." : "Pay Now"}
             </Button>
