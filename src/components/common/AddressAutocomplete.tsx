@@ -211,7 +211,10 @@ export default function GooglePlacesInput({
         }}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className={inputClassName || "w-full px-4 py-2 border border-gray-300 rounded-md"}
+        className={
+          inputClassName ||
+          "flex h-[41px] w-full min-w-0 shrink-0 items-center justify-between rounded-[10px]! border-[1.167px]! border-[#E5E7EB]! bg-transparent px-[13px] py-0 sm:h-[40.75px] sm:border-[1px]! sm:px-3 sm:py-2.5 font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)]! font-normal! leading-[18.75px] text-[#2A2A2A] transition-colors outline-none placeholder:font-montserrat placeholder:text-[#2A2A2A] placeholder:text-[clamp(0.75rem,0.75rem,0.75rem)]! placeholder:font-normal placeholder:leading-[18.75px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50"
+        }
       />
 
       {loading && (

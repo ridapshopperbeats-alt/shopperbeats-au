@@ -812,7 +812,7 @@ export default function SecureCheckout() {
 
         {/* ORDER SUMMARY */}
         <div className="w-full xl:!w-[570px] xl:shrink-0 order-2 flex flex-col gap-4 xl:sticky xl:top-32 h-auto">
-          <div className="w-full xl:!w-full  h-auto bg-white opacity-100 rounded-[8px] shadow-[0px_0px_14px_0px_#00000014]">
+          <div className="w-full xl:!w-full h-auto bg-white opacity-100 rounded-[7px] border border-[#F8F8F8] shadow-[0_0_4px_0_rgba(0,0,0,0.10)]">
             {isLoading ? (
               <div
                 style={{
@@ -963,7 +963,7 @@ export default function SecureCheckout() {
                       Already have an account?{" "}
                       <Link
                         href={`/login?redirect=${encodeURIComponent(pathname)}`}
-                        className="text-[#fd151b] font-bold no-underline"
+                        className="text-[#fd151b] font-bold underline"
                       >
                         Sign in
                       </Link>
@@ -976,7 +976,7 @@ export default function SecureCheckout() {
                     </h6>
                     <a
                       href="/cart"
-                      className="fluid-text-xs font-semibold text-black"
+                      className="fluid-text-xs font-semibold text-black underline"
                     >
                       Edit Cart
                     </a>
