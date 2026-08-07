@@ -68,7 +68,7 @@ export default function ProductDetailsMobileTabs({
         </div>
       )}
 
-      <div className="-mx-7 lg:-mx-4 border-t border-[#EAEAEA] lg:hidden  shadow-[0px_0px_16.1px_0px_#8E8E8E40]" />
+      <div className="mt-6 -mx-7 lg:-mx-4 border-t border-[#EAEAEA] lg:hidden  shadow-[0px_0px_16.1px_0px_#8E8E8E40]" />
     </div>
   );
 }

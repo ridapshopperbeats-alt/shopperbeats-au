@@ -231,7 +231,7 @@ function StaticCarouselCard(product: ProductCardProps) {
             </div>
           </div>
 
-          <div className="w-full px-2 lg:px-3 flex justify-center mt-2">
+          <div className="w-full px-2 lg:px-3 flex justify-center">
             <button
               type="button"
               onClick={handleAddToCart}
@@ -259,7 +259,7 @@ export default function StaticProductCarousel({
   if (!products || products.length === 0) return null;
 
   return (
-    <div className="w-full px-[10px] pb-6">
+    <div className="w-full px-[10px]">
       <div className="flex justify-between gap-4">
         <div className="w-full">
           <div className="flex flex-col gap-1 w-full my-1">

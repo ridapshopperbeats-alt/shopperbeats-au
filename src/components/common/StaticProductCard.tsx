@@ -233,7 +233,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
               </div>
             </div>
 
-            <div className="w-full px-2 lg:px-3 flex justify-center mt-2">
+            <div className="w-full px-2 lg:px-3 flex justify-center">
               <button
                 onClick={handleAddToCartClick}
                 disabled={isOutOfStock}
