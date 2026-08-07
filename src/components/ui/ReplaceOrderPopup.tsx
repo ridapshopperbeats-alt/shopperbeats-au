@@ -157,8 +157,9 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/50 p-4">
-      <div className="flex w-full max-w-lg max-h-[85vh] flex-col overflow-hidden rounded-2xl border-t-4 border-[#FD151B] bg-white shadow-xl">
+    <div className="fixed inset-0 z-[1100] flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4">
+      <div className="flex w-full max-w-lg max-h-[90vh] sm:max-h-[85vh] flex-col overflow-hidden rounded-t-2xl sm:rounded-2xl border-t-4 border-[#FD151B] bg-white shadow-xl">
+        <div className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-gray-300 sm:hidden" />
         <div className="flex items-start justify-between gap-4 p-6 pb-0">
           <div className="flex flex-col gap-1">
             <h2 className="text-[1rem] font-bold text-[#211E22]">
@@ -354,10 +355,10 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
           )}
         </div>
 
-        <div className="flex items-center justify-end gap-3 p-6 pt-2">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 p-6 pt-2">
           <button
             onClick={onClose}
-            className="cursor-pointer rounded-full border border-[#E5E7EB] bg-white px-6 py-2.5 text-center text-[0.8125rem] font-semibold text-[#99A1AF] hover:bg-gray-50"
+            className="w-full sm:w-auto cursor-pointer rounded-full border border-[#E5E7EB] bg-white px-6 py-2.5 text-center text-[0.8125rem] font-semibold text-[#99A1AF] hover:bg-gray-50"
           >
             Cancel
           </button>
@@ -365,7 +366,7 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
           <button
             onClick={handleConfirm}
             disabled={isReplacing}
-            className="cursor-pointer rounded-full bg-[#FD151B] px-6 py-2.5 text-center text-[0.8125rem] font-bold text-white hover:bg-[#e11319] disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full sm:w-auto cursor-pointer rounded-full bg-[#FD151B] px-6 py-2.5 text-center text-[0.8125rem] font-bold text-white hover:bg-[#e11319] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isReplacing ? "Submitting..." : "Submit Replacement"}
           </button>

@@ -90,6 +90,10 @@ export default function MobileBottomNav() {
         {navItems.map((item) => {
           const Icon = item.icon;
           const color = item.isActive ? ACTIVE_COLOR : INACTIVE_COLOR;
+          const borderClass = item.isActive
+            ? "border-t-2 border-[#FD151B]"
+            : "border-t-2 border-transparent";
+
           const content = (
             <>
               <span className="relative inline-flex">
@@ -103,7 +107,9 @@ export default function MobileBottomNav() {
               </span>
 
               <span
-                className="leading-[100%] tracking-[0%] font-medium text-[10px] text-[#001325]/64"
+                className={`leading-[100%] tracking-[0%] font-medium text-[10px] ${
+                  item.isActive ? "text-[#FD151B]" : "text-[#001325]/64"
+                }`}
               >
                 {item.label}
               </span>
@@ -116,9 +122,11 @@ export default function MobileBottomNav() {
                 key={item.key}
                 type="button"
                 onClick={() => setIsAccountSheetOpen(true)}
-                className="relative flex-1 flex flex-col items-center justify-center gap-1 py-2 cursor-pointer"
+                className="relative flex-1 flex justify-center cursor-pointer [-webkit-tap-highlight-color:transparent] focus:outline-none focus-visible:outline-none active:bg-transparent hover:bg-transparent"
               >
-                {content}
+                <span className={`w-12 flex flex-col items-center gap-1 pt-1.5 ${borderClass}`}>
+                  {content}
+                </span>
               </button>
             );
           }
@@ -127,9 +135,11 @@ export default function MobileBottomNav() {
             <Link
               key={item.key}
               href={item.href}
-              className="relative flex-1 flex flex-col items-center justify-center gap-1 py-2"
+              className="relative flex-1 flex justify-center [-webkit-tap-highlight-color:transparent] focus:outline-none focus-visible:outline-none active:bg-transparent hover:bg-transparent"
             >
-              {content}
+              <span className={`w-12 flex flex-col items-center gap-1 pt-1.5 ${borderClass}`}>
+                {content}
+              </span>
             </Link>
           );
         })}
