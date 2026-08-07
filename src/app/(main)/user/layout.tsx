@@ -49,6 +49,8 @@ export default function UserLayout({
         return "Your saved fashion favourites, all in one place.";
          case "/user/orders":
         return "Track, manage and review your orders.";
+        case "/user/change-password":
+        return "Keep your account secure with a strong password.";
       default:
         return "Track, manage and review your orders.";
     }

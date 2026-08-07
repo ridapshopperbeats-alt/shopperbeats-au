@@ -124,27 +124,27 @@ export default function Logout() {
         </div>
       </div>
 
-      <div className="flex w-full flex-wrap gap-4">
-        <div className="flex h-[70.75px] w-[143.333px] shrink-0 flex-col items-center justify-center rounded-[14px] border border-[#F3F4F6] bg-[#F9FAFB] px-4 py-3">
+      <div className="flex w-full gap-3 sm:gap-4">
+        <div className="flex h-[70.75px] w-0 flex-1 flex-col items-center justify-center rounded-[14px] border border-[#F3F4F6] bg-[#F9FAFB] px-2 py-3 sm:w-[143.333px] sm:flex-none sm:shrink-0 sm:px-4">
           <p className="font-montserrat text-[clamp(1.125rem,1.125rem,1.125rem)] font-bold leading-[27px] text-center text-[#211E22]">{activeOrdersCount}</p>
           <p className="font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-normal leading-[15.75px] text-center text-[#99A1AF]">Active Orders</p>
         </div>
-        <div className="flex h-[70.75px] w-[143.333px] shrink-0 flex-col items-center justify-center rounded-[14px] border border-[#F3F4F6] bg-[#F9FAFB] px-4 py-3">
+        <div className="flex h-[70.75px] w-0 flex-1 flex-col items-center justify-center rounded-[14px] border border-[#F3F4F6] bg-[#F9FAFB] px-2 py-3 sm:w-[143.333px] sm:flex-none sm:shrink-0 sm:px-4">
           <p className="font-montserrat text-[clamp(1.125rem,1.125rem,1.125rem)] font-bold leading-[27px] text-center text-[#211E22]">{wishlistCount}</p>
           <p className="font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-normal leading-[15.75px] text-center text-[#99A1AF]">Wishlist Items</p>
         </div>
-        <div className="flex h-[70.75px] w-[143.333px] shrink-0 flex-col items-center justify-center rounded-[14px] border border-[#F3F4F6] bg-[#F9FAFB] px-4 py-3">
+        <div className="flex h-[70.75px] w-0 flex-1 flex-col items-center justify-center rounded-[14px] border border-[#F3F4F6] bg-[#F9FAFB] px-2 py-3 sm:w-[143.333px] sm:flex-none sm:shrink-0 sm:px-4">
           <p className="font-montserrat text-[clamp(1.125rem,1.125rem,1.125rem)] font-bold leading-[27px] text-center text-[#211E22]">{addressesCount}</p>
           <p className="font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-normal leading-[15.75px] text-center text-[#99A1AF]">Saved Addresses</p>
         </div>
       </div>
 
-      <div className="flex w-full items-center gap-3">
+      <div className="flex w-full flex-col sm:flex-row sm:items-center gap-3">
         <Button
           onClick={handleLogout}
           disabled={isLoading}
           isLoading={isLoading}
-          className="flex items-center justify-center gap-2 rounded-full bg-sb-red px-6 py-2.5 font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-bold leading-[18.75px] text-center text-white disabled:opacity-50"
+          className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-sb-red px-6 py-2.5 font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-bold leading-[18.75px] text-center text-white disabled:opacity-50"
           debounceDelay={500}
         >
           <LogOut size={16} />
@@ -153,7 +153,7 @@ export default function Logout() {
         <Button
           onClick={handleCancel}
           disabled={isLoading}
-          className="rounded-full border border-[#E5E7EB] bg-white px-6 py-2.5 font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-bold leading-[18.75px] text-center text-[#A9A9A9]"
+          className="w-full sm:w-auto rounded-full border border-[#E5E7EB] bg-white px-6 py-2.5 font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-bold leading-[18.75px] text-center text-[#A9A9A9]"
         >
           Cancel
         </Button>

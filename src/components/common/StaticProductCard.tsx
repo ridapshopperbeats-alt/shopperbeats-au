@@ -239,10 +239,10 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 disabled={isOutOfStock}
                 className={
                   isOutOfStock
-                    ? "w-full h-[30px] !bg-[#F3F4F6] !text-[#9CA3AF] !opacity-100 text-[12px] font-medium rounded-[32px] flex items-center justify-center cursor-not-allowed"
+                    ? "w-full h-[30px] !bg-[#F3F4F6] !text-[#9CA3AF] !opacity-100 text-[11px] sm:text-[12px] font-medium rounded-[32px] flex items-center justify-center whitespace-nowrap cursor-not-allowed"
                     : isInCart
-                      ? "w-full h-[30px] bg-white text-[#849324] text-[12px] font-medium rounded-[32px] border border-[#849324] flex items-center justify-center gap-1 transition-colors cursor-pointer"
-                      : "w-full h-[30px] bg-[#849324] text-white text-[12px] font-medium rounded-[32px] flex items-center justify-center transition-colors cursor-pointer"
+                      ? "w-full h-[30px] bg-white text-[#849324] text-[11px] sm:text-[12px] font-medium rounded-[32px] border border-[#849324] flex items-center justify-center gap-1 whitespace-nowrap transition-colors cursor-pointer"
+                      : "w-full h-[30px] bg-[#849324] text-white text-[11px] sm:text-[12px] font-medium rounded-[32px] flex items-center justify-center whitespace-nowrap transition-colors cursor-pointer"
                 }
                 style={
                   isOutOfStock
