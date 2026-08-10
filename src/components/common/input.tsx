@@ -30,7 +30,7 @@ const inputEl = (
   return (
     <>
       {label && (
-        <label htmlFor={id} className={cn("text-[#272727] text-[clamp(0.75rem,0.75rem,0.75rem)] font-medium leading-[16.5px]", labelClassName)}>
+        <label htmlFor={id} className={cn("mb-1 block text-[#272727] text-[clamp(0.75rem,0.75rem,0.75rem)] font-medium leading-[16.5px]", labelClassName)}>
           {labelText}
           {isRequired && (
             <span className="font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-medium leading-[16.5px] text-[#FD151B]">
