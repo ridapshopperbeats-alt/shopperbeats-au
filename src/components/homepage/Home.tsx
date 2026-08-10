@@ -49,7 +49,7 @@ const Home = async () => {
 
         <TopBrands />
 
-        <div className="container pt-4 md:pt-5 lg:pt-0">
+        <div className="container pt-4 md:pt-5 lg:mb-3 mb-4">
           {/* {products.length > 0 && (
             <ProductCarousel
               title="New Arrivals"
@@ -58,7 +58,7 @@ const Home = async () => {
             />
           )} */}
 
-          <StaticProductCards heading="New Arrivals " viewAllHref="#" />
+          <StaticProductCards heading="New Arrivals" viewAllHref="#" />
         </div>
       </div>
     </TopCategories>

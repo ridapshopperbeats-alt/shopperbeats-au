@@ -362,6 +362,11 @@ export default function Header({ megaMenuData }: HeaderProps) {
     : "/images/user.svg";
 
   const isCheckout = pathname === "/check-out";
+  const hideSearch =
+    pathname === "/user/personal-information" ||
+    pathname === "/user/change-password" ||
+    pathname === "/user/logout" ||
+    pathname === "/user/addresses";
 
   if (isCheckout) {
     return (
@@ -392,7 +397,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
   return (
     <div className="header-fixed ">
       <div className="container flex flex-col">
-        <div className="top-head">
+        <div className={`top-head ${hideSearch ? "no-search" : ""}`}>
           <div className="logo-block ">
             <div
               role="button"

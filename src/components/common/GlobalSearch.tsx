@@ -127,6 +127,14 @@ export default function GlobalSearch() {
     };
   }, [showSearchResults]);
 
+  if (
+    pathname === "/user/personal-information" ||
+    pathname === "/user/change-password" ||
+    pathname === "/user/logout" ||
+    pathname === "/user/addresses"
+  )
+    return null;
+
   return (
     <div className="search-block" ref={searchRef}>
       <label htmlFor="headerSearch" className="visually-hidden">

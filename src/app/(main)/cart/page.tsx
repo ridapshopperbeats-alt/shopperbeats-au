@@ -415,7 +415,7 @@ const Cart = () => {
   );
 
   const secureCheckoutSection = (
-    <div className="order-3">
+    <div className="order-3 mb-4">
       <div className="flex items-center justify-center gap-1.5 text-[#657689] mt-4 fluid-text-xs font-medium leading-5">
         <ShieldCheck /> Guaranteed Safe &amp; Secured Checkout
       </div>
@@ -442,10 +442,9 @@ const Cart = () => {
     </div>
   );
 
-  // ---------------- RENDER ----------------
   return (
     <div className="container">
-      <h4 className="mb-4 lg:pt-7 fluid-text-xl text-center lg:text-start font-extrabold leading-[100%]">
+      <h4 className="mb-4 pt-5 lg:pt-10 fluid-text-xl text-center lg:text-start font-extrabold leading-[100%]">
         Your Shopping Cart
       </h4>
 
@@ -878,7 +877,7 @@ const Cart = () => {
 
         <div
           ref={orderSummaryRef}
-          className="w-[358px] mx-auto md:mx-0 md:w-full xl:w-[488px] xl:min-h-[522px] flex flex-col xl:sticky xl:top-24 xl:self-start"
+          className="w-[358px] mx-auto md:mx-0 md:w-full xl:w-[488px] xl:min-h-[522px] flex flex-col xl:sticky xl:top-24 xl:self-start mb-4"
         >
           <div className="bg-white rounded-[8px] shadow-[0px_0px_14px_rgba(0,0,0,0.08)] p-6 flex flex-col">
             <div className="flex items-center justify-between mb-5">

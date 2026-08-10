@@ -22,6 +22,7 @@ import { getStaticOrder, isStaticOrderId } from "@/lib/mock/static-orders";
 import StatusBanner from "@/components/common/Tooltip";
 import { Card } from "@/components/common/Card";
 import { Input } from "@/components/common/input";
+import { StatusBadge, BadgeColor } from "@/components/common/StatusBadge";
 
 interface ReviewPageProps {
   params: Promise<{ orderId: string }>;
@@ -196,19 +197,19 @@ export default function ReviewForm({ params }: ReviewPageProps) {
           />
 
           <div className="flex flex-col gap-2">
-            <h3 className="text-[13px] leading-[16px] font-bold text-black">
+            <h3 className="fluid-text-xs leading-[16px] font-bold text-black">
               {product.title || product.name}
             </h3>
 
             {variantTags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {variantTags.map((tag, i) => (
-                  <span
+                  <StatusBadge
                     key={i}
-                    className="inline-flex items-center rounded-[30px] bg-[#f3f4f6] px-2.5 py-1 text-[10px] font-medium text-[#99a1af]"
-                  >
-                    {tag}
-                  </span>
+                    label={tag}
+                    color={BadgeColor.Gray}
+                    showDot={false}
+                  />
                 ))}
               </div>
             )}
@@ -227,7 +228,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
         <div className="h-px w-full bg-gray-100" />
 
         <div className="w-full">
-          <span className="mb-2 block text-[11px] font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]">
+          <span className="mb-2 block text-12px font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]">
             Your Rating
           </span>
           <div className="flex items-center gap-1">
@@ -249,7 +250,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
         <div className="w-full">
           <label
             htmlFor="review-title"
-            className="mb-2 block text-[11px] font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]"
+            className="mb-2 block text-12px font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]"
           >
             Review Title
           </label>
@@ -266,7 +267,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
         <div className="w-full">
           <label
             htmlFor="review-comments"
-            className="mb-2 block text-[11px] font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]"
+            className="mb-2 block text-12px font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]"
           >
             Your Review
           </label>
@@ -279,13 +280,13 @@ export default function ReviewForm({ params }: ReviewPageProps) {
             placeholder="Tell others what you think about this product — fit, quality, packaging, delivery experience..."
             className={`${fieldInputClass} max-h-[100px] focus:outline-none focus:ring-0 bg-white`}
           />
-          <span className="mt-1 block text-right text-[11px] text-[#D1D5DC]">
+          <span className="mt-1 block text-right text-12px text-[#D1D5DC]">
             {comments.length}/{COMMENT_MAX_LENGTH}
           </span>
         </div>
 
         <div className="w-full">
-          <span className="mb-2 block text-[11px] font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]">
+          <span className="mb-2 block text-12px font-bold  leading-[16px] text-[#6A7282] tracking-[0.55px]">
             Add Photos (Optional)
           </span>
 

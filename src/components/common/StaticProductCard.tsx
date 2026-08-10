@@ -207,7 +207,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 </div>
               )}
 
-              <div className="min-h-[46px] text-[12px] md:text-[13px] leading-[18px] text-[#535252] flex flex-col">
+              <div className="min-h-[46px] fluid-text-xs leading-[18px] text-[#535252] flex flex-col">
                 {!isOutOfStock && (
                   <div className="leading-[18px] flex flex-col gap-[2px]">
                     <p className="font-normal text-[#535252]">
@@ -235,16 +235,16 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
               </div>
             </div>
 
-            <div className="w-full px-2 lg:px-3 flex justify-center">
+            <div className="w-full flex justify-center mt-2 sm:mt-3">
               <button
                 onClick={handleAddToCartClick}
                 disabled={isOutOfStock}
                 className={
                   isOutOfStock
-                    ? "w-full h-[30px] !bg-[#F3F4F6] !text-[#9CA3AF] !opacity-100 text-[11px] sm:text-[12px] font-medium rounded-[32px] flex items-center justify-center whitespace-nowrap cursor-not-allowed"
+                    ? "w-full h-[30px] !bg-[#F3F4F6] !text-[#9CA3AF] !opacity-100 text-[12px] sm:text-[14px] font-medium rounded-[32px] flex items-center justify-center whitespace-nowrap cursor-not-allowed"
                     : isInCart
-                      ? "w-full h-[30px] bg-white text-[#849324] text-[11px] sm:text-[12px] font-medium rounded-[32px] border border-[#849324] flex items-center justify-center gap-1 whitespace-nowrap transition-colors cursor-pointer"
-                      : "w-full h-[30px] bg-[#849324] text-white text-[11px] sm:text-[12px] font-medium rounded-[32px] flex items-center justify-center whitespace-nowrap transition-colors cursor-pointer"
+                      ? "w-full h-[30px] bg-white text-[#FD151B] text-[12px] sm:text-[14px] font-medium rounded-[32px] border border-[#FD151B] flex items-center justify-center gap-1 whitespace-nowrap transition-colors cursor-pointer"
+                      : "w-full h-[30px] bg-[#FD151B] text-white text-[12px] sm:text-[14px] font-medium rounded-[32px] flex items-center justify-center whitespace-nowrap transition-colors cursor-pointer"
                 }
                 style={
                   isOutOfStock

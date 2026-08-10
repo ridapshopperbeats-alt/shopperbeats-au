@@ -27,7 +27,7 @@ export function StatusBadge({ label, color, showDot = true, className }: Readonl
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full px-3 py-1 text-[0.75rem] font-semibold whitespace-nowrap",
+        "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full px-3 py-1 !text-[12px] font-semibold whitespace-nowrap",
         BADGE_COLOR_STYLES[color],
         className,
       )}

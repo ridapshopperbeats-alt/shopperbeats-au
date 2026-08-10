@@ -294,7 +294,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                     <Link
                       href={`/product/${product.unique_code || product.product_id}`}
                     >
-                      <p className="cursor-pointer hover:text-red-600 transition-colors font-bold text-[14px] capitalize">
+                      <p className="cursor-pointer hover:text-red-600 transition-colors font-bold fluid-text-xs capitalize">
                         {product.name}
                       </p>
                     </Link>
@@ -484,7 +484,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         </Card>
 
         <Card className="w-full border p-4 sm:p-6 gap-4">
-          <h3 className="text-[0.875rem] font-bold text-[#211E22] leading-[19px]">Delivery Address</h3>
+          <h3 className="fluid-text-xs font-bold text-[#211E22] leading-[19px]">Delivery Address</h3>
           <hr className="-mx-4 sm:-mx-6 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] border-t border-[#F3F4F6]" />
 
           <div className="flex w-full items-start gap-3">

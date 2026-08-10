@@ -346,7 +346,7 @@ export default function MyOrdersPage() {
       {allOrders.length > 0 && (
         <>
           <Card className="w-full flex-row flex-wrap items-center justify-between gap-3 p-3 sm:p-4">
-            <div className="inline-flex max-w-full flex-wrap items-center gap-1 rounded-full bg-[#F5F5F5] p-1">
+            <div className="no-scrollbar flex w-fit max-w-full flex-nowrap items-center gap-1 overflow-x-auto rounded-full bg-[#F5F5F5] p-1">
               {TABS.map((tab) => (
                 <button
                   key={tab.key}
@@ -372,15 +372,16 @@ export default function MyOrdersPage() {
               ))}
             </div>
 
-            <div className="product-sort flex items-center gap-2">
-              <ArrowUpDown size={14} className="text-[#99A1AF]" />
-              <span className="text-[#99A1AF] font-medium text-[clamp(0.75rem,0.75rem,0.75rem)] leading-[16.5px]">Sort by:</span>
+            <div className="product-sort flex w-full shrink-0 items-center gap-2 sm:w-auto">
+              <ArrowUpDown size={14} className="shrink-0 text-[#99A1AF]" />
+              <span className="shrink-0 text-[#99A1AF] font-medium text-[clamp(0.75rem,0.75rem,0.75rem)] leading-[16.5px]">Sort by:</span>
 
               <Select value={sortOrdersBy} onValueChange={handleSortChange}>
-                <SelectTrigger className="inline-flex w-auto items-center justify-start gap-2 rounded-[23px] border border-[#E5E7EB] bg-[#F9FAFB] py-[7.5px] pr-[38px] pl-[12.066px] shadow-none focus:ring-0 focus:ring-offset-0">
+                <SelectTrigger
+                className="inline-flex w-auto min-w-0 items-center justify-start gap-2 rounded-[23px] border border-[#E5E7EB] bg-[#F9FAFB] py-[7.5px] pr-[38px] pl-[12.066px] shadow-none focus:ring-0 focus:ring-offset-0">
                   <SelectValue
-                    placeholder="Select"
-                    className="!text-[#99A1AF] font-medium leading-[16px] fluid-text-xs"
+                    placeholder="Delivery Date"
+                    className="!text-[#99A1AF] font-medium leading-[16px] text-12px!"
                     style={{ color: "#99A1AF" }}
                   />
                 </SelectTrigger>
@@ -401,7 +402,7 @@ export default function MyOrdersPage() {
           </Card>
 
           <div className="flex items-center gap-2 fluid-text-sm">
-            <span className="font-bold fluid-text-xs font-bold text-[#211E22] leading-[19px]">
+            <span className="font-bold text-sm font-bold text-[#211E22] leading-[19px]">
               Orders <span className="text-sb-red">({effectiveTotal})</span>
             </span>
             <ChevronRight size={14} className="text-[#D1D5DC] ml-[-5px]" />
