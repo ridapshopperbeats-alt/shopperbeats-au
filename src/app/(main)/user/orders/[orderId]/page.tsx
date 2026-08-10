@@ -196,14 +196,18 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 w-full">
           <div className="grid grid-cols-3 gap-2 sm:gap-5 flex-1 w-full">
             <div className="flex flex-col gap-1">
-              <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">Order ID</span>
+              <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">
+                Order ID
+              </span>
               <span className="text-[0.75rem] font-bold text-[#211E22] leading-[18px]">
                 #{order.order_number || order.id}
               </span>
             </div>
 
             <div className="flex flex-col gap-1">
-              <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">Placed On</span>
+              <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">
+                Placed On
+              </span>
               <span className="text-[0.75rem] font-bold text-[#211E22] leading-[18px]">
                 {formatOrderDate(order.created_at)}
               </span>
@@ -239,13 +243,13 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
             {(order.available_actions?.includes("retry") ||
               order.available_actions?.includes("retry_payment")) && (
-                <Button
-                  className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] bg-[#FD151B] px-5 py-2 text-center font-montserrat text-[0.75rem] font-bold leading-[18.75px] text-white"
-                  onClick={() => setIsRetryPopupOpen(true)}
-                >
-                  Retry Payment
-                </Button>
-              )}
+              <Button
+                className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] bg-[#FD151B] px-5 py-2 text-center font-montserrat text-[0.75rem] font-bold leading-[18.75px] text-white"
+                onClick={() => setIsRetryPopupOpen(true)}
+              >
+                Retry Payment
+              </Button>
+            )}
 
             {isDelivered && (
               <Button
@@ -344,19 +348,19 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                         matchingItem?.available_options?.includes(
                           "cancel",
                         )) && (
-                          <button
-                            className="cursor-pointer text-[0.75rem] font-semibold text-[#99A1AF] hover:text-[#FD151B]"
-                            onClick={() => {
-                              setSelectedItemForCancel({
-                                id: String(trueItemId),
-                                name: product.name,
-                              });
-                              setIsCancelItemPopupOpen(true);
-                            }}
-                          >
-                            Cancel Item
-                          </button>
-                        )}
+                        <button
+                          className="cursor-pointer text-[0.75rem] font-semibold text-[#99A1AF] hover:text-[#FD151B]"
+                          onClick={() => {
+                            setSelectedItemForCancel({
+                              id: String(trueItemId),
+                              name: product.name,
+                            });
+                            setIsCancelItemPopupOpen(true);
+                          }}
+                        >
+                          Cancel Item
+                        </button>
+                      )}
 
                       {matchingItem?.status?.toLowerCase() === "delivered" && (
                         <button
@@ -396,13 +400,13 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                         matchingItem?.available_options?.includes(
                           "add_review",
                         )) && (
-                          <Link
-                            href={`/user/orders/${order.id}/review?product_id=${product.product_id}`}
-                            className="cursor-pointer text-[0.75rem] font-semibold text-[#FD151B] hover:underline"
-                          >
-                            Add Review
-                          </Link>
-                        )}
+                        <Link
+                          href={`/user/orders/${order.id}/review?product_id=${product.product_id}`}
+                          className="cursor-pointer text-[0.75rem] font-semibold text-[#FD151B] hover:underline"
+                        >
+                          Add Review
+                        </Link>
+                      )}
 
                       {product.status === "cancelled" && (
                         <p className="text-[0.75rem] font-semibold text-red-600">
@@ -427,28 +431,38 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
       <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
         <Card className="w-full border p-4 sm:p-6 gap-4">
-          <h3 className="fluid-text-xs font-bold text-[#211E22] leading-[19px]">Price Breakdown</h3>
+          <h3 className="fluid-text-xs font-bold text-[#211E22] leading-[19px]">
+            Price Breakdown
+          </h3>
 
           <hr className="-mx-4 sm:-mx-6 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] border-t border-[#F3F4F6]" />
 
           <div className="flex w-full flex-col">
             <div className="flex items-center justify-between py-2.5 first:pt-0">
-              <span className="text-[0.75rem] text-[#99A1AF] font-normal">Subtotal</span>
+              <span className="text-[0.75rem] text-[#99A1AF] font-normal">
+                Subtotal
+              </span>
               <span className="text-[0.75rem] font-semibold text-[#211E22]">
                 {order.currency} {formatPrice(subtotal)}
               </span>
             </div>
 
             <div className="flex items-center justify-between py-2.5">
-              <span className="text-[0.75rem] text-[#99A1AF] font-normal">Shipping</span>
+              <span className="text-[0.75rem] text-[#99A1AF] font-normal">
+                Shipping
+              </span>
               <span className="text-[0.75rem] font-semibold text-[#211E22]">
-                {shipping > 0 ? `${order.currency} ${formatPrice(shipping)}` : "Free"}
+                {shipping > 0
+                  ? `${order.currency} ${formatPrice(shipping)}`
+                  : "Free"}
               </span>
             </div>
 
             {totalSavings > 0 && (
               <div className="flex items-center justify-between py-2.5">
-                <span className="text-[0.75rem] text-[#99A1AF]">Discount Applied</span>
+                <span className="text-[0.75rem] text-[#99A1AF]">
+                  Discount Applied
+                </span>
                 <span className="text-[0.75rem] font-semibold text-[#1AAE4A]">
                   - {order.currency} {formatPrice(totalSavings)}
                 </span>
@@ -459,7 +473,9 @@ export default function OrderDetail({ params }: OrderDetailProps) {
           <hr className="-mx-4 sm:-mx-6 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] border-t border-dashed border-[#F3F4F6]" />
 
           <div className="flex w-full items-center justify-between">
-            <span className="fluid-text-xs font-bold text-[#211E22] font-bold">Total Paid</span>
+            <span className="fluid-text-xs font-bold text-[#211E22] font-bold">
+              Total Paid
+            </span>
             <span className="text-[0.875rem] font-bold text-[#FD151B]">
               {order.currency} {formatPrice(finalTotal)}
             </span>
@@ -467,8 +483,6 @@ export default function OrderDetail({ params }: OrderDetailProps) {
           <hr className="-mx-4 sm:-mx-6 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] border-t border-dashed border-[#F3F4F6]" />
 
           <div className="flex w-full items-center gap-3 ">
-
-
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-[#F3F4F6] text-[#1AAE4A]">
               <CheckCircle2 size={18} />
             </span>
@@ -477,14 +491,17 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                 Payment Method
               </p>
               <p className="text-[0.75rem] text-[#99A1AF] font-normal">
-                {snapshot.payment_method?.type || "N/A"} &middot; Paid on {formatOrderDate(order.created_at)}
+                {snapshot.payment_method?.type || "N/A"} &middot; Paid on{" "}
+                {formatOrderDate(order.created_at)}
               </p>
             </div>
           </div>
         </Card>
 
         <Card className="w-full border p-4 sm:p-6 gap-4">
-          <h3 className="fluid-text-xs font-bold text-[#211E22] leading-[19px]">Delivery Address</h3>
+          <h3 className="fluid-text-xs font-bold text-[#211E22] leading-[19px]">
+            Delivery Address
+          </h3>
           <hr className="-mx-4 sm:-mx-6 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] border-t border-[#F3F4F6]" />
 
           <div className="flex w-full items-start gap-3">
@@ -518,7 +535,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
               Contact Support - {SUPPORT_PHONE}
             </a>
             <Link
-              href="/return-and-warranty"
+              href="/cms/return-refunds"
               className="text-[0.75rem] font-medium text-[#211E22] hover:text-[#FD151B] leading-[15px]"
             >
               Return / Refund Policy

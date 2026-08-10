@@ -13,13 +13,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
 
 import Link from "next/link";
-import { useLoginMutation, useResendVerificationCodeMutation } from "@/lib/redux/apis/auth-api";
+import {
+  useLoginMutation,
+  useResendVerificationCodeMutation,
+} from "@/lib/redux/apis/auth-api";
 import { useCreateWishlistMutation } from "@/lib/redux/apis/cart-api";
 import { loginSchema } from "@/lib/validations/form-schemas";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { Input } from "@/components/common/input";
 import { Card } from "@/components/common/Card";
-
 
 export default function LoginPage() {
   const dispatch = useDispatch();
@@ -38,29 +40,28 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
   const [checking, setChecking] = useState(true);
 
-  
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const redirect = params.get("redirect");
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setRedirectUrl(redirect);
- 
+
     if (isAuthenticated) {
       router.replace(redirect || "/");
     } else {
       setChecking(false);
     }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const { formData, formErrors, handleChange, handleSubmit } = useFormValidation(
-    loginSchema,
-    { email: "", password: "" }
-  );
+  const { formData, formErrors, handleChange, handleSubmit } =
+    useFormValidation(loginSchema, { email: "", password: "" });
 
   const flushPendingWishlist = async (_loginResponse: LoginResponse) => {
     const raw = sessionStorage.getItem("pendingWishlist");
@@ -128,7 +129,8 @@ export default function LoginPage() {
       }, 1000);
     } catch (err) {
       const errorMessage =
-        (err as { data?: { message?: string } })?.data?.message || "Failed to send verification email";
+        (err as { data?: { message?: string } })?.data?.message ||
+        "Failed to send verification email";
       toast.error(errorMessage);
     }
   };
@@ -152,7 +154,7 @@ export default function LoginPage() {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
-    const isProd = process.env.NEXT_PUBLIC_ENV_VARIABLE === 'prod';
+    const isProd = process.env.NEXT_PUBLIC_ENV_VARIABLE === "prod";
 
     if (isProd && !recaptcha_token) {
       toast.error("Please complete the reCAPTCHA.", {
@@ -169,8 +171,6 @@ export default function LoginPage() {
         remember_me: rememberMe,
       }).unwrap();
 
-      
-
       // NOTE: Zendesk messenger "loginUser" requires JWT authentication to be
       // configured in Zendesk Admin > Messenger > Authentication (client_id).
       // Uncomment the block below only after that setup is complete.
@@ -184,9 +184,6 @@ export default function LoginPage() {
       //     // Zendesk login failed silently
       //   }
       // }
-
-
-
 
       toast.success("Login successful!");
       await flushPendingWishlist(response);
@@ -223,13 +220,11 @@ export default function LoginPage() {
     }
   };
 
-
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowResendEmail(false);
     setCooldown(0);
   }, [formData.email]);
-
 
   if (checking) {
     return null;
@@ -240,8 +235,11 @@ export default function LoginPage() {
       <Card className="mx-auto my-6 flex flex-col items-start gap-6 border-0 w-full max-w-[371px] px-[16px] py-[24px] rounded-[8px] bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.10),0_1px_11.8px_-1px_rgba(0,0,0,0.10)] sm:max-w-[714px] sm:items-stretch sm:px-[34px] sm:py-6 sm:rounded-lg sm:bg-white sm:shadow-none sm:border-2 sm:border-[rgba(255,255,255,0.9)]">
         <h3 className="auth-title w-full">Sign In</h3>
 
-        <form className="w-full" onSubmit={handleSubmit(handleLoginSubmit)} noValidate>
-
+        <form
+          className="w-full"
+          onSubmit={handleSubmit(handleLoginSubmit)}
+          noValidate
+        >
           <div className="form-item">
             <input
               type="email"
@@ -253,9 +251,7 @@ export default function LoginPage() {
               disabled={isLoading || isBlocked}
               className="!rounded-[10px] border border-[#E5E7EB] flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
             />
-            {formErrors.email && (
-              <p className="error">{formErrors.email}</p>
-            )}
+            {formErrors.email && <p className="error">{formErrors.email}</p>}
           </div>
 
           <div className="form-item">
@@ -271,7 +267,11 @@ export default function LoginPage() {
                 className="!rounded-[10px] border border-[#E5E7EB] w-full flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
               />
 
-              <button type="button" onClick={togglePasswordVisibility} className="eyeIcon">
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="eyeIcon"
+              >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
@@ -285,10 +285,13 @@ export default function LoginPage() {
             <p>Your password must have:</p>
             <ul>
               <li>Must be 8-24 characters long</li>
-              <li>Must include uppercase and lowercase letters, numbers plus at least one special character</li>
+              <li>
+                Must include uppercase and lowercase letters, numbers plus at
+                least one special character
+              </li>
             </ul>
           </div>
-          {process.env.NEXT_PUBLIC_ENV_VARIABLE === 'prod' && (
+          {process.env.NEXT_PUBLIC_ENV_VARIABLE === "prod" && (
             <div className="form-item">
               <ReCaptcha onCaptchaChange={setRecaptcha_token} />
             </div>
@@ -303,7 +306,12 @@ export default function LoginPage() {
               onChange={(e) => setRememberMe(e.target.checked)}
               disabled={isLoading || isBlocked}
             />
-            <label htmlFor="remember_me" className="fluid-text-sm!  font-medium!">Remember me</label>
+            <label
+              htmlFor="remember_me"
+              className="fluid-text-sm!  font-medium!"
+            >
+              Remember me
+            </label>
           </div>
 
           <Button
@@ -318,7 +326,8 @@ export default function LoginPage() {
           {showResendEmail && (
             <div className="resend-email-section">
               <p className="resend-email-text">
-                Your email is not verified. Click below to resend verification email.
+                Your email is not verified. Click below to resend verification
+                email.
               </p>
               <Button
                 type="button"
@@ -331,23 +340,19 @@ export default function LoginPage() {
                   ? `Resend in ${cooldown}s`
                   : isResending
                     ? "Sending..."
-                    : "Resend Verification Email"
-                }
+                    : "Resend Verification Email"}
               </Button>
             </div>
           )}
 
-          <div className="dflex link auth-links-row">
+          <div className="dflex link auth-links-row flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <Link href="/forgot-password">Forgot Password</Link>
             <p>
               New to ShopperBeats? <Link href="/sign-up">Sign Up</Link>
             </p>
           </div>
-
         </form>
       </Card>
     </div>
   );
 }
-
-
