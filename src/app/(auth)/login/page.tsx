@@ -18,6 +18,7 @@ import { useCreateWishlistMutation } from "@/lib/redux/apis/cart-api";
 import { loginSchema } from "@/lib/validations/form-schemas";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { Input } from "@/components/common/input";
+import { Card } from "@/components/common/Card";
 
 
 export default function LoginPage() {
@@ -236,13 +237,13 @@ export default function LoginPage() {
 
   return (
     <div className="container">
-      <div className="user-form-wrapper flex flex-col gap-6">
-        <h3 className="auth-title">Sign In</h3>
+      <Card className="mx-auto my-6 flex flex-col items-start gap-6 border-0 w-full max-w-[371px] px-[16px] py-[24px] rounded-[8px] bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.10),0_1px_11.8px_-1px_rgba(0,0,0,0.10)] sm:max-w-[714px] sm:items-stretch sm:px-[34px] sm:py-6 sm:rounded-lg sm:bg-white sm:shadow-none sm:border-2 sm:border-[rgba(255,255,255,0.9)]">
+        <h3 className="auth-title w-full">Sign In</h3>
 
-        <form onSubmit={handleSubmit(handleLoginSubmit)} noValidate>
+        <form className="w-full" onSubmit={handleSubmit(handleLoginSubmit)} noValidate>
 
           <div className="form-item">
-            <Input
+            <input
               type="email"
               id="email"
               name="email"
@@ -250,7 +251,7 @@ export default function LoginPage() {
               value={formData.email}
               onChange={handleChange}
               disabled={isLoading || isBlocked}
-              className="input-rounded"
+              className="!rounded-[10px] border border-[#E5E7EB] flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
             />
             {formErrors.email && (
               <p className="error">{formErrors.email}</p>
@@ -259,7 +260,7 @@ export default function LoginPage() {
 
           <div className="form-item">
             <div className="password-wrapper">
-              <Input
+              <input
                 type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
@@ -267,7 +268,7 @@ export default function LoginPage() {
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading || isBlocked}
-                className="input-rounded"
+                className="!rounded-[10px] border border-[#E5E7EB] w-full flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
               />
 
               <button type="button" onClick={togglePasswordVisibility} className="eyeIcon">
@@ -302,7 +303,7 @@ export default function LoginPage() {
               onChange={(e) => setRememberMe(e.target.checked)}
               disabled={isLoading || isBlocked}
             />
-            <label htmlFor="remember_me" className="text-[16px]! font-normal!">Remember me</label>
+            <label htmlFor="remember_me" className="fluid-text-sm!  font-medium!">Remember me</label>
           </div>
 
           <Button
@@ -344,7 +345,7 @@ export default function LoginPage() {
           </div>
 
         </form>
-      </div>
+      </Card>
     </div>
   );
 }

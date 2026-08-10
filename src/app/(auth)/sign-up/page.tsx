@@ -16,6 +16,7 @@ import {
 import { signupSchema } from "@/lib/validations/form-schemas";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { Input } from "@/components/common/input";
+import { Card } from "@/components/common/Card";
 
 export default function SignupPage() {
   const [signup, { isLoading }] = useSignupMutation();
@@ -143,15 +144,15 @@ export default function SignupPage() {
 
   return (
     <div className="container">
-      <div className="user-form-wrapper">
-        <h3 className="flex justify-center py-6 auth-form-title">
+      <Card className="mx-auto my-6 flex flex-col items-start gap-2 border-0 w-full max-w-[371px] px-[16px] py-[24px] rounded-[8px] bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.10),0_1px_11.8px_-1px_rgba(0,0,0,0.10)] sm:max-w-[714px] sm:items-stretch sm:px-[34px] sm:py-6 sm:rounded-lg sm:bg-white sm:shadow-none sm:border-2 sm:border-[rgba(255,255,255,0.9)]">
+        <h3 className="flex justify-center py-6 auth-form-title leading-[normal] w-full">
           Create an Account
         </h3>
 
-        <form onSubmit={handleSubmit(handleSignupSubmit)} noValidate>
+        <form className="w-full" onSubmit={handleSubmit(handleSignupSubmit)} noValidate>
           <div className="flex gap-4">
             <div className="form-item w-1/2">
-              <Input
+              <input
                 type="text"
                 id="first_name"
                 name="first_name"
@@ -159,7 +160,7 @@ export default function SignupPage() {
                 value={formData.first_name}
                 onChange={handleChange}
                 disabled={isLoading}
-                className="w-full"
+                className="!rounded-[10px] border border-[#E5E7EB] w-full flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
                 required
               />
               {formErrors.first_name && (
@@ -168,7 +169,7 @@ export default function SignupPage() {
             </div>
 
             <div className="form-item w-1/2">
-              <Input
+              <input
                 type="text"
                 id="last_name"
                 name="last_name"
@@ -176,7 +177,7 @@ export default function SignupPage() {
                 value={formData.last_name}
                 onChange={handleChange}
                 disabled={isLoading}
-                className="w-full"
+                className="!rounded-[10px] border border-[#E5E7EB] w-full flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
                 required
               />
               {formErrors.last_name && (
@@ -186,7 +187,7 @@ export default function SignupPage() {
           </div>
 
           <div className="form-item">
-            <Input
+            <input
               type="email"
               id="email"
               name="email"
@@ -194,13 +195,14 @@ export default function SignupPage() {
               value={formData.email}
               onChange={handleChange}
               disabled={isLoading}
+              className="!rounded-[10px] border border-[#E5E7EB] w-full flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
             />
             {formErrors.email && <p className="error">{formErrors.email}</p>}
           </div>
 
           <div className="form-item">
             <div className="password-wrapper">
-              <Input
+              <input
                 type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
@@ -208,6 +210,7 @@ export default function SignupPage() {
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading}
+                className="!rounded-[10px] border border-[#E5E7EB] w-full flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
               />
               <button
                 type="button"
@@ -225,7 +228,7 @@ export default function SignupPage() {
 
           <div className="form-item">
             <div className="password-wrapper">
-              <Input
+              <input
                 type={showConfirmPassword ? "text" : "password"}
                 id="password2"
                 name="password2"
@@ -233,6 +236,7 @@ export default function SignupPage() {
                 value={formData.password2}
                 onChange={handleChange}
                 disabled={isLoading}
+                className="!rounded-[10px] border border-[#E5E7EB] w-full flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
               />
               <button
                 type="button"
@@ -334,7 +338,7 @@ export default function SignupPage() {
             </p>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   );
 }

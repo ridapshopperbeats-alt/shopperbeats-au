@@ -147,7 +147,7 @@ export default function PersonalInformationPage() {
   };
 
   return (
-    <Card className="mx-auto w-[377px] h-auto shrink-0 border-[1.167px] p-6 gap-6 sm:w-full sm:max-w-[1118px] sm:border">
+    <Card className="mx-auto w-full max-w-[377px] h-auto shrink-0 border-[1.167px] p-6 gap-6 sm:w-full sm:max-w-[1118px] sm:border">
       <div className="flex items-center gap-4">
         <div className="relative h-14 w-14 shrink-0">
           <Image

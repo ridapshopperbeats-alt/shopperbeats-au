@@ -194,9 +194,9 @@ export default function AddressForm({
   };
 
   return (
-    <form className="pt-[10px]" onSubmit={handleSubmit(handleSave)}>
-      <div className="form-fields flex-col gap-y-0 sm:flex-row sm:gap-y-0">
-        <div className="form-item mb-0!">
+    <form className="pt-[15px]" onSubmit={handleSubmit(handleSave)}>
+      <div className="form-fields flex-col gap-y-4 sm:flex-row sm:gap-y-0 mb-4">
+        <div className="flex flex-col gap-1 w-full">
           <Input
             id="first_name"
             label="First Name*"
@@ -206,10 +206,10 @@ export default function AddressForm({
             placeholder="First name"
             value={formData.first_name}
             onChange={handleChange}
-            labelClassName="text-[#4A5565]"
+            labelClassName="text-[#4A5565] font-semibold "
           />
         </div>
-        <div className="form-item mb-0!">
+        <div className="flex flex-col gap-1 w-full">
           <Input
             id="last_name"
             label="Last Name*"
@@ -219,12 +219,12 @@ export default function AddressForm({
             placeholder="Last name"
             value={formData.last_name}
             onChange={handleChange}
-            labelClassName="text-[#4A5565]"
+            labelClassName="text-[#4A5565] font-semibold"
           />
         </div>
       </div>
 
-      <div className="form-item ">
+      <div className="flex flex-col gap-1 mb-4">
         <Input
           id="phone_number"
           label="Phone Number*"
@@ -235,13 +235,13 @@ export default function AddressForm({
           value={formData.phone_number}
           onChange={handlePhoneChange}
           inputMode="numeric"
-          labelClassName="text-[#4A5565]"
+          labelClassName="text-[#4A5565] font-semibold "
           pattern="[0-9+]*"
         />
       </div>
 
       {from != "refund" && (
-        <div className="form-item">
+        <div className="flex flex-col gap-1 mb-4">
           <Input
             id="date_of_birth"
             label="Date of Birth (Optional)"
@@ -252,13 +252,13 @@ export default function AddressForm({
             onChange={handleChange}
             min="1900-01-01"
             max="2025-12-31"
-            labelClassName="text-[#4A5565]"
+            labelClassName="text-[#4A5565] font-semibold"
           />
         </div>
       )}
 
-      <div className="form-item">
-        <label htmlFor="address-autocomplete" className="text-[#4A5565] text-[12px]">Address Line <span className="text-[#FF4D4F]">*</span></label>
+      <div className="flex flex-col gap-1 mb-4">
+        <label htmlFor="address-autocomplete" className="text-[#4A5565] font-semibold text-[12px]">Address Line <span className="text-[#FF4D4F]">*</span></label>
         <AddressAutocomplete
           id="address-autocomplete"
           key={resetKey}
@@ -294,7 +294,7 @@ export default function AddressForm({
           }}
         />
       </div>
-      <div className="form-item">
+      <div className="flex flex-col gap-1 mb-4">
         <Input
           id="manual_address"
           label="Address Line 1/ Street Address"
@@ -303,7 +303,7 @@ export default function AddressForm({
           name="address"
           placeholder="Address Line 1/ Street Address"
           value={manualAddress}
-          labelClassName="text-[#4A5565]"
+          labelClassName="text-[#4A5565] font-semibold"
           onChange={(e) => {
             const val = e.target.value;
             setManualAddress(val);
@@ -317,7 +317,7 @@ export default function AddressForm({
         />
       </div>
 
-      <div className="form-item mb-0!">
+      <div className="flex flex-col gap-1 mb-4">
         <Input
           id="country"
           label="Country"
@@ -326,22 +326,22 @@ export default function AddressForm({
           name="country"
           placeholder="Country"
           value={formData.country}
-          labelClassName="text-[#4A5565]"
+          labelClassName="text-[#4A5565] font-semibold!"
           onChange={(e) => {
             handleChange(e);
             setAddressValid(false);
           }}
         />
       </div>
-      <div className="form-fields flex-col  sm:flex-row sm:gap-y-0">
-        <div className="form-item mb-0!">
+      <div className="form-fields flex-col gap-y-4 sm:flex-row sm:gap-y-0 mb-4">
+        <div className="flex flex-col gap-1 w-full">
           <Input
             id="city"
             label="City"
             error={formErrors.city}
             type="text"
             name="city"
-            labelClassName="text-[#4A5565]"
+            labelClassName="text-[#4A5565] font-semibold"
             placeholder="City"
             value={formData.city}
             onChange={(e) => {
@@ -350,14 +350,14 @@ export default function AddressForm({
             }}
           />
         </div>
-        <div className="form-item mb-0!">
+        <div className="flex flex-col gap-1 w-full">
           <Input
             id="state"
             label="State"
             error={formErrors.state}
             type="text"
             name="state"
-            labelClassName="text-[#4A5565]"
+            labelClassName="text-[#4A5565] font-semibold"
             placeholder="State"
             value={formData.state}
             onChange={(e) => {
@@ -366,7 +366,7 @@ export default function AddressForm({
             }}
           />
         </div>
-        <div className="form-item">
+        <div className="flex flex-col gap-1 w-full">
           <Input
             id="pincode"
             label="Postcode"
@@ -374,7 +374,7 @@ export default function AddressForm({
             type="number"
             onWheel={(e) => e.currentTarget.blur()}
             name="pincode"
-            labelClassName="text-[#4A5565]"
+            labelClassName="text-[#4A5565] font-semibold"
             placeholder="Postcode"
             value={formData.pincode}
             onChange={(e) => {
@@ -385,11 +385,11 @@ export default function AddressForm({
         </div>
       </div>
       {formData.title === "Others" && (
-        <div className="form-item ">
+        <div className="flex flex-col gap-1 mb-4">
           <Input
             id="customTitle"
             label="Please Specify*"
-            labelClassName="text-[#4A5565]"
+            labelClassName="text-[#4A5565] "
             error={formErrors.customTitle}
             name="customTitle"
             type="text"

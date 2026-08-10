@@ -2,6 +2,7 @@
 
 import { toast } from "react-toastify";
 import Button from "@/components/common/Button";
+import { Card } from "@/components/common/Card";
 import { useForgotPasswordMutation } from "@/lib/redux/apis/auth-api";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { forgotPasswordSchema } from "@/lib/validations/form-schemas";
@@ -27,10 +28,10 @@ export default function ForgotPasswordPage() {
 
   return (
     <main className="container">
-      <div className="user-form-wrapper">
-        <h3 className="flex justify-center my-6 auth-form-title">Reset Password</h3>
+      <Card className="mx-auto my-6 flex flex-col items-start gap-2 border-0 w-full max-w-[371px] px-[16px] py-[24px] rounded-[8px] bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.10),0_1px_11.8px_-1px_rgba(0,0,0,0.10)] sm:max-w-[714px] sm:items-stretch sm:px-[34px] sm:py-6 sm:rounded-lg sm:bg-white sm:shadow-none sm:border-2 sm:border-[rgba(255,255,255,0.9)]">
+        <h3 className="flex justify-center my-6 auth-form-title w-full">Reset Password</h3>
 
-        <form onSubmit={handleSubmit(handleForgotPasswordSubmit)} noValidate>
+        <form className="w-full" onSubmit={handleSubmit(handleForgotPasswordSubmit)} noValidate>
           <div className="form-item">
             <input
               type="email"
@@ -40,7 +41,7 @@ export default function ForgotPasswordPage() {
               value={formData.email_address}
               onChange={handleChange}
               disabled={isLoading}
-              className="input-rounded-lg"
+              className="input-rounded-lg flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
             />
             {formErrors.email_address && (
               <p className="error">{formErrors.email_address}</p>
@@ -62,7 +63,7 @@ export default function ForgotPasswordPage() {
             </p>
           </div>
         </form>
-      </div>
+      </Card>
     </main>
 
   );
