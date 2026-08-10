@@ -174,10 +174,10 @@ export default function PersonalInformationPage() {
           />
         </div>
         <div>
-          <h2 className="font-[Montserrat] text-[clamp(0.8125rem,0.8125rem,0.8125rem)] font-semibold leading-[19.5px] text-[#101828]">
+          <h2 className="font-[Montserrat] fluid-text-xs font-semibold leading-[19.5px] text-[#101828]">
             Personal Information
           </h2>
-          <p className="font-[Montserrat] text-[clamp(0.6875rem,0.6875rem,0.6875rem)] font-normal leading-[16.5px] text-[#99A1AF]">
+          <p className="font-[Montserrat] text-12px font-normal leading-[16.5px] text-[#99A1AF]">
             Manage your account details below
           </p>
         </div>
@@ -265,7 +265,7 @@ export default function PersonalInformationPage() {
             type="submit"
             disabled={isUpdating}
             isLoading={isUpdating}
-            className="flex items-center justify-center rounded-[30px]! bg-sb-red px-6 py-2.5 text-center font-montserrat text-[clamp(0.8125rem,0.8125rem,0.8125rem)] font-bold leading-[19.5px] text-white disabled:opacity-50"
+            className="flex items-center justify-center rounded-[30px]! bg-sb-red px-6 py-2.5 text-center font-montserrat text-12px font-bold leading-[19.5px] text-white disabled:opacity-50"
             debounceDelay={500}
           >
             {isUpdating ? "Saving..." : "Update Information"}

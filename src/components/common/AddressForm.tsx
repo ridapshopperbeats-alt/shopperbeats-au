@@ -195,7 +195,7 @@ export default function AddressForm({
 
   return (
     <form className="pt-[10px]" onSubmit={handleSubmit(handleSave)}>
-      <div className="form-fields flex-col gap-y-4 sm:flex-row sm:gap-y-0">
+      <div className="form-fields flex-col gap-y-0 sm:flex-row sm:gap-y-0">
         <div className="form-item mb-0!">
           <Input
             id="first_name"

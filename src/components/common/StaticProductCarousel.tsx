@@ -239,7 +239,7 @@ function StaticCarouselCard(product: ProductCardProps) {
               className={
                 isOutOfStock
                   ? "w-full h-[30px] !bg-[#F3F4F6] !text-[#9CA3AF] !opacity-100 text-[12px] font-medium rounded-[32px] flex items-center justify-center cursor-not-allowed"
-                  : "w-full h-[30px] bg-[#849324] text-white text-[12px] font-medium rounded-[32px] flex items-center justify-center transition-colors cursor-pointer"
+                  : "w-full h-[30px] bg-[#FD151B] text-white text-[12px] font-medium rounded-[32px] flex items-center justify-center transition-colors cursor-pointer"
               }
             >
               {isOutOfStock ? "Out Of Stock" : "Add To Cart"}

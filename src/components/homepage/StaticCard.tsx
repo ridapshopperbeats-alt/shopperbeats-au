@@ -386,7 +386,7 @@ export default function StaticProductCards({
                         e.preventDefault();
                         handleAddToCart(product);
                       }}
-                      className="w-full h-[30px] bg-[#849324] text-white fluid-text-sm rounded-[32px] cursor-pointer"
+                      className="w-full h-[30px] bg-[#FD151B] text-white fluid-text-sm rounded-[32px] cursor-pointer"
                     >
                       Add To Cart
                     </button>
@@ -515,7 +515,7 @@ export default function StaticProductCards({
                         e.preventDefault();
                         handleAddToCart(product);
                       }}
-                      className="w-full h-[30px] bg-[#849324] text-white fluid-text-sm rounded-[32px] cursor-pointer"
+                      className="w-full h-[30px] bg-[#FD151B] text-white fluid-text-sm rounded-[32px] cursor-pointer"
                     >
                       Add To Cart
                     </button>

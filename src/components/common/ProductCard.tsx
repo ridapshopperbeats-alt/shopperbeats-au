@@ -255,7 +255,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               <button
                 onClick={handleAddToCartClick}
                 disabled={isAddingToCart || isOutOfStock}
-                className="w-full h-[30px] bg-[#849324] text-white text-[14px] font-medium rounded-[32px] flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full h-[30px] bg-[#FD151B] text-white text-[14px] font-medium rounded-[32px] flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {isAddingToCart
                   ? "Adding..."

@@ -34,6 +34,8 @@ export default function UserLayout({
         return "Change Password";
       case "/user/logout":
         return "Logout";
+      case "/cms/About-us":
+        return "About Us";
       default:
         return "My Orders";
     }
@@ -53,6 +55,8 @@ export default function UserLayout({
         return "Keep your account secure with a strong password.";
         case "/user/addresses":
         return "Save and manage your delivery addresses";
+        case "/cms/About-us":
+        return "The story behind ShopperBeats.";
       default:
         return "Track, manage and review your orders.";
     }
@@ -91,7 +95,7 @@ export default function UserLayout({
 
             <div
               className="flex w-full max-w-[1118px] items-start"
-              style={{ marginTop: "0" }}
+              
             >
               <Suspense fallback={<div>Loading...</div>}>
                 {children}
