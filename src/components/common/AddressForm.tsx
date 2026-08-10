@@ -196,7 +196,7 @@ export default function AddressForm({
   return (
     <form className="pt-[15px]" onSubmit={handleSubmit(handleSave)}>
       <div className="form-fields flex-col gap-y-4 sm:flex-row sm:gap-y-0 mb-4">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 w-full">
           <Input
             id="first_name"
             label="First Name*"
@@ -209,7 +209,7 @@ export default function AddressForm({
             labelClassName="text-[#4A5565] font-semibold "
           />
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 w-full">
           <Input
             id="last_name"
             label="Last Name*"
@@ -334,7 +334,7 @@ export default function AddressForm({
         />
       </div>
       <div className="form-fields flex-col gap-y-4 sm:flex-row sm:gap-y-0 mb-4">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 w-full">
           <Input
             id="city"
             label="City"
@@ -350,7 +350,7 @@ export default function AddressForm({
             }}
           />
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 w-full">
           <Input
             id="state"
             label="State"
@@ -366,7 +366,7 @@ export default function AddressForm({
             }}
           />
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 w-full">
           <Input
             id="pincode"
             label="Postcode"
