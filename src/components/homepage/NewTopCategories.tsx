@@ -88,7 +88,7 @@ export default function NewTopCategories() {
 
   return (
     <div className="w-full container">
-      <h2 className="text-center fluid-text-20-24 font-bold leading-7.5 mx-auto lg:pt-4">
+      <h2 className="text-center fluid-text-20-24 font-bold leading-7.5 mx-auto mt-6">
         Top Categories
       </h2>
 

@@ -187,7 +187,7 @@ const renderTag = (tag: string) => {
   switch (tag) {
     case "hotseller":
       return (
-        <div className="absolute bg-[#01295F] text-white w-[70px] h-[18px] md:w-[90px] md:h-[19px] top-[10px] left-[10px] fluid-text-2xs font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
+        <div className="absolute bg-[#01295F] text-white px-2 h-[18px] md:h-[19px] top-[10px] left-[10px] fluid-text-2xs font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1 whitespace-nowrap">
           <ThumbUpIcon sx={{ fontSize: "clamp(0.625rem, 1vw, 0.6875rem)" }} />
           Bestseller
         </div>
@@ -195,7 +195,7 @@ const renderTag = (tag: string) => {
 
     case "new":
       return (
-        <div className="absolute bg-[#787FFF] text-white w-[60px] h-[18px] md:w-[60px] md:h-[19px] top-[10px] left-[10px] fluid-text-2xs font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1">
+        <div className="absolute bg-[#787FFF] text-white px-2 h-[18px] md:h-[19px] top-[10px] left-[10px] fluid-text-2xs font-medium flex items-center justify-center z-10 rounded-[5px] leading-[18px] gap-1 whitespace-nowrap">
           <StarIcon sx={{ fontSize: "clamp(0.625rem, 1vw, 0.6875rem)" }} />
           New
         </div>
@@ -203,7 +203,7 @@ const renderTag = (tag: string) => {
 
     case "bestseller":
       return (
-        <div className="absolute top-[10px] left-[10px] z-10 flex h-[18px] w-[80px] items-center justify-center gap-1 rounded-[5px] bg-[#FFB30F] fluid-text-2xs font-medium leading-[18px] text-white md:h-[19px] md:w-[80px]">
+        <div className="absolute top-[10px] left-[10px] z-10 flex h-[18px] px-2 items-center justify-center gap-1 rounded-[5px] bg-[#FFB30F] fluid-text-2xs font-medium leading-[18px] text-white md:h-[19px] whitespace-nowrap">
           <WhatshotIcon sx={{ fontSize: "clamp(0.625rem, 1vw, 0.6875rem)" }} />
           Hotseller
         </div>
@@ -262,20 +262,20 @@ export default function StaticProductCards({
   return (
     <div className="relative">
       <div className="flex items-center justify-between ">
-        <h2 className="font-bold fluid-text-18-32 tracking-normal leading-4.5 capitalize">
+        <h2 className="font-montserrat fluid-text-18-32 font-bold leading-[normal] capitalize text-black">
           {heading}
         </h2>
 
         <Link
           href={viewAllHref}
-          className="flex items-center gap-1 font-bold fluid-text-13-14 tracking-normal text-[#F51721] no-underline"
+          className="flex items-center gap-1 font-bold fluid-text-sm tracking-normal text-[#F51721] no-underline"
         >
           View All
           <ChevronRight size={16} className="text-[#F51721]" />
         </Link>
       </div>
 
-      <div className="relative lg:hidden">
+      <div className="relative  lg:mb-4 lg:hidden">
         <button
           type="button"
           onClick={() => handleMobileScroll("left")}
@@ -294,7 +294,7 @@ export default function StaticProductCards({
 
         <div
           ref={mobileSliderRef}
-          className="flex gap-3 overflow-x-auto scroll-smooth no-scrollbar pt-3 md:pt-5 lg:pt-2"
+          className="flex gap-3 overflow-x-auto scroll-smooth no-scrollbar pt-3 md:pt-3 lg:pt-2"
         >
           {staticProducts.map((product) => (
             <div
@@ -401,7 +401,7 @@ export default function StaticProductCards({
       <button
         type="button"
         onClick={() => handleScroll("left")}
-        className="hidden lg:flex @apply !absolute -left-3 top-1/2 -translate-y-1/2 !z-[999] items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed translate-x-[-12px] cursor-pointer"
+        className="hidden lg:flex absolute -left-3 top-1/2 -translate-y-1/2 z-[999] items-center justify-center w-10 h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed translate-x-[-12px]"
       >
         <ChevronLeft size={18} className="text-black" />
       </button>
@@ -409,20 +409,20 @@ export default function StaticProductCards({
       <button
         type="button"
         onClick={() => handleScroll("right")}
-        className="hidden lg:flex @apply !absolute !right-0 top-1/2 -translate-y-1/2 translate-x-1/2 !z-[999] items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+        className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-[999] items-center justify-center w-10 h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
       >
         <ChevronRight size={18} className="text-black" />
       </button>
 
       <div
         ref={sliderRef}
-        className="hidden lg:flex gap-6 overflow-x-auto scroll-smooth no-scrollbar lg:pt-6"
+        className="hidden lg:flex gap-6 overflow-x-auto scroll-smooth no-scrollbar lg:pt-4"
       >
         {staticProducts.map((product) => {
           return (
             <div
               key={product.id}
-              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[530px] flex flex-col justify-start overflow-hidden rounded-[7px]"
+              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[530px] flex flex-col justify-start overflow-hidden rounded-[7px] mb-2"
             >
               {renderTag(product.tag)}
 
@@ -502,7 +502,7 @@ export default function StaticProductCards({
                         </div>
                       )}
 
-                      <p className="mt-1 font-normal fluid-text-13-14 leading-[18px] text-[#ff4400]">
+                      <p className="mt-1 font-normal fluid-text-xs leading-[18px] text-[#ff4400]">
                         Extra 10% Off with Code: SHBS10
                       </p>
                     </div>

@@ -40,7 +40,7 @@ export default function StaticTopCategoriesSlider({
   return (
     <div className="w-full">
       {title && (
-        <h2 className="text-center text-[20px] lg:text-[24px] font-bold leading-6 mx-auto lg:pt-4">
+        <h2 className="text-center text-[20px] lg:text-[24px] font-bold leading-6 mx-auto lg:pt-4 mt-4">
           {title}
         </h2>
       )}

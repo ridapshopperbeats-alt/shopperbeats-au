@@ -242,7 +242,7 @@ export default function CustomerRatingViewPage({
     <div>
       <div className="flex flex-col xl:flex-row xl:flex-wrap xl:items-center xl:justify-between gap-3 mb-2 lg:gap-4 lg:mb-4 xl:mb-6">
         <h2 className="text-[14px] lg:text-[26px] leading-[18px] font-bold">
-          <span className="text-[#FD151B]">Customer ratings</span>{" "}
+          <span className="text-[#FD151B]">Customer ratings123</span>{" "}
           <span className="text-[#012A62]">&amp; reviews</span>
         </h2>
 
@@ -318,7 +318,7 @@ export default function CustomerRatingViewPage({
         </div>
       </div>
 
-      <div className="flex flex-col xl:flex-row gap-4 xl:gap-7">
+      <div className="flex flex-col xl:flex-row gap-4 xl:gap-7 my-6">
         {!isQuestionsTab && (
           <div className="w-full xl:w-[320px] xl:shrink-0">
             <p className="text-[15px] leading-[20px] lg:text-[30px] font-bold text-black">

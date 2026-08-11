@@ -88,10 +88,10 @@ export default function TopBrands() {
   };
 
   return (
-    <section className="container">
+    <section className="container pt-3 md:py-0">
       {/* Heading */}
-      <div className="flex items-center justify-between pt-3 md:pt-2 lg:pt-0 lg:mb-2 ">
-        <h2 className="fluid-text-18-32  font-extrabold text-[#1E1E1E]">
+      <div className="flex items-center justify-between lg:mb-3">
+        <h2 className="font-montserrat fluid-text-18-32 font-bold leading-[normal] capitalize text-black self-center">
           Top Brands
         </h2>
 
@@ -99,15 +99,15 @@ export default function TopBrands() {
           href="/brand"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1 fluid-text-13-14 text-[#FD151B]  font-bold"
+          className="flex items-center gap-1 fluid-text-sm tracking-normal text-[#FD151B] font-bold no-underline self-center"
         >
           See All Brands
-          <ChevronRight size={13} />
+          <ChevronRight size={16} />
         </Link>
       </div>
 
       {/* Mobile */}
-      <div className="grid grid-cols-2 gap-3 lg:gap-4 lg:hidden pt-2">
+      <div className="grid grid-cols-2 gap-3 lg:gap-4 lg:hidden pt-3 lg:pt-2">
         {mobileBrands.map((brand) => (
           <div
             key={brand.id}
@@ -150,7 +150,7 @@ export default function TopBrands() {
       )}
 
       {/* Desktop */}
-      <div className="relative hidden lg:block lg:mb-6">
+      <div className="relative hidden lg:block lg:mb-4">
         <div
           ref={sliderRef}
           className="flex gap-5 overflow-x-auto scroll-smooth no-scrollbar"
@@ -170,7 +170,7 @@ export default function TopBrands() {
               <div className="banner-gradient-overlay" />
 
               <div className="absolute p-6 w-[226px] flex flex-col ">
-                <h3 className="text-white text-[13px] md:text-[18px] font-bold">
+                <h3 className="text-white fluid-text-13-18 font-bold">
                   {brand.title}
                 </h3>
 

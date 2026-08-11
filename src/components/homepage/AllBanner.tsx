@@ -168,14 +168,14 @@ export default function PopularCategories() {
   return (
     <div className="container">
       {/* Heading */}
-      <div className="flex items-center justify-between pt-4 md:pt-1 lg:pt-2">
+      <div className="flex items-center justify-between pt-3 lg:pt-0">
         <div>
           <h2 className="fluid-text-18-32 font-bold text-black">
             Popular Categories
           </h2>
         </div>
 
-        <button className="flex items-center gap-2 fluid-text-13-14 text-[#FD151B] font-bold cursor-pointer">
+        <button className="flex items-center gap-2 fluid-text-sm text-[#FD151B] font-bold cursor-pointer">
           View All
           <ChevronRight size={13} />
         </button>
