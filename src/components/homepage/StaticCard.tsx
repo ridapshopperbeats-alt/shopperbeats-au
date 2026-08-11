@@ -275,7 +275,7 @@ export default function StaticProductCards({
         </Link>
       </div>
 
-      <div className="relative mb-4 lg:hidden">
+      <div className="relative  lg:mb-4 lg:hidden">
         <button
           type="button"
           onClick={() => handleMobileScroll("left")}
@@ -294,7 +294,7 @@ export default function StaticProductCards({
 
         <div
           ref={mobileSliderRef}
-          className="flex gap-3 overflow-x-auto scroll-smooth no-scrollbar pt-3 md:pt-5 lg:pt-2"
+          className="flex gap-3 overflow-x-auto scroll-smooth no-scrollbar pt-3 md:pt-3 lg:pt-2"
         >
           {staticProducts.map((product) => (
             <div
@@ -416,13 +416,13 @@ export default function StaticProductCards({
 
       <div
         ref={sliderRef}
-        className="hidden lg:flex gap-6 overflow-x-auto scroll-smooth no-scrollbar lg:pt-6"
+        className="hidden lg:flex gap-6 overflow-x-auto scroll-smooth no-scrollbar lg:pt-4"
       >
         {staticProducts.map((product) => {
           return (
             <div
               key={product.id}
-              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[530px] flex flex-col justify-start overflow-hidden rounded-[7px] mb-4"
+              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[530px] flex flex-col justify-start overflow-hidden rounded-[7px] mb-2"
             >
               {renderTag(product.tag)}
 
@@ -508,7 +508,7 @@ export default function StaticProductCards({
                     </div>
                   </div>
 
-                  <div className="w-full px-2 flex justify-center pb-1">
+                  <div className="w-full px-2 flex justify-center">
                     <button
                       type="button"
                       onClick={(e) => {

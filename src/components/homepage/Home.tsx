@@ -22,7 +22,7 @@ const Home = async () => {
     <TopCategories>
       <SingleBanner />
       <div className="flex flex-col">
-        <div className="container lg:py-2">
+        <div className="container">
           {/* {products.length > 0 && (
             <ProductCarousel
               title="Best Sellers"
@@ -35,7 +35,7 @@ const Home = async () => {
 
         <PopularCategories />
 
-        <div className="container py-4 md:py-5 lg:py-3">
+        <div className="container pt-4 md:py-3 lg:py-3">
           {/* {trendingProducts.length > 0 && (
             <ProductCarousel
               title="Trending Products"
@@ -49,7 +49,7 @@ const Home = async () => {
 
         <TopBrands />
 
-        <div className="container py-4 md:py-5 lg:py-3">
+        <div className="container py-4 md:py-3 lg:py-0">
           {/* {products.length > 0 && (
             <ProductCarousel
               title="New Arrivals"

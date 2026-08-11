@@ -130,7 +130,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <>
-      <div className="group relative w-full min-h-[400px] md:min-h-[498px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
+      <div className="group relative w-full min-h-[400px] md:min-h-[480px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
         {renderTag(tags?.[0])}
 
         <button

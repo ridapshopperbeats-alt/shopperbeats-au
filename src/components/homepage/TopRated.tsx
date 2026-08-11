@@ -88,9 +88,9 @@ export default function TopBrands() {
   };
 
   return (
-    <section className="container py-4 md:py-5 lg:py-3">
+    <section className="container pt-3 md:py-0">
       {/* Heading */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between lg:mb-3">
         <h2 className="font-montserrat fluid-text-18-32 font-bold leading-[normal] capitalize text-black self-center">
           Top Brands
         </h2>
@@ -107,7 +107,7 @@ export default function TopBrands() {
       </div>
 
       {/* Mobile */}
-      <div className="grid grid-cols-2 gap-3 lg:gap-4 lg:hidden pt-2">
+      <div className="grid grid-cols-2 gap-3 lg:gap-4 lg:hidden pt-3 lg:pt-2">
         {mobileBrands.map((brand) => (
           <div
             key={brand.id}
@@ -150,7 +150,7 @@ export default function TopBrands() {
       )}
 
       {/* Desktop */}
-      <div className="relative hidden lg:block lg:mb-6">
+      <div className="relative hidden lg:block lg:mb-4">
         <div
           ref={sliderRef}
           className="flex gap-5 overflow-x-auto scroll-smooth no-scrollbar"
