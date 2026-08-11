@@ -361,38 +361,12 @@ export default function Header({ megaMenuData }: HeaderProps) {
     ? applyImageVariant(personalData.response.profile_image, "public")
     : "/images/user.svg";
 
-  const isCheckout = pathname === "/check-out";
   const hideSearch =
     pathname === "/user/personal-information" ||
     pathname === "/user/change-password" ||
     pathname === "/user/logout" ||
-    pathname === "/user/addresses";
-
-  if (isCheckout) {
-    return (
-      <div className="header-fixed">
-        <div className="container">
-          <div className="top-head" style={{ justifyContent: "space-between" }}>
-            <div className="logo-block">
-              <div className="logo">
-                <Link href="/">
-                  <Image
-                    src="/images/logo.svg"
-                    alt="ShopperBeats Logo"
-                    width={300}
-                    height={300}
-                    priority
-                  />
-                </Link>
-              </div>
-            </div>
-
-            <CartPopup isVisible={showCartCard} />
-          </div>
-        </div>
-      </div>
-    );
-  }
+    pathname === "/user/addresses" ||
+    pathname === "/check-out";
 
   return (
     <div className="header-fixed ">
@@ -428,7 +402,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
             </div>
           </div>
 
-          <GlobalSearch />
+          {!hideSearch && <GlobalSearch />}
 
           <div className="login-block">
             <div className="delivery-block" style={{ position: "relative" }}>

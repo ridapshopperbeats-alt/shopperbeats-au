@@ -90,7 +90,7 @@ export default function TopBrands() {
   return (
     <section className="container pt-3 md:py-0">
       {/* Heading */}
-      <div className="flex items-center justify-between lg:mb-3">
+      <div className="flex items-center justify-between lg:mb-4">
         <h2 className="font-montserrat fluid-text-18-32 font-bold leading-[normal] capitalize text-black self-center">
           Top Brands
         </h2>
