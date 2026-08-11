@@ -54,7 +54,21 @@ export default function ShadowDomContent({ content }: ShadowDomContentProps) {
     };
   }, [content]);
 
-  const safeContent = DOMPurify.sanitize(content);
+  const safeDocument = DOMPurify.sanitize(content, { WHOLE_DOCUMENT: true });
+
+  const injectedHead = `
+    <meta charset="utf-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html, body {
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>`;
+
+  const safeContent = safeDocument.includes("<head>")
+    ? safeDocument.replace("<head>", `<head>${injectedHead}`)
+    : `<html><head>${injectedHead}</head><body>${safeDocument}</body></html>`;
 
   return (
     <iframe
@@ -82,22 +96,7 @@ export default function ShadowDomContent({ content }: ShadowDomContentProps) {
       scrolling="no"
       className="w-full border-0"
       style={{ minHeight: "300px" }}
-      srcDoc={`<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      html, body {
-        margin: 0;
-        overflow: hidden;
-      }
-    </style>
-  </head>
-  <body>
-    ${safeContent}
-  </body>
-</html>`}
+      srcDoc={`<!doctype html>${safeContent}`}
     />
   );
 }
