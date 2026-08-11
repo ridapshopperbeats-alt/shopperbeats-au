@@ -322,7 +322,7 @@ const StaticCategoryPage = ({ slug }: StaticCategoryPageProps) => {
       )}
 
       <Breadcrumb />
-      <div className="flex flex-col  relative lg:gap-6 lg:flex-row lg:items-start">
+      <div className="flex flex-col min-w-0 relative lg:gap-6 lg:flex-row lg:items-start my-6">
         <div
           className="hidden lg:block shrink-0 lg:w-[300px] xl:w-[300px] filter-sidebar-sticky no-scrollbar"
           data-lenis-prevent
@@ -343,7 +343,7 @@ const StaticCategoryPage = ({ slug }: StaticCategoryPageProps) => {
           category={category}
         />
 
-        <div className="flex w-full">
+        <div className="flex w-full min-w-0">
           <StaticProductDisplay
             products={paginatedProducts}
             onToggleSidebar={toggleSidebar}

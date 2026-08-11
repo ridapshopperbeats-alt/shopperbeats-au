@@ -593,7 +593,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                       draggable={false}
                       onLoad={() => markLoaded(safeUrl(item.image_url))}
                       onClick={() => openPreview(safeUrl(item.image_url))}
-                      className="w-full h-full object-contain rounded-[15px]"
+                      className="w-full h-full object-cover rounded-[15px]"
                       style={{
                         opacity: isLoaded(safeUrl(item.image_url)) ? 1 : 0,
                         transition: "opacity 0.3s ease",

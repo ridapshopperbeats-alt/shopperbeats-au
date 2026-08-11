@@ -11,6 +11,14 @@ const StaticProductCard = dynamic(
 
 const EMPTY_VARIANTS: never[] = [];
 
+const SORT_OPTIONS = [
+  { value: "price-low-to-high", label: "Price: Low to High", desktopLabel: "Price: Low to High" },
+  { value: "price-high-to-low", label: "Price: High to Low", desktopLabel: "Price: High to Low" },
+  { value: "newest", label: "Newest", desktopLabel: "Newest" },
+  { value: "best-sellers", label: "Best Sellers", desktopLabel: "Best Sellers" },
+  { value: "rating", label: "Highest Rated", desktopLabel: "Highest Rated" },
+];
+
 import Pagination from "@/components/common/Pagination";
 import { Product } from "@/types/product";
 import { getPriceDetails, getImageUrl } from "@/lib/utils/main-utils";
@@ -22,7 +30,7 @@ import {
   SelectValue,
 } from "../common/select";
 
-import { Filter, X } from "lucide-react";
+import { ArrowUpDown, Filter, X } from "lucide-react";
 import Image from "next/image";
 import NoProductsFound from "../NoProductFound";
 import Button from "../common/Button";
@@ -112,16 +120,11 @@ const StaticProductDisplay: React.FC<StaticProductDisplayProps> = ({
                 </div>
               )}
 
-              <div className="w-[241px] md:ml-auto">
-                <Select value={sortBy} onValueChange={onSortChange}>
-                  <SelectTrigger className="h-[32px] w-full rounded-[20px] border border-[#001325]/64 bg-white px-4 shadow-none focus:ring-0">
+              <div className="w-fit md:ml-auto">
+                 <Select value={sortBy} onValueChange={onSortChange}>
+                  <SelectTrigger className="h-[32px] w-full max-w-none rounded-[20px] border border-[#001325]/64 bg-white pl-4 pr-9 shadow-none focus:ring-0">
                     <div className="flex items-center gap-2 flex-1">
-                      <Image
-                        src="/images/sortBy.svg"
-                        alt="sort"
-                        width={18}
-                        height={18}
-                      />
+                      <ArrowUpDown size={18} className="text-[#001325]/64 shrink-0" />
 
                       <span className="text-[12px] font-normal text-[#001325]/64 leading-[18px] whitespace-nowrap">
                         Sort by :
@@ -135,25 +138,15 @@ const StaticProductDisplay: React.FC<StaticProductDisplayProps> = ({
                     position="popper"
                     className="w-[240px] max-w-[230px] border !border-[#F6F6F6] bg-white p-2 shadow-[#000000]/25 rounded-[5px] ring-0 outline-none focus:outline-none focus:ring-0 text-[14px] font-normal leading-[17px] "
                   >
-                    <SelectItem value="price_asc" className="mb-2">
-                      Price: Low to High
-                    </SelectItem>
-
-                    <SelectItem value="price_desc" className="mb-2">
-                      Price: High to Low
-                    </SelectItem>
-
-                    <SelectItem value="newly_added" className="mb-2">
-                      Newly Added
-                    </SelectItem>
-
-                    <SelectItem value="top_rated" className="mb-2">
-                      Highest Rated
-                    </SelectItem>
-
-                    <SelectItem value="biggest_saving" className="mb-2">
-                      Biggest Saving
-                    </SelectItem>
+                    {SORT_OPTIONS.map((option) => (
+                      <SelectItem
+                        key={option.value}
+                        value={option.value}
+                        className="mb-2"
+                      >
+                        {option.desktopLabel ?? option.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
