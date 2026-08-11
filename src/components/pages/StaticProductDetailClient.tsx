@@ -803,7 +803,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
             </div>
 
             <div className="xl:hidden flex flex-col gap-5 w-full min-[1440px]:max-w-[1388px] min-[1440px]:sticky min-[1440px]:self-start">
-              {/* <ProductDetailsMobileTabs
+              <ProductDetailsMobileTabs
                 featuresContent={null}
                 descriptionContent={
                   <div style={{ textAlign: "left" }}>
@@ -825,7 +825,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 }
                 deliveryContent={getDeliveryTabContent(product)}
                 reviews={product.reviews || []}
-              /> */}
+              />
             </div>
             <div className="hidden xl:flex w-full min-[1440px]:min-h-auto border border-[#ECECEC] rounded-[7px] p-5 flex-col gap-4">
               <div className="product-tabs">

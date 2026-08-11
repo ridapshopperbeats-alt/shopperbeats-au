@@ -176,7 +176,7 @@ export default function SecureCheckout() {
     expirationDate: "",
     securityCode: "",
     cardholderName: "",
-    useShippingAddressAsBilling: true, 
+    useShippingAddressAsBilling: false,
     billingFirstName: "",
     billingLastName: "",
     billingCompany: "",
@@ -299,7 +299,7 @@ export default function SecureCheckout() {
         return;
       }
 
-      if (!data.useShippingAddressAsBilling && !billingAddressValid) {
+      if (data.useShippingAddressAsBilling && !billingAddressValid) {
         toast.error("Please enter a valid billing address");
         return;
       }
@@ -407,7 +407,7 @@ export default function SecureCheckout() {
           discount_value: promoData.discount_value,
         }),
 
-        shipping_same_as_billing: data.useShippingAddressAsBilling,
+        shipping_same_as_billing: !data.useShippingAddressAsBilling,
 
         shipping: {
           first_name: data.firstName,
@@ -422,7 +422,7 @@ export default function SecureCheckout() {
           phone: String(data.phone),
         },
 
-        billing: data.useShippingAddressAsBilling
+        billing: !data.useShippingAddressAsBilling
           ? {
               first_name: data.firstName,
               last_name: data.lastName,
@@ -783,7 +783,7 @@ export default function SecureCheckout() {
 
   return (
     <div className="lg:py-7">
-      <h1 className="font-extrabold text-xl md:text-2xl leading-[normal] tracking-[normal] text-center capitalize text-black mb-6">
+      <h1 className="font-extrabold text-xl md:text-2xl leading-[normal] tracking-[normal] text-center capitalize text-black mb-6 pt-5 lg:pt-0">
         Secure Checkout
       </h1>
       <div className="container flex flex-col xl:flex-row items-start justify-center gap-6 mx-auto">

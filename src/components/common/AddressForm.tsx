@@ -414,12 +414,12 @@ export default function AddressForm({
           />
           <label
             htmlFor="Home"
-            className={`flex h-[36px] min-w-[80px] cursor-pointer items-center justify-center border pt-2 pr-5 pb-2 pl-5 text-[13px] font-semibold transition-colors ${
+            className={`flex h-[36px] min-w-[80px] cursor-pointer items-center justify-center rounded-[21px] border pt-2 pr-5 pb-2 pl-5 text-[13px] font-semibold transition-colors ${
               isTitleTaken("Home", editingAddress?.id)
-                ? "rounded-[10px] cursor-not-allowed border-[#E5E7EB] bg-white text-[#99A1AF] opacity-60"
+                ? "cursor-not-allowed border-[#E5E7EB] bg-white text-[#99A1AF] opacity-60"
                 : formData.title === "Home"
-                  ? "rounded-[21px] border-[#FD151B] bg-[#FD151B] text-white"
-                  : "rounded-[10px] border-[#E5E7EB] bg-white text-[#4A5565]"
+                  ? "border-[#FD151B] bg-[#FD151B] text-white"
+                  : "border-[#E5E7EB] bg-white text-[#4A5565]"
             }`}
           >
             Home
@@ -438,12 +438,12 @@ export default function AddressForm({
           />
           <label
             htmlFor="Work"
-            className={`flex h-[36px] min-w-[80px] cursor-pointer items-center justify-center border pt-2 pr-5 pb-2 pl-5 text-[13px] font-semibold transition-colors ${
+            className={`flex h-[36px] min-w-[80px] cursor-pointer items-center justify-center rounded-[21px] border pt-2 pr-5 pb-2 pl-5 text-[13px] font-semibold transition-colors ${
               isTitleTaken("Work", editingAddress?.id)
-                ? "rounded-[10px] cursor-not-allowed border-[#E5E7EB] bg-white text-[#99A1AF] opacity-60"
+                ? "cursor-not-allowed border-[#E5E7EB] bg-white text-[#99A1AF] opacity-60"
                 : formData.title === "Work"
-                  ? "rounded-[21px] border-[#FD151B] bg-[#FD151B] text-white"
-                  : "rounded-[10px] border-[#E5E7EB] bg-white text-[#4A5565]"
+                  ? "border-[#FD151B] bg-[#FD151B] text-white"
+                  : "border-[#E5E7EB] bg-white text-[#4A5565]"
             }`}
           >
             Work
@@ -464,10 +464,10 @@ export default function AddressForm({
           />
           <label
             htmlFor="Others"
-            className={`flex h-[36px] min-w-[80px] cursor-pointer items-center justify-center border pt-2 pr-5 pb-2 pl-5 text-[13px] font-semibold transition-colors ${
+            className={`flex h-[36px] min-w-[80px] cursor-pointer items-center justify-center rounded-[21px] border pt-2 pr-5 pb-2 pl-5 text-[13px] font-semibold transition-colors ${
               formData.title === "Others"
-                ? "rounded-[21px] border-[#FD151B] bg-[#FD151B] text-white"
-                : "rounded-[10px] border-[#E5E7EB] bg-white text-[#4A5565]"
+                ? "border-[#FD151B] bg-[#FD151B] text-white"
+                : "border-[#E5E7EB] bg-white text-[#4A5565]"
             }`}
           >
             Others
