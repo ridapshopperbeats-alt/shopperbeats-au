@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { ArrowUpDown } from "lucide-react";
 import StarRating from "../common/StarRating";
 import {
   Select,
@@ -143,6 +144,13 @@ const QUESTIONS: {
 const TABS = ["Product Reviews", "Store Reviews", "Questions"] as const;
 type Tab = (typeof TABS)[number];
 
+const REVIEW_SORT_OPTIONS = [
+  { value: "latest", label: "Latest" },
+  { value: "highest_rating", label: "Highest Rating" },
+  { value: "lowest_rating", label: "Lowest Rating" },
+  { value: "most_helpful", label: "Most Helpful" },
+];
+
 const REVIEWS_PAGE_SIZE = 2;
 
 interface CustomerRatingViewPageProps {
@@ -242,7 +250,7 @@ export default function CustomerRatingViewPage({
     <div>
       <div className="flex flex-col xl:flex-row xl:flex-wrap xl:items-center xl:justify-between gap-3 mb-2 lg:gap-4 lg:mb-4 xl:mb-6">
         <h2 className="text-[14px] lg:text-[26px] leading-[18px] font-bold">
-          <span className="text-[#FD151B]">Customer ratings123</span>{" "}
+          <span className="text-[#FD151B]">Customer ratings</span>{" "}
           <span className="text-[#012A62]">&amp; reviews</span>
         </h2>
 
@@ -276,16 +284,11 @@ export default function CustomerRatingViewPage({
             ))}
           </div>
 
-          <div className="w-auto 2xl:w-[240px] shrink-0">
+          <div className="hidden xl:block w-auto 2xl:w-[240px] shrink-0">
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="h-[32px] w-full rounded-[20px] border border-[#001325]/64 bg-white px-4 shadow-none focus:ring-0">
+              <SelectTrigger className="h-[32px] w-full max-w-none rounded-[20px] border border-[#001325]/64 bg-white pl-4 pr-9 shadow-none focus:ring-0">
                 <div className="flex items-center gap-2 flex-1">
-                  <Image
-                    src="/images/sortBy.svg"
-                    alt="sort"
-                    width={18}
-                    height={18}
-                  />
+                  <ArrowUpDown size={18} className="text-[#001325]/64 shrink-0" />
 
                   <span className="text-[12px] font-normal text-[#001325]/64 leading-[18px] whitespace-nowrap">
                     Sort by :
@@ -297,21 +300,17 @@ export default function CustomerRatingViewPage({
 
               <SelectContent
                 position="popper"
-                className="w-(--radix-select-trigger-width)  2xl:w-[230px]  border !border-[#F6F6F6] bg-white p-2 shadow-[#000000]/25 rounded-[5px] ring-0 outline-none focus:outline-none focus:ring-0 text-[14px] font-normal leading-[17px] "
+                className="w-[240px] max-w-[230px] border !border-[#F6F6F6] bg-white p-2 shadow-[#000000]/25 rounded-[5px] ring-0 outline-none focus:outline-none focus:ring-0 text-[14px] font-normal leading-[17px] "
               >
-                <SelectItem value="latest" className="mb-2">
-                  Latest
-                </SelectItem>
-
-                <SelectItem value="highest_rating" className="mb-2">
-                  Highest Rating
-                </SelectItem>
-
-                <SelectItem value="lowest_rating">Lowest Rating</SelectItem>
-
-                <SelectItem value="most_helpful" className="mb-2">
-                  Most Helpful
-                </SelectItem>
+                {REVIEW_SORT_OPTIONS.map((option) => (
+                  <SelectItem
+                    key={option.value}
+                    value={option.value}
+                    className="mb-2"
+                  >
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -321,9 +320,46 @@ export default function CustomerRatingViewPage({
       <div className="flex flex-col xl:flex-row gap-4 xl:gap-7 my-6">
         {!isQuestionsTab && (
           <div className="w-full xl:w-[320px] xl:shrink-0">
-            <p className="text-[15px] leading-[20px] lg:text-[30px] font-bold text-black">
-              {averageRating.toFixed(1)} Out Of 5
-            </p>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-[15px] leading-[20px] lg:text-[30px] font-bold text-black">
+                {averageRating.toFixed(1)} Out Of 5
+              </p>
+
+              <div className="flex xl:hidden shrink-0">
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="h-[32px] w-full max-w-none rounded-[20px] border border-[#001325]/64 bg-white pl-4 pr-9 shadow-none focus:ring-0">
+                    <div className="flex items-center gap-2 flex-1">
+                      <ArrowUpDown
+                        size={18}
+                        className="text-[#001325]/64 shrink-0"
+                      />
+
+                      <span className="text-[12px] font-normal text-[#001325]/64 leading-[18px] whitespace-nowrap">
+                        Sort by :
+                      </span>
+
+                      <SelectValue placeholder="Price" />
+                    </div>
+                  </SelectTrigger>
+
+                  <SelectContent
+                    position="popper"
+                    className="w-[240px] max-w-[230px] border !border-[#F6F6F6] bg-white p-2 shadow-[#000000]/25 rounded-[5px] ring-0 outline-none focus:outline-none focus:ring-0 text-[14px] font-normal leading-[17px] "
+                  >
+                    {REVIEW_SORT_OPTIONS.map((option) => (
+                      <SelectItem
+                        key={option.value}
+                        value={option.value}
+                        className="mb-2"
+                      >
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
             <div className="flex items-center gap-2 mt-1">
               <StarRating rating={averageRating} size={16} />
               <span className="text-[13px] text-[#211E22]">
@@ -357,11 +393,11 @@ export default function CustomerRatingViewPage({
           </div>
         )}
 
-        <div className="flex lg:hidden w-[calc(100%+64px)] -ml-8 border-t border-[#ECECEC]" />
+        <div className="flex xl:hidden w-[calc(100%+64px)] -ml-8 border-t border-[#ECECEC]" />
 
-        <div className="relative flex-1 min-w-0 xl:pl-10">
+        <div className="relative flex-1 min-w-0 xl:pl-15">
           {!isQuestionsTab && (
-            <div className="hidden xl:block absolute left-0 top-4 bottom-0 w-px bg-[#D2D2D2]" />
+            <div className="hidden xl:block absolute left-10 top-0 bottom-0 w-px bg-[#D2D2D2]" />
           )}
           {isQuestionsTab ? (
             visibleQuestions.length > 0 ? (

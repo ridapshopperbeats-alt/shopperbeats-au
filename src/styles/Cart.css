@@ -461,7 +461,7 @@
 }
 
 .cart-drawer-shipping-label {
-  @apply font-['Inter'] font-normal leading-[100%] tracking-[0%] text-[#878787];
+  @apply font-montserrat font-normal leading-[100%] tracking-[0%] text-[#878787];
   fontsize: clamp(0.875rem, 1.5vw, 1rem);
 }
 

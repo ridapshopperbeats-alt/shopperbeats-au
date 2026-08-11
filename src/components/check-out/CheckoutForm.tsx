@@ -294,9 +294,9 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     }))
                   }
                 />
-                Use shipping address as billing address
+                Use a different billing address
               </div>
-              {!formData.useShippingAddressAsBilling && (
+              {formData.useShippingAddressAsBilling && (
                 <div className="delivery-details billing-address-block">
                   <div className="form-item">
                     <p className="payment-method-name">Billing Address</p>

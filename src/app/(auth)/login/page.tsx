@@ -232,7 +232,7 @@ export default function LoginPage() {
 
   return (
     <div className="container">
-      <Card className="mx-auto my-6 flex flex-col items-start gap-6 border-0 w-full max-w-[371px] px-[16px] py-[24px] rounded-[8px] bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.10),0_1px_11.8px_-1px_rgba(0,0,0,0.10)] sm:max-w-[714px] sm:items-stretch sm:px-[34px] sm:py-6 sm:rounded-lg sm:bg-white sm:shadow-none sm:border-2 sm:border-[rgba(255,255,255,0.9)]">
+      <Card className="mx-auto my-6 flex flex-col items-start gap-6 border-0 w-full max-w-[371px] px-[16px] py-[24px] rounded-[8px] bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.10),0_1px_11.8px_-1px_rgba(0,0,0,0.10)] sm:max-w-[714px] sm:items-stretch sm:px-[34px] sm:py-6 sm:rounded-lg sm:bg-white">
         <h3 className="auth-title w-full">Sign In</h3>
 
         <form
