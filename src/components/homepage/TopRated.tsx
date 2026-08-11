@@ -88,10 +88,10 @@ export default function TopBrands() {
   };
 
   return (
-    <section className="container">
+    <section className="container py-4 md:py-5 lg:py-3">
       {/* Heading */}
-      <div className="flex items-center justify-between pt-3 md:pt-2 lg:pt-0 lg:mb-2 ">
-        <h2 className="fluid-text-18-32  font-extrabold text-[#1E1E1E]">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="font-montserrat fluid-text-18-32 font-bold leading-[normal] capitalize text-black self-center">
           Top Brands
         </h2>
 
@@ -99,10 +99,10 @@ export default function TopBrands() {
           href="/brand"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1 fluid-text-13-14 text-[#FD151B]  font-bold"
+          className="flex items-center gap-1 fluid-text-sm tracking-normal text-[#FD151B] font-bold no-underline self-center"
         >
           See All Brands
-          <ChevronRight size={13} />
+          <ChevronRight size={16} />
         </Link>
       </div>
 
@@ -170,7 +170,7 @@ export default function TopBrands() {
               <div className="banner-gradient-overlay" />
 
               <div className="absolute p-6 w-[226px] flex flex-col ">
-                <h3 className="text-white text-[13px] md:text-[18px] font-bold">
+                <h3 className="text-white fluid-text-13-18 font-bold">
                   {brand.title}
                 </h3>
 

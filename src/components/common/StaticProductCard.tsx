@@ -130,7 +130,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <>
-      <div className="group relative w-full h-[400px] md:h-[498px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
+      <div className="group relative w-full min-h-[400px] md:min-h-[498px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
         {renderTag(tags?.[0])}
 
         <button
@@ -148,7 +148,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
         </button>
         <Link
           href={`/static-product/${unique_code || id}`}
-          className="flex h-[400px] md:h-[480px] flex-col no-underline text-inherit"
+          className="flex min-h-[400px] md:min-h-[480px] flex-col no-underline text-inherit"
         >
           <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden rounded-t-[8px] bg-[rgba(233,233,233,0.60)]">
             <Image

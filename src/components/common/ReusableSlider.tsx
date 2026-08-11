@@ -502,8 +502,9 @@ function SliderComponent<T>(
       {arrows && !isFade && (
         <>
           <button
+            type="button"
             onClick={handlePrev}
-            className="handlePrev !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)] cursor-pointer"
+            className="handlePrev !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)] cursor-pointer disabled:!opacity-100"
             disabled={!canGoPrev}
             aria-label="Previous slide"
           >
@@ -511,12 +512,13 @@ function SliderComponent<T>(
           </button>
 
           <button
+            type="button"
             onClick={handleNext}
-            className="handleNext !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)] ml-20 cursor-pointer"
+            className="handleNext !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)] ml-20 cursor-pointer disabled:!opacity-100"
             disabled={!canGoNext}
             aria-label="Next slide"
           >
-            <ChevronRight size={20} color="#1D1B20" />
+            <ChevronRight size={20} />
           </button>
         </>
       )}

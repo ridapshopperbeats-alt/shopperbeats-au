@@ -1297,10 +1297,38 @@ function buildVariants(
       rrp_price: product.rrp_price,
       stock: baseStock === 0 ? 0 : Math.max(1, stockForVariant),
       sku: `${product.unique_code}-${index + 1}`,
-      images: baseImage ? [{ image_url: baseImage, is_main: true }] : undefined,
+      images: baseImage ? buildGallerySlides(baseImage) : undefined,
       attributes,
     };
   });
+}
+
+const GALLERY_SLIDE_COUNT = 5;
+
+// Placeholder extra angles for testing the mobile gallery's dot pagination.
+// The product's own photo is always slide 1 — these are generic stock
+// photos, not the product, so swap them out once real multi-angle shots
+// exist.
+const GALLERY_TEST_IMAGES = [
+  "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&h=600&q=80",
+  "https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&w=600&h=600&q=80",
+  "https://images.unsplash.com/photo-1516762689617-e1cffcef479d?auto=format&fit=crop&w=600&h=600&q=80",
+  "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=600&h=600&q=80",
+];
+
+function buildGallerySlides(
+  ownImage: string,
+): { image_url: string; is_main: boolean; image_order: number }[] {
+  const slides = [ownImage, ...GALLERY_TEST_IMAGES].slice(
+    0,
+    GALLERY_SLIDE_COUNT,
+  );
+
+  return slides.map((url, index) => ({
+    image_url: url,
+    is_main: index === 0,
+    image_order: index,
+  }));
 }
 
 function buildGalleryImages(
@@ -1308,11 +1336,9 @@ function buildGalleryImages(
 ): { image_url: string; is_main: boolean; image_order: number }[] {
   const own = typeof product.images === "string" ? product.images : undefined;
 
-  // Only ever show this product's own photo — never borrow another
-  // product's image just to pad out a "multi-angle" gallery.
   if (!own) return [];
 
-  return [{ image_url: own, is_main: true, image_order: 0 }];
+  return buildGallerySlides(own);
 }
 
 export interface StaticProductDetail extends Product {
