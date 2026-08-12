@@ -740,9 +740,9 @@ const Cart = () => {
               return (
                 <div
                   key={item.id}
-                  className={`md:w-full lg:border-b lg:border-[#e4e3e3] lg:last:border-b-0 lg:px-6 lg:py-5 ${!item.is_active ? "opacity-60" : ""}`}
+                  className={`w-full lg:border-b lg:border-[#e4e3e3] lg:last:border-b-0 lg:px-6 lg:py-5 ${!item.is_active ? "opacity-60" : ""}`}
                 >
-                  <div className="lg:hidden w-[358px] mx-auto md:w-full rounded-[8px] bg-white shadow-[0px_0px_14px_0px_#00000014] p-4 overflow-hidden">
+                  <div className="lg:hidden w-full rounded-[8px] bg-white shadow-[0px_0px_14px_0px_#00000014] p-4 overflow-hidden">
                     <div className="flex flex-row gap-3">
                       <div className="shrink-0 w-[84px] h-[84px]">
                         {item.is_active &&
@@ -877,7 +877,7 @@ const Cart = () => {
 
         <div
           ref={orderSummaryRef}
-          className="w-[358px] mx-auto md:mx-0 md:w-full xl:w-[488px] xl:min-h-[522px] flex flex-col xl:sticky xl:top-24 xl:self-start mb-4"
+          className="w-full xl:w-[488px] xl:min-h-[522px] flex flex-col xl:sticky xl:top-24 xl:self-start mb-4"
         >
           <div className="bg-white rounded-[8px] shadow-[0px_0px_14px_rgba(0,0,0,0.08)] p-6 flex flex-col">
             <div className="flex items-center justify-between mb-5">
