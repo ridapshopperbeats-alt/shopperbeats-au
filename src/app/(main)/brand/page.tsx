@@ -113,8 +113,9 @@ export default async function BrandsSection() {
 
             return brand;
           })
-          .filter((brand: Brand | undefined) => brand && brand.logo_url)
+          .filter((brand: Brand | undefined): brand is Brand => !!brand)
           .map((brand: Brand) => {
+            const logoSrc = brand.logo_url || brand.image_url || "/no-product-bg.svg";
             return (
               <Link
                 key={brand.id}
@@ -147,7 +148,7 @@ export default async function BrandsSection() {
                 {/* Logo */}
                 <div className="relative z-10 flex items-center justify-center">
                   <Image
-                    src={brand.logo_url!}
+                    src={logoSrc}
                     alt={brand.name}
                     width={140}
                     height={80}

@@ -299,7 +299,7 @@ export default function StaticProductCards({
           {staticProducts.map((product) => (
             <div
               key={product.id}
-              className="group relative flex w-[160px] sm:w-[190px] h-[360px] sm:h-[380px] shrink-0 flex-col overflow-hidden rounded-[7px]"
+              className="group relative flex w-[160px] sm:w-[190px] h-[370px] sm:h-[380px] shrink-0 flex-col overflow-hidden rounded-[7px]"
             >
               {renderTag(product.tag)}
 
@@ -317,7 +317,7 @@ export default function StaticProductCards({
 
               <Link
                 href={`/static-product/${product.slug}`}
-                className="flex h-full max-h-[360px] sm:max-h-[380px] flex-col no-underline text-inherit"
+                className="flex h-full max-h-[370px] sm:max-h-[380px] flex-col no-underline text-inherit"
               >
                 <div className="relative w-full h-[150px] sm:h-[180px] shrink-0 overflow-hidden rounded-t-[7px] bg-[#F5F5F5]">
                   <Image
@@ -348,7 +348,7 @@ export default function StaticProductCards({
                         ${product.wasPrice}
                       </span>
 
-                      <span className="text-[12px] font-semibold text-[#008F11]">
+                      <span className="text-[10px] font-semibold text-[#008F11]">
                         {product.saveAmount}% OFF
                       </span>
                     </div>
