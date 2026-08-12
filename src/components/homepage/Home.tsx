@@ -35,7 +35,7 @@ const Home = async () => {
 
         <PopularCategories />
 
-        <div className="container pt-4 md:py-3 lg:py-3">
+        <div className="container pt-4 md:py-3 lg:py-2">
           {/* {trendingProducts.length > 0 && (
             <ProductCarousel
               title="Trending Products"

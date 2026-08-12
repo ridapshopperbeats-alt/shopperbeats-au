@@ -422,7 +422,7 @@ export default function StaticProductCards({
           return (
             <div
               key={product.id}
-              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[530px] flex flex-col justify-start overflow-hidden rounded-[7px] mb-2"
+              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[520px] flex flex-col justify-start overflow-hidden rounded-[7px] mb-2"
             >
               {renderTag(product.tag)}
 
