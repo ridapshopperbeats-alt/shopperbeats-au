@@ -161,7 +161,7 @@ const StaticProductDisplay: React.FC<StaticProductDisplayProps> = ({
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-5 lg:gap-6  ">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-5">
             {products.map((product) => {
               const priceInfo = getPriceDetails(product);
 
