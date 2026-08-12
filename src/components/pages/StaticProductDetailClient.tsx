@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import Button from "@/components/common/Button";
+import { StatusBadge, BadgeColor } from "@/components/common/StatusBadge";
 import CartCheckoutDrawer from "@/components/cart/CartCheckoutDrawer";
 import ProductGallery from "../product-listing/ProductGallery";
 import Accordion from "../common/Accordion";
@@ -50,6 +51,7 @@ import {
   getStaticProductShippingCost,
   getStaticRelatedProducts,
 } from "@/lib/utils/staticCategoryData";
+import StarRating from "../common/StarRating";
 
 export default function StaticProductDetailClient({ slug }: { slug: string }) {
   const product = useMemo(() => getStaticProductDetail(slug), [slug]);
@@ -158,7 +160,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
       return (
         <div key={attrName} className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <label className=" fluid-text-sm  font-bold text-[#1D265F]">
+            <label className="fluid-text-xs  font-bold text-[#1D265F]">
               {attrLabel}
               {selectedAttributes[attrName] && (
                 <span> : {selectedAttributes[attrName]}</span>
@@ -169,9 +171,9 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
               <button
                 type="button"
                 onClick={() => setShowSizeGuide(true)}
-                className="inline-flex items-center gap-1 whitespace-nowrap underline fluid-text-sm font-bold leading-[14px] text-[#0B38D7] cursor-pointer"
+                className="inline-flex items-center gap-1 whitespace-nowrap underline fluid-text-xs font-bold leading-[14px] text-[#0B38D7] cursor-pointer"
               >
-                <Pencil size={16} className="shrink-0" />
+                <Pencil size={18} className="shrink-0" />
                 Size Guide
               </button>
             )}
@@ -190,7 +192,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                   onClick={() => handleAttributeChange(attrName, item.value)}
                   aria-label={item.value}
                   title={item.value}
-                  className={`min-w-10 px-2 h-10 rounded-[8px] border cursor-pointer whitespace-nowrap fluid-text-sm font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                  className={`min-w-10 px-2 h-10 rounded-[8px] border cursor-pointer whitespace-nowrap fluid-text-xs font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
                     isSelected
                       ? "border-[#FD151B] text-[#FD151B]"
                       : "border-[#CCCCCC] text-[#1D265F]/50"
@@ -458,15 +460,19 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                         (selectedVariant
                           ? selectedVariant.stock
                           : product.stock)! < 5 && (
-                          <div className="promotion-badge low-stock-badge">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src="/images/low-stock.svg"
-                              alt="Low Stock"
-                              className="badge-img"
-                            />
-                            <span className="badge-text">LOW STOCK</span>
-                          </div>
+                          <StatusBadge
+                            label="LOW STOCK"
+                            color={BadgeColor.BlueDark}
+                            icon={
+                              <Image
+                                src="/images/low-stock.svg"
+                                alt="Low Stock"
+                                width={14}
+                                height={14}
+                                className="brightness-0 invert"
+                              />
+                            }
+                          />
                         )}
                       {/* {product.tags && product.tags.length > 0 && (
                         <Button className="bg-[#01295F] text-white text-[10px] md:text-[12px] font-medium px-2 py-1 rounded-[5px] capitalize">
@@ -495,6 +501,16 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                     <span className="fluid-text-14-24  font-medium text-[#535766] line-through self-center">
                       ${formatPrice(wasPrice)}
                     </span>
+                    {/* <div className="flex text-[12px] font-medium items-center leading-[18px] gap-1">
+                      {rating > 0 && (
+                        <>
+                          <StarRating rating={rating} size={13} />
+                          <span className="text-[#535766] leading-none">
+                            ({reviewCount})
+                          </span>
+                        </>
+                      )}
+                    </div> */}
                   </div>
                   <span className="fluid-text-12-14 leading-[16px] lg:leading-[26px] font-semibold">
                     <span className="bg-[#EEF8F0] inline-flex w-[84px] h-[30px] text-center items-center justify-center  text-[#267A03]  font-bold  rounded-[5px]">
@@ -773,10 +789,10 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 </div>
                 {productFeatures.length > 0 && (
                   <div className="hidden lg:flex flex-col lg:pt-2">
-                    <span className="fluid-text-base font-bold leading-[19px] text-[#333333]">
+                    <span className="fluid-text-sm font-bold leading-[19px] text-[#333333]">
                       Features :
                     </span>
-                    <ul className="list-disc pl-5 mt-2 flex flex-col gap-2 fluid-text-sm leading-[24px] text-[#333333]">
+                    <ul className="list-disc pl-5 mt-2 flex flex-col gap-2 fluid-text-xs leading-[24px] text-[#333333]">
                       {productFeatures.slice(0, 6).map((feature, index) => (
                         <li key={index}>{feature}</li>
                       ))}
@@ -900,9 +916,9 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
               </div>
 
               {!isOutOfStock && (
-                <p className="font-bold text-[#1D265F] fluid-text-sm">
+                <p className="font-bold text-[#1D265F] fluid-text-xs">
                   Delivery Fee - ${formatPrice(shippingCharge)}{" "}
-                  <span className="fluid-text-sm font-normal text-[#1A2553] leading-[20px]">
+                  <span className="fluid-text-xs font-normal text-[#1A2553] leading-[20px]">
                     ({estimatedDeliveryRange})
                   </span>
                 </p>
@@ -939,7 +955,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                   <button
                     type="button"
                     onClick={() => setShowLocationPopup(true)}
-                    className="fluid-text-sm font-bold text-[#0B38D7]  cursor-pointer shrink-0"
+                    className="fluid-text-xs font-bold text-[#0B38D7]  cursor-pointer shrink-0"
                   >
                     Change
                   </button>
@@ -954,7 +970,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                     htmlFor="product-quantity-desktop"
                     className="pdp-field-label"
                   >
-                    Quantity:
+                    Quantity :
                   </label>
                   {(() => {
                     const stockValue = selectedVariant
@@ -998,7 +1014,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                       >
                         &minus;
                       </button>
-                      <span className="fluid-text-sm font-bold text-black">
+                      <span className="fluid-text-xs font-bold text-black">
                         {quantity}
                       </span>
                       <button
