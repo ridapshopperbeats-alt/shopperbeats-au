@@ -273,10 +273,10 @@ export default function CustomerRatingViewPage({
                   if (dragState.current.moved) return;
                   handleTabClick(tab);
                 }}
-                className={` shrink-0 h-[30px] md:h-[38px] px-2 md:px-5 rounded-full text-[10px] md:text-[13px] font-semibold border items-center justify-center cursor-pointer whitespace-nowrap transition-colors ${
+                className={` flex-1 xl:flex-none xl:shrink-0 h-[30px] md:h-[38px] px-2 md:px-5 rounded-full fluid-text-xs font-bold border items-center justify-center cursor-pointer whitespace-nowrap transition-colors ${
                   currentTab === tab
                     ? "bg-[#FD151B] border-[#FD151B] text-white"
-                    : "bg-white border-[#E2E2E2] text-black"
+                    : "bg-white border-[#E2E2E2] text-[#000000]"
                 }`}
               >
                 {tab}
@@ -286,7 +286,7 @@ export default function CustomerRatingViewPage({
 
           <div className="hidden xl:block w-auto 2xl:w-[240px] shrink-0">
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="h-[32px] w-full max-w-none rounded-[20px] border border-[#001325]/64 bg-white pl-4 pr-9 shadow-none focus:ring-0">
+              <SelectTrigger className="h-[32px] w-full max-w-none rounded-[152px] border border-[#001325A3]/64 bg-white pl-4 pr-9 shadow-none focus:ring-0">
                 <div className="flex items-center gap-2 flex-1">
                   <ArrowUpDown size={18} className="text-[#001325]/64 shrink-0" />
 
@@ -362,7 +362,7 @@ export default function CustomerRatingViewPage({
 
             <div className="flex items-center gap-2 mt-1">
               <StarRating rating={averageRating} size={16} />
-              <span className="text-[13px] text-[#211E22]">
+              <span className="fluid-text-xs text-[#211E22] font-normal leading-[18px]">
                 {totalReviews.toLocaleString()}{" "}
                 {totalReviews === 1 ? "Review" : "Reviews"}
               </span>
@@ -372,19 +372,18 @@ export default function CustomerRatingViewPage({
               {ratingBreakdown.map((row) => (
                 <div
                   key={row.stars}
-                  className="flex items-center gap-2 text-[13px] font-normal leading-[18px] text-[#535766]"
+                  className="flex items-center gap-2 fluid-text-xs font-normal leading-[18px] text-[#535766]"
                 >
-                  <span className="w-10 shrink-0">{row.stars} Star</span>
+                  <span className="w-12 shrink-0 whitespace-nowrap">
+                    {row.stars} Star
+                  </span>
                   <div className="flex-1 rounded-[12px] bg-[#DBDEE1] overflow-hidden h-[10px]">
                     <div
                       className="h-full bg-[#FBBC05] rounded-[12px]"
                       style={{ width: `${row.percent}%` }}
                     />
                   </div>
-                  <span
-                    className="w-9 shrink-0  text-[13px] font-normal leading-[18px] text-[#535766] 
-                  "
-                  >
+                  <span className="w-9 shrink-0 fluid-text-xs font-normal leading-[18px] text-[#535766]">
                     {row.count}
                   </span>
                 </div>
@@ -485,13 +484,13 @@ export default function CustomerRatingViewPage({
                         alt="Reviewed product"
                         width={75}
                         height={75}
-                        className="rounded-[6px] w-14 h-14 object-cover shrink-0"
+                        className="rounded-[5px] bg-[lightgray] object-cover object-center w-14 h-14 shrink-0"
                       />
                     </div>
                   </div>
 
                   {/* Desktop (lg and up): original layout with avatar + product image */}
-                  <div className="hidden lg:flex items-start gap-3">
+                  <div className="hidden lg:flex items-start gap-3 pb-3 border-b border-[#ECECEC]">
                     <Image
                       src={
                         review.reviewer_profile_image ||
@@ -535,7 +534,7 @@ export default function CustomerRatingViewPage({
                       alt="Reviewed product"
                       width={75}
                       height={75}
-                      className="rounded-[6px] w-14 h-14 object-cover shrink-0"
+                      className="rounded-[5px] bg-[lightgray] object-cover object-center w-14 h-14 shrink-0"
                     />
                   </div>
                 </div>

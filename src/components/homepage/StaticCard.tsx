@@ -339,7 +339,7 @@ export default function StaticProductCards({
                       {limitWords(product.title)}
                     </p>
 
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5  lg:h-4 lg:py-3">
+                    <div className="flex items-center gap-x-1 gap-y-1  lg:h-4 lg:py-3">
                       <span className="fluid-text-16-20 font-semibold text-[#052B56]">
                         ${product.mainPrice}
                       </span>
@@ -348,7 +348,7 @@ export default function StaticProductCards({
                         ${product.wasPrice}
                       </span>
 
-                      <span className="fluid-text-9-10 text-[#008F11]">
+                      <span className="text-[12px] font-semibold text-[#008F11]">
                         {product.saveAmount}% OFF
                       </span>
                     </div>
@@ -361,25 +361,25 @@ export default function StaticProductCards({
                     </div>
 
                     {!product.isOutOfStock && (
-                      <div className="flex flex-col gap-1 fluid-text-11-12 text-[#535252] mt-1 lg:mt-0">
+                      <div className="flex flex-col text-12px text-[#535252] lg:mt-0">
                         <p className="truncate">
-                          Delivery Fee - ${product.shippingCharge}
+                          Delivery Fee - <span className="!font-medium">${product.shippingCharge}</span>
                         </p>
                         <p className="font-normal text-[#535766]">
                           Estimated delivery between{" "}
-                          <span className="font-medium">
+                          <span className="!font-medium">
                             {getEstimatedDeliveryRange(undefined, 0)}
                           </span>
                         </p>
                       </div>
                     )}
 
-                    <p className="font-normal fluid-text-11-12 leading-[16px] text-[#ff4400] mt-1 lg:mt-0 truncate">
+                    <p className="font-medium text-12px leading-[16px] text-[#ff4400] lg:mt-0 truncate mt-1">
                       Extra 10% Off with Code: SHBS10
                     </p>
                   </div>
 
-                  <div className="w-full px-2 flex justify-center mt-2">
+                  <div className="w-full px-2 flex justify-center mt-1">
                     <button
                       type="button"
                       onClick={(e) => {
@@ -458,7 +458,7 @@ export default function StaticProductCards({
                       {product.brand_name}
                     </h4>
 
-                    <p className="fluid-text-sm  text-[#878787]">
+                    <p className="fluid-text-xs text-[#878787] leading-[18px]">
                       {limitWords(product.title)}
                     </p>
 
@@ -467,28 +467,28 @@ export default function StaticProductCards({
                         ${product.mainPrice}
                       </span>
 
-                      <span className="fluid-text-xs line-through text-[#535766]">
+                      <span className="text-12px font-[300] line-through text-[#535766]">
                         ${product.wasPrice}
                       </span>
 
-                      <span className="fluid-text-xs text-[#008F11]">
+                      <span className="text-12px text-[#008F11] leading-[18px] font-normal capitalize">
                         {product.saveAmount}% OFF
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1 fluid-text-xs">
+                    <div className="flex items-center gap-1 text-12px capitalize">
                       <StarRating rating={product.rating} size={13} />
                       <span className="text-[#535766]">
                         ({product.reviewCount})
                       </span>
                     </div>
 
-                    <div className="fluid-text-12-13 text-[#535252] flex flex-col">
+                    <div className="fluid-text-xs text-[#535252] flex flex-col">
                       {!product.isOutOfStock && (
                         <div className="leading-[18px] flex flex-col gap-[2px]">
                           <p className="font-normal text-[#535252]">
                             Delivery Fee -
-                            <span className="font-medium">
+                            <span className="!font-medium">
                               ${product.shippingCharge}
                             </span>
                           </p>

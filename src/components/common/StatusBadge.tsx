@@ -6,6 +6,7 @@ export enum BadgeColor {
   Red = "red",
   Orange = "orange",
   Gray = "gray",
+  BlueDark = "blue-dark",
 }
 
 const BADGE_COLOR_STYLES: Record<BadgeColor, string> = {
@@ -14,16 +15,18 @@ const BADGE_COLOR_STYLES: Record<BadgeColor, string> = {
   [BadgeColor.Red]: "bg-[#FDECEC] text-[#fd151b]",
   [BadgeColor.Orange]: "bg-[#FFF4E5] text-[#B76E00]",
   [BadgeColor.Gray]: "bg-[#F3F4F6] text-[#6A7282]",
+  [BadgeColor.BlueDark]: "bg-[#01295F] text-[#FFFFFF]",
 };
 
 export interface StatusBadgeProps {
   label: string;
   color: BadgeColor;
   showDot?: boolean;
+  icon?: React.ReactNode;
   className?: string;
 }
 
-export function StatusBadge({ label, color, showDot = true, className }: Readonly<StatusBadgeProps>) {
+export function StatusBadge({ label, color, showDot = true, icon, className }: Readonly<StatusBadgeProps>) {
   return (
     <span
       className={cn(
@@ -32,7 +35,9 @@ export function StatusBadge({ label, color, showDot = true, className }: Readonl
         className,
       )}
     >
-      {showDot && <span className="h-1.5 w-1.5 rounded-full bg-current" />}
+      {icon
+        ? icon
+        : showDot && <span className="h-1.5 w-1.5 rounded-full bg-current" />}
       {label}
     </span>
   );
