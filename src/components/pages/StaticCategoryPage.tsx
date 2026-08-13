@@ -13,7 +13,7 @@ import {
   addBreadcrumb,
 } from "@/lib/redux/slices/breadcrumb-slice";
 
-import { Product } from "@/types/product";
+import { Filter, Product } from "@/types/product";
 
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
 
@@ -35,7 +35,9 @@ import {
   findStaticCategoryBySlug,
   getStaticProductsForCategory,
 } from "@/lib/utils/staticCategoryData";
-import type { Filter } from "@/types/product";
+// import type { Category, Filter } from "@/types/product";
+// import { API_ENDPOINTS } from "@/lib/constants/api";
+
 
 const Sidebar = dynamic(() => import("../product-listing/Sidebar"), {
   loading: DynamicImportLoader,
@@ -140,11 +142,88 @@ interface StaticCategoryPageProps {
   slug?: string;
 }
 
+const dummySliderCategories = [
+  {
+    title: "Women's Clothing",
+    image: "/images/womentop.png",
+    slug: "womens-clothing",
+    product_count: 10,
+  },
+  {
+    title: "Fragrance",
+    image: "/images/fragrance.png",
+    slug: "fragrance",
+    product_count: 8,
+  },
+  {
+    title: "Furniture",
+    image: "/images/furniture.png",
+    slug: "furniture",
+    product_count: 12,
+  },
+  {
+    title: "Patio Furniture",
+    image: "/images/patioFurniture.png",
+    slug: "patio-furniture",
+    product_count: 6,
+  },
+  {
+    title: "Baby & Kids",
+    image: "/images/baby-kids.png",
+    slug: "baby-kids",
+    product_count: 15,
+  },
+  {
+    title: "Home Decor",
+    image: "/images/homeDecor.png",
+    slug: "home-decor",
+    product_count: 9,
+  },
+  {
+    title: "Jewelry",
+    image: "/images/jewelry.png",
+    slug: "jewelry",
+    product_count: 11,
+  },
+  {
+    title: "Men's Clothing",
+    image: "/images/menClothing.png",
+    slug: "mens-clothing",
+    product_count: 14,
+  },
+  {
+    title: "Footwear",
+    image: "/images/footwear.png",
+    slug: "footwear",
+    product_count: 7,
+  },
+  {
+    title: "Watches",
+    image: "/images/watches.png",
+    slug: "watches",
+    product_count: 5,
+  },
+  {
+    title: "Children Clothing",
+    image: "/images/baby-kids.png",
+    slug: "children-clothing",
+    product_count: 8,
+  },
+  {
+    title: "Fashion",
+    image: "/images/womentop.png",
+    slug: "fashion",
+    product_count: 13,
+  },
+];
+
 const StaticCategoryPage = ({ slug }: StaticCategoryPageProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
+
+  const [sliderCategories] = useState(dummySliderCategories);
 
   const category = useMemo(
     () =>
@@ -287,7 +366,7 @@ const StaticCategoryPage = ({ slug }: StaticCategoryPageProps) => {
     [pathname, router, searchParams],
   );
 
-  const sliderCategories = useMemo(
+  const fallbackSliderCategories = useMemo(
     () =>
       staticMegaMenuCategories.flatMap(
         (topCategory) =>
@@ -303,9 +382,70 @@ const StaticCategoryPage = ({ slug }: StaticCategoryPageProps) => {
     [],
   );
 
+  // const [sliderCategories, setSliderCategories] = useState(
+  //   fallbackSliderCategories,
+  // );
+
+  // useEffect(() => {
+  //   let isMounted = true;
+
+  //   async function loadCategories() {
+  //     try {
+  //       const res = await fetch(
+  //         `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.CATEGORIES.LIST}`,
+  //       );
+
+  //       if (!res.ok) return;
+
+  //       const data: Category[] = await res.json();
+  //       const topLevel = (Array.isArray(data) ? data : []).filter(
+  //         (category) => !category.parent_id,
+  //       );
+
+  //       if (!isMounted || topLevel.length === 0) return;
+
+  //       setSliderCategories(
+  //         topLevel.map((category) => ({
+  //           title: category.name,
+  //           image:
+  //             category.icon_url ||
+  //             category.image_url ||
+  //             "/images/image-coming-soon.jpg",
+  //           slug: category.slug ?? category.id,
+  //           product_count: category.product_count ?? 0,
+  //         })),
+  //       );
+  //     } catch (error) {
+  //       console.error("Error fetching top categories:", error);
+  //     }
+  //   }
+
+  //   loadCategories();
+
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, []);
+
+
+
   return (
     <div className="container">
       {sliderCategories.length > 0 && (
+        // <StaticTopCategoriesSlider
+        //   title="Top Categories"
+        //   items={sliderCategories}
+        //   onCategoryClick={(item) =>
+        //     dispatch(
+        //       addBreadcrumb({
+        //         name: item.title,
+        //         path: `/static-category/${item.slug}`,
+        //       }),
+        //     )
+        //   }
+        //   getHref={(item) => `/static-category/${item.slug}`}
+        // />
+
         <StaticTopCategoriesSlider
           title="Top Categories"
           items={sliderCategories}

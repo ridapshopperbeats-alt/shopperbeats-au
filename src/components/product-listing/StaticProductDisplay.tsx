@@ -120,9 +120,9 @@ const StaticProductDisplay: React.FC<StaticProductDisplayProps> = ({
                 </div>
               )}
 
-              <div className="w-fit md:ml-auto">
-                 <Select value={sortBy} onValueChange={onSortChange}>
-                  <SelectTrigger className="h-[32px] w-full max-w-none rounded-[20px] border border-[#001325]/64 bg-white pl-4 pr-9 shadow-none focus:ring-0">
+              <div className="w-[241px] md:ml-auto">
+                <Select value={sortBy} onValueChange={onSortChange}>
+                  <SelectTrigger className="h-[32px] w-full max-w-none rounded-[20px] border border-[#001325]/64 bg-white px-4 shadow-none focus:ring-0">
                     <div className="flex items-center gap-2 flex-1">
                       <ArrowUpDown size={18} className="text-[#001325]/64 shrink-0" />
 
@@ -130,19 +130,19 @@ const StaticProductDisplay: React.FC<StaticProductDisplayProps> = ({
                         Sort by :
                       </span>
 
-                      <SelectValue placeholder="Price" />
+                      <SelectValue placeholder="Price" className="text-[12px]! font-normal leading-[18px] whitespace-nowrap" />
                     </div>
                   </SelectTrigger>
 
                   <SelectContent
                     position="popper"
-                    className="w-[240px] max-w-[230px] border !border-[#F6F6F6] bg-white p-2 shadow-[#000000]/25 rounded-[5px] ring-0 outline-none focus:outline-none focus:ring-0 text-[14px] font-normal leading-[17px] "
+                    className="w-[240px] max-w-[230px] border border-[#F6F6F6]! bg-white p-2 shadow-[#000000]/25 rounded-[5px] ring-0 outline-none focus:outline-none focus:ring-0 text-[12px]! font-normal leading-[17px] "
                   >
                     {SORT_OPTIONS.map((option) => (
                       <SelectItem
                         key={option.value}
                         value={option.value}
-                        className="mb-2"
+                        className="mb-2 rounded-none"
                       >
                         {option.desktopLabel ?? option.label}
                       </SelectItem>
