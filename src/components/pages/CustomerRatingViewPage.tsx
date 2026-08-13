@@ -306,7 +306,7 @@ export default function CustomerRatingViewPage({
                   <SelectItem
                     key={option.value}
                     value={option.value}
-                    className="mb-2"
+                    className="mb-2 rounded-none"
                   >
                     {option.label}
                   </SelectItem>
