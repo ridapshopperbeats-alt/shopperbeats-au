@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { API_ENDPOINTS } from "@/lib/constants/api";
+import type { Category } from "@/types/product";
 
 interface NewTopCategoryItem {
   title: string;
@@ -11,7 +13,7 @@ interface NewTopCategoryItem {
   href: string;
 }
 
-const NEW_TOP_CATEGORIES: NewTopCategoryItem[] = [
+const FALLBACK_TOP_CATEGORIES: NewTopCategoryItem[] = [
   {
     title: "Women's Clothing",
     image: "/images/womentop.png",
@@ -76,6 +78,63 @@ const NEW_TOP_CATEGORIES: NewTopCategoryItem[] = [
 
 export default function NewTopCategories() {
   const sliderRef = useRef<HTMLDivElement>(null);
+  const [categories, setCategories] = useState<NewTopCategoryItem[]>(
+    FALLBACK_TOP_CATEGORIES,
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadCategories() {
+      try {
+        const url = `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.CATEGORIES.LIST}`;
+
+        console.log("CATEGORY API URL:", url);
+
+        const res = await fetch(url);
+
+        console.log("CATEGORY API STATUS:", res.status);
+        console.log("CATEGORY API OK:", res.ok);
+
+        if (!res.ok) return;
+
+        const data: Category[] = await res.json();
+
+        console.log("CATEGORY API RESULT:", data);
+        console.log("CATEGORY COUNT:", data.length);
+
+        const topLevel = (Array.isArray(data) ? data : []).filter(
+          (category) => !category.parent_id,
+        );
+
+        console.log("TOP LEVEL CATEGORIES:", topLevel);
+        console.log("TOP LEVEL COUNT:", topLevel.length);
+
+        if (!isMounted || topLevel.length === 0) return;
+
+        const mappedCategories = topLevel.map((category) => ({
+          title: category.name,
+          image:
+            category.icon_url ||
+            category.image_url ||
+            "/images/image-coming-soon.jpg",
+          href: `/category/${category.slug}`,
+        }));
+
+        console.log("MAPPED CATEGORIES:", mappedCategories);
+
+        setCategories(mappedCategories);
+      } catch (error) {
+        console.error("Error fetching top categories:", error);
+      }
+    }
+
+    loadCategories();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleScroll = (direction: "left" | "right") => {
     if (!sliderRef.current) return;
@@ -113,7 +172,7 @@ export default function NewTopCategories() {
           ref={sliderRef}
           className="flex items-start gap-[16px] lg:gap-[35px] overflow-x-auto scroll-smooth no-scrollbar py-6"
         >
-          {NEW_TOP_CATEGORIES.map((item) => (
+          {categories.map((item) => (
             <Link
               key={item.title}
               href={item.href}
