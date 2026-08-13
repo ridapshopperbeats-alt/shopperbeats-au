@@ -401,7 +401,7 @@ export default function StaticProductCards({
       <button
         type="button"
         onClick={() => handleScroll("left")}
-        className="hidden lg:flex absolute -left-3 top-1/2 -translate-y-1/2 z-[999] items-center justify-center w-9 h-9 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed translate-x-[-12px]"
+        className="hidden lg:flex absolute -left-3 top-1/2 -translate-y-1/2 z-[999] items-center justify-center w-9 h-9 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed translate-x-[-12px] cursor-pointer"
       >
         <ChevronLeft size={18} className="text-black" />
       </button>
@@ -409,7 +409,7 @@ export default function StaticProductCards({
       <button
         type="button"
         onClick={() => handleScroll("right")}
-        className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-[999] items-center justify-center w-9 h-9 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
+        className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-[999] items-center justify-center w-9 h-9 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
       >
         <ChevronRight size={18} className="text-black" />
       </button>
