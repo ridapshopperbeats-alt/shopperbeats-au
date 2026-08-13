@@ -368,6 +368,12 @@ export default function Header({ megaMenuData }: HeaderProps) {
     pathname === "/user/addresses" ||
     pathname === "/check-out";
 
+  // Checkout has its own minimal header (see CheckoutHeader) instead of the
+  // full site header.
+  if (pathname === "/check-out") {
+    return null;
+  }
+
   return (
     <div className="header-fixed ">
       <div className="container flex flex-col">
