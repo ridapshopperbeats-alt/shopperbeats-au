@@ -277,6 +277,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                       placeholder="Name on Card"
                       value={formData.cardholderName}
                       onChange={handleChange}
+                      className="bg-white"
                     />
                   </div>
                 </div>
@@ -453,6 +454,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                       onChange={handlePhoneChange}
                       maxLength={12}
                       error={formErrors.billingPhone}
+                      className="bg-white"
                     />
                   </div>
                 </div>

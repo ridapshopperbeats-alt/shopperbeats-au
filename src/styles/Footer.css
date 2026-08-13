@@ -41,7 +41,7 @@ footer p {
 }
 
 .footer-block.footer-newsletter form button {
-  @apply bg-[var(--secondary)] px-5 py-0 h-[38px] rounded-[8px] flex items-center justify-center shrink-0 cursor-pointer;
+  @apply bg-[var(--secondary)] px-5 py-0 h-auto rounded-[8px] flex items-center justify-center shrink-0 cursor-pointer;
 }
 
 .footer-block.footer-newsletter form button:hover {

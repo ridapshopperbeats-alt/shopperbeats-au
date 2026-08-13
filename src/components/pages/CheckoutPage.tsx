@@ -12,6 +12,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import CheckoutForm from "@/components/check-out/CheckoutForm";
+import CheckoutHeader from "@/components/check-out/CheckoutHeader";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 import Button from "@/components/common/Button";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
@@ -783,6 +784,7 @@ export default function SecureCheckout() {
 
   return (
     <div className="lg:py-7">
+      <CheckoutHeader />
       <h1 className="font-extrabold text-xl md:text-2xl leading-[normal] tracking-[normal] text-center capitalize text-black mb-6 pt-5 lg:pt-0">
         Secure Checkout
       </h1>
