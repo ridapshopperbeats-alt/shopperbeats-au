@@ -23,6 +23,7 @@ import {
   Sparkles,
   Armchair,
   Home,
+  Gem,
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
@@ -720,7 +721,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <Gamepad2 size={16} className="inline-block" />
+                  <Gem size={16} className="inline-block" />
                   Best Sellers
                 </Link>
               </li>

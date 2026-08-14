@@ -24,13 +24,6 @@ const montserrat = Montserrat({
   weight: ["400", "500", "600", "700"],
 });
 
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
-};
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -49,7 +42,7 @@ export const metadata: Metadata = {
     "kids toys",
     "health and beauty",
     "sport & outdoor",
-    "mobile",
+    "mobile"
   ],
   robots: {
     index: true,
@@ -98,7 +91,6 @@ export default function RootLayout({
           src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&libraries=places&v=beta`}
           strategy="afterInteractive"
         />
-
         <StoreProvider>
           <SEOProvider>{children}</SEOProvider>
           <RouteChangeLoader />
