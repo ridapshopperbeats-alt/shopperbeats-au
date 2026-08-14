@@ -233,6 +233,10 @@
   gap: 75px;
 }
 
+.bottom-head ul.menu li {
+  flex-shrink: 0;
+}
+
 .bottom-head ul.menu a.link {
   font-family: var(--font-montserrat);
   font-weight: 700;
@@ -240,6 +244,7 @@
   line-height: 100%;
   letter-spacing: 0%;
   color: var(--black);
+  white-space: nowrap;
 }
 
 .bottom-head ul.menu a.link:hover {
@@ -263,6 +268,8 @@
   align-items: center;
   gap: 5px;
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
   /* border-radius:30px 0px 0px 30px; */
 }
 
@@ -727,20 +734,6 @@ nav.navbar {
 
 @media screen and (min-width: 1400px) and (max-width: 1499px) {
 
-
-  .megamenuBtn {
-    font-size: 13px;
-  }
-
-  .bottom-head ul.menu a.link {
-    font-size: 14px !important;
-  }
-
-  .bottom-head ul.menu {
-    gap: 25px;
-  }
-
-
   .search-block {
     min-width: 405px;
   }
@@ -763,21 +756,15 @@ nav.navbar {
   }
 }
 
-@media screen and (min-width: 1201px) and (max-width: 1439px) {
-
+@media screen and (min-width: 1201px) and (max-width: 1680px) {
   .bottom-head ul.menu a.link,
   .megamenuBtn {
     font-size: 14px !important;
   }
 
-  .bottom-head ul.menu a.link {
-    font-size: 14px !important;
-  }
-
   .bottom-head ul.menu {
-    gap: 13px;
+    gap: 10px;
   }
-
 }
 
 @media screen and (max-width: 1200px) {

@@ -77,6 +77,18 @@ body {
   font-family: Montserrat !important;
 }
 
+/* Radix popups (Select, etc.) lock body scroll while open via
+   react-remove-scroll, which compensates for the removed scrollbar by
+   injecting margin/padding on body. Mobile has no reserved scrollbar
+   width, so that compensation should always be zero — forcing it here
+   stops the rest of the page visibly shifting when the popup closes. */
+body[data-scroll-locked] {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+  padding-left: 0 !important;
+}
+
 :root {
   --black: #000000;
   --white: #fff;
@@ -878,10 +890,6 @@ input[type="radio"] {
 }
 
 @media screen and (max-width: 767px) {
-  .container {
-    @apply px-5;
-  }
-
   .swipper-btn-left {
     @apply -left-3;
   }
