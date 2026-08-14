@@ -868,6 +868,12 @@ input[type="radio"] {
   }
 }
 
+@media screen and (max-width: 767px) {
+  .container {
+    @apply px-5;
+  }
+}
+
 @media screen and (max-width: 1199px) {
   .sidebar {
     @apply !w-full;
