@@ -91,7 +91,10 @@ const DynamicHead = ({ metadata, cookie_logo }: { metadata: MetaInfo, cookie_log
     <>
       <Head>
         <title>{title || "ShopperBeats"}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+        />
         <meta name="robots" content={robots || "index, follow"} />
         {canonical_url && <link rel="canonical" href={canonical_url} />}
         {description && <meta name="description" content={description} />}
