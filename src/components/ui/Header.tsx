@@ -377,7 +377,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
   return (
     <div className="header-fixed ">
-      <div className="xl:px-[40px] flex flex-col">
+      <div className="lg:px-[40px] flex flex-col">
         <div className={`top-head ${hideSearch ? "no-search" : ""}`}>
           <div className="logo-block ">
             <div

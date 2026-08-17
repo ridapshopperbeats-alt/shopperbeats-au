@@ -6,6 +6,7 @@ import Link from "next/link";
 import { X } from "lucide-react";
 import { CartCheckoutDrawerProps } from "@/types/cart";
 import { getImageUrl, formatPrice, getPriceDetails } from "@/lib/utils/main-utils";
+import { getHandlingDeliveryRange } from "@/lib/utils/get-handling-delivery-range";
 import "@/styles/Cart.css";
 
 export default function CartCheckoutDrawer({
@@ -122,8 +123,8 @@ export default function CartCheckoutDrawer({
                   </p>
                   <p className="cart-drawer-item-handling">
                     {item.handling_time_days === 1
-                      ? "Leaves Warehouse In Next Business Day"
-                      : `Leaves Warehouse In 1-${item.handling_time_days ?? 2} Business Days`}
+                      ? "Estimated Delivery in"
+                      : `Estimated Delivery in ${getHandlingDeliveryRange(item.handling_time_days ?? 2)}`}
                   </p>
                   {/* {size && ( */}
                     <p className="cart-drawer-item-attr-label">
@@ -169,7 +170,7 @@ export default function CartCheckoutDrawer({
                     <p className="cart-drawer-price-row">
                       <span className="cart-drawer-item-attr-label">Price : </span>
                       <span className="cart-drawer-price-value text-[12px] font-semibold">
-                        ${formatPrice(item.final_price ?? mainPrice)}kk
+                        ${formatPrice(item.final_price ?? mainPrice)}
                       </span>
                     </p>
                     <button

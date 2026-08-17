@@ -231,7 +231,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
   return (
     <>
       <div className="hidden xl:flex w-full h-full items-stretch gap-4">
-        <div className="flex flex-col items-center justify-center min-[1280px]:h-[500px] min-[1440px]:h-[700px] shrink-0">
+        <div className="flex flex-col items-center justify-center min-[1280px]:h-[500px] min-[1500px]:h-[700px] shrink-0">
           <button
             className="flex items-center justify-center w-7 h-7 rounded-full border border-gray-200 bg-white text-black shrink-0 cursor-pointer transition-colors hover:bg-gray-100 hover:border-gray-300 disabled:opacity-30 disabled:cursor-not-allowed"
             onClick={() => {
@@ -481,7 +481,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                 height={700}
                 onLoad={() => markLoaded(mainImage)}
                 onClick={() => openPreview(mainImage)}
-                className="absolute inset-0 w-full h-full min-[1366px]:max-[1440px]:h-[500px] rounded-[15px] object-cover"
+                className="absolute inset-0 w-full h-full min-[1366px]:max-[1500px]:h-[600px] rounded-[15px] object-cover"
                 style={{
                   transform: isHovered ? "scale(1.5)" : "scale(1)",
                   transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,
