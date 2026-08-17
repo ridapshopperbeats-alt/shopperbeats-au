@@ -401,9 +401,8 @@ export default function CustomerRatingViewPage({
           {isQuestionsTab ? (
             visibleQuestions.length > 0 ? (
               <div
-                className="flex flex-col divide-y divide-[#F0F0F0] max-h-[520px] overflow-y-auto overscroll-contain pr-2 scrollbar scrollbar-track-[#F2F2F2] scrollbar-thumb-[#BDBDBD] scrollbar-track-rounded-[15px] scrollbar-thumb-rounded-[15px]"
+                className="flex flex-col divide-y divide-[#F0F0F0] max-h-[520px] overflow-y-auto pr-2 scrollbar scrollbar-track-[#F2F2F2] scrollbar-thumb-[#BDBDBD] scrollbar-track-rounded-[15px] scrollbar-thumb-rounded-[15px]"
                 data-lenis-prevent
-                onWheel={(e) => e.stopPropagation()}
               >
                 {visibleQuestions.map((item) => (
                   <div key={item.id} className="py-4">
@@ -435,9 +434,8 @@ export default function CustomerRatingViewPage({
             )
           ) : visibleReviews.length > 0 ? (
             <div
-              className="flex flex-col max-h-[520px] overflow-y-auto overscroll-contain pr-2 scrollbar scrollbar-track-[#F2F2F2] scrollbar-thumb-[#BDBDBD] scrollbar-track-rounded-[15px] scrollbar-thumb-rounded-[15px]"
+              className="flex flex-col max-h-[520px] overflow-y-auto pr-2 scrollbar scrollbar-track-[#F2F2F2] scrollbar-thumb-[#BDBDBD] scrollbar-track-rounded-[15px] scrollbar-thumb-rounded-[15px]"
               data-lenis-prevent
-              onWheel={(e) => e.stopPropagation()}
             >
               {visibleReviews.map((review) => (
                 <div key={review.id} className="py-3">
