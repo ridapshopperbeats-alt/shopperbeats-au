@@ -432,12 +432,12 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
 
   return (
     <div className="lg:pt-[13px]">
-      <div className="xl:px-[40px]">
+      <div className="lg:px-[40px]">
         <Breadcrumb />
         <div className="pdp-columns flex flex-wrap lg:flex-nowrap justify-start lg:gap-3 lg:items-start">
           <div className="flex flex-col gap-[20px] w-full lg:min-w-0 lg:flex-1 lg:max-w-[1540px]">
-            <div className="flex flex-wrap w-full xl:flex-nowrap gap-5 min-[1280px]:h-[500px] min-[1440px]:h-[700px] ">
-              <div className="w-full min-[1280px]:h-[500px] min-[1440px]:h-[700px] min-[1440px]:basis-[calc(55%_-_12px)] min-[1440px]:grow-0 min-[1440px]:shrink-0 min-[1440px]:max-w-[746px] min-[1540px]:self-stretch">
+            <div className="flex flex-wrap w-full xl:flex-nowrap gap-5 min-[1280px]:h-[600px] min-[1500px]:h-[700px] ">
+              <div className="w-full min-[1280px]:h-[600px] min-[1500px]:h-[700px] min-[1440px]:basis-[calc(60%_-_12px)] min-[1440px]:grow-0 min-[1440px]:shrink-0 min-[1440px]:max-w-[746px] min-[1540px]:self-stretch">
                 <ProductGallery
                   product={product}
                   selectedVariant={selectedVariant}

@@ -130,7 +130,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <>
-      <div className="group relative w-full min-h-[400px] md:min-h-[480px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
+      <div className="group relative w-full min-h-[300px] md:min-h-[400px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
         {renderTag(tags?.[0])}
 
         <button
@@ -148,7 +148,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
         </button>
         <Link
           href={`/static-product/${unique_code || id}`}
-          className="flex min-h-[400px] md:min-h-[480px] flex-col no-underline text-inherit"
+          className="flex min-h-[300px] md:min-h-[400px] flex-col no-underline text-inherit"
         >
           <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden rounded-t-[8px] bg-[rgba(233,233,233,0.60)]">
             <Image
@@ -207,7 +207,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 </div>
               )}
 
-              <div className="min-h-[46px] fluid-text-xs leading-[18px] text-[#535252] flex flex-col">
+              {/* <div className="min-h-[46px] fluid-text-xs leading-[18px] text-[#535252] flex flex-col">
                 {!isOutOfStock && (
                   <div className="leading-[18px] flex flex-col gap-[2px]">
                     <p className="font-normal text-[#535252]">
@@ -232,7 +232,7 @@ const StaticProductCard: React.FC<ProductCardProps> = ({
                 <p className="mt-1 font-normal text-[#FF4400]">
                   Extra 10% Off With Code: SHBS10
                 </p>
-              </div>
+              </div> */}
             </div>
 
             <div className="w-full flex justify-center mt-2 sm:mt-3">
