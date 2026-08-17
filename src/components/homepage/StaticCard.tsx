@@ -299,7 +299,7 @@ export default function StaticProductCards({
           {staticProducts.map((product) => (
             <div
               key={product.id}
-              className="group relative flex w-[160px] sm:w-[190px] h-[370px] sm:h-[380px] shrink-0 flex-col overflow-hidden rounded-[7px]"
+              className="group relative flex w-[160px] sm:w-[190px] h-[280px] sm:h-[310px] shrink-0 flex-col overflow-hidden rounded-[7px]"
             >
               {renderTag(product.tag)}
 
@@ -360,7 +360,7 @@ export default function StaticProductCards({
                       </span>
                     </div>
 
-                    {!product.isOutOfStock && (
+                    {/* {!product.isOutOfStock && (
                       <div className="flex flex-col text-12px text-[#535252] lg:mt-0">
                         <p className="truncate">
                           Delivery Fee - <span className="!font-medium">${product.shippingCharge}</span>
@@ -372,11 +372,11 @@ export default function StaticProductCards({
                           </span>
                         </p>
                       </div>
-                    )}
+                    )} */}
 
-                    <p className="font-medium text-12px leading-[16px] text-[#ff4400] lg:mt-0 truncate mt-1">
+                    {/* <p className="font-medium text-12px leading-[16px] text-[#ff4400] lg:mt-0 truncate mt-1">
                       Extra 10% Off with Code: SHBS10
-                    </p>
+                    </p> */}
                   </div>
 
                   <div className="w-full px-2 flex justify-center mt-1">
@@ -422,7 +422,7 @@ export default function StaticProductCards({
           return (
             <div
               key={product.id}
-              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[520px] flex flex-col justify-start overflow-hidden rounded-[7px] mb-2"
+              className="group relative w-[220px] sm:w-[240px] md:w-[270px] shrink-0 h-[430px] flex flex-col justify-start overflow-hidden rounded-[7px] mb-2"
             >
               {renderTag(product.tag)}
 
@@ -483,7 +483,7 @@ export default function StaticProductCards({
                       </span>
                     </div>
 
-                    <div className="fluid-text-xs text-[#535252] flex flex-col">
+                    {/* <div className="fluid-text-xs text-[#535252] flex flex-col">
                       {!product.isOutOfStock && (
                         <div className="leading-[18px] flex flex-col gap-[2px]">
                           <p className="font-normal text-[#535252]">
@@ -505,7 +505,7 @@ export default function StaticProductCards({
                       <p className="mt-1 font-normal fluid-text-xs leading-[18px] text-[#ff4400]">
                         Extra 10% Off with Code: SHBS10
                       </p>
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="w-full px-2 flex justify-center">

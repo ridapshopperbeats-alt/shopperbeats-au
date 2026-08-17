@@ -950,7 +950,7 @@ export default function SecureCheckout() {
 
                   <div className="flex items-center justify-between px-4 py-4 bg-[#F5F5F5] rounded-b-[8px]">
                     <p className="checkout-total-label">
-                      Total (incl. GST)
+                      Total (incl. Tax)
                     </p>
                     <p className="price text-[1.125rem] font-semibold leading-[normal]">
                       ${formatPrice(finalTotal)}
