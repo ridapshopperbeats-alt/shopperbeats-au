@@ -204,7 +204,7 @@ function StaticCarouselCard(product: ProductCardProps) {
               </div>
             )}
 
-            <div className="flex flex-col gap-1 min-h-[46px] text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
+            {/* <div className="flex flex-col gap-1 min-h-[46px] text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
               {!isOutOfStock && (
                 <>
                   <p className="font-normal truncate">
@@ -228,7 +228,7 @@ function StaticCarouselCard(product: ProductCardProps) {
               <p className="font-normal text-[#FF4400] truncate">
                 Extra 10% Off With Code: SHBS10
               </p>
-            </div>
+            </div> */}
           </div>
 
           <div className="w-full px-2 lg:px-3 flex justify-center">
@@ -293,7 +293,7 @@ export default function StaticProductCarousel({
           slideClassName=""
           keyExtractor={(product) => product.unique_code || product.id || ""}
           renderItem={(product) => (
-            <div className="w-[180px] h-[370px] md:w-[271px] md:h-[490px]">
+            <div className="w-[180px] h-[290px] md:w-[271px] md:h-[400px]">
               <StaticCarouselCard {...product} />
             </div>
           )}

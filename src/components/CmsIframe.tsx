@@ -54,12 +54,24 @@ export default function ShadowDomContent({ content }: ShadowDomContentProps) {
     };
   }, [content]);
 
-  const safeDocument = DOMPurify.sanitize(content, { WHOLE_DOCUMENT: true });
+  const safeDocument = DOMPurify.sanitize(content, {
+    WHOLE_DOCUMENT: true,
+    ADD_TAGS: ["link"],
+    ADD_ATTR: ["crossorigin"],
+  });
 
   const injectedHead = `
     <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+      html, body, * {
+        font-family: "Montserrat", sans-serif !important;
+      }
       html, body {
         margin: 0;
         overflow: hidden;

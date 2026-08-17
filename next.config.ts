@@ -15,9 +15,9 @@ import type { NextConfig } from "next";
 const CSP = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://www.google.com https://js.stripe.com https://cdn.tailwindcss.com`,
-  "style-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: blob: https:",
-  "font-src 'self' data:",
+  "font-src 'self' data: https://fonts.gstatic.com",
   "connect-src 'self' https://api-us.shopperbeats.cloud https://admin.shopperbeats.com.au https://www.google-analytics.com https://maps.googleapis.com https://js.stripe.com https://api.stripe.com",
   "frame-src https://js.stripe.com https://hooks.stripe.com https://www.google.com",
   "object-src 'none'",

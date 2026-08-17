@@ -114,11 +114,6 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
     [product],
   );
 
-  // Derived state: `images` is fully computed from `product`/`selectedVariant`,
-  // so it doesn't need its own useState + effect. useMemo keeps the array
-  // reference stable across unrelated re-renders (matching the previous
-  // cadence at which the preload effect below used to see a "new" images
-  // array).
   const images = useMemo(
     () => getImages(selectedVariant?.id),
     [getImages, selectedVariant],
@@ -154,9 +149,6 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
     setIsPreviewOpen(false);
   }, []);
 
-  // `loadedUrlsRef` is bookkeeping used only inside the preload effect below
-  // (effects are allowed to read refs). Render reads `loadedUrls` state
-  // instead, since reading a ref's `.current` during render is unsafe.
   const loadedUrlsRef = useRef<Set<string>>(new Set());
 
   const [loadedUrls, setLoadedUrls] = useState<Set<string>>(new Set());
@@ -170,11 +162,6 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
     }
   }, []);
 
-  // Reset the active/main thumbnail (and thumbnail/slide scroll position)
-  // whenever the variant or product changes. Adjusted directly during render
-  // (React's recommended pattern for state that derives from a changed prop,
-  // using state rather than a ref so it stays safe to read during render)
-  // instead of inside an effect, to avoid an extra render pass.
   const [prevSelectedVariant, setPrevSelectedVariant] =
     useState(selectedVariant);
   const [prevProduct, setPrevProduct] = useState(product);
@@ -244,7 +231,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
   return (
     <>
       <div className="hidden xl:flex w-full h-full items-stretch gap-4">
-        <div className="flex flex-col items-center justify-center h-[700px] shrink-0">
+        <div className="flex flex-col items-center justify-center min-[1280px]:h-[500px] min-[1440px]:h-[700px] shrink-0">
           <button
             className="flex items-center justify-center w-7 h-7 rounded-full border border-gray-200 bg-white text-black shrink-0 cursor-pointer transition-colors hover:bg-gray-100 hover:border-gray-300 disabled:opacity-30 disabled:cursor-not-allowed"
             onClick={() => {
@@ -494,7 +481,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                 height={700}
                 onLoad={() => markLoaded(mainImage)}
                 onClick={() => openPreview(mainImage)}
-                className="absolute inset-0 w-full h-full rounded-[15px] object-cover"
+                className="absolute inset-0 w-full h-full min-[1366px]:max-[1440px]:h-[500px] rounded-[15px] object-cover"
                 style={{
                   transform: isHovered ? "scale(1.5)" : "scale(1)",
                   transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,

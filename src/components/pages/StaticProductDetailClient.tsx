@@ -192,11 +192,10 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                   onClick={() => handleAttributeChange(attrName, item.value)}
                   aria-label={item.value}
                   title={item.value}
-                  className={`min-w-10 px-2 h-10 rounded-[8px] border cursor-pointer whitespace-nowrap fluid-text-xs font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-                    isSelected
-                      ? "border-[#FD151B] text-[#FD151B]"
-                      : "border-[#CCCCCC] text-[#1D265F]/50"
-                  }`}
+                  className={`min-w-10 px-2 h-10 rounded-[8px] border cursor-pointer whitespace-nowrap fluid-text-xs font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${isSelected
+                    ? "border-[#FD151B] text-[#FD151B]"
+                    : "border-[#CCCCCC] text-[#1D265F]/50"
+                    }`}
                 >
                   {item.value}
                 </button>
@@ -282,48 +281,48 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
   const accordionItems = [
     ...(specifications.length > 0
       ? [
-          {
-            title: "Specifications",
-            id: "specifications",
-            content: (
-              <ul>
-                {specifications.map((spec) => (
-                  <li key={spec.label}>
-                    <b>{spec.label} :-</b> {spec.value}
-                  </li>
-                ))}
-              </ul>
-            ),
-          },
-        ]
+        {
+          title: "Specifications",
+          id: "specifications",
+          content: (
+            <ul>
+              {specifications.map((spec) => (
+                <li key={spec.label}>
+                  <b>{spec.label} :-</b> {spec.value}
+                </li>
+              ))}
+            </ul>
+          ),
+        },
+      ]
       : []),
     ...(product.care_instructions
       ? [
-          {
-            title: "Precautionary & Care Instructions",
-            id: "care",
-            content: (
-              <ul>
-                <li>
-                  <b>Care Instructions :-</b> {product.care_instructions}
-                </li>
-              </ul>
-            ),
-          },
-        ]
+        {
+          title: "Precautionary & Care Instructions",
+          id: "care",
+          content: (
+            <ul>
+              <li>
+                <b>Care Instructions :-</b> {product.care_instructions}
+              </li>
+            </ul>
+          ),
+        },
+      ]
       : []),
     ...(product.warranty
       ? [
-          {
-            title: "Warranty",
-            id: "warranty",
-            content: (
-              <ul>
-                <li>{product.warranty}</li>
-              </ul>
-            ),
-          },
-        ]
+        {
+          title: "Warranty",
+          id: "warranty",
+          content: (
+            <ul>
+              <li>{product.warranty}</li>
+            </ul>
+          ),
+        },
+      ]
       : []),
   ];
 
@@ -433,12 +432,12 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
 
   return (
     <div className="lg:pt-[13px]">
-      <div className="container">
+      <div className="xl:px-[40px]">
         <Breadcrumb />
         <div className="pdp-columns flex flex-wrap lg:flex-nowrap justify-start lg:gap-3 lg:items-start">
           <div className="flex flex-col gap-[20px] w-full lg:min-w-0 lg:flex-1 lg:max-w-[1540px]">
-            <div className="flex flex-wrap w-full xl:flex-nowrap gap-5 xl:h-[700px]">
-              <div className="w-full min-[1440px]:basis-[calc(55%_-_12px)] min-[1440px]:grow-0 min-[1440px]:shrink-0 min-[1440px]:max-w-[746px] xl:max-[1439px]:h-[700px] min-[1540px]:self-stretch">
+            <div className="flex flex-wrap w-full xl:flex-nowrap gap-5 min-[1280px]:h-[500px] min-[1440px]:h-[700px] ">
+              <div className="w-full min-[1280px]:h-[500px] min-[1440px]:h-[700px] min-[1440px]:basis-[calc(55%_-_12px)] min-[1440px]:grow-0 min-[1440px]:shrink-0 min-[1440px]:max-w-[746px] min-[1540px]:self-stretch">
                 <ProductGallery
                   product={product}
                   selectedVariant={selectedVariant}
@@ -447,7 +446,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                 />
               </div>
 
-              <div className="w-full min-[1440px]:basis-[calc(43%_-_12px)] min-[1440px]:grow-0 min-[1440px]:shrink-0 min-[1440px]:max-w-[580px] flex flex-col gap-3 lg:gap-[3px] xl:max-[1540px]:max-h-[800px] 2xl:basis-[45%] 2xl:grow-0 2xl:shrink-0 2xl:max-w-[680px]">
+              <div className="w-full max-w-[310px] min-[1366px]:max-w-[350px] min-[1440px]:max-w-[420px] flex flex-col gap-3 lg:gap-[3px] xl:max-[1540px]:max-h-[800px] 2xl:max-w-[640px]">
                 <div className="flex items-start justify-between gap-2">
                   <div className="mr-2 pb-1.5">
                     <div className="flex items-center gap-2">
@@ -546,11 +545,10 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                             disabled={(c.stock ?? 0) <= 0}
                             aria-label={c.value}
                             title={c.value}
-                            className={`m-1 w-8 h-8 rounded-full border border-[#6B6B6B]/30 overflow-hidden cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-                              selectedAttributes[colorAttrName!] === c.value
-                                ? "border-2 shadow-[0_0_12px_rgba(0,0,0,0.5)]"
-                                : ""
-                            }`}
+                            className={`m-1 w-8 h-8 rounded-full border border-[#6B6B6B]/30 overflow-hidden cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed ${selectedAttributes[colorAttrName!] === c.value
+                              ? "border-2 shadow-[0_0_12px_rgba(0,0,0,0.5)]"
+                              : ""
+                              }`}
                           >
                             <Image
                               src={c.image}
@@ -623,11 +621,11 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                           {mounted
                             ? selectedLocation
                               ? [
-                                  selectedLocation.suburb,
-                                  selectedLocation.pincode,
-                                ]
-                                  .filter(Boolean)
-                                  .join(" ")
+                                selectedLocation.suburb,
+                                selectedLocation.pincode,
+                              ]
+                                .filter(Boolean)
+                                .join(" ")
                               : postcode
                                 ? [suburb, postcode].filter(Boolean).join(" ")
                                 : "Melbourne 3000"
@@ -738,11 +736,10 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                               ? handleDisabledAddToCart
                               : handleCartButtonClick
                           }
-                          className={`w-full h-[46px] rounded-full font-semibold text-white transition-colors cursor-pointer bg-[#FD151B] ${
-                            shouldDisableAddToCart
-                              ? "opacity-50 cursor-not-allowed"
-                              : ""
-                          }`}
+                          className={`w-full h-[46px] rounded-full font-semibold text-white transition-colors cursor-pointer bg-[#FD151B] ${shouldDisableAddToCart
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
+                            }`}
                           aria-disabled={shouldDisableAddToCart}
                           debounceDelay={500}
                         >
@@ -855,11 +852,10 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                       role="tab"
                       aria-selected={activeTab === key}
                       tabIndex={activeTab === key ? 0 : -1}
-                      className={`flex items-center justify-center h-[45px] px-6 rounded-[30px] border border-[#ECECEC] cursor-pointer whitespace-nowrap transition-colors font-bold fluid-text-sm leading-[17px] tracking-[0px] text-center align-middle ${
-                        activeTab === key
-                          ? "bg-[#FD151B] text-white shadow-[5px_5px_15px_0px_rgba(0,0,0,0.05)]"
-                          : "bg-white text-[#000000]"
-                      }`}
+                      className={`flex items-center justify-center h-[45px] px-6 rounded-[30px] border border-[#ECECEC] cursor-pointer whitespace-nowrap transition-colors font-bold fluid-text-sm leading-[17px] tracking-[0px] text-center align-middle ${activeTab === key
+                        ? "bg-[#FD151B] text-white shadow-[5px_5px_15px_0px_rgba(0,0,0,0.05)]"
+                        : "bg-white text-[#000000]"
+                        }`}
                       onClick={() => handleTabClick(key, index)}
                       onKeyDown={(e) => handleTabKeyDown(e, index)}
                     >
@@ -940,11 +936,11 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                         {mounted
                           ? selectedLocation
                             ? [
-                                selectedLocation.suburb,
-                                selectedLocation.pincode,
-                              ]
-                                .filter(Boolean)
-                                .join(" ")
+                              selectedLocation.suburb,
+                              selectedLocation.pincode,
+                            ]
+                              .filter(Boolean)
+                              .join(" ")
                             : postcode
                               ? [suburb, postcode].filter(Boolean).join(" ")
                               : "Melbourne 3000"
@@ -972,7 +968,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                   >
                     Quantity :
                   </label>
-                  {(() => {
+                  {/* {(() => {
                     const stockValue = selectedVariant
                       ? selectedVariant.stock
                       : product.stock;
@@ -988,7 +984,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                         Only {stockValue} items left
                       </span>
                     ) : null;
-                  })()}
+                  })()} */}
                 </div>
                 {(() => {
                   const maxQty = Math.max(
@@ -1058,11 +1054,10 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                             ? handleDisabledAddToCart
                             : handleCartButtonClick
                         }
-                        className={`w-full h-[46px] rounded-full font-semibold text-white transition-colors cursor-pointer bg-[#FD151B] ${
-                          shouldDisableAddToCart
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
+                        className={`w-full h-[46px] rounded-full font-semibold text-white transition-colors cursor-pointer bg-[#FD151B] ${shouldDisableAddToCart
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                          }`}
                         aria-disabled={shouldDisableAddToCart}
                         debounceDelay={500}
                       >

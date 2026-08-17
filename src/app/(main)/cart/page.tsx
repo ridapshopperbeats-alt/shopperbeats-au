@@ -26,6 +26,32 @@ const pincodeSchema = yup.object().shape({
   pincode: pincode,
 });
 
+// ---------------- DELIVERY RANGE HELPERS ----------------
+const addBusinessDays = (date: Date, days: number) => {
+  const result = new Date(date);
+  let added = 0;
+
+  while (added < days) {
+    result.setDate(result.getDate() + 1);
+    const day = result.getDay();
+
+    if (day !== 0 && day !== 6) added++;
+  }
+
+  return result;
+};
+
+const formatDeliveryDate = (date: Date) =>
+  date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+const getHandlingDeliveryRange = (handlingDays: number) => {
+  const today = new Date();
+  const start = addBusinessDays(today, 1);
+  const end = addBusinessDays(today, Math.max(handlingDays, 1));
+
+  return `${formatDeliveryDate(start)} – ${formatDeliveryDate(end)}`;
+};
+
 // ---------------- DUMMY DATA (static, for now) ----------------
 const DUMMY_CART_ITEMS = [
   {
@@ -83,7 +109,7 @@ const DUMMY_CART_ITEMS = [
     is_shippable: true,
     shipping_cost: 0,
     handling_time_days: 2,
-    delivery_prefix: "FREE Delivery As Soon As",
+    delivery_prefix: "FREE Delivery",
     saleBadge: "Sale 20% Off",
     images:
       "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&q=80",
@@ -178,7 +204,7 @@ const Cart = () => {
     return () => mql.removeEventListener("change", handleChange);
   }, []);
 
-  
+
   useEffect(() => {
     const el = orderSummaryRef.current;
     if (!el || !isXlUp || cart.items.length < 3) {
@@ -546,9 +572,7 @@ const Cart = () => {
                   ) : (
                     <p className="fluid-text-xs leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
                       {item.delivery_prefix}{" "}
-                      {/* <strong className="font-semibold text-black"> */}
-                        1-{item.handling_time_days} Business Days
-                      {/* </strong> */}
+                      {getHandlingDeliveryRange(item.handling_time_days)}
                     </p>
                   )}
 
@@ -999,7 +1023,7 @@ const Cart = () => {
 
             <div className="flex items-center justify-between py-4 xl:border-t border-[#e5e5e5] mt-4">
               <strong className="fluid-text-base leading-[normal] font-semibold text-black capitalize">
-                Total (Incl. GST)
+                Total (Incl. Tax)
               </strong>
               <div className="flex flex-col items-end gap-1">
                 {totalSaveAmount > 0 && (
