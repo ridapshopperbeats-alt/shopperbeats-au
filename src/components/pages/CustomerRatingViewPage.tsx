@@ -392,7 +392,7 @@ export default function CustomerRatingViewPage({
           </div>
         )}
 
-        <div className="flex xl:hidden w-[calc(100%+64px)] -ml-8 border-t border-[#ECECEC]" />
+        <div className="flex xl:hidden w-[calc(100%+64px)] -ml-8 lg:-ml-0 border-t border-[#ECECEC]" />
 
         <div className="relative flex-1 min-w-0 xl:pl-15">
           {!isQuestionsTab && (

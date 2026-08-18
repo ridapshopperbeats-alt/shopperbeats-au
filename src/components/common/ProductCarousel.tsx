@@ -1,3 +1,5 @@
+"use client";
+
 import ReusableSlider from "./ReusableSlider";
 import { Product, BundleProduct, ProductCarouselProps } from "@/types/product";
 import ProductCard from "./ProductCard";
@@ -17,7 +19,7 @@ export default function ProductCarousel({
 
   return (
 
-    <div className={from == "details" ? "products" : "w-full"}>
+    <div className={from == "details" ? "products" : "w-full px-[7px]"}>
         <div className="flex justify-between  gap-4">
           <div className="w-full">
             <div className="flex flex-col gap-1 w-full my-1">
@@ -40,7 +42,7 @@ export default function ProductCarousel({
         </div>
 
       <div className={isLoading ? "" : ""}>
-        <div className="pt-3 lg:pt-5 overflow-visible">
+        <div className="pt-3 lg:pt-5 overflow-visible px-[10px] lg:px-0">
           {!isLoading && (
             <ReusableSlider<Product | BundleProduct>
               items={items}
@@ -59,7 +61,7 @@ export default function ProductCarousel({
 
                   return (
                     <div
-                      className="w-[180px] h-[340px] md:w-[270px] md:h-[450px]"
+                      className="w-[180px] h-[350px] md:w-[270px] md:h-[465px]"
                       key={
                         bundleItem.product_id ||
                         bundleItem.unique_code
@@ -91,7 +93,7 @@ export default function ProductCarousel({
 
                 return (
                   <div
-                    className="w-[180px] h-[340px] md:w-[270px] md:h-[450px]"
+                    className="w-[180px] h-[350px] md:w-[260px] md:h-[465px]"
                     key={product.id || product.unique_code}
                   >
                     <ProductCard

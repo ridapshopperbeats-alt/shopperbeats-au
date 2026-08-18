@@ -45,6 +45,22 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
+        source: "/api/v1/cart/:path*",
+        destination: "https://api-us.shopperbeats.cloud/cart/api/v1/cart/:path*",
+      },
+      {
+        source: "/api/v1/wishlist/:path*",
+        destination: "https://api-us.shopperbeats.cloud/cart/api/v1/wishlist/:path*",
+      },
+      {
+        source: "/api/v1/coupon/:path*",
+        destination: "https://api-us.shopperbeats.cloud/cart/api/v1/coupon/:path*",
+      },
+      {
+        source: "/api/v1/coupon-tracker/:path*",
+        destination: "https://api-us.shopperbeats.cloud/cart/api/v1/coupon-tracker/:path*",
+      },
+      {
         source: "/api/v1/:path*",
         destination: "https://api-us.shopperbeats.cloud/api/v1/:path*",
       },
@@ -87,7 +103,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "www.jasnor.com.au",
+        hostname: "www.jasnor.com.au", 
       },
       {
         protocol: "https",
@@ -100,6 +116,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "assets.shopperbeats.cloud",
+      },
+      {
+        protocol: "https",
+        hostname: "media-prod-use-1.mirakl.net",
       },
     ],
   },

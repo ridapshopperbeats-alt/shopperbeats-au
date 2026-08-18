@@ -651,7 +651,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                     >
                       Quantity:
                     </label>
-                    {(() => {
+                    {/* {(() => {
                       const stockValue = selectedVariant
                         ? selectedVariant.stock
                         : product.stock;
@@ -667,7 +667,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                           Only {stockValue} items left
                         </span>
                       ) : null;
-                    })()}
+                    })()} */}
                   </div>
                   {(() => {
                     const maxQty = Math.max(

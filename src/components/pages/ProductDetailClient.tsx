@@ -67,6 +67,7 @@ import {
   getPriceDetails,
   getVariantImage,
 } from "@/lib/utils/main-utils";
+import { BadgeColor, StatusBadge } from "../common/StatusBadge";
 
 export default function ProductDetailClient({
   product: initialProduct,
@@ -598,73 +599,73 @@ export default function ProductDetailClient({
     () => [
       ...(length || width || weight || height
         ? [
-            {
-              title: "Specifications",
-              id: "specifications",
-              content: (
-                <ul>
-                  {length && (
-                    <li>
-                      <b>Length :-</b> {length} cm
-                    </li>
-                  )}
-                  {width && (
-                    <li>
-                      <b>Width :-</b> {width} cm
-                    </li>
-                  )}
-                  {weight && (
-                    <li>
-                      <b>Weight :-</b> {weight} Kg
-                    </li>
-                  )}
-                  {height && (
-                    <li>
-                      <b>Height :-</b> {height} cm
-                    </li>
-                  )}
-                </ul>
-              ),
-            },
-          ]
+          {
+            title: "Specifications",
+            id: "specifications",
+            content: (
+              <ul>
+                {length && (
+                  <li>
+                    <b>Length :-</b> {length} cm
+                  </li>
+                )}
+                {width && (
+                  <li>
+                    <b>Width :-</b> {width} cm
+                  </li>
+                )}
+                {weight && (
+                  <li>
+                    <b>Weight :-</b> {weight} Kg
+                  </li>
+                )}
+                {height && (
+                  <li>
+                    <b>Height :-</b> {height} cm
+                  </li>
+                )}
+              </ul>
+            ),
+          },
+        ]
         : []),
 
       ...(precautionaryNote || careInstructions
         ? [
-            {
-              title: "Precautionary & Care Instructions",
-              id: "care",
-              content: (
-                <ul>
-                  {precautionaryNote && (
-                    <li>
-                      <b>Precautionary Note :-</b> {precautionaryNote}
-                    </li>
-                  )}
-                  {careInstructions && (
-                    <li>
-                      <b>Care Instructions :-</b> {careInstructions}
-                    </li>
-                  )}
-                </ul>
-              ),
-            },
-          ]
+          {
+            title: "Precautionary & Care Instructions",
+            id: "care",
+            content: (
+              <ul>
+                {precautionaryNote && (
+                  <li>
+                    <b>Precautionary Note :-</b> {precautionaryNote}
+                  </li>
+                )}
+                {careInstructions && (
+                  <li>
+                    <b>Care Instructions :-</b> {careInstructions}
+                  </li>
+                )}
+              </ul>
+            ),
+          },
+        ]
         : []),
 
       //  Show Warranty only if exists
       ...(warranty
         ? [
-            {
-              title: "Warranty",
-              id: "warranty",
-              content: (
-                <ul>
-                  <li>{warranty}</li>
-                </ul>
-              ),
-            },
-          ]
+          {
+            title: "Warranty",
+            id: "warranty",
+            content: (
+              <ul>
+                <li>{warranty}</li>
+              </ul>
+            ),
+          },
+        ]
         : []),
     ],
     [
@@ -798,11 +799,10 @@ export default function ProductDetailClient({
                   onClick={() => handleAttributeChange(attrName, item.value)}
                   disabled={isOutOfStockOption}
                   title={item.value}
-                  className={`min-w-[30px] h-[30px] lg:min-w-10 lg:h-10 px-2 flex items-center justify-center border rounded-[8px] text-[14px] font-bold cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-                    isSelected
-                      ? "border-[#FD151B] text-[#FD151B]"
-                      : "border-[#CCCCCC] text-[#1D265F]/50"
-                  }`}
+                  className={`min-w-[30px] h-[30px] lg:min-w-10 lg:h-10 px-2 flex items-center justify-center border rounded-[8px] text-[14px] font-bold cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${isSelected
+                    ? "border-[#FD151B] text-[#FD151B]"
+                    : "border-[#CCCCCC] text-[#1D265F]/50"
+                    }`}
                 >
                   {item.value}
                 </button>
@@ -815,12 +815,12 @@ export default function ProductDetailClient({
 
   return (
     <div className="lg:pt-[13px]">
-      <div className="container">
+      <div className="lg:px-[40px]">
         <Breadcrumb />
         <div className="pdp-columns flex flex-wrap lg:flex-nowrap justify-start lg:gap-3 lg:items-start">
           <div className="flex flex-col gap-[20px] w-full lg:min-w-0 lg:flex-1 lg:max-w-[1540px]">
-            <div className="flex flex-wrap w-full xl:flex-nowrap gap-5 xl:h-[700px]">
-              <div className="w-full min-[1440px]:basis-[calc(55%_-_12px)] min-[1440px]:grow-0 min-[1440px]:shrink-0 min-[1440px]:max-w-[746px] xl:max-[1439px]:h-[700px] min-[1540px]:self-stretch">
+            <div className="flex flex-wrap w-full xl:flex-nowrap gap-5 min-[1280px]:h-[600px] min-[1500px]:h-[700px] ">
+              <div className="w-full px-[10px] lg:px-0 min-[1280px]:h-[600px] min-[1500px]:h-[700px] min-[1440px]:basis-[calc(60%_-_12px)] min-[1440px]:grow-0 min-[1440px]:shrink-0 min-[1440px]:max-w-[746px] min-[1540px]:self-stretch">
                 <ProductGallery
                   product={product}
                   selectedVariant={selectedVariant}
@@ -830,19 +830,34 @@ export default function ProductDetailClient({
                 />
               </div>
 
-              <div className="w-full min-[1440px]:basis-[calc(43%_-_12px)] min-[1440px]:grow-0 min-[1440px]:shrink-0 min-[1440px]:max-w-[580px] flex flex-col gap-3 lg:gap-[3px] xl:max-[1540px]:max-h-[800px] 2xl:basis-[45%] 2xl:grow-0 2xl:shrink-0 2xl:max-w-[680px]">
+              <div className="w-full px-[10px] lg:px-0 min-[1366px]:max-w-[400px] min-[1440px]:max-w-[420px] flex flex-col gap-3 lg:gap-[3px] xl:max-[1540px]:max-h-[800px] 2xl:max-w-[640px]">
                 <div className="flex items-start justify-between gap-2">
                   <div className="mr-2 pb-1.5">
                     <div className="flex items-center gap-2">
                       {product.promotion_name && (
                         <div className="promotion-badge">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
+                          {/* <img
                             src="/images/sale.svg"
                             alt="Sale"
                             className="badge-img"
                           />
-                          <span className="badge-text">SALE</span>
+                          <span className="badge-text">SALE</span> */}
+
+
+                          <StatusBadge
+                            label="sALE"
+                            color={BadgeColor.BlueDark}
+                            icon={
+                              <Image
+                                src="/images/sale.svg"
+                                alt="sale"
+                                width={14}
+                                height={14}
+                                className="brightness-0 invert"
+                              />
+                            }
+                          />
                         </div>
                       )}
                       {(selectedVariant
@@ -854,15 +869,19 @@ export default function ProductDetailClient({
                         (selectedVariant
                           ? selectedVariant.stock
                           : product.stock)! < 5 && (
-                          <div className="promotion-badge low-stock-badge">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src="/images/low-stock.svg"
-                              alt="Low Stock"
-                              className="badge-img"
-                            />
-                            <span className="badge-text">LOW STOCK</span>
-                          </div>
+                          <StatusBadge
+                            label="LOW STOCK"
+                            color={BadgeColor.BlueDark}
+                            icon={
+                              <Image
+                                src="/images/low-stock.svg"
+                                alt="Low Stock"
+                                width={14}
+                                height={14}
+                                className="brightness-0 invert"
+                              />
+                            }
+                          />
                         )}
 
                       {/* {product.tags && product.tags.length > 0 && (
@@ -873,7 +892,7 @@ export default function ProductDetailClient({
                         </div>
                       )} */}
                     </div>
-                    <h5 className="text-[14px] lg:text-[20px] font-medium text-black leading-[20px] lg:leading-[30px]">
+                    <h5 className="fluid-text-14-20 font-medium text-black leading-[20px] lg:leading-[30px]">
                       {productTitle || "Product Title"}
                     </h5>
 
@@ -888,7 +907,7 @@ export default function ProductDetailClient({
                         {product.review_stats?.total_reviews ?? 0} Reviews
                       </span>
                     </div> */}
-                    <p className="mt-1 font-bold text-[12px] lg:text-[14px] leading-[18px] text-[#162DC3]">
+                    <p className="mt-1 font-bold fluid-text-12-14 leading-[18px] text-[#162DC3]">
                       <Link href={`/brand/${product.brand_slug}`}>
                         <span className="text-[#535766]">By</span>{" "}
                         {product.brand_name || "Brand Name"}
@@ -899,14 +918,14 @@ export default function ProductDetailClient({
                 <div className="border-t border-[#ECECEC]" />
                 <div className="flex flex-col gap-[15px] lg:gap-5 lg:py-3">
                   <div className="flex items-baseline gap-3 flex-wrap leading-[18px]">
-                    <span className="text-[20px] lg:text-[36px] leading-[20px] font-bold text-[#FD151B]">
+                    <span className="fluid-text-20-36 leading-[20px] font-bold text-[#FD151B]">
                       ${formatPrice(mainPrice)}
                     </span>
-                    <span className="text-[14px] lg:text-[24px]  font-medium text-[#535766] line-through self-center">
+                    <span className="fluid-text-14-24  font-medium text-[#535766] line-through self-center">
                       ${formatPrice(wasPrice)}
                     </span>
                   </div>
-                  <span className="text-[12px] lg:text-[14px] leading-[16px] lg:leading-[26px] font-semibold">
+                  <span className="fluid-text-12-14 leading-[16px] lg:leading-[26px] font-semibold">
                     <span className="bg-[#EEF8F0] inline-flex w-[84px] h-[30px] text-center items-center justify-center  text-[#267A03]  font-bold  rounded-[5px]">
                       You Save :
                     </span>
@@ -940,11 +959,10 @@ export default function ProductDetailClient({
                             disabled={(c.stock ?? 0) <= 0}
                             aria-label={c.value}
                             title={c.value}
-                            className={`m-1 w-8 h-8 rounded-full border border-[#6B6B6B]/30 overflow-hidden cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-                              selectedAttributes[colorAttrName!] === c.value
-                                ? "border-2 shadow-[0_0_12px_rgba(0,0,0,0.5)]"
-                                : ""
-                            }`}
+                            className={`m-1 w-8 h-8 rounded-full border border-[#6B6B6B]/30 overflow-hidden cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed ${selectedAttributes[colorAttrName!] === c.value
+                              ? "border-2 shadow-[0_0_12px_rgba(0,0,0,0.5)]"
+                              : ""
+                              }`}
                           >
                             <Image
                               src={c.image}
@@ -961,7 +979,7 @@ export default function ProductDetailClient({
                             <Button
                               onClick={() => setShowPopup(true)}
                               type="button"
-                              className="text-[12px] lg:text-[14px] ml-auto font-bold text-[#0B38D7] underline cursor-pointer shrink-0 inline-flex items-center gap-1 leading-[18px]"
+                              className="fluid-text-12-14 ml-auto font-bold text-[#0B38D7] underline cursor-pointer shrink-0 inline-flex items-center gap-1 leading-[18px]"
                             >
                               More{" "}
                               <ChevronDownIcon className="shrink-0" size={13} />
@@ -1026,11 +1044,10 @@ export default function ProductDetailClient({
                             className="flex flex-col items-center gap-1 rounded-[8px] cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             <div
-                              className={`w-[47px] h-[48px] rounded-full border-[#6B6B6B] overflow-hidden flex items-center justify-center shrink-0 transition-all ${
-                                isSelected
-                                  ? "border-2 shadow-[0_0_8px_rgba(107,107,107,0.5)]"
-                                  : "border"
-                              }`}
+                              className={`w-[47px] h-[48px] rounded-full border-[#6B6B6B] overflow-hidden flex items-center justify-center shrink-0 transition-all ${isSelected
+                                ? "border-2 shadow-[0_0_8px_rgba(107,107,107,0.5)]"
+                                : "border"
+                                }`}
                             >
                               <Image
                                 src={
@@ -1083,26 +1100,25 @@ export default function ProductDetailClient({
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <MapPin
-                        size={20}
-                        className="shrink-0 text-[#FD151B]"
-                        fill="#FD151B"
-                        stroke="#FFFFFF"
+                        size={15}
+                        strokeWidth={2.5}
+                        className="text-[#FD151B]"
                       />
                       <div className="flex flex-col leading-[16px]">
-                        <span className="text-[12px] font-bold text-[#1D265F]">
+                        <span className="fluid-text-xs font-bold text-[#1D265F]">
                           Deliver To{" "}
                           {mounted
                             ? selectedLocation
                               ? [
-                                  selectedLocation.suburb,
-                                  selectedLocation.pincode,
-                                ]
-                                  .filter(Boolean)
-                                  .join(" ")
+                                selectedLocation.suburb,
+                                selectedLocation.pincode,
+                              ]
+                                .filter(Boolean)
+                                .join(" ")
                               : postcode
                                 ? [suburb, postcode].filter(Boolean).join(" ")
-                                : "Melbourne 3000"
-                            : "Melbourne 3000"}
+                                : "New York 10001"
+                            : "New York 10001 "}
                         </span>
                       </div>
                     </div>
@@ -1124,7 +1140,7 @@ export default function ProductDetailClient({
                     >
                       Quantity:
                     </label>
-                    {(() => {
+                    {/* {(() => {
                       const stockValue = selectedVariant
                         ? selectedVariant.stock
                         : product.stock;
@@ -1133,7 +1149,7 @@ export default function ProductDetailClient({
                         stockValue !== null &&
                         stockValue > 0 &&
                         stockValue < 10 ? (
-                        <span className="text-[12px]  font-bold text-[#FD151B]">
+                          <span className="fluid-text-xs  font-bold text-[#FD151B]">
                           <Clock
                             size={16}
                             className="inline-flex mb-1 font-bold"
@@ -1141,7 +1157,7 @@ export default function ProductDetailClient({
                           Only {stockValue} items left
                         </span>
                       ) : null;
-                    })()}
+                    })()} */}
                   </div>
                   {(() => {
                     const maxQty = Math.max(
@@ -1167,7 +1183,7 @@ export default function ProductDetailClient({
                         >
                           &minus;
                         </button>
-                        <span className="text-[14px] font-bold text-black">
+                        <span className="fluid-text-sm font-bold text-black">
                           {quantity}
                         </span>
                         <button
@@ -1246,65 +1262,36 @@ export default function ProductDetailClient({
                 <div className="lg:hidden flex mx-auto text-[12px] text-center font-medium text-[#657689] leading-[20px] ">
                   <ShieldCheck /> Guaranteed Safe & Secured Checkout
                 </div>
-                <div className="lg:hidden flex flex-wrap gap-2">
-                  <div className="pdp-qty-box">
-                    {" "}
-                    <Image
-                      src="/images/visa.svg"
-                      alt="Visa"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
-                  <div className="pdp-qty-box">
-                    <Image
-                      src="/images/payment.svg"
-                      alt="Payment"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
-                  <div className="pdp-qty-box">
-                    <Image
-                      src="/images/american.svg"
-                      alt="American Express"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
-                  <div className="pdp-qty-box">
-                    <Image
-                      src="/images/paypal.svg"
-                      alt="PayPal"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
-                  <div className="pdp-qty-box">
-                    {" "}
-                    <Image
-                      src="/images/afterpay.svg"
-                      alt="Afterpay"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
-                  <div className="pdp-qty-box">
-                    {" "}
-                    <Image
-                      src="/images/zip.svg"
-                      alt="Zip"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
+                <div className="lg:hidden flex flex-wrap gap-2 justify-center">
+                  {[
+                    "visa",
+                    "payment",
+                    "american",
+                    "paypal",
+                    "afterpay",
+                    "zip",
+                  ].map((img) => (
+                    <div
+                      key={img}
+                      className=" rounded h-[15px] flex items-center justify-center bg-white"
+                    >
+                      <Image
+                        src={`/images/${img}.svg`}
+                        alt={img}
+                        width={38}
+                        height={15}
+                        loading="lazy"
+                        className="object-contain"
+                      />
+                    </div>
+                  ))}
                 </div>
                 {productFeatures.length > 0 && (
                   <div className="hidden lg:flex flex-col lg:pt-2">
-                    <span className="text-[16px] font-bold leading-[19px] text-[#333333]">
+                    <span className="fluid-text-sm font-bold leading-[19px] text-[#333333]">
                       Features :
                     </span>
-                    <ul className="list-disc pl-5 mt-2 flex flex-col gap-2 text-[14px] leading-[24px] text-[#333333]">
+                    <ul className="list-disc pl-5 mt-2 flex flex-col gap-2 fluid-text-xs leading-[24px] text-[#333333]">
                       {productFeatures.slice(0, 6).map((feature, index) => (
                         <li key={index}>{feature}</li>
                       ))}
@@ -1321,7 +1308,7 @@ export default function ProductDetailClient({
                   alt="Shop with Confidence"
                   width={381}
                   height={270}
-                  className="w-full h-auto block"
+                  className="w-full h-auto block px-[10px] lg:px-0"
                 />
               </div>
             </Link>
@@ -1339,7 +1326,7 @@ export default function ProductDetailClient({
               />
             </div>
 
-            <div className="xl:hidden flex flex-col gap-5 w-full min-[1440px]:max-w-[1388px] min-[1440px]:sticky min-[1440px]:self-start">
+            <div className="xl:hidden flex flex-col gap-5 w-full min-[1440px]:max-w-[1388px] min-[1440px]:sticky min-[1440px]:self-start `">
               <ProductDetailsMobileTabs
                 featuresContent={getFeaturesContent(product, {
                   hideHeading: true,
@@ -1347,8 +1334,7 @@ export default function ProductDetailClient({
                 descriptionContent={
                   <div style={{ textAlign: "left" }}>
                     <h6
-                      className="descrpt-title"
-                      style={{ textAlign: "left", marginTop: "10px" }}
+                      className="descrpt-title px-[10px] lg:px-0 text-left"
                     >
                       Product Description
                     </h6>
@@ -1371,7 +1357,7 @@ export default function ProductDetailClient({
                       </div> */}
 
                       <div
-                        className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black"
+                        className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black px-[10px] lg:px-0"
                         style={{ textAlign: "left", marginTop: "15px" }}
                       >
                         {renderContent(product.description) ||
@@ -1396,11 +1382,10 @@ export default function ProductDetailClient({
                       role="tab"
                       aria-selected={activeTab === key}
                       tabIndex={activeTab === key ? 0 : -1}
-                      className={`flex items-center justify-center h-[45px] px-6 rounded-[30px] border border-[#ECECEC] cursor-pointer whitespace-nowrap transition-colors font-bold text-[14px] leading-[17px] tracking-[0px] text-center align-middle ${
-                        activeTab === key
-                          ? "bg-[#FD151B] text-white shadow-[5px_5px_15px_0px_rgba(0,0,0,0.05)]"
-                          : "bg-white text-[#000000]"
-                      }`}
+                      className={`flex items-center justify-center h-[45px] px-6 rounded-[30px] border border-[#ECECEC] cursor-pointer whitespace-nowrap transition-colors font-bold fluid-text-sm leading-[17px] tracking-[0px] text-center align-middle ${activeTab === key
+                        ? "bg-[#FD151B] text-white shadow-[5px_5px_15px_0px_rgba(0,0,0,0.05)]"
+                        : "bg-white text-[#000000]"
+                        }`}
                       onClick={() => handleTabClick(key, index)}
                       onKeyDown={(e) => handleTabKeyDown(e, index)}
                     >
@@ -1476,7 +1461,7 @@ export default function ProductDetailClient({
           <div className="hidden lg:flex flex-col gap-5 w-full lg:w-[300px] lg:shrink-0 xl:w-[381px] lg:sticky lg:top-32 lg:self-start">
             <div className="w-full lg:min-h-[489px] border border-[#F8F8F8] shadow shadow-[#000000]/10 rounded-[7px] p-5 flex flex-col gap-4">
               <div className="flex items-baseline gap-3 flex-wrap">
-                <span className="text-[36px] leading-[18px] font-bold text-[#FD151B]">
+                <span className="fluid-text-20-36 leading-[18px] font-bold text-[#FD151B]">
                   ${formatPrice(mainPrice)}
                 </span>
               </div>
@@ -1484,7 +1469,7 @@ export default function ProductDetailClient({
               {!isOutOfStock && (
                 <p className="font-bold text-[#1D265F] text-[14px]">
                   Delivery Fee - ${formatPrice(shippingCharge)}{" "}
-                  <span className="text-[14px] font-normal text-[#1A2553] leading-[20px]">
+                  <span className="fluid-text-xs font-normal text-[#1A2553] leading-[20px]">
                     (
                     {getEstimatedDeliveryRange(
                       product.ships_from_location,
@@ -1499,12 +1484,11 @@ export default function ProductDetailClient({
 
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-start gap-2">
                     <MapPin
-                      size={20}
-                      className="shrink-0 text-[#FD151B]"
-                      fill="#FD151B"
-                      stroke="#FFFFFF"
+                      size={16}
+                      strokeWidth={2.5}
+                      className="text-[#FD151B]"
                     />
                     <div className="flex flex-col leading-[18px]">
                       <span className="pdp-field-label">
@@ -1514,22 +1498,22 @@ export default function ProductDetailClient({
                         {mounted
                           ? selectedLocation
                             ? [
-                                selectedLocation.suburb,
-                                selectedLocation.pincode,
-                              ]
-                                .filter(Boolean)
-                                .join(" ")
+                              selectedLocation.suburb,
+                              selectedLocation.pincode,
+                            ]
+                              .filter(Boolean)
+                              .join(" ")
                             : postcode
                               ? [suburb, postcode].filter(Boolean).join(" ")
-                              : "Melbourne 3000"
-                          : "Melbourne 3000"}
+                              : "New York 10001"
+                          : "New York 10001"}
                       </span>
                     </div>
                   </div>
                   <button
                     type="button"
                     onClick={() => setShowLocationPopup(true)}
-                    className="text-[14px] font-bold text-[#0B38D7]  cursor-pointer shrink-0"
+                    className="fluid-text-xs font-bold text-[#0B38D7]  cursor-pointer shrink-0"
                   >
                     Change
                   </button>
@@ -1546,7 +1530,7 @@ export default function ProductDetailClient({
                   >
                     Quantity:
                   </label>
-                  {(() => {
+                  {/* {(() => {
                     const stockValue = selectedVariant
                       ? selectedVariant.stock
                       : product.stock;
@@ -1563,7 +1547,7 @@ export default function ProductDetailClient({
                         Only {stockValue} items left
                       </span>
                     ) : null;
-                  })()}
+                  })()} */}
                 </div>
                 {(() => {
                   const maxQty = Math.max(
@@ -1674,12 +1658,12 @@ export default function ProductDetailClient({
                 })()}
               </div>
 
-              <div className="text-[12px] text-center font-medium text-[#657689] leading-[20px] ">
+              <div className=" flex mx-auto items-center gap-2 fluid-text-xs text-center font-medium text-[#657689] leading-[20px]  ">
                 <ShieldCheck /> Guaranteed Safe & Secured Checkout
               </div>
 
               <div>
-                <div className="flex flex-wrap gap-2">
+                {/* <div className="flex flex-wrap gap-2">
                   <div className="pdp-qty-box-lg">
                     {" "}
                     <Image
@@ -1731,6 +1715,31 @@ export default function ProductDetailClient({
                       height={25}
                     />
                   </div>
+                </div> */}
+
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {[
+                    "visa",
+                    "payment",
+                    "american",
+                    "paypal",
+                    "afterpay",
+                    "zip",
+                  ].map((img) => (
+                    <div
+                      key={img}
+                      className=" rounded h-[15px] flex items-center justify-center bg-white"
+                    >
+                      <Image
+                        src={`/images/${img}.svg`}
+                        alt={img}
+                        width={38}
+                        height={15}
+                        loading="lazy"
+                        className="object-contain"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -1741,7 +1750,7 @@ export default function ProductDetailClient({
                 alt="Shop with Confidence"
                 width={381}
                 height={270}
-                className="hidden lg:block w-full h-auto"
+                className="hidden lg:block w-full h-auto mb-6"
               />
             </Link>
           </div>

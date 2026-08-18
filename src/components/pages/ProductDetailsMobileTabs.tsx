@@ -35,7 +35,7 @@ export default function ProductDetailsMobileTabs({
 
   return (
     <div>
-      <div className="-mx-7 lg:-mx-4 flex items-center gap-6 border-b border-[#ECECEC] px-5">
+      <div className="  flex items-center gap-6 border-b border-[#ECECEC] px-2 lg:px-0">
         <button
           type="button"
           onClick={() => setActiveTab("details")}
@@ -53,13 +53,13 @@ export default function ProductDetailsMobileTabs({
       </div>
 
       {activeTab === "details" && (
-        <div className="pt-2">
+        <div className="pt-2 px-[10px] lg:px-0">
           <Accordion items={accordionItems} variation={2} independent />
         </div>
       )}
 
       {activeTab === "reviews" && (
-        <div className="pt-4 pb-4">
+        <div className="pt-4 pb-4 px-[10px] lg:px-0">
           {reviews.length > 0 ? (
             <CustomerRatingViewPage reviews={reviews} />
           ) : (
