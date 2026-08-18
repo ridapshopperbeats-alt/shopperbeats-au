@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { ProductImage } from "@/types/product";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 
 interface ImagePreviewModalProps {
   open: boolean;
@@ -132,7 +133,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
               )
             ) : (
               <Image
-                src={selectedUrl}
+                src={applyImageVariant(selectedUrl, "pdpmain")}
                 alt={title || "Product Image"}
                 fill
                 sizes="(min-width: 1280px) 800px, 100vw"
@@ -191,7 +192,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
                       />
                     ) : (
                       <Image
-                        src={mediaUrl}
+                        src={applyImageVariant(mediaUrl, "pdptmb")}
                         alt={`preview-thumb-${index}`}
                         fill
                         sizes="100px"

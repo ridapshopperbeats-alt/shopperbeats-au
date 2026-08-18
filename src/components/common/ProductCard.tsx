@@ -17,7 +17,7 @@ import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 
 import { ProductCardProps } from "@/types/product";
 
-import { Heart } from "lucide-react";
+import { Check, Heart } from "lucide-react";
 import StarRating from "./StarRating";
 
 function limitWords(text: string | undefined, limit = 6) {
@@ -66,6 +66,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const { postcode } = useGlobalPostcode();
   const router = useRouter();
   const pathname = usePathname();
+
+  const isInCart = false;
 
   const currentVariant = variants.find((v) => v.id === defaultVariantId);
 
@@ -150,7 +152,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <>
-      <div className="group relative w-full h-full max-h-[450px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
+      <div className="group relative w-full h-full max-h-[530px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
         {/* {renderTag} */}
 
         <button
@@ -170,17 +172,25 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         <Link
           href={`/product/${unique_code || id}`}
-          className="flex h-full max-h-[450px] flex-col no-underline text-inherit"
+          className="flex min-h-[350px] md:min-h-[465px] flex-col no-underline text-inherit"
         >
-          <div className="relative w-full aspect-[280/296] overflow-hidden">
+          <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden rounded-t-[8px] bg-[rgba(233,233,233,0.60)]">
             <Image
               src={image}
               alt={title || "Product Image"}
               fill
-              sizes="(min-width: 1700px) 20vw, (min-width: 1200px) 33vw, (min-width: 1024px) 40vw, 50vw"
+              sizes="(max-width: 768px) 180px, 270px"
+              loading="lazy"
               className="object-cover"
             />
-            <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" />
+            {/* <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" /> */}
+            {isOutOfStock && (
+              <div className="absolute inset-0 flex items-center justify-center bg-[#F5F5F5]/60">
+                <span className="rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-[#211E22] shadow-md">
+                  Out of Stock
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-1 flex-col justify-between w-full">
@@ -189,7 +199,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 {brand_name || ""}
               </h4>
 
-              <p className="text-[14px] md:text-[14px] leading-[18px] text-[#878787] font-normal line-clamp-2 min-h-[36px]">
+              <p className="text-[13px] md:text-[14px] leading-4.5 text-[#878787] font-normal">
                 {limitWords(title, 7) || "MakeupKit"}
               </p>
 
@@ -199,29 +209,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 </span>
 
                 {showWasPrice && wasPrice && (
-                  <span className="text-[9px] md:text-[12px] font-normal text-[#008F11]">
-                    {formatPrice(saveAmount)} %OFF
+                  <span className="text-[11px] font-light text-[#535766] line-through">
+                    ${formatPrice(wasPrice)}
                   </span>
                 )}
-
-                {/* <div className="flex text-[12px] font-medium items-center leading-[18px] gap-1">
-                  {rating > 0 && (
-                    <>
-                      <StarRating rating={rating} size={13} />
-                      <span className="text-[#535766] leading-none">
-                        ({reviewCount})
-                      </span>
-                    </>
-                  )}
-                </div> */}
-
+                
                 {saveAmount && (
-                  <span className="text-[9px] md:text-[12px] font-normal text-[#008F11]">
-                    {formatPrice(saveAmount)} %OFF
+                  <span className="text-[9px] md:text-[12px] font-semibold text-[#008F11]">
+                    {formatPrice(saveAmount)}% OFF
                   </span>
                 )}
+
               </div>
-              {/* 
+
               {rating > 0 && (
                 <div className="flex text-[12px] font-medium items-center leading-[18px] gap-1 h-[13px]">
                   <StarRating rating={rating} size={13} />
@@ -229,9 +229,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     ({reviewCount})
                   </span>
                 </div>
-              )} */}
+              )}
 
-              {/* {!isOutOfStock && (
+              {!isOutOfStock && (
                 <div className="text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
                   <p className="font-normal">
                     {shippingCharge === 0
@@ -240,6 +240,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   </p>
 
                   <p className="font-normal">
+                    Estimated delivery between{" "}
                     <span className="font-medium">
                       {getEstimatedDeliveryRange(
                         ships_from_location,
@@ -248,20 +249,40 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     </span>
                   </p>
                 </div>
-              )} */}
+              )}
             </div>
 
-            <div className="w-full px-2 lg:px-3 flex justify-center mt-2">
+            <div className="w-full px-2 lg:px-3 flex justify-center">
               <button
                 onClick={handleAddToCartClick}
                 disabled={isAddingToCart || isOutOfStock}
-                className="w-full h-[30px] bg-[#FD151B] text-white text-[14px] font-medium rounded-[32px] flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className={
+                  isOutOfStock
+                    ? "w-full h-[30px] !bg-[#F3F4F6] !text-[#9CA3AF] !opacity-100 text-[12px] sm:text-[14px] font-medium rounded-[32px] flex items-center justify-center whitespace-nowrap cursor-not-allowed"
+                    : isInCart
+                      ? "w-full h-[30px] bg-white text-[#FD151B] text-[12px] sm:text-[14px] font-medium rounded-[32px] border border-[#FD151B] flex items-center justify-center gap-1 whitespace-nowrap transition-colors cursor-pointer"
+                      : "w-full h-[30px] bg-[#FD151B] text-white text-[12px] sm:text-[14px] font-medium rounded-[32px] flex items-center justify-center whitespace-nowrap transition-colors cursor-pointer"
+                }
+                style={
+                  isOutOfStock
+                    ? {
+                      backgroundColor: "#F3F4F6",
+                      color: "#9CA3AF",
+                      opacity: 1,
+                    }
+                    : undefined
+                }
               >
-                {isAddingToCart
-                  ? "Adding..."
-                  : isOutOfStock
-                    ? "Out of Stock"
-                    : "Add To Cart"}
+                {isOutOfStock ? (
+                  "Out Of Stock"
+                ) : isInCart ? (
+                  <>
+                    <Check size={14} />
+                    Add To Cart
+                  </>
+                ) : (
+                  "Add To Cart"
+                )}
               </button>
             </div>
           </div>

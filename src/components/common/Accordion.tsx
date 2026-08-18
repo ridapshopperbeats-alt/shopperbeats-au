@@ -71,13 +71,13 @@ const Accordion = ({
     return (
       <div className="w-full">
         {items.map((item, index) => (
-          <div key={item.id} className="-mx-7 lg:-mx-4 border-b border-[#ECECEC]">
+          <div key={item.id} className="-mx-7 lg:mx-0 border-b border-[#ECECEC]">
             <h3 className="m-0">
               <button
                 type="button"
                 onClick={() => toggleItem(index)}
                 aria-expanded={openItems[index]}
-                className="flex w-full items-center justify-between px-5 py-3 text-left font-medium text-[14px] md:text-[16px] cursor-pointer"
+                className="flex w-full items-center justify-between px-7 lg:px-0 py-3 text-left font-medium text-[14px] md:text-[16px] cursor-pointer"
               >
                 <span>{item.title}</span>
 

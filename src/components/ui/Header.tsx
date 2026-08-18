@@ -377,7 +377,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
   return (
     <div className="header-fixed ">
-      <div className="lg:px-[40px] flex flex-col">
+      <div className="px-[10px] xl:px-[40px] flex flex-col">
         <div className={`top-head ${hideSearch ? "no-search" : ""}`}>
           <div className="logo-block ">
             <div
@@ -676,7 +676,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <Home size={16} className="inline-block text-center" />
+                  <Home size={16} className="inline-block text-center icons-size" />
                   Home & Garden
                 </Link>
               </li>
@@ -685,7 +685,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <Armchair size={16} className="inline-block" />
+                  <Armchair size={16} className="inline-block icons-size" />
                   Furniture
                 </Link>
               </li>
@@ -694,7 +694,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center  xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <HandbagIcon size={16} className="inline-block" />
+                  <HandbagIcon size={16} className="inline-block icons-size" />
                   Fashion & Accessories
                 </Link>
               </li>
@@ -703,7 +703,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <HeartPulse size={16} className="inline-block" />
+                  <HeartPulse size={16} className="inline-block icons-size" />
                   Health & Beauty
                 </Link>
               </li>
@@ -712,7 +712,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <Armchair size={16} className="inline-block" />
+                  <Armchair size={16} className="inline-block icons-size" />
                   Outdoor & Patio
                 </Link>
               </li>
@@ -721,7 +721,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <Gem size={16} className="inline-block" />
+                  <Gem size={16} className="inline-block icons-size" />
                   Best Sellers
                 </Link>
               </li>
@@ -731,7 +731,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <Sparkles size={16} className="inline-block" />
+                  <Sparkles size={16} className="inline-block icons-size" />
                   What&apos;s On Sale
                 </Link>
               </li>

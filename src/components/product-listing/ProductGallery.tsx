@@ -279,7 +279,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
 
           <div className="flex-1 flex py-2 h-full items-start overflow-hidden">
             <div
-              className="flex flex-col gap-2 w-[100px] overflow-y-auto overscroll-contain"
+              className="flex flex-col gap-[10px] w-[100px] overflow-y-auto overscroll-contain"
               data-lenis-prevent
               onWheel={(e) => e.stopPropagation()}
             >
@@ -304,11 +304,10 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                           handleThumbnailClick(mediaUrl, originalIndex);
                         }
                       }}
-                      className={`w-full h-[70px] shrink-0 border overflow-hidden relative flex items-center justify-center cursor-pointer rounded-[5px] bg-white transition-shadow ${
-                        isActive
+                      className={`w-full h-[70px] shrink-0 border overflow-hidden relative flex items-center justify-center cursor-pointer rounded-[5px] bg-white transition-shadow ${isActive
                           ? "border-[#fd151b] shadow-[3px_3px_5px_#cccccc]"
                           : "border-gray-200"
-                      }`}
+                        }`}
                     >
                       {item?.video_url && !item?.image_url ? (
                         isYouTubeUrl(mediaUrl) ? (
@@ -336,7 +335,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                           {!isLoaded(mediaUrl) && <div style={shimmerStyle} />}
 
                           <Image
-                           src={applyImageVariant(mediaUrl, "pdptmb")}
+                            src={applyImageVariant(mediaUrl, "pdptmb")}
                             alt={`thumbnail-${originalIndex}`}
                             width={100}
                             height={100}
@@ -433,12 +432,12 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
           )}
 
           {mainImage &&
-          images.find(
-            (img) => safeUrl(img.image_url || img.video_url) === mainImage,
-          )?.video_url &&
-          !images.find(
-            (img) => safeUrl(img.image_url || img.video_url) === mainImage,
-          )?.image_url ? (
+            images.find(
+              (img) => safeUrl(img.image_url || img.video_url) === mainImage,
+            )?.video_url &&
+            !images.find(
+              (img) => safeUrl(img.image_url || img.video_url) === mainImage,
+            )?.image_url ? (
             isYouTubeUrl(mainImage) ? (
               <div className="w-full h-full absolute inset-0 bg-white">
                 <iframe
@@ -498,7 +497,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
       </div>
 
       <div className="xl:hidden">
-        <div className="relative">
+        <div className="relative overflow-hidden">
           {onWishlistToggle && (
             <button
               type="button"
@@ -523,8 +522,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
             items={images}
             slidesToShow={1}
             slidesToScroll={1}
-            gap={0}
-            breakpoints={{ 0: { slidesPerView: 1, spaceBetween: 0 } }}
+            breakpoints={{ 0: { slidesPerView: 1, spaceBetween: 20 } }}
             infinite={true}
             centered={true}
             speed={500}
@@ -580,7 +578,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                       draggable={false}
                       onLoad={() => markLoaded(safeUrl(item.image_url))}
                       onClick={() => openPreview(safeUrl(item.image_url))}
-                      className="w-full h-full object-cover rounded-[15px]"
+                      className="w-full h-full object-cover rounded-[15px]  "
                       style={{
                         opacity: isLoaded(safeUrl(item.image_url)) ? 1 : 0,
                         transition: "opacity 0.3s ease",
@@ -601,11 +599,10 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                 type="button"
                 aria-label={`Go to slide ${index + 1}`}
                 onClick={() => sliderRef.current?.goToSlide(index)}
-                className={`rounded-full transition-all duration-200 ${
-                  index === mobileSlide
+                className={`rounded-full transition-all duration-200 ${index === mobileSlide
                     ? "w-[8px] h-[8px] bg-[#fd151b]"
                     : "w-[6px] h-[6px] bg-[#D9D9D9]"
-                }`}
+                  }`}
               />
             ))}
           </div>
