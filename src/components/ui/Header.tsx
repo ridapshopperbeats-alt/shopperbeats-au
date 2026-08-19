@@ -24,6 +24,7 @@ import {
   Gem,
   Tag,
   Leaf,
+  Gamepad2,
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
@@ -87,9 +88,6 @@ const GENDER_KEYWORDS: Record<"women" | "men", RegExp> = {
   men: /\bmen\b|\bman\b|gentlemen/i,
 };
 
-// Best-effort match: names with no explicit gender keyword (e.g. "Jeans",
-// "Jackets & Coats") are treated as unisex and shown under both tabs, since
-// the category data has no gender field to split on.
 const matchesGenderTab = (name: string, tab: "women" | "men") => {
   const isWomen = GENDER_KEYWORDS.women.test(name);
   const isMen = GENDER_KEYWORDS.men.test(name);

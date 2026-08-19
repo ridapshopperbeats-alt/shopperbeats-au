@@ -42,12 +42,7 @@ export default function LocationPopup({
     state: string;
   } | null>(null);
 
-  // Re-initialize the popup's local selection whenever it opens (or the
-  // underlying address list / selected address changes while open). This
-  // mirrors the previous effect, but adjusts state during render instead of
-  // inside a useEffect (see https://react.dev/learn/you-might-not-need-an-effect).
-  // Previous trigger values are tracked in state (not a ref) since refs must
-  // not be read during render.
+
   const [prevTriggers, setPrevTriggers] = useState({
     open,
     addresses,
