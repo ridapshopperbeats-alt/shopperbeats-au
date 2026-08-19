@@ -49,6 +49,12 @@ export default function RecommendedForYou({
         promotion_name: product.promotion_name ?? null,
         rating: product.review_stats?.average_rating ?? undefined,
         reviewsCount: product.reviews?.length ?? 0,
+        defaultVariantId: product.variants?.[0]?.id ?? product.variant_id,
+        variants: product.variants,
+        stock: product.stock,
+        vendor_id: product.vendor_id,
+        ships_from_location: product.ships_from_location,
+        handling_time_days: product.handling_time_days,
       };
     }) || [];
 

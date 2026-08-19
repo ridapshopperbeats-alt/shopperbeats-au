@@ -7,18 +7,10 @@ import { cache } from "react";
 import { ContactContent } from "@/types/cms";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 
-// Safely serialize data for a `<script type="application/ld+json">` block.
-// JSON.stringify leaves `<` unescaped, so a value containing `</script>`
-// (e.g. a scraped/malicious product title) can break out of the script tag
-// and inject arbitrary markup — escape it to a JSON-safe unicode sequence.
 export function toSafeJsonLd(data: unknown): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
-// A raw backend message that's this long, or that looks like a stack
-// trace/exception dump rather than a short user-facing string, is a sign
-// of a backend regression (an unhandled 500 serializing an exception) —
-// show the generic fallback instead of surfacing it verbatim to the user.
 const MAX_API_ERROR_MESSAGE_LENGTH = 200;
 const LOOKS_INTERNAL_PATTERN = /\n|\r|Traceback|Exception|at \w+[.:]|\.(py|js|ts):\d+/;
 
@@ -30,17 +22,10 @@ function isSafeToDisplay(message: string): boolean {
   );
 }
 
-// For call sites that extract a backend error string themselves (rather
-// than going through getApiErrorMessage) but still show it directly in a
-// toast — same guard against surfacing an oversized/stack-trace-looking
-// backend error verbatim.
 export function sanitizeErrorMessage(message: string, fallback: string): string {
   return isSafeToDisplay(message) ? message : fallback;
 }
 
-// Extracts a human-readable message from an RTK Query error, falling back
-// to `fallback` when the error has none (e.g. a network failure) or when
-// the message doesn't look safe to show a user as-is.
 export function getApiErrorMessage(error: unknown, fallback: string): string {
   const apiError = error as {
     data?: { message?: string; errors?: { message: string }[] };
@@ -229,9 +214,6 @@ export const handleAustralianPhoneNumberChange = (
   return { value, error: null };
 };
 
-// Get the main image URL for a product, with a fallback if no images are available.
-// `variant` is an optional Cloudflare Images variant name (e.g. "plpcard") applied
-// via `applyImageVariant` to request an appropriately sized/cropped rendition.
 export function getImageUrl(product: Product, variant?: string): string {
   const fallback = "/images/image-coming-soon.jpg";
 
@@ -258,7 +240,6 @@ export function getImageUrl(product: Product, variant?: string): string {
   return fallback;
 }
 
-// Get the main image URL for a product variant, with a fallback if no images are available
 export function getVariantImage(variant: Variant, imageVariant?: string): string {
   const fallback = "/images/image-coming-soon.jpg";
 
@@ -525,8 +506,5 @@ export const contactData: ContactContent = {
   ],
 };
 
-// Falls back to the production domain when NEXT_PUBLIC_SITE_URL isn't set,
-// so behavior is unchanged for existing deployments that haven't added it
-// yet — but staging/preprod can now emit correct canonicals by setting it.
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://shopperbeats.com";

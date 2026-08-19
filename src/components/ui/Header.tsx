@@ -16,10 +16,8 @@ import {
   ChevronDown,
   ChevronRight,
   Menu,
-  Handbag,
   HandbagIcon,
   HeartPulse,
-  Gamepad2,
   Sparkles,
   Armchair,
   Home,
@@ -194,7 +192,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
             if (city && pincode) {
               updatePostcode(pincode, city);
             } else if (pincode) {
-              updatePostcode(pincode, "Melbourne");
+              updatePostcode(pincode, "");
             } else {
               toast.error("Could not determine postal code from your location");
             }
@@ -524,11 +522,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 <div className="deliver-location">
                   <span>Deliver to</span>
                   <p>
-                    {mounted
-                      ? postcode
-                        ? `${postcode} ${suburb}`
-                        : "3000 Melbourne"
-                      : "3000 Melbourne"}
+                    {mounted && postcode
+                      ? `${postcode}${suburb ? ` ${suburb}` : ""}`
+                      : "Enter your postcode"}
                   </p>
                 </div>
               </div>
@@ -550,10 +546,10 @@ export default function Header({ megaMenuData }: HeaderProps) {
                         );
                         return;
                       }
-                      updatePostcode(data.pincode, data.city || "Melbourne");
+                      updatePostcode(data.pincode, data.city || "");
                       setShowPincodeInput(false);
                       toast.success(
-                        `Location set to ${data.pincode} ${data.city || "Melbourne"}`,
+                        `Location set to ${data.pincode}${data.city ? ` ${data.city}` : ""}`,
                       );
                     }}
                     onClear={() => {

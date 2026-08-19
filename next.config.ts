@@ -1,17 +1,5 @@
 import type { NextConfig } from "next";
 
-// Kept 'unsafe-inline' on script-src because the app relies on inline
-// scripts (Next.js hydration, GTM/GA snippets) that aren't behind a
-// nonce today — tightening that needs its own dedicated QA pass. Every
-// other directive is a real, enforced allowlist: it still blocks a
-// classic XSS payload from exfiltrating data to an attacker-controlled
-// host, framing the site, or loading a plugin/object.
-//
-// 'unsafe-eval' is required in development for React's dev-mode debugging
-// (component stack reconstruction), and in all environments for the
-// Tailwind CDN script (https://cdn.tailwindcss.com) used inside the CMS
-// content iframe (CmsIframe.tsx), which JIT-compiles utility classes via
-// eval() at runtime. React itself never uses eval() in production.
 const CSP = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://www.google.com https://js.stripe.com https://cdn.tailwindcss.com`,
@@ -103,7 +91,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "www.jasnor.com.au", 
+        hostname: "www.jasnor.com.au",
       },
       {
         protocol: "https",
@@ -120,6 +108,14 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "media-prod-use-1.mirakl.net",
+      },
+      {
+        protocol: "https",
+        hostname: "assets.costway.com",
+      },
+      {
+        protocol: "https",
+        hostname: "dngnxcmxnkyl5.cloudfront.net",
       },
     ],
   },

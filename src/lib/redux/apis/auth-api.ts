@@ -112,11 +112,6 @@ export const authApi = createApi({
         try {
           await queryFulfilled;
         } catch (err) {
-          // The server call can fail (e.g. an already-expired session
-          // returns 401) but the user still asked to log out, so the
-          // local session is cleared regardless below.
-          // The local session is cleared regardless (see finally below), so
-          // this isn't fatal — avoid tripping Next's console.error dev overlay.
           console.warn("Logout request failed; clearing local session anyway, status:", (err as { status?: number | string })?.status);
         } finally {
           clearRefreshToken();
@@ -138,20 +133,11 @@ export const authApi = createApi({
         url: API_ENDPOINTS.AUTH.USER_DETAILS,
       }),
       providesTags: ["User"],
-      // This is also the app's sole session check (see StoreProvider): the
-      // cookie session is HttpOnly and can't be read from JS, so whether
-      // this call succeeds or fails IS the source of truth for
-      // `state.auth.isAuthenticated`, instead of a client-writable flag.
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
           dispatch(setAuthenticated(true));
         } catch (err) {
-          // Only a definitive 401/403 (or a session base-query already gave
-          // up on, i.e. tokens were cleared) means the user is actually
-          // logged out. A transient failure (network blip, 5xx, timeout)
-          // isn't proof of that — flipping isAuthenticated to false here
-          // would hide the user's data even though their session is fine.
           const status = (err as { error?: { status?: number | string } })?.error?.status;
           if (status === 401 || status === 403) {
             dispatch(setAuthenticated(false));

@@ -21,79 +21,87 @@ import { ShieldCheck, ThumbsUp } from "lucide-react";
 import { useStaticCart } from "@/lib/hooks/useStaticCart";
 import type { StaticCartItem } from "@/lib/utils/staticStorage";
 import { getHandlingDeliveryRange } from "@/lib/utils/get-handling-delivery-range";
+import {
+  useGetCartQuery,
+  useUpdateCartItemQuantityMutation,
+  useRemoveFromCartMutation,
+  useCheckDeliveryMutation,
+  useValidatePromoCodeMutation,
+} from "@/lib/redux/apis/cart-api";
+import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 
 // ---------------- SCHEMAS ----------------
 const pincodeSchema = yup.object().shape({
   pincode: pincode,
 });
 
-// ---------------- DUMMY DATA (static, for now) ----------------
-const DUMMY_CART_ITEMS = [
-  {
-    id: "item-1",
-    product_id: "prod-1",
-    variant_id: undefined as string | undefined,
-    unique_code: "SKU001",
-    product_name:
-      "Saint Laurent Classic Biker Leather Jacket (Black) — Signature Biker Silhouette In Supple Lambskin",
-    quantity: 1,
-    unit_price: 1290,
-    rrp_price_snapshot: 1490,
-    discount_percentage: 50,
-    discounted_price: 1290,
-    oldPrice: 1490,
-    discount: 50,
-    final_price: 1290,
-    subtotal: 1290,
-    promotion_discount: 0,
-    is_active: true,
-    available_stock: 15,
-    stock: 15,
-    is_shippable: true,
-    shipping_cost: 0,
-    handling_time_days: 2,
-    delivery_prefix: "Estimated delivery in",
-    promoCode: "GET500",
-    images:
-      "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&q=80",
-    variant_attributes: [
-      { name: "Size", value: "M" },
-      { name: "Colour", value: "Black" },
-    ],
-  },
-  {
-    id: "item-2",
-    product_id: "prod-2",
-    variant_id: "var-2",
-    unique_code: "SKU002",
-    product_name:
-      "GUCCI Ace Sneaker (Tan Leather, Gold Buckle) — Low-Top Lace-Up Sneaker With Signature",
-    quantity: 1,
-    unit_price: 450,
-    rrp_price_snapshot: 520,
-    discount_percentage: 20,
-    discounted_price: 450,
-    oldPrice: 520,
-    discount: 20,
-    final_price: 450,
-    subtotal: 450,
-    promotion_discount: 0,
-    is_active: true,
-    available_stock: 5,
-    stock: 5,
-    is_shippable: true,
-    shipping_cost: 0,
-    handling_time_days: 2,
-    delivery_prefix: "FREE Delivery",
-    saleBadge: "Sale 20% Off",
-    images:
-      "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&q=80",
-    variant_attributes: [
-      { name: "Size", value: "US 8" },
-      { name: "Colour", value: "Tan" },
-    ],
-  },
-];
+// ---------------- DUMMY DATA (kept for reference only — no longer used, cart now comes from the real get-cart API) ----------------
+// const DUMMY_CART_ITEMS = [
+//   {
+//     id: "item-1",
+//     product_id: "prod-1",
+//     variant_id: undefined as string | undefined,
+//     unique_code: "SKU001",
+//     product_name:
+//       "Saint Laurent Classic Biker Leather Jacket (Black) — Signature Biker Silhouette In Supple Lambskin",
+//     quantity: 1,
+//     unit_price: 1290,
+//     rrp_price_snapshot: 1490,
+//     discount_percentage: 50,
+//     discounted_price: 1290,
+//     oldPrice: 1490,
+//     discount: 50,
+//     final_price: 1290,
+//     subtotal: 1290,
+//     promotion_discount: 0,
+//     is_active: true,
+//     available_stock: 15,
+//     stock: 15,
+//     is_shippable: true,
+//     shipping_cost: 0,
+//     handling_time_days: 2,
+//     delivery_prefix: "Estimated delivery in",
+//     promoCode: "GET500",
+//     images:
+//       "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&q=80",
+//     variant_attributes: [
+//       { name: "Size", value: "M" },
+//       { name: "Colour", value: "Black" },
+//     ],
+//   },
+//   {
+//     id: "item-2",
+//     product_id: "prod-2",
+//     variant_id: "var-2",
+//     unique_code: "SKU002",
+//     product_name:
+//       "GUCCI Ace Sneaker (Tan Leather, Gold Buckle) — Low-Top Lace-Up Sneaker With Signature",
+//     quantity: 1,
+//     unit_price: 450,
+//     rrp_price_snapshot: 520,
+//     discount_percentage: 20,
+//     discounted_price: 450,
+//     oldPrice: 520,
+//     discount: 20,
+//     final_price: 450,
+//     subtotal: 450,
+//     promotion_discount: 0,
+//     is_active: true,
+//     available_stock: 5,
+//     stock: 5,
+//     is_shippable: true,
+//     shipping_cost: 0,
+//     handling_time_days: 2,
+//     delivery_prefix: "FREE Delivery",
+//     saleBadge: "Sale 20% Off",
+//     images:
+//       "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&q=80",
+//     variant_attributes: [
+//       { name: "Size", value: "US 8" },
+//       { name: "Colour", value: "Tan" },
+//     ],
+//   },
+// ];
 
 function getCartItemHref(item: { product_id: string; unique_code: string }) {
   return item.product_id.startsWith("static-")
@@ -101,7 +109,7 @@ function getCartItemHref(item: { product_id: string; unique_code: string }) {
     : `/product/${item.unique_code || item.product_id}`;
 }
 
-function buildCartFromItems(items: StaticCartItem[]) {
+function buildCartFromItems(items: StaticCartItem[], id?: string) {
   const items_total = items.reduce(
     (acc, item) => acc + (item.final_price ?? item.subtotal ?? 0),
     0,
@@ -115,7 +123,7 @@ function buildCartFromItems(items: StaticCartItem[]) {
     .reduce((acc, item) => acc + (item.shipping_cost || 0), 0);
 
   return {
-    id: "dummy-cart-id",
+    id: id || "",
     items,
     items_total,
     subtotal: items_total,
@@ -128,8 +136,25 @@ function buildCartFromItems(items: StaticCartItem[]) {
 }
 
 const Cart = () => {
-  const [postcode, setPostcode] = useState("");
-  const [cartItems, setCartItems] = useState(DUMMY_CART_ITEMS);
+  const { postcode, updatePostcode } = useGlobalPostcode();
+  const {
+    data: cartData,
+    isLoading: isCartLoading,
+    isFetching: isCartFetching,
+  } = useGetCartQuery(postcode ? { postcode } : undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+  const [removeFromCart, { isLoading: isRemoving }] =
+    useRemoveFromCartMutation();
+  const [updateCartItemQuantity, { isLoading: isUpdatingCartItem }] =
+    useUpdateCartItemQuantityMutation();
+  const [checkDelivery, { isLoading: isCheckingDelivery }] =
+    useCheckDeliveryMutation();
+  const [validatePromoCode, { isLoading: isApplyingPromo }] =
+    useValidatePromoCodeMutation();
+
+  const realCartItems = useMemo(() => cartData?.items ?? [], [cartData]);
+
   const {
     items: staticCartItems,
     updateQuantity: updateStaticCartQuantity,
@@ -137,25 +162,22 @@ const Cart = () => {
   } = useStaticCart();
   const combinedCartItems = useMemo(
     () => [
-      ...(cartItems as unknown as StaticCartItem[]),
+      ...(realCartItems as unknown as StaticCartItem[]),
       ...staticCartItems,
     ],
-    [cartItems, staticCartItems],
+    [realCartItems, staticCartItems],
   );
   const cart = useMemo(
-    () => buildCartFromItems(combinedCartItems),
-    [combinedCartItems],
+    () => buildCartFromItems(combinedCartItems, cartData?.id),
+    [combinedCartItems, cartData?.id],
   );
 
   const clickLockRef = useRef(false);
   const orderSummaryRef = useRef<HTMLDivElement>(null);
   const [matchedHeight, setMatchedHeight] = useState<number | null>(null);
 
-  const [isRemoving, setIsRemoving] = useState(false);
-  const [isApplyingPromo, setIsApplyingPromo] = useState(false);
-  const [isCheckingDelivery, setIsCheckingDelivery] = useState(false);
   const [updatingItemId, setUpdatingItemId] = useState<string | null>(null);
-  const isUpdating = updatingItemId !== null;
+  const isUpdating = updatingItemId !== null || isUpdatingCartItem;
 
   const { formData, formErrors, handleChange, handleSubmit } =
     useFormValidation(pincodeSchema, { pincode: postcode || "" });
@@ -217,7 +239,7 @@ const Cart = () => {
     return itemSavings + promotionDiscount + couponDiscount;
   }, [cart, discountAmount]);
 
-  // ---------------- APPLY PROMO CODE (dummy) ----------------
+  // ---------------- APPLY PROMO CODE ----------------
   const handleApplyPromoCode = async () => {
     if (!promoCodeInput.trim()) {
       setPromoCodeError("Please enter a promo code.");
@@ -234,33 +256,49 @@ const Cart = () => {
       return;
     }
 
-    setIsApplyingPromo(true);
     setPromoCodeError(null);
 
-    setTimeout(() => {
-      const code = promoCodeInput.trim().toUpperCase();
-      const isValid = code === "SAVE10" || code === "FLAT20";
+    try {
+      const result = await validatePromoCode({
+        coupon_code: promoCodeInput.trim(),
+        cart_id: cartData?.id || "",
+        post_code: postcode,
+      }).unwrap();
 
-      if (!isValid) {
-        setPromoCodeError("Invalid coupon code");
+      if (!result.is_valid) {
+        const message =
+          result.reason || result.message || "Invalid coupon code";
+        setPromoCodeError(message);
         setAppliedPromoCode(null);
         setDiscountAmount(0);
         setNewTotalPrice(null);
-        toast.error("Invalid coupon code");
-        setIsApplyingPromo(false);
+        toast.error(message);
         return;
       }
 
-      const discount =
-        code === "SAVE10" ? cart.total_price * 0.1 : Math.min(20, cart.total_price);
+      const discountValue = Number.parseFloat(result.discount_value || "0");
+      const maxDiscount = result.max_discount
+        ? Number.parseFloat(result.max_discount)
+        : null;
+
+      let discount =
+        result.discount_type === "percentage"
+          ? cart.total_price * (discountValue / 100)
+          : discountValue;
+
+      if (maxDiscount !== null) discount = Math.min(discount, maxDiscount);
+      discount = Math.min(discount, cart.total_price);
+
       const newTotal = Math.max(cart.total_price - discount, 0);
 
       setAppliedPromoCode(promoCodeInput);
       setDiscountAmount(discount);
       setNewTotalPrice(newTotal);
-      toast.success("Coupon applied successfully!");
-      setIsApplyingPromo(false);
-    }, 500);
+      toast.success(result.message || "Coupon applied successfully!");
+    } catch {
+      setPromoCodeError("Failed to validate coupon code");
+      toast.error("Failed to validate coupon code");
+    }
   };
 
   const handleRemovePromo = () => {
@@ -271,7 +309,7 @@ const Cart = () => {
     toast.info("Promo code removed.");
   };
 
-  // ---------------- REMOVE ITEM (dummy) ----------------
+  // ---------------- REMOVE ITEM ----------------
   const handleRemoveItem = async (id: string, variant_id?: string) => {
     if (id.startsWith("static-")) {
       removeStaticCartItemById(id);
@@ -284,17 +322,13 @@ const Cart = () => {
       return;
     }
 
-    setIsRemoving(true);
-    setTimeout(() => {
-      setCartItems((prev) =>
-        prev.filter(
-          (item) =>
-            !(item.product_id === id && item.variant_id === variant_id),
-        ),
-      );
-      setIsRemoving(false);
+    try {
+      await removeFromCart({ product_id: id, variant_id }).unwrap();
+    } catch {
+      toast.error("Failed to remove item.");
+    } finally {
       clickLockRef.current = false;
-    }, 300);
+    }
   };
 
   useEffect(() => {
@@ -306,14 +340,20 @@ const Cart = () => {
     }
   }, [cart]);
 
-  // ---------------- CHECK DELIVERY (dummy) ----------------
+  // ---------------- CHECK DELIVERY ----------------
   const handleCheckDelivery = handleSubmit(async (data) => {
-    setIsCheckingDelivery(true);
-    setTimeout(() => {
-      setPostcode(data.pincode);
-      toast.success("Delivery available!");
-      setIsCheckingDelivery(false);
-    }, 500);
+    try {
+      const result = await checkDelivery(data.pincode).unwrap();
+      updatePostcode(data.pincode);
+
+      if (result.deliverable) {
+        toast.success(result.message || "Delivery available!");
+      } else {
+        toast.error(result.message || "Delivery not available for this postcode.");
+      }
+    } catch {
+      toast.error("Failed to check delivery.");
+    }
   });
 
   // Per-item local quantity display (allows user to clear & retype)
@@ -332,7 +372,7 @@ const Cart = () => {
     });
   }, [cart]);
 
-  // ---------------- QUANTITY DEBOUNCED UPDATE (dummy) ----------------
+  // ---------------- QUANTITY DEBOUNCED UPDATE ----------------
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleUpdateQuantity = (
@@ -377,29 +417,35 @@ const Cart = () => {
 
       if (item_id != null) setUpdatingItemId(item_id);
 
-      setTimeout(() => {
-        setCartItems((prev) =>
-          prev.map((it) =>
-            it.product_id === product_id && it.variant_id === variant_id
-              ? {
-                ...it,
-                quantity,
-                subtotal: it.unit_price * quantity,
-                final_price:
-                  (it.final_price / it.quantity || it.unit_price) * quantity,
-              }
-              : it,
-          ),
-        );
-        if (item_id != null) {
-          setLocalQtyMap((prev) => ({ ...prev, [item_id]: String(quantity) }));
-        }
-        setUpdatingItemId(null);
-      }, 400);
+      updateCartItemQuantity({ product_id, quantity, variant_id, postcode })
+        .unwrap()
+        .then(() => {
+          if (item_id != null) {
+            setLocalQtyMap((prev) => ({ ...prev, [item_id]: String(quantity) }));
+          }
+        })
+        .catch(() => {
+          toast.error("Failed to update quantity");
+          if (item_id != null) {
+            setLocalQtyMap((prev) => {
+              const next = { ...prev };
+              delete next[item_id];
+              return next;
+            });
+          }
+        })
+        .finally(() => setUpdatingItemId(null));
     }, 800);
   };
 
   // ---------------- LOADING / EMPTY STATES ----------------
+  if (isCartLoading || (isCartFetching && !cartData))
+    return (
+      <div className="flex flex-col justify-center items-center text-center p-8 min-h-[40vh]">
+        <p className="text-sm text-gray-400">Loading your cart...</p>
+      </div>
+    );
+
   if (!cart || cart.items.length === 0)
     return (
       <div className="flex flex-col justify-center items-center text-center p-8 min-h-[40vh]">
@@ -486,6 +532,8 @@ const Cart = () => {
               const itemSubtotal =
                 item.subtotal ?? mainPrice * Number(item.quantity);
 
+              const deliveryPrefix = "Estimated delivery in";
+
               const itemInfo = (
                 <>
                   <h3 className="fluid-text-xs font-semibold leading-[18px] text-black mb-0.5 lg:mb-1.5 ">
@@ -537,19 +585,10 @@ const Cart = () => {
                       Eligible For FREE Shipping
                     </p>
                   )}
-                  {item.handling_time_days === 1 ? (
-                    <p className="fluid-text-xs leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
-                      {item.delivery_prefix}{" "}
-                      <strong className="font-semibold text-black">
-                        Next Business Day
-                      </strong>
-                    </p>
-                  ) : (
-                    <p className="fluid-text-xs leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
-                      {item.delivery_prefix}{" "}
-                      {getHandlingDeliveryRange(item.handling_time_days)}
-                    </p>
-                  )}
+                  <p className="fluid-text-xs leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
+                    {deliveryPrefix}{" "}
+                    {getHandlingDeliveryRange(item.handling_time_days)}
+                  </p>
 
                   {item.variant_attributes &&
                     item.variant_attributes.length > 0 && (
@@ -1041,7 +1080,7 @@ const Cart = () => {
                         value: data.pincode,
                       },
                     } as React.ChangeEvent<HTMLInputElement>);
-                    setPostcode(data.pincode);
+                    updatePostcode(data.pincode, data.city);
                   }}
                   inputClassName="flex-1 min-w-0 !h-auto !p-0 !bg-transparent !border-0 !rounded-none !shadow-none !ring-0 outline-none text-sm placeholder:text-[#726969]"
                 />
