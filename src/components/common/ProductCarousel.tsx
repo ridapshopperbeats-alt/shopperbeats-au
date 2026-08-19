@@ -19,7 +19,7 @@ export default function ProductCarousel({
 
   return (
 
-    <div className={from == "details" ? "products" : "w-full px-[7px]"}>
+    <div className={from == "details" ? "products" : "w-full"}>
         <div className="flex justify-between  gap-4">
           <div className="w-full">
             <div className="flex flex-col gap-1 w-full my-1">
@@ -42,7 +42,7 @@ export default function ProductCarousel({
         </div>
 
       <div className={isLoading ? "" : ""}>
-        <div className="pt-3 lg:pt-5 overflow-visible px-[10px] lg:px-0">
+        <div className="pt-3 lg:pt-4 overflow-visible px-[10px] lg:px-0">
           {!isLoading && (
             <ReusableSlider<Product | BundleProduct>
               items={items}

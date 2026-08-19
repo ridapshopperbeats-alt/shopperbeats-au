@@ -26,7 +26,7 @@ const Breadcrumb = ({ from }: BreadcrumbProps) => {
   if (!categoryHistory || categoryHistory.length === 0) return null;
 
   return (
-    <div className="w-full mt-3 lg:mt-0 mb-3 lg:mb-4">
+    <div className="w-full mt-3 lg:mt-1 mb-3 lg:mb-4">
       <div className={from === "detail" ? "" : "w-full px-[10px] lg:px-0"}>
         <ul className="no-scrollbar flex items-center gap-1 overflow-x-auto whitespace-nowrap text-[12px] sm:text-[14px] font-medium leading-[100%]">
           {categoryHistory.map((item, index) => (

@@ -5,138 +5,52 @@ import { toast } from "react-toastify";
 
 import Button from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
-import StaticProductCard from "@/components/common/StaticProductCard";
-import { useStaticCart } from "@/lib/hooks/useStaticCart";
-import { ProductCardProps } from "@/types/product";
-
-// ---------------- DUMMY DATA (static, for now — mirrors homepage StaticCard.tsx) ----------------
-const STATIC_WISHLIST_PRODUCTS: ProductCardProps[] = [
-  {
-    id: "wishlist-1",
-    unique_code: "wishlist-1",
-    image:
-      "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&q=80",
-    brand_name: "Terractive",
-    title: "Stretchie Tank Top - Super-Soft, Sweat-Wicking & Stretchy",
-    mainPrice: 89,
-    wasPrice: 249,
-    showWasPrice: true,
-    saveAmount: 64,
-    rating: 4.5,
-    reviewCount: 128,
-    stock: 15,
-    shippingCharge: 0,
-    tags: ["hotseller"],
-  },
-  {
-    id: "wishlist-2",
-    unique_code: "wishlist-2",
-    image:
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&q=80",
-    brand_name: "Glow",
-    title: "Glow Makeup Essentials Kit - Glow With Beauty Essentials",
-    mainPrice: 119,
-    wasPrice: 299,
-    showWasPrice: true,
-    saveAmount: 60,
-    rating: 4.5,
-    reviewCount: 76,
-    stock: 24,
-    shippingCharge: 0,
-    tags: ["new"],
-  },
-  {
-    id: "wishlist-3",
-    unique_code: "wishlist-3",
-    image:
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&q=80",
-    brand_name: "ShopperBeats",
-    title: "Rose Gold Minimal Watch - Timeless Style With Luxury Touch",
-    mainPrice: 199,
-    wasPrice: 499,
-    showWasPrice: true,
-    saveAmount: 60,
-    rating: 4.5,
-    reviewCount: 54,
-    stock: 8,
-    shippingCharge: 0,
-    tags: ["bestseller"],
-  },
-  {
-    id: "wishlist-4",
-    unique_code: "wishlist-4",
-    image:
-      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&q=80",
-    brand_name: "ShopperBeats",
-    title: "Luxury Quilted Chain Bag - Elegant Bags For Modern Looks",
-    mainPrice: 79,
-    wasPrice: 199,
-    showWasPrice: true,
-    saveAmount: 60,
-    rating: 4.5,
-    reviewCount: 32,
-    stock: 0,
-    shippingCharge: 0,
-  },
-  {
-    id: "wishlist-5",
-    unique_code: "wishlist-5",
-    image:
-      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=400&q=80",
-    brand_name: "Terractive",
-    title: "Stretchie Tank Top - Super-Soft, Sweat-Wicking & Stretchy",
-    mainPrice: 89,
-    wasPrice: 249,
-    showWasPrice: true,
-    saveAmount: 64,
-    rating: 4.5,
-    reviewCount: 128,
-    stock: 15,
-    shippingCharge: 0,
-    tags: ["hotseller"],
-  },
-  {
-    id: "wishlist-6",
-    unique_code: "wishlist-6",
-    image:
-      "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&q=80",
-    brand_name: "ShopperBeats",
-    title: "Rose Gold Minimal Watch - Timeless Style With Luxury Touch",
-    mainPrice: 199,
-    wasPrice: 499,
-    showWasPrice: true,
-    saveAmount: 60,
-    rating: 4.5,
-    reviewCount: 54,
-    stock: 8,
-    shippingCharge: 0,
-    tags: ["bestseller"],
-  },
-];
-
+import ProductCard from "@/components/common/ProductCard";
+import {
+  useGetWishlistQuery,
+  useAddToCartMutation,
+} from "@/lib/redux/apis/cart-api";
+import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
+import { getPriceDetails, getImageUrl } from "@/lib/utils/main-utils";
 export default function WishlistPage() {
-  const { addToCart } = useStaticCart();
+  const {
+    data: wishlist,
+    isLoading,
+    isFetching,
+  } = useGetWishlistQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+  const [addToCart] = useAddToCartMutation();
+  const { postcode } = useGlobalPostcode();
 
-  const items = STATIC_WISHLIST_PRODUCTS;
+  const items = wishlist?.items ?? [];
 
-  const handleAddAllToCart = () => {
-    const inStockItems = items.filter((item) => (item.stock ?? 0) > 0);
+  const wishlistKeys = items.map((item) => ({
+    product_id: item.product_id,
+    variant_id: item.variant_id,
+  }));
 
-    inStockItems.forEach((item) =>
-      addToCart({
-        id: String(item.unique_code || item.id),
-        image: item.image,
-        brand_name: item.brand_name || "No Brand",
-        title: item.title || "",
-        mainPrice: item.mainPrice || 0,
-        wasPrice: item.wasPrice || 0,
-        saveAmount: item.saveAmount || 0,
-        shippingCharge: item.shippingCharge || 0,
-        isOutOfStock: false,
-      }),
+  const handleAddAllToCart = async () => {
+    const inStockItems = items.filter(
+      (item) => (item.available_stock ?? item.stock ?? 0) > 0,
     );
 
-    toast.success(`Added ${inStockItems.length} item(s) to cart`);
+    try {
+      await Promise.all(
+        inStockItems.map((item) =>
+          addToCart({
+            productId: item.product_id,
+            quantity: 1,
+            variant_id: item.variant_id,
+            vendor_id: item.vendor_id,
+            postcode,
+          }).unwrap(),
+        ),
+      );
+      toast.success(`Added ${inStockItems.length} item to cart`);
+    } catch {
+      toast.error("Failed to add some items to cart.");
+    }
   };
 
   return (
@@ -155,26 +69,57 @@ export default function WishlistPage() {
           onClick={handleAddAllToCart}
           className="flex shrink-0 items-center justify-center gap-1.5 sm:gap-2 rounded-[10px] bg-sb-red px-3.5 sm:px-5 py-2 sm:py-2.5 text-[0.75rem]! sm:text-[0.75rem] font-normal text-white whitespace-nowrap cursor-pointer"
           debounceDelay={500}
+          disabled={items.length === 0}
         >
           <ShoppingBag size={14} />
           Add All to Cart
         </Button>
       </Card>
 
-      {items.length === 0 ? (
+      {isLoading || isFetching ? (
+        <Card className="w-full items-center p-10 text-center">
+          <p className="text-sm text-gray-400">Loading your wishlist...</p>
+        </Card>
+      ) : items.length === 0 ? (
         <Card className="w-full items-center p-10 text-center">
           <p className="text-sm text-gray-400">Your wishlist is empty.</p>
         </Card>
       ) : (
         <div className="grid w-full grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="w-full [&>div]:max-h-none! [&>div]:h-auto! [&_a]:max-h-none! [&_a]:h-auto!"
-            >
-              <StaticProductCard {...item} />
-            </div>
-          ))}
+          {items.map((item) => {
+            const priceInfo = getPriceDetails(item);
+
+            return (
+              <div
+                key={`${item.product_id}-${item.variant_id ?? "default"}`}
+                className="w-full [&>div]:max-h-none! [&>div]:h-auto! [&_a]:max-h-none! [&_a]:h-auto!"
+              >
+                <ProductCard
+                  wishlistItems={wishlistKeys}
+                  image={getImageUrl(item, "plpcard")}
+                  title={item.title || item.product_name}
+                  brand_name={item.brand_name}
+                  mainPrice={priceInfo.mainPrice}
+                  wasPrice={priceInfo.wasPrice}
+                  showWasPrice={priceInfo.showWasPrice}
+                  discountPercentage={priceInfo.discountPercentage}
+                  saveAmount={priceInfo.saveAmount}
+                  id={item.product_id}
+                  unique_code={item.unique_code || item.product_id}
+                  defaultVariantId={item.variant_id}
+                  variants={item.variants}
+                  promotion_name={item.promotion_name}
+                  stock={item.available_stock ?? item.stock}
+                  vendor_id={item.vendor_id}
+                  rating={item.review_stats?.average_rating || 0}
+                  reviewCount={item.review_stats?.total_reviews || 0}
+                  tags={item.tags}
+                  ships_from_location={item.ships_from_location}
+                  handling_time_days={item.handling_time_days}
+                />
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

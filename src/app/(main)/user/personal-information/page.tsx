@@ -265,7 +265,7 @@ export default function PersonalInformationPage() {
             type="submit"
             disabled={isUpdating}
             isLoading={isUpdating}
-            className="flex items-center justify-center rounded-[30px]! bg-sb-red px-6 py-2.5 text-center font-montserrat text-12px font-bold leading-[19.5px] text-white disabled:opacity-50"
+            className="flex items-center justify-center rounded-[30px]! bg-sb-red px-6 py-2.5 text-center font-montserrat text-12px font-bold leading-[19.5px] text-white disabled:opacity-50 cursor-pointer"
             debounceDelay={500}
           >
             {isUpdating ? "Saving..." : "Update Information"}

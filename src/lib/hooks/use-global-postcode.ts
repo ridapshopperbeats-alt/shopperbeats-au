@@ -12,7 +12,7 @@ export const useGlobalPostcode = () => {
     dispatch(loadPostcode());
   }, [dispatch]);
 
-  const updatePostcode = (newPostcode: string, newSuburb: string = 'Sydney') => {
+  const updatePostcode = (newPostcode: string, newSuburb: string = '') => {
     dispatch(setPostcode({ postcode: newPostcode, suburb: newSuburb }));
   };
 
