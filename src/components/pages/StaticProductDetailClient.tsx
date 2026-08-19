@@ -628,8 +628,8 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
                                 .join(" ")
                               : postcode
                                 ? [suburb, postcode].filter(Boolean).join(" ")
-                                : "Melbourne 3000"
-                            : "Melbourne 3000"}
+                                : "Enter your postcode"
+                            : "Enter your postcode"}
                         </span>
                       </div>
                     </div>
@@ -1136,7 +1136,7 @@ export default function StaticProductDetailClient({ slug }: { slug: string }) {
         onClose={() => setShowLocationPopup(false)}
         selectedAddressId={selectedAddressId}
         onApply={(data) => {
-          updatePostcode(data.pincode, data.suburb || "Melbourne");
+          updatePostcode(data.pincode, data.suburb || "");
           setSelectedLocation({
             pincode: data.pincode,
             suburb: data.suburb,

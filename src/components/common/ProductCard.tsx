@@ -32,7 +32,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   title,
   mainPrice,
   wasPrice,
-  saveAmount,
+  discountPercentage,
   rating = 0,
   reviewCount = 0,
   id,
@@ -214,9 +214,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   </span>
                 )}
                 
-                {saveAmount && (
+                {discountPercentage && (
                   <span className="text-[9px] md:text-[12px] font-semibold text-[#008F11]">
-                    {formatPrice(saveAmount)}% OFF
+                    {formatPrice(discountPercentage)}% OFF
                   </span>
                 )}
 

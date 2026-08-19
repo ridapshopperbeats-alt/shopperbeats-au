@@ -188,7 +188,7 @@ export default function SecureCheckout() {
     billingPostcode: "",
     billingPhone: "",
     paymentMethod: "",
-    country: "Australia",
+    country: "United States",
     billingCountry: "",
     buyNote: "",
   });
@@ -396,7 +396,7 @@ export default function SecureCheckout() {
         items_count: checkoutProducts.length,
         total_saving: totalSaveAmount,
         source: "web",
-        currency: "AUD",
+        currency: "USD",
         customer_name: `${data.firstName} ${data.lastName}`,
         customer_email: data.email,
         customer_phone: String(data.phone),
@@ -418,7 +418,7 @@ export default function SecureCheckout() {
           apartment: data.apartment,
           city: data.city,
           state: data.state,
-          country: data.country || "AUS",
+          country: data.country || "US",
           postal_code: String(data.postcode),
           phone: String(data.phone),
         },
@@ -432,7 +432,7 @@ export default function SecureCheckout() {
               apartment: data.apartment,
               city: data.city,
               state: data.state,
-              country: data.country || "AUS",
+              country: data.country || "US",
               postal_code: String(data.postcode),
               phone: String(data.phone),
             }
@@ -444,7 +444,7 @@ export default function SecureCheckout() {
               apartment: data.billingApartment,
               city: data.billingCity,
               state: data.billingState,
-              country: data.billingCountry || "AUS",
+              country: data.billingCountry || "US",
               postal_code: data.billingPostcode,
               phone: data.billingPhone,
             },
@@ -549,7 +549,7 @@ export default function SecureCheckout() {
         products: productsForConfirmation,
         deliveryAddress: `${data.address}, ${data.city}, ${data.state}, ${data.postcode}, ${data.country}`,
         couponCode: promoData?.code,
-        orderDate: new Date().toLocaleDateString("en-AU", {
+        orderDate: new Date().toLocaleDateString("en-US", {
           day: "2-digit",
           month: "short",
           year: "numeric",
@@ -755,7 +755,7 @@ export default function SecureCheckout() {
 
   if (prevEffectivePostcode !== effectivePostcode) {
     setPrevEffectivePostcode(effectivePostcode);
-    if (!(effectivePostcode && effectivePostcode.length === 4)) {
+    if (!(effectivePostcode && effectivePostcode.length === 5)) {
       setDebouncedPostcode("");
     }
   }
@@ -765,7 +765,7 @@ export default function SecureCheckout() {
       clearTimeout(timerRef.current);
     }
 
-    if (effectivePostcode && effectivePostcode.length === 4) {
+    if (effectivePostcode && effectivePostcode.length === 5) {
       timerRef.current = setTimeout(() => {
         setDebouncedPostcode(effectivePostcode);
       }, 600);

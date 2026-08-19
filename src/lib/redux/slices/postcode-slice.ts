@@ -6,8 +6,8 @@ interface PostcodeState {
 }
 
 const initialState: PostcodeState = {
-  postcode: (typeof window !== 'undefined' ? localStorage.getItem('globalPostcode') : null) || '3000',
-  suburb: (typeof window !== 'undefined' ? localStorage.getItem('globalSuburb') : null) || 'Melbourne',
+  postcode: (typeof window !== 'undefined' ? localStorage.getItem('globalPostcode') : null) || '',
+  suburb: (typeof window !== 'undefined' ? localStorage.getItem('globalSuburb') : null) || '',
 };
 
 const postcodeSlice = createSlice({
@@ -28,14 +28,14 @@ const postcodeSlice = createSlice({
         const storedSuburb = localStorage.getItem('globalSuburb');
         if (stored) {
           state.postcode = stored;
-          state.suburb = storedSuburb || 'Melbourne';
+          state.suburb = storedSuburb || '';
         } else {
-          state.postcode = '3000';
-          state.suburb = 'Melbourne';
+          state.postcode = '';
+          state.suburb = '';
         }
       } else {
-        state.postcode = '3000';
-        state.suburb = 'Melbourne';
+        state.postcode = '';
+        state.suburb = '';
       }
     },
   },

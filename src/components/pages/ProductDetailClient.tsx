@@ -1773,7 +1773,7 @@ export default function ProductDetailClient({
         onClose={() => setShowLocationPopup(false)}
         selectedAddressId={selectedAddressId}
         onApply={(data) => {
-          updatePostcode(data.pincode, data.suburb || "Melbourne");
+          updatePostcode(data.pincode, data.suburb || "");
           setSelectedLocation({
             pincode: data.pincode,
             suburb: data.suburb,

@@ -71,7 +71,8 @@ export default function GooglePlacesInput({
       !isUserTypingRef.current ||
       isSelectingRef.current ||
       !window.google?.maps?.places ||
-      !query
+      !query ||
+      query.trim().length < 2
     ) {
       setSuggestions([]);
       return;
@@ -85,11 +86,11 @@ export default function GooglePlacesInput({
           ? {
             input: query,
             includedPrimaryTypes: ["postal_code"],
-            includedRegionCodes: ["AU"],
+            includedRegionCodes: ["US"],
           }
           : {
             input: query,
-            includedRegionCodes: ["AU"],
+            includedRegionCodes: ["US"],
           }
       )
       .then((res) => {
@@ -101,6 +102,9 @@ export default function GooglePlacesInput({
             })
             : res.suggestions;
         setSuggestions(filtered);
+      })
+      .catch(() => {
+        setSuggestions([]);
       })
       .finally(() => setLoading(false));
   }, [query, mode]);

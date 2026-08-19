@@ -64,20 +64,7 @@ export const dateOfBirth = yup
 export const pincode = yup
   .string()
   .required("Postcode is required")
-  .matches(/^\d{4}$/, "Postcode must be 4 digits")
-  .test("au-postcode", "Enter a valid Australian postcode", (value) => {
-    if (!value) return false;
-    const n = Number.parseInt(value, 10);
-    return (
-      (n >= 800 && n <= 999) ||   // NT (0800–0999)
-      (n >= 1000 && n <= 2999) || // NSW / ACT
-      (n >= 3000 && n <= 3999) || // VIC
-      (n >= 4000 && n <= 4999) || // QLD
-      (n >= 5000 && n <= 5999) || // SA
-      (n >= 6000 && n <= 6999) || // WA
-      (n >= 7000 && n <= 7999)    // TAS
-    );
-  });
+  .matches(/^\d{5}(-\d{4})?$/, "Enter a valid US ZIP code");
 
 
 /* ------------------ Name  ------------------ */

@@ -11,9 +11,6 @@ export default function ErrorBoundary({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log only enough to correlate with server-side logs (Next.js attaches
-    // a `digest` to the matching server log entry) — never the raw message
-    // or stack, which can echo backend internals to the browser console.
     console.error("Unhandled page error, digest:", error.digest);
   }, [error]);
 
