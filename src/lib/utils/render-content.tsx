@@ -19,9 +19,15 @@ export function renderContent(content?: string): React.ReactNode {
 
   if (isHtml) {
     return (
+      <>
       <div
         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
       />
+      <div className="text-[14px] text-[#F51721] mt-2 font-bold">
+        PROP65 Warning: This product contains a chemical known to the State of California to cause cancer.
+        Decorations and accessories are not included. Images shown are only a representation and may vary.
+      </div>
+      </>
     );
   }
 
