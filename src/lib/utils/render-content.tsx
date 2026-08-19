@@ -25,13 +25,21 @@ export function renderContent(content?: string): React.ReactNode {
       />
       <div className="text-[14px] text-[#F51721] mt-2 font-bold">
         PROP65 Warning: This product contains a chemical known to the State of California to cause cancer.
-        Decorations and accessories are not included. Images shown are only a representation and may vary.
+        <br/> Decorations and accessories are not included. Images shown are only a representation and may vary.
       </div>
       </>
     );
   }
 
-  return <p>{content}</p>;
+  return (
+    <>
+      <p>{content}</p>
+      <div className="text-[14px] text-[#F51721] mt-2 font-bold">
+        PROP65 Warning: This product contains a chemical known to the State of California to cause cancer.
+        <br/> Decorations and accessories are not included. Images shown are only a representation and may vary.
+      </div>
+    </>
+  );
 }
 
 const HTML_ENTITIES: Record<string, string> = {
