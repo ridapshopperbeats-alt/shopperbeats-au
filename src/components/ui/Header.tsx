@@ -24,6 +24,8 @@ import {
   Armchair,
   Home,
   Gem,
+  Tag,
+  Leaf,
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
@@ -67,6 +69,80 @@ const resolveCategoryHref = (slugOrId: string) =>
   slugOrId?.startsWith("static-")
     ? "/static-category"
     : `/category/${slugOrId}`;
+
+const getCategoryIcon = (name: string) => {
+  const n = name.toLowerCase();
+  if (n.includes("fashion") || n.includes("apparel") || n.includes("clothing"))
+    return HandbagIcon;
+  if (n.includes("home") && n.includes("garden")) return Home;
+  if (n.includes("furniture")) return Armchair;
+  if (n.includes("health") || n.includes("beauty")) return HeartPulse;
+  if (n.includes("outdoor") || n.includes("patio")) return Armchair;
+  if (n.includes("toy") || n.includes("game")) return Gamepad2;
+  if (n.includes("jewel")) return Gem;
+  if (n.includes("sale") || n.includes("sparkle")) return Sparkles;
+  return Tag;
+};
+
+const GENDER_KEYWORDS: Record<"women" | "men", RegExp> = {
+  women: /women|woman|ladies/i,
+  men: /\bmen\b|\bman\b|gentlemen/i,
+};
+
+// Best-effort match: names with no explicit gender keyword (e.g. "Jeans",
+// "Jackets & Coats") are treated as unisex and shown under both tabs, since
+// the category data has no gender field to split on.
+const matchesGenderTab = (name: string, tab: "women" | "men") => {
+  const isWomen = GENDER_KEYWORDS.women.test(name);
+  const isMen = GENDER_KEYWORDS.men.test(name);
+  if (!isWomen && !isMen) return true;
+  return tab === "women" ? isWomen : isMen;
+};
+
+const getCategoryPromo = (name: string) => {
+  const n = name.toLowerCase();
+  if (n.includes("fashion"))
+    return {
+      label: "New Collection",
+      title: "Women's Fashion",
+      desc: "Explore the latest trends this season.",
+      image: "/images/womentop.png",
+    };
+  if (n.includes("home") && n.includes("garden"))
+    return {
+      label: "Trending Now",
+      title: "Home & Garden",
+      desc: "Refresh your space for less.",
+      image: "/images/home-garden-banner.jpg",
+    };
+  if (n.includes("furniture"))
+    return {
+      label: "New Arrivals",
+      title: "Furniture",
+      desc: "Comfort meets style.",
+      image: "/images/furniture.png",
+    };
+  if (n.includes("health") || n.includes("beauty"))
+    return {
+      label: "Self Care",
+      title: "Health & Beauty",
+      desc: "Feel good, look good.",
+      image: "/images/health-beauty-banner.jpg",
+    };
+  if (n.includes("outdoor") || n.includes("patio"))
+    return {
+      label: "Outdoor Living",
+      title: "Outdoor & Patio",
+      desc: "Make the most of the outdoors.",
+      image: "/images/patioFurniture.png",
+    };
+  return {
+    label: "New In",
+    title: name,
+    desc: "Explore our latest picks.",
+    image: null as string | null,
+  };
+};
 
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -187,6 +263,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
     megaMenuData.length > 0
       ? (megaMenuData[0].slug ?? megaMenuData[0].id)
       : null,
+  );
+  const [activeGenderTab, setActiveGenderTab] = useState<"women" | "men">(
+    "women",
   );
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [openSubCategories, setOpenSubCategories] = useState<
@@ -564,33 +643,43 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <div className="mega-menu">
                 <div className="category-list" data-lenis-prevent>
                   <ul>
-                    {megaMenuData.map((cat) => (
-                      <li
-                        key={cat.id}
-                        className={
-                          activeCategory === (cat.slug ?? cat.id)
-                            ? "active"
-                            : ""
-                        }
-                        onMouseEnter={() =>
-                          setActiveCategory(cat.slug ?? cat.id)
-                        }
-                      >
-                        <Link
-                          href={resolveCategoryHref(cat.slug ?? cat.id)}
-                          prefetch={false}
-                          className="category-link"
-                          onClick={closeMegaMenu}
+                    {megaMenuData.map((cat) => {
+                      const CategoryIcon = getCategoryIcon(cat.name);
+                      return (
+                        <li
+                          key={cat.id}
+                          className={
+                            activeCategory === (cat.slug ?? cat.id)
+                              ? "active"
+                              : ""
+                          }
+                          onMouseEnter={() =>
+                            setActiveCategory(cat.slug ?? cat.id)
+                          }
                         >
-                          {cat.name}{" "}
-                          <ChevronRight
-                            size={14}
-                            className="inline-block"
-                            aria-hidden="true"
-                          />
-                        </Link>
-                      </li>
-                    ))}
+                          <Link
+                            href={resolveCategoryHref(cat.slug ?? cat.id)}
+                            prefetch={false}
+                            className="category-link"
+                            onClick={closeMegaMenu}
+                          >
+                            <span className="category-link-label">
+                              <CategoryIcon
+                                size={16}
+                                className="category-icon"
+                                aria-hidden="true"
+                              />
+                              {cat.name}
+                            </span>
+                            <ChevronRight
+                              size={14}
+                              className="inline-block"
+                              aria-hidden="true"
+                            />
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
 
@@ -606,62 +695,163 @@ export default function Header({ megaMenuData }: HeaderProps) {
                         }`}
                         id={cat.id}
                       >
-                        <div className="mega-cat">
-                          {cat.subcategories.map((subCat) => (
-                            <div key={subCat.name} className="mega-column">
-                              <Link
-                                prefetch={false}
-                                href={resolveCategoryHref(
-                                  subCat.slug ?? subCat.id,
-                                )}
-                                onClick={closeMegaMenu}
-                              >
-                                <h5>{subCat.name}</h5>
-                              </Link>
-                              <ul>
-                                {subCat.links.map((link) => (
-                                  <li
-                                    key={link.name}
-                                    style={{ lineHeight: "28px" }}
-                                  >
-                                    <Link
-                                      prefetch={false}
-                                      href={link.href}
-                                      onClick={closeMegaMenu}
-                                    >
-                                      {link.name}
-                                    </Link>
-                                  </li>
-                                ))}
+                        {(() => {
+                          const isFashionCat = cat.name
+                            .toLowerCase()
+                            .includes("fashion");
+                          const promo = getCategoryPromo(cat.name);
 
-                                {subCat.viewAll && (
-                                  <li>
+                          return (
+                            <div className="mega-content-inner">
+                              {isFashionCat && (
+                                <div className="mega-gender-tabs">
+                                  <button
+                                    type="button"
+                                    className={
+                                      activeGenderTab === "women"
+                                        ? "active"
+                                        : ""
+                                    }
+                                    onClick={() =>
+                                      setActiveGenderTab("women")
+                                    }
+                                  >
+                                    Women
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className={
+                                      activeGenderTab === "men" ? "active" : ""
+                                    }
+                                    onClick={() => setActiveGenderTab("men")}
+                                  >
+                                    Men
+                                  </button>
+                                </div>
+                              )}
+                              <div className="mega-content-row">
+                                <div className="mega-cat">
+                                  {cat.subcategories.map((subCat) => {
+                                    if (
+                                      isFashionCat &&
+                                      !matchesGenderTab(
+                                        subCat.name,
+                                        activeGenderTab,
+                                      )
+                                    ) {
+                                      return null;
+                                    }
+
+                                    const visibleLinks = isFashionCat
+                                      ? subCat.links.filter((link) =>
+                                          matchesGenderTab(
+                                            link.name,
+                                            activeGenderTab,
+                                          ),
+                                        )
+                                      : subCat.links;
+
+                                    if (
+                                      isFashionCat &&
+                                      visibleLinks.length === 0
+                                    ) {
+                                      return null;
+                                    }
+
+                                    return (
+                                      <div
+                                        key={subCat.name}
+                                        className="mega-column"
+                                      >
+                                        <Link
+                                          prefetch={false}
+                                          href={resolveCategoryHref(
+                                            subCat.slug ?? subCat.id,
+                                          )}
+                                          onClick={closeMegaMenu}
+                                        >
+                                          <h5>{subCat.name}</h5>
+                                        </Link>
+                                        <ul>
+                                          {visibleLinks.map((link) => (
+                                            <li
+                                              key={link.name}
+                                              style={{ lineHeight: "28px" }}
+                                            >
+                                              <Link
+                                                prefetch={false}
+                                                href={link.href}
+                                                onClick={closeMegaMenu}
+                                              >
+                                                {link.name}
+                                              </Link>
+                                            </li>
+                                          ))}
+
+                                          {subCat.viewAll && (
+                                            <li>
+                                              <Link
+                                                href={resolveCategoryHref(
+                                                  subCat.slug ?? subCat.id,
+                                                )}
+                                                className="view-link"
+                                                prefetch={false}
+                                                onClick={() => {
+                                                  dispatch(
+                                                    addBreadcrumb({
+                                                      name: cat.name,
+                                                      path: resolveCategoryHref(
+                                                        cat.slug ?? cat.id,
+                                                      ),
+                                                    }),
+                                                  );
+                                                  closeMegaMenu();
+                                                }}
+                                              >
+                                                View All
+                                              </Link>
+                                            </li>
+                                          )}
+                                        </ul>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+
+                                <div className="mega-promo w-[340px] h-[307px] opacity-100 rounded-[10px] pt-[40px] pr-[24px] pb-[40px] pl-[24px] bg-[#FFF0F1]">
+                                  {promo.image && (
+                                    <div className="mega-promo-image">
+                                      <Image
+                                        src={promo.image}
+                                        alt={promo.title}
+                                        fill
+                                        sizes="220px"
+                                        style={{ objectFit: "cover" }}
+                                      />
+                                    </div>
+                                  )}
+                                  <div className="mega-promo-content">
+                                    <span className="mega-promo-label">
+                                      {promo.label}
+                                    </span>
+                                    <h4>{promo.title}</h4>
+                                    <p>{promo.desc}</p>
                                     <Link
                                       href={resolveCategoryHref(
-                                        subCat.slug ?? subCat.id,
+                                        cat.slug ?? cat.id,
                                       )}
-                                      className="view-link"
                                       prefetch={false}
-                                      onClick={() => {
-                                        dispatch(
-                                          addBreadcrumb({
-                                            name: cat.name,
-                                            path: resolveCategoryHref(
-                                              cat.slug ?? cat.id,
-                                            ),
-                                          }),
-                                        );
-                                        closeMegaMenu();
-                                      }}
+                                      className="mega-promo-btn"
+                                      onClick={closeMegaMenu}
                                     >
-                                      View All
+                                      Shop Now
                                     </Link>
-                                  </li>
-                                )}
-                              </ul>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                          ))}
-                        </div>
+                          );
+                        })()}
                       </div>
                     ),
                 )}
@@ -676,7 +866,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   className="link flex items-center xl:gap-2 hover:text-red-500"
                   href="#"
                 >
-                  <Home size={16} className="inline-block text-center icons-size" />
+                  <Leaf size={16} className="inline-block text-center icons-size" />
                   Home & Garden
                 </Link>
               </li>
