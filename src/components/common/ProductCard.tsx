@@ -164,7 +164,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <>
-      <div className="group relative w-full h-full max-h-[530px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
+      <div className="group relative w-full h-full max-h-[410px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
         {/* {renderTag} */}
 
         <button
@@ -196,7 +196,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         <Link
           href={`/product/${unique_code || id}`}
-          className="flex min-h-[350px] md:min-h-[465px] flex-col no-underline text-inherit"
+          className="flex min-h-[300px] md:min-h-[400px] flex-col no-underline text-inherit"
         >
           <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden rounded-t-[8px] bg-[rgba(233,233,233,0.60)]">
             <Image
@@ -255,7 +255,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 </div>
               )}
 
-              {!isOutOfStock && (
+              {/* {!isOutOfStock && (
                 <div className="text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
                   <p className="font-normal">
                     {shippingCharge === 0
@@ -273,7 +273,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     </span>
                   </p>
                 </div>
-              )}
+              )} */}
             </div>
 
             <div className="w-full px-2 lg:px-3 flex justify-center">
