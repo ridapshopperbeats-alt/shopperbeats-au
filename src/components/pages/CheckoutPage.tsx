@@ -894,14 +894,14 @@ export default function SecureCheckout() {
                                 {item.product_name}
                               </p>
                               {isUnavailable && (
-                                <span className="block text-xs text-red-600 mt-1">
+                                <span className="block text-[12px] text-red-600 mt-1">
                                   {isInactive && "Not Available Currently"}
                                   {isOutOfStock && "Out of Stock"}
                                   {isNotShippable &&
                                     "Not available for this location"}
                                 </span>
                               )}
-                              <p className="text-right text-sm font-semibold text-black my-4">
+                              <p className="text-right text-[12px] font-semibold text-black my-4">
                                 {item.quantity} ×{" "}
                                 {showWasPrice && (
                                   <span className="price old-price">

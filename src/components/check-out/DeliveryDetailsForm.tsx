@@ -26,7 +26,7 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
       <div className="delivery-card-box">
         <div className="delivery-details ">
           <div className="mb-5 delivery-option-row">
-            <label className="flex items-center gap-2 font-bold fluid-text-12-16 leading-[20px] text-black">
+            <label className="flex items-center gap-2 font-bold fluid-text-12-16 leading-[20px] text-black cursor-pointer">
               <input
                 type="radio"
                 name="deliveryOption"
@@ -36,13 +36,13 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
                   setSelectedAddressId(null);
                   onShippingAddressValid(false);
                 }}
-                className="!w-[18px] !h-[18px] !scale-100 accent-[#01295F] cursor-pointer"
+                className="!w-[14px] !h-[14px] !scale-100 accent-[#01295F] cursor-pointer"
               />
               Add New Delivery
             </label>
             {isAuthenticated && (
               <label
-                className="flex items-center gap-2 font-bold fluid-text-xs leading-[20px] text-black"
+                className="flex items-center gap-2 font-bold fluid-text-xs leading-[20px] text-black cursor-pointer"
               >
                 <input
                   type="radio"
@@ -64,7 +64,7 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
                       phone: "",
                     }));
                   }}
-                  className="!w-[18px] !h-[18px] !scale-100 accent-[#01295F] cursor-pointer"
+                  className="!w-[14px] !h-[14px] !scale-100 accent-[#01295F] cursor-pointer"
                 />
                 Use Saved Address
               </label>
@@ -83,7 +83,7 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
                       selectedAddressId === id ? "active" : ""
                     }`}
                   >
-                    <div className="saved-address-header">
+                    <div className="saved-address-header cursor-pointer">
                       <input
                         type="radio"
                         name="savedAddress"
@@ -94,7 +94,7 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
                       <strong className="saved-address-title">{addr.title}</strong>
                     </div>
 
-                    <div className="saved-address-detail">
+                    <div className="saved-address-detail cursor-pointer">
                       <p>{addr.address}</p>
                       {addr.city}, {addr.state} {addr.pincode}
                     </div>

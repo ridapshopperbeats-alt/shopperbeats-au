@@ -401,7 +401,7 @@ button.zip {
 }
 
 .saved-address-radio {
-  @apply w-[13px] h-[13px] accent-[#01295f];
+  @apply w-[8px] h-[8px] accent-[#01295f];
 }
 
 .saved-address-title {

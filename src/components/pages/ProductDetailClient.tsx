@@ -301,13 +301,13 @@ export default function ProductDetailClient({
   );
 
   const { data: wishlistData } = useGetWishlistQuery(undefined, {
-    refetchOnMountOrArgChange: false,
+    refetchOnMountOrArgChange: true,
   });
 
-  const [localWishlistItems, setLocalWishlistItems] = useState<WishlistKey[]>(
-    [],
+  const wishlistItemsFromServer = useMemo<WishlistKey[]>(
+    () => wishlistData?.items ?? [],
+    [wishlistData],
   );
-  const [wishlistLoaded, setWishlistLoaded] = useState(false);
 
   const [shippingCharge, setShippingCharge] = useState<number | null>(null);
   const [shippingStatus, setShippingStatus] = useState<
@@ -327,13 +327,6 @@ export default function ProductDetailClient({
     null,
   );
 
-  useEffect(() => {
-    if (wishlistData?.items && !wishlistLoaded) {
-      setLocalWishlistItems(wishlistData.items);
-      setWishlistLoaded(true);
-    }
-  }, [wishlistData, wishlistLoaded]);
-
   const router = useRouter();
 
   const hasVariants = (product?.variants?.length ?? 0) > 0;
@@ -345,8 +338,7 @@ export default function ProductDetailClient({
   } = useWishlistToggle({
     productId: product.id,
     variantId: selectedVariant?.id ?? null,
-    wishlistItems: localWishlistItems,
-    syncWishlistItems: setLocalWishlistItems,
+    wishlistItems: wishlistItemsFromServer,
     requireVariant: true,
     hasVariants,
     matchAnyVariant: true,
@@ -824,8 +816,16 @@ export default function ProductDetailClient({
                 <ProductGallery
                   product={product}
                   selectedVariant={selectedVariant}
-                  isWishlisted={isProductInWishlist}
-                  onWishlistToggle={handleWishlistButtonClick}
+                  isWishlisted={!isOutOfStock && isProductInWishlist}
+                  onWishlistToggle={(e) => {
+                    if (isOutOfStock) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toast.error("This product is out of stock");
+                      return;
+                    }
+                    handleWishlistButtonClick(e);
+                  }}
                   isWishlistLoading={isWishlistLoading}
                 />
               </div>

@@ -27,7 +27,7 @@ async function getProduct(
     );
 
     if (!res.ok) {
-      throw new Error("Failed to fetch product");
+      throw new Error(`Failed to fetch product (status ${res.status})`);
     }
 
     const setCookie = res.headers.get("set-cookie") ?? undefined;
@@ -93,7 +93,8 @@ async function getProduct(
     };
 
     return { product, setCookie, seo };
-  } catch {
+  } catch (error) {
+    console.warn(`getProduct failed for slug "${slug}":`, error);
     return { product: null };
   }
 }

@@ -42,9 +42,18 @@ const ProductListingClient = ({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
-  useGetWishlistQuery(undefined, {
+  const { data: wishlistData } = useGetWishlistQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
+
+  const wishlistItems = useMemo(
+    () =>
+      (wishlistData?.items ?? []).map((item) => ({
+        product_id: item.product_id,
+        variant_id: item.variant_id,
+      })),
+    [wishlistData],
+  );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = useCallback(() => { setIsSidebarOpen((prev) => !prev); }, []);
 
@@ -542,6 +551,7 @@ const extractedBrands = useMemo(() => {
               hideSortAndPagination={slug === "personalized" || slug === "recently-viewed"}
               tags={filterTags}
               onClearFilters={handleClearAllFilters}
+              wishlistItems={wishlistItems}
             />
           )}
         </div>

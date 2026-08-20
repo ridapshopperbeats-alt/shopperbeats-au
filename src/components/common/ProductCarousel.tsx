@@ -1,10 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import ReusableSlider from "./ReusableSlider";
 import { Product, BundleProduct, ProductCarouselProps } from "@/types/product";
 import ProductCard from "./ProductCard";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
 
 export default function ProductCarousel({
   title,
@@ -16,6 +18,16 @@ export default function ProductCarousel({
   isLoading = false
 }: ProductCarouselProps) {
   const items = (bundleProducts || products || []) as (Product | BundleProduct)[];
+
+  const { data: wishlistData } = useGetWishlistQuery(undefined);
+  const wishlistItems = useMemo(
+    () =>
+      (wishlistData?.items ?? []).map((wishlistItem) => ({
+        product_id: wishlistItem.product_id,
+        variant_id: wishlistItem.variant_id,
+      })),
+    [wishlistData],
+  );
 
   return (
 
@@ -84,6 +96,7 @@ export default function ProductCarousel({
                         defaultVariantId={bundleItem.variant_id}
                         promotion_name={bundleItem.promotion_name}
                         tags={bundleItem.tags}
+                        wishlistItems={wishlistItems}
                       />
                     </div>
                   );
@@ -114,6 +127,7 @@ export default function ProductCarousel({
                         product.variants?.[0]?.id ||
                         product.variant_id
                       }
+                      wishlistItems={wishlistItems}
                     />
                   </div>
                 );
