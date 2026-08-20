@@ -862,7 +862,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center xl:gap-2 hover:text-red-500"
-                  href="#"
+                  href="/category/home-garden"
                 >
                   <Leaf size={16} className="inline-block text-center icons-size" />
                   Home & Garden
@@ -871,7 +871,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center xl:gap-2 hover:text-red-500"
-                  href="#"
+                  href="/category/furniture"
                 >
                   <Armchair size={16} className="inline-block icons-size" />
                   Furniture
@@ -880,7 +880,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center  xl:gap-2 hover:text-red-500"
-                  href="#"
+                  href="/category/fashion-accessories"
                 >
                   <HandbagIcon size={16} className="inline-block icons-size" />
                   Fashion & Accessories

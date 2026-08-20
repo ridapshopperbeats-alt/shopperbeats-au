@@ -76,6 +76,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
       ? currentVariant !== undefined && Number(currentVariant.stock) <= 0
       : stock !== undefined && stock !== null && Number(stock) <= 0;
 
+  const handleWishlistClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (isOutOfStock) {
+      toast.error("This product is out of stock");
+      return;
+    }
+
+    handleWishlistButtonClick(e);
+  };
+
   const handleAddToCartClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
   ) => {
@@ -156,16 +168,28 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* {renderTag} */}
 
         <button
-          onClick={handleWishlistButtonClick}
+          onClick={handleWishlistClick}
           disabled={isWishlistLoading}
-          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          aria-label={
+            isOutOfStock
+              ? "Out of stock"
+              : isWishlisted
+                ? "Remove from wishlist"
+                : "Add to wishlist"
+          }
+          title={
+            isOutOfStock
+              ? "Out of stock"
+              : isWishlisted
+                ? "Remove from wishlist"
+                : "Add to wishlist"
+          }
           className="absolute top-3 right-3 sm:top-[9px] sm:right-3 w-4 h-4 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center shadow-md z-20 transition-all hover:scale-105 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed border border-[#E0E0E0] cursor-pointer"
         >
           <Heart
             className="h-[9px] w-[9px] md:h-4 md:w-4"
-            fill={isWishlisted ? "#FD151B" : "none"}
-            stroke={isWishlisted ? "#FD151B" : "#012A61"}
+            fill={!isOutOfStock && isWishlisted ? "#FD151B" : "none"}
+            stroke={!isOutOfStock && isWishlisted ? "#FD151B" : "#012A61"}
             strokeWidth={2}
           />
         </button>
