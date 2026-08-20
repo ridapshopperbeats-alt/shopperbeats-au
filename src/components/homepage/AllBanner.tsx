@@ -226,7 +226,7 @@ export default function PopularCategories() {
 
       {/* BOTTOM */}
       <div
-        className={`grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 mt-4 ${
+        className={`grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 my-3.5 ${
           showAll ? "grid" : "hidden lg:grid"
         }`}
       >
