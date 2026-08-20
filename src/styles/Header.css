@@ -450,7 +450,7 @@
   font-weight: 700;
   font-style: normal;
   font-size: 28px;
-  line-height: 34px;
+  line-height: 30px;
   letter-spacing: 0%;
   color: #1A1A1A;
   margin: 0 0 8px;
@@ -767,17 +767,6 @@ span.wishlist-num {
 .mega-column > a:focus,
 .mega-column > a h5 {
   text-decoration: none !important;
-}
-
-.mega-column > a:hover h5,
-.mega-column > a:focus h5 {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-style: normal;
-  font-size: 12px;
-  line-height: 100%;
-  letter-spacing: 0%;
-  color: #F51721;
 }
 
 .bottom-head {
