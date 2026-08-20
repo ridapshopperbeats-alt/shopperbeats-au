@@ -25,6 +25,8 @@ import {
   Tag,
   Leaf,
   Gamepad2,
+  ShoppingBag,
+  Heart
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
@@ -72,10 +74,10 @@ const resolveCategoryHref = (slugOrId: string) =>
 const getCategoryIcon = (name: string) => {
   const n = name.toLowerCase();
   if (n.includes("fashion") || n.includes("apparel") || n.includes("clothing"))
-    return HandbagIcon;
-  if (n.includes("home") && n.includes("garden")) return Home;
+    return ShoppingBag;
+  if (n.includes("home") && n.includes("garden")) return Leaf;
   if (n.includes("furniture")) return Armchair;
-  if (n.includes("health") || n.includes("beauty")) return HeartPulse;
+  if (n.includes("health") || n.includes("beauty")) return Heart;
   if (n.includes("outdoor") || n.includes("patio")) return Armchair;
   if (n.includes("toy") || n.includes("game")) return Gamepad2;
   if (n.includes("jewel")) return Gem;
@@ -366,7 +368,10 @@ export default function Header({ megaMenuData }: HeaderProps) {
   // };
 
   const toggleMegaMenu = () => {
-    setIsMegaMenuOpen(!isMegaMenuOpen);
+    setIsMegaMenuOpen(true);
+  };
+
+  const toggleMobileNav = () => {
     setIsMobileNavOpen((prev) => !prev);
   };
 
@@ -461,11 +466,11 @@ export default function Header({ megaMenuData }: HeaderProps) {
               id="mobileSidebarToggleBtn"
               className="mobile-sidebar-toggle"
               aria-label="Open category menu"
-              onClick={toggleMegaMenu}
+              onClick={toggleMobileNav}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  toggleMegaMenu();
+                  toggleMobileNav();
                 }
               }}
             >
@@ -770,7 +775,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                           {visibleLinks.map((link) => (
                                             <li
                                               key={link.name}
-                                              style={{ lineHeight: "28px" }}
                                             >
                                               <Link
                                                 prefetch={false}
@@ -812,7 +816,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                   })}
                                 </div>
 
-                                <div className="mega-promo w-[340px] h-[307px] opacity-100 rounded-[10px] pt-[40px] pr-[24px] pb-[40px] pl-[24px] bg-[#FFF0F1]">
+                                <div className="mega-promo !w-[340px] !h-[307px] opacity-100 rounded-[10px] pt-[40px] pr-[24px] pb-[40px] pl-[24px] bg-[#FFF0F1]">
                                   {promo.image && (
                                     <div className="mega-promo-image">
                                       <Image
