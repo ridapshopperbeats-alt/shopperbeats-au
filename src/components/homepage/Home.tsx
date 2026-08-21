@@ -8,7 +8,6 @@ import {
 } from "@/lib/utils/main-utils";
 import PopularCategories from "./AllBanner";
 import TopBrands from "./TopRated";
-import StaticProductCards from "./StaticCard";
 import ProductCarousel from "../common/ProductCarousel";
 
 const Home = async () => {
@@ -32,7 +31,6 @@ const Home = async () => {
               link="#"
             />
           )}
-          {/* <StaticProductCards heading="bestseller" viewAllHref="#" /> */}
         </div>
 
         <PopularCategories />
@@ -45,8 +43,6 @@ const Home = async () => {
               link="#"
             />
           )}
-
-          {/* <StaticProductCards heading="Trending Products" viewAllHref="#" /> */}
         </div>
 
         <TopBrands />
@@ -59,8 +55,6 @@ const Home = async () => {
               link="#"
             />
           )}
-
-          {/* <StaticProductCards heading="New Arrivals" viewAllHref="#" /> */}
         </div>
       </div>
     </TopCategories>

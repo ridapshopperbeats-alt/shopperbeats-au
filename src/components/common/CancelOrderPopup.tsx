@@ -67,7 +67,7 @@ const CancelOrderPopup: React.FC<CancelOrderPopupProps> = ({
               <select
                 id="reason"
                 name="reason"
-                className="!h-auto !w-full !appearance-none !rounded-[14px] !border !border-[#E5E7EB] !bg-white !bg-none !px-4 !py-3 !pr-10 !text-[0.8125rem] !leading-normal !text-[#211E22] focus:!border-[#FD151B] focus:outline-none focus:ring-1 focus:ring-[#FD151B]"
+                className="!h-auto !w-full !appearance-none !rounded-[14px] !border !border-[#E5E7EB] !bg-white !bg-none !px-4 !py-3 !pr-10 !text-[0.8125rem] !leading-normal !text-[#211E22] cursor-pointer focus:!border-[#FD151B] focus:outline-none focus:ring-1 focus:ring-[#FD151B]"
                 value={formData.reason}
                 onChange={handleChange}
               >

@@ -7,40 +7,9 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/common/Button";
 import { OrderDetailsType } from "@/types/order";
 
-// Extract the order details type from OrderSummaryPopup's props
-
-// TODO: remove once the real order-confirmation flow is wired back up —
-// static placeholder so this page has something to show for now.
-const STATIC_ORDER_DETAILS: OrderDetailsType = {
-  orderNumber: "1234F61920",
-  orderId: "1234F61920",
-  products: [
-    {
-      id: "1",
-      name: "REDMI A7 Pro 5G (Sunset Orange, 4GB RAM, 64GB Storage) | Segment's ....",
-      image: "/images/headphone.png",
-      quantity: 1,
-      price: "$245.78",
-      originalPrice: "$291.99",
-    },
-    {
-      id: "2",
-      name: "IFB 8 Kg 5 Star with Deep Clean® Technology, AI Powered...",
-      image: "/images/ear-pods.png",
-      quantity: 1,
-      price: "$245.78",
-      originalPrice: "$291.99",
-    },
-  ],
-  deliveryAddress: "145 Kingfisher Avenue, Brunswick VIC 3056, Melbourne, Australia",
-  deliveryCost: "$38.99",
-  couponCode: "GET500",
-  totalAmount: "$337.99",
-};
-
 export default function ConfirmedOrderPage() {
   const router = useRouter();
-  const [orderDetails, setOrderDetails] = useState<OrderDetailsType>(STATIC_ORDER_DETAILS);
+  const [orderDetails, setOrderDetails] = useState<OrderDetailsType | null>(null);
   const hasLoadedRef = useRef(false);
 
   useEffect(() => {
@@ -50,6 +19,7 @@ export default function ConfirmedOrderPage() {
     const stored = sessionStorage.getItem("orderConfirmation");
 
     if (!stored) {
+      router.replace("/user/orders");
       return;
     }
 
@@ -57,10 +27,13 @@ export default function ConfirmedOrderPage() {
       setOrderDetails(JSON.parse(stored) as OrderDetailsType);
     } catch {
       console.log("Failed to parse order confirmation data from sessionStorage.");
+      router.replace("/user/orders");
     }
 
     sessionStorage.removeItem("orderConfirmation");
   }, [router]);
+
+  if (!orderDetails) return null;
 
   return (
     <div className="py-7">

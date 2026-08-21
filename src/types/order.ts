@@ -22,6 +22,7 @@ export interface APIProduct {
 
   size?: string;
   color?: string;
+  variant_id?: string;
 
   // dynamic attributes
   variant_attributes: VariantAttribute[];
@@ -179,6 +180,7 @@ export interface ReturnOption {
 
 export interface AddReviewPayload {
   product_id: string;
+  variant_id?: string;
   order_id: string;
   rating: number;
   comment: string;

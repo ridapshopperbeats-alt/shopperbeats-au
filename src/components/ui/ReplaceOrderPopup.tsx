@@ -195,7 +195,7 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
                 value={formData.reason}
                 onChange={handleChange}
                 disabled={isLoadingOptions}
-                className="!h-auto !w-full !appearance-none !rounded-[16px] !border !border-[#E5E7EB] !bg-white !bg-none !px-4 !py-3 !pr-10 !text-[0.8125rem] !leading-normal !text-[#211E22] focus:!border-[#FD151B] focus:outline-none focus:ring-1 focus:ring-[#FD151B]"
+                className="!h-auto !w-full !appearance-none !rounded-[16px] !border !border-[#E5E7EB] !bg-white !bg-none !px-4 !py-3 !pr-10 !text-[0.8125rem] !leading-normal !text-[#211E22] cursor-pointer disabled:cursor-not-allowed focus:!border-[#FD151B] focus:outline-none focus:ring-1 focus:ring-[#FD151B]"
               >
                 <option value="">
                   {isLoadingOptions ? "Loading..." : "Select a reason"}
