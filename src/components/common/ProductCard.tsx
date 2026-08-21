@@ -10,9 +10,6 @@ import { useWishlistToggle } from "@/lib/hooks/use-wishlist-toggle";
 
 import { formatPrice } from "@/lib/utils/main-utils";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
-import { useSelector } from "react-redux";
-import { RootState } from "@/lib/redux/store";
-import { useRouter, usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 
 import { ProductCardProps } from "@/types/product";
@@ -59,13 +56,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     wishlistItems,
   });
 
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
-
   const { postcode } = useGlobalPostcode();
-  const router = useRouter();
-  const pathname = usePathname();
 
   const isInCart = false;
 
@@ -93,12 +84,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   ) => {
     e.preventDefault();
     e.stopPropagation();
-
-    if (!isAuthenticated) {
-      toast.error("Please login to add to cart");
-      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
-      return;
-    }
 
     if (!id || isAddingToCart || isOutOfStock) return;
 

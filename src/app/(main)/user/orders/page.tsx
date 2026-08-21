@@ -25,6 +25,7 @@ import { useCancelOrderMutation, useListOrdersQuery } from "@/lib/redux/apis/ord
 import { formatPrice } from "@/lib/utils/main-utils";
 import { getOrderProductImage, getReviewProductId, mapOrderProducts } from "@/lib/utils/order-products";
 import { API_ENDPOINTS } from "@/lib/constants/api";
+import { getAccessTokenCookie } from "@/lib/utils/access-token";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/common/select";
 import CancelOrderPopup from "@/components/common/CancelOrderPopup";
@@ -33,7 +34,6 @@ import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
 import Pagination from "@/components/common/Pagination";
 import { Card } from "@/components/common/Card";
 import { StatusBadge, BadgeColor } from "@/components/common/StatusBadge";
-import { STATIC_ORDERS } from "@/lib/mock/static-orders";
 import { Truck, Eye, ChevronUp, ChevronDown, ArrowUpDown, XCircle, RotateCcw, ChevronRight, Star, RefreshCw } from "lucide-react";
 
 enum OrderStatusCode {
@@ -156,19 +156,14 @@ export default function MyOrdersPage() {
 
   const [allOrders, setAllOrders] = useState<OrderItem[]>([]);
   const querySettled = !isLoading && !isFetching;
-  const useStaticFallback =
-    querySettled && (isError || !data || (data.data?.length ?? 0) === 0);
 
-  const effectiveTotal = useStaticFallback
-    ? STATIC_ORDERS.length
-    : data?.total_items ?? 0;
+  const effectiveTotal = data?.total_items ?? 0;
   const totalPages = Math.ceil(effectiveTotal / uiLimit);
 
   useEffect(() => {
     if (!querySettled) return;
 
-    const sourceOrders =
-      data?.data && data.data.length > 0 ? data.data : STATIC_ORDERS;
+    const sourceOrders = data?.data ?? [];
 
     const mapped: OrderItem[] = sourceOrders.map((o: OrderAPIResponse) => {
       const isCancelled =
@@ -263,8 +258,10 @@ export default function MyOrdersPage() {
       const endpoint = API_ENDPOINTS.ORDER.GET_INVOICE(orderId);
       const url = `${baseUrl}${endpoint}`;
 
+      const token = getAccessTokenCookie();
       const response = await fetch(url, {
         credentials: "include",
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
 
       if (!response.ok) {
@@ -392,7 +389,7 @@ export default function MyOrdersPage() {
                 >
                   <SelectItem
                     value="oldest"
-                    className="px-3 py-2 not-visited:cursor-pointer rounded-none fluid-text-xs text-[#99A1AF] font-medium leading-[16px]"
+                    className="px-3 py-2 cursor-pointer rounded-none fluid-text-xs text-[#99A1AF] font-medium leading-[16px]"
                   >
                     Delivery Date
                   </SelectItem>
@@ -413,7 +410,22 @@ export default function MyOrdersPage() {
         </>
       )}
 
-      {allOrders.length === 0 && (
+      {querySettled && isError && allOrders.length === 0 && (
+        <Card className="w-full p-6 border">
+          <div className="w-full flex flex-col items-center justify-center gap-3 py-20">
+            <p>Failed to load your orders. Please try again.</p>
+            <button
+              type="button"
+              onClick={() => refetch()}
+              className="btn btn-red btn-filled btn-sharp"
+            >
+              Retry
+            </button>
+          </div>
+        </Card>
+      )}
+
+      {querySettled && !isError && allOrders.length === 0 && (
         <Card className="w-full p-6 border">
           <div className="w-full flex justify-center py-20">
             <p>No orders yet</p>

@@ -56,6 +56,17 @@ export function getOrderProductImage(product: Pick<APIProduct, "image">): string
   return url || ORDER_PRODUCT_IMAGE_FALLBACK;
 }
 
+export function canReviewProduct(
+  product: Pick<APIProduct, "available_actions" | "available_options">
+): boolean {
+  const actions = [
+    ...(product.available_actions ?? []),
+    ...(product.available_options ?? []),
+  ];
+  if (!actions.length) return true;
+  return orderHasAction(actions, "review", "add_review");
+}
+
 export function mapOrderProducts(order: OrderAPIResponse): APIProduct[] {
   const snapshotProducts =
     order.order_details?.customer_snapshot?.products ?? [];
@@ -81,6 +92,12 @@ export function mapOrderProducts(order: OrderAPIResponse): APIProduct[] {
         unit_price: p.unit_price ?? 0,
         total_price: p.total_price ?? 0,
         variant_attributes: p.variant_attributes || [],
+        available_actions: p.available_actions?.length
+          ? p.available_actions
+          : matchingItem?.available_actions,
+        available_options: p.available_options?.length
+          ? p.available_options
+          : matchingItem?.available_options,
       };
     });
   }

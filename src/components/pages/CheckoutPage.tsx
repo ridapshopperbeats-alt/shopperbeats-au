@@ -34,7 +34,6 @@ import {
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import Image from "next/image";
-import { useStaticCart } from "@/lib/hooks/useStaticCart";
 
 export default function SecureCheckout() {
   const { postcode } = useGlobalPostcode();
@@ -69,30 +68,12 @@ export default function SecureCheckout() {
     skip: !isAuthenticated,
   });
 
-  const { items: staticCartItems } = useStaticCart();
-
   const router = useRouter();
   const pathname = usePathname();
 
   const combinedCartItems: CartItem[] = useMemo(
-    () => [...(cart?.items ?? []), ...(staticCartItems as unknown as CartItem[])],
-    [cart, staticCartItems],
-  );
-
-  const staticItemsSubtotal = useMemo(
-    () => staticCartItems.reduce((acc, item) => acc + (item.final_price ?? item.subtotal ?? 0), 0),
-    [staticCartItems],
-  );
-  const staticItemsShipping = useMemo(
-    () =>
-      staticCartItems
-        .filter((item) => item.is_shippable)
-        .reduce((acc, item) => acc + (item.shipping_cost || 0), 0),
-    [staticCartItems],
-  );
-  const staticItemsDiscount = useMemo(
-    () => staticCartItems.reduce((acc, item) => acc + (item.promotion_discount || 0), 0),
-    [staticCartItems],
+    () => cart?.items ?? [],
+    [cart],
   );
 
   useEffect(() => {
@@ -452,12 +433,12 @@ export default function SecureCheckout() {
         payment_method: {
           type:
             formData.paymentMethod === "CreditCard"
-              ? "CARD"
+              ? "card"
               : formData.paymentMethod === "afterpay"
                 ? "afterpay_clearpay"
                 : formData.paymentMethod === "zip"
                   ? "zip"
-                  : "PAYPAL",
+                  : "paypal",
           provider:
             formData.paymentMethod === "CreditCard"
               ? "stripe"
@@ -709,8 +690,8 @@ export default function SecureCheckout() {
   };
 
   const orderSummary = checkoutProducts;
-  const effectiveShipping = (cart?.shipping ?? 0) + staticItemsShipping;
-  const calculatedSubtotal = (cart?.total_price ?? 0) + staticItemsSubtotal + staticItemsShipping;
+  const effectiveShipping = cart?.shipping ?? 0;
+  const calculatedSubtotal = cart?.total_price ?? 0;
 
   const totalSaveAmount = ((): number => {
     if (orderSummary.length === 0) return 0;
@@ -728,7 +709,7 @@ export default function SecureCheckout() {
       return acc + saveAmount * Number(item.quantity);
     }, 0);
 
-    const promotionDiscount = (cart?.items_discount || 0) + staticItemsDiscount;
+    const promotionDiscount = cart?.items_discount || 0;
 
     return itemSavings + promotionDiscount;
   })();

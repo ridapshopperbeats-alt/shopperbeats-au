@@ -38,7 +38,7 @@ const RetryPaymentForm: React.FC<RetryPaymentPopupProps> = ({ isOpen, onClose, o
       }
 
       const methodPayload = {
-        type: paymentMethod === "CreditCard" ? "CARD" : paymentMethod === "afterpay" ? "afterpay_clearpay" : paymentMethod === "zip" ? "zip" : "PAYPAL",
+        type: paymentMethod === "CreditCard" ? "card" : paymentMethod === "afterpay" ? "afterpay_clearpay" : paymentMethod === "zip" ? "zip" : "paypal",
         provider: paymentMethod === "paypal" ? "paypal" : "stripe",
       };
 
