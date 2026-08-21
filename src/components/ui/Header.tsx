@@ -757,20 +757,35 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                       return null;
                                     }
 
+                                    // The red gender tab above already says
+                                    // "Women"/"Men" — skip the redundant
+                                    // black subcategory heading when its name
+                                    // is just the gender term again.
+                                    const isGenderNameHeading =
+                                      isFashionCat &&
+                                      (GENDER_KEYWORDS.women.test(
+                                        subCat.name,
+                                      ) ||
+                                        GENDER_KEYWORDS.men.test(
+                                          subCat.name,
+                                        ));
+
                                     return (
                                       <div
                                         key={subCat.name}
                                         className="mega-column"
                                       >
-                                        <Link
-                                          prefetch={false}
-                                          href={resolveCategoryHref(
-                                            subCat.slug ?? subCat.id,
-                                          )}
-                                          onClick={closeMegaMenu}
-                                        >
-                                          <h5>{subCat.name}</h5>
-                                        </Link>
+                                        {!isGenderNameHeading && (
+                                          <Link
+                                            prefetch={false}
+                                            href={resolveCategoryHref(
+                                              subCat.slug ?? subCat.id,
+                                            )}
+                                            onClick={closeMegaMenu}
+                                          >
+                                            <h5>{subCat.name}</h5>
+                                          </Link>
+                                        )}
                                         <ul>
                                           {visibleLinks.map((link) => (
                                             <li

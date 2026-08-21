@@ -36,7 +36,7 @@ footer p {
 }
 
 .footer-block.footer-newsletter form {
-  @apply flex gap-2 mt-[14px];
+  @apply flex gap-2 mt-[14px] mb-[20px];
 }
 
 .footer-block.footer-newsletter form button {
@@ -162,7 +162,7 @@ ul.social {
 
 @media screen and (max-width: 991px) {
   footer {
-    @apply pt-[50px] px-0;
+    @apply pt-[24px] px-0;
   }
 }
 
@@ -253,6 +253,7 @@ ul.social {
   .footer-menu-row {
     display: flex;
     flex-direction: column;
+    row-gap: 8px;
   }
 
   .footer-newsletter {
@@ -270,12 +271,12 @@ ul.social {
   .footer-menu-block .footer-section-title {
     @apply mb-0 font-semibold cursor-pointer;
     display: flex;
-    padding: 14px 0;
+    padding: 10px 0;
     justify-content: space-between;
     align-items: center;
     text-align: center;
     align-self: stretch;
-    margin-top: 12px
+    margin-top: 0;
   }
 
   .footer-accordion-chevron {
