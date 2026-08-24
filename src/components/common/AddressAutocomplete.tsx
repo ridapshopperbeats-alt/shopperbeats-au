@@ -2,6 +2,7 @@
 
 import { GooglePlacesInputProps } from "@/types/address";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function GooglePlacesInput({
   onPlaceSelect,
@@ -136,13 +137,20 @@ export default function GooglePlacesInput({
     isSelectingRef.current = true;
     isUserTypingRef.current = false;
 
-    const fullAddress = suggestion.placePrediction.text.text; 
+    const fullAddress = suggestion.placePrediction.text.text;
 
     const place = suggestion.placePrediction.toPlace();
 
-    await place.fetchFields({
-      fields: ["addressComponents"],
-    });
+    try {
+      await place.fetchFields({
+        fields: ["addressComponents"],
+      });
+    } catch {
+      toast.error("Couldn't fetch that address, please try again.");
+      onValidPlace?.(false);
+      isSelectingRef.current = false;
+      return;
+    }
 
     const components = place.addressComponents ?? [];
     const get = (type: string) =>

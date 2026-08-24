@@ -1361,6 +1361,272 @@ input[type="radio"] {
   @apply -mx-5 border-t border-[#ECECEC];
 }
 
+/* Desktop PDP sticky sidebar card — scale down text & spacing at
+   1600px and below so price/labels don't overwhelm the narrow card.
+   This tier is the baseline for the whole 1300-1600px range; a
+   further reduction kicks in below 1300px (see next block) since
+   the card gets noticeably tighter there. */
+@media screen and (max-width: 1600px) {
+  .pdp-sidebar-col {
+    width: 280px !important;
+    gap: 10px !important;
+  }
+
+  .pdp-sidebar-card {
+    min-height: 0 !important;
+    padding: 12px !important;
+    gap: 8px !important;
+  }
+
+  .pdp-sidebar-card .pdp-section-divider {
+    margin-inline: -12px !important;
+  }
+
+  .pdp-sidebar-card .pdp-price {
+    font-size: 20px !important;
+  }
+
+  .pdp-sidebar-card .pdp-delivery-fee {
+    font-size: 11px !important;
+  }
+
+  .pdp-sidebar-card .pdp-field-label {
+    font-size: 11px !important;
+  }
+
+  .pdp-deliver-row {
+    gap: 5px !important;
+  }
+
+  .pdp-qty-row {
+    gap: 3px !important;
+  }
+
+  .pdp-qty-stepper {
+    width: 92px !important;
+    height: 32px !important;
+    padding-inline: 10px !important;
+  }
+
+  .pdp-sidebar-card .pdp-stepper-btn {
+    font-size: 13px !important;
+  }
+
+  .pdp-qty-value {
+    font-size: 12px !important;
+  }
+
+  .pdp-cta-group {
+    gap: 6px !important;
+  }
+
+  .pdp-cta-btn {
+    height: 36px !important;
+    font-size: 13px !important;
+  }
+
+  .pdp-safe-checkout {
+    gap: 4px !important;
+    font-size: 10px !important;
+  }
+
+  .pdp-safe-checkout svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .pdp-payment-icons {
+    gap: 4px !important;
+  }
+
+  .pdp-shipping-warning {
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    line-height: 1.4 !important;
+    margin-top: -2px !important;
+  }
+}
+
+/* Narrower lg-range sidebar (roughly 1200-1300px and below) — the card
+   is tighter here than the 1600px tier above accounts for, so shrink
+   text and gaps one more notch and give the warning text real weight
+   so it stays legible at the smaller size. */
+@media screen and (max-width: 1300px) {
+  .pdp-sidebar-col {
+    width: 260px !important;
+    gap: 8px !important;
+  }
+
+  .pdp-sidebar-card {
+    padding: 10px !important;
+    gap: 6px !important;
+  }
+
+  .pdp-sidebar-card .pdp-section-divider {
+    margin-inline: -10px !important;
+  }
+
+  .pdp-sidebar-card .pdp-price {
+    font-size: 18px !important;
+  }
+
+  .pdp-sidebar-card .pdp-delivery-fee {
+    font-size: 10px !important;
+  }
+
+  .pdp-sidebar-card .pdp-field-label {
+    font-size: 10px !important;
+  }
+
+  .pdp-deliver-row {
+    gap: 4px !important;
+  }
+
+  .pdp-qty-row {
+    gap: 2px !important;
+  }
+
+  .pdp-qty-stepper {
+    width: 80px !important;
+    height: 28px !important;
+    padding-inline: 8px !important;
+  }
+
+  .pdp-sidebar-card .pdp-stepper-btn {
+    font-size: 12px !important;
+  }
+
+  .pdp-qty-value {
+    font-size: 11px !important;
+  }
+
+  .pdp-cta-group {
+    gap: 4px !important;
+  }
+
+  .pdp-cta-btn {
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+
+  .pdp-safe-checkout {
+    gap: 3px !important;
+    font-size: 9px !important;
+  }
+
+  .pdp-safe-checkout svg {
+    width: 11px !important;
+    height: 11px !important;
+  }
+
+  .pdp-payment-icons {
+    gap: 3px !important;
+  }
+
+  .pdp-shipping-warning {
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+    margin-top: -1px !important;
+  }
+}
+
+/* Short laptop screens (~1280-1400 wide x ~800 tall, e.g. 1366x768) — the
+   width-only tiers above still leave the card taller than it needs to be
+   on a short viewport, so shrink it further whenever height is tight too.
+   max-width raised from 1300 to 1400 so it actually covers 1366px-wide
+   screens instead of missing them. */
+@media screen and (max-width: 1400px) and (max-height: 800px) {
+  .pdp-sidebar-col {
+    width: 260px !important;
+    gap: 6px !important;
+  }
+
+  .pdp-sidebar-card {
+    min-height: 0 !important;
+    padding: 8px !important;
+    gap: 5px !important;
+  }
+
+  .pdp-sidebar-card .pdp-section-divider {
+    margin-inline: -8px !important;
+  }
+
+  .pdp-sidebar-card .pdp-price {
+    font-size: 16px !important;
+  }
+
+  .pdp-sidebar-card .pdp-delivery-fee {
+    font-size: 11px !important;
+  }
+
+  .pdp-sidebar-card .pdp-field-label {
+    font-size: 11px !important;
+  }
+
+  .pdp-delivery-date {
+    font-size: 10px !important;
+  }
+
+  .pdp-change-btn {
+    font-size: 11px !important;
+  }
+
+  .pdp-deliver-row {
+    gap: 3px !important;
+  }
+
+  .pdp-qty-row {
+    gap: 2px !important;
+  }
+
+  .pdp-qty-stepper {
+    width: 80px !important;
+    height: 28px !important;
+    padding-inline: 8px !important;
+  }
+
+  .pdp-sidebar-card .pdp-stepper-btn {
+    font-size: 12px !important;
+  }
+
+  .pdp-qty-value {
+    font-size: 11px !important;
+  }
+
+  .pdp-cta-group {
+    gap: 4px !important;
+  }
+
+  .pdp-cta-btn {
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+
+  .pdp-safe-checkout {
+    gap: 2px !important;
+    font-size: 9px !important;
+  }
+
+  .pdp-safe-checkout svg {
+    width: 11px !important;
+    height: 11px !important;
+  }
+
+  .pdp-payment-icons {
+    gap: 2px !important;
+  }
+
+  .pdp-shipping-warning {
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    line-height: 1.4 !important;
+    margin-top: -4px !important;
+    white-space: normal !important;
+    letter-spacing: normal !important;
+  }
+}
+
 .popup-field-label {
   @apply block text-sm font-medium text-gray-700 mb-2;
 }
