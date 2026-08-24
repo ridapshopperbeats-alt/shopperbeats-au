@@ -81,6 +81,7 @@ const ProductListingClient = ({
     maxPrice,
     setMaxPrice,
     clearFilters,
+    isPendingApply,
   } = useProductFilters(persistedFilters, category);
 
   const handleClearAllFilters = () => {
@@ -146,11 +147,10 @@ const ProductListingClient = ({
     queryObject,
     {
       skip: isHighlight,
-      refetchOnMountOrArgChange: true,
     }
   );
 
-  const isFilterFetching = !isHighlight && rtkIsFetching;
+  const isFilterFetching = !isHighlight && (rtkIsFetching || isPendingApply);
   const wasFilterFetchingRef = useRef(false);
 
   useEffect(() => {

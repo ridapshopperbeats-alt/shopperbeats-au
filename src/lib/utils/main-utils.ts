@@ -263,11 +263,23 @@ export function getVariantImage(variant: Variant, imageVariant?: string): string
   return fallback;
 }
 
-export function getReviewImage(review: { images?: string[] | null }): string {
+type ReviewImageEntry =
+  | string
+  | { image_url?: string; url?: string }
+  | null
+  | undefined;
+
+export function getReviewImage(review: {
+  images?: ReviewImageEntry[] | null;
+}): string {
   const fallback = "/images/image-coming-soon.jpg";
 
   if (Array.isArray(review.images) && review.images.length > 0) {
-    return review.images[0];
+    const first = review.images[0];
+    if (typeof first === "string" && first) return first;
+    if (first && typeof first === "object") {
+      return first.image_url || first.url || fallback;
+    }
   }
 
   return fallback;

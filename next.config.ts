@@ -6,7 +6,7 @@ const CSP = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data: https://fonts.gstatic.com",
-  "connect-src 'self' https://api-us.shopperbeats.cloud https://admin.shopperbeats.com.au https://www.google-analytics.com https://maps.googleapis.com https://js.stripe.com https://api.stripe.com",
+  "connect-src 'self' https://api-us.shopperbeats.cloud https://admin.shopperbeats.com.au https://www.google-analytics.com https://maps.googleapis.com https://places.googleapis.com https://js.stripe.com https://api.stripe.com",
   "frame-src https://js.stripe.com https://hooks.stripe.com https://www.google.com",
   "object-src 'none'",
   "base-uri 'self'",
@@ -119,7 +119,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "img.fragrancex.com",
+        hostname: "perfumesw.com",
       },
     ],
   },

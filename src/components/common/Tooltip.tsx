@@ -87,7 +87,9 @@ export default function StatusBanner({
               onClick={onSubmit}
               isLoading={isLoading}
               disabled={disabled}
-              className="h-[40px] w-[160px] rounded-[26px] opacity-40 bg-[#FD151B] inline-flex items-center justify-center text-[12px] font-bold text-white gap-2 cursor-pointer"
+              className={`h-[40px] w-[160px] rounded-[26px] bg-[#FD151B] inline-flex items-center justify-center text-[12px] font-bold text-white gap-2 ${
+                disabled ? "opacity-40 cursor-not-allowed" : "opacity-100 cursor-pointer"
+              }`}
             >
               {SubmitIcon && <SendIcon size={14} />}
               <span>{isLoading ? onSubmitText : submitText}</span>

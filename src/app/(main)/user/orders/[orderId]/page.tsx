@@ -14,6 +14,7 @@ import "../../../../../styles/Checkout.css";
 import "../../../../../styles/Cart.css";
 import "../../../../../styles/Product.css";
 import { API_ENDPOINTS } from "@/lib/constants/api";
+import { getAccessTokenCookie } from "@/lib/utils/access-token";
 import Image from "next/image";
 import {
   useCancelOrderItemMutation,
@@ -29,7 +30,6 @@ import CancelOrderPopup from "@/components/common/CancelOrderPopup";
 import ReturnOrderPopup from "@/components/common/ReturnOrderPopup";
 import ReplaceOrderPopup from "@/components/ui/ReplaceOrderPopup";
 import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
-import { getStaticOrder, isStaticOrderId } from "@/lib/mock/static-orders";
 
 const SUPPORT_PHONE = "+1 (994) 775-8686";
 
@@ -76,10 +76,7 @@ interface OrderDetailProps {
 
 export default function OrderDetail({ params }: OrderDetailProps) {
   const { orderId } = use(params);
-  const isStatic = isStaticOrderId(orderId);
-  const { data, isLoading, refetch } = useGetOrderByIdQuery(orderId, {
-    skip: isStatic,
-  });
+  const { data, isLoading, refetch } = useGetOrderByIdQuery(orderId);
   const [cancelOrder] = useCancelOrderMutation();
   const [cancelOrderItem] = useCancelOrderItemMutation();
 
@@ -124,7 +121,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         toast.success("Order cancelled successfully!");
       }
       setIsCancelPopupOpen(false);
-      if (!isStatic) refetch();
+      refetch();
     } catch {
       toast.error(`Failed to cancel ${isItemLevel ? "item" : "order"}.`);
     }
@@ -136,8 +133,10 @@ export default function OrderDetail({ params }: OrderDetailProps) {
       const endpoint = API_ENDPOINTS.ORDER.GET_INVOICE(orderId);
       const url = `${baseUrl}${endpoint}`;
 
+      const token = getAccessTokenCookie();
       const response = await fetch(url, {
         credentials: "include",
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
 
       if (!response.ok) throw new Error("Failed to fetch invoice");
@@ -156,9 +155,9 @@ export default function OrderDetail({ params }: OrderDetailProps) {
     }
   };
 
-  if (!isStatic && isLoading) return <Loader />;
+  if (isLoading) return <Loader />;
 
-  const order = isStatic ? getStaticOrder(orderId) : data;
+  const order = data;
   if (!order) return <p>Order not found</p>;
   const snapshot = order.order_details?.customer_snapshot || {};
   const products = snapshot.products || [];
@@ -253,7 +252,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
             {isDelivered && (
               <Button
-                className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] border border-[#FD151B] bg-white px-5 py-2 text-center font-montserrat text-[0.75rem] font-semibold leading-[18.75px] text-[#FD151B]"
+                className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] border border-[#FD151B] bg-white px-5 py-2 text-center font-montserrat text-[0.75rem] font-semibold leading-[18.75px] text-[#FD151B] cursor-pointer"
                 onClick={handleDownloadInvoice}
               >
                 Download Invoice
@@ -605,7 +604,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
           setIsReturnPopupOpen(false);
           setIsReturnItemPopupOpen(false);
           setSelectedItemForReturn(null);
-          if (!isStatic) refetch();
+          refetch();
         }}
         orderId={order.id}
         itemId={selectedItemForReturn?.id}
@@ -617,7 +616,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
         onClose={() => {
           setIsReplacePopupOpen(false);
           setSelectedItemForReplace(null);
-          if (!isStatic) refetch();
+          refetch();
         }}
         orderId={order.id}
         itemId={selectedItemForReplace?.id}

@@ -231,7 +231,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
   return (
     <>
       <div className="hidden xl:flex w-full h-full items-stretch gap-4">
-        <div className="flex flex-col items-center justify-center min-[1280px]:h-[500px] min-[1500px]:h-[700px] shrink-0">
+        <div className="flex flex-col items-center justify-center min-[1280px]:h-full min-[1500px]:h-[700px] shrink-0">
           <button
             className="flex items-center justify-center w-7 h-7 rounded-full border border-gray-200 bg-white text-black shrink-0 cursor-pointer transition-colors hover:bg-gray-100 hover:border-gray-300 disabled:opacity-30 disabled:cursor-not-allowed"
             onClick={() => {
@@ -305,8 +305,8 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                         }
                       }}
                       className={`w-full h-[70px] shrink-0 border overflow-hidden relative flex items-center justify-center cursor-pointer rounded-[5px] bg-white transition-shadow ${isActive
-                          ? "border-[#fd151b] shadow-[3px_3px_5px_#cccccc]"
-                          : "border-gray-200"
+                        ? "border-[#fd151b] shadow-[3px_3px_5px_#cccccc]"
+                        : "border-gray-200"
                         }`}
                     >
                       {item?.video_url && !item?.image_url ? (
@@ -600,8 +600,8 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                 aria-label={`Go to slide ${index + 1}`}
                 onClick={() => sliderRef.current?.goToSlide(index)}
                 className={`rounded-full transition-all duration-200 ${index === mobileSlide
-                    ? "w-[8px] h-[8px] bg-[#fd151b]"
-                    : "w-[6px] h-[6px] bg-[#D9D9D9]"
+                  ? "w-[8px] h-[8px] bg-[#fd151b]"
+                  : "w-[6px] h-[6px] bg-[#D9D9D9]"
                   }`}
               />
             ))}

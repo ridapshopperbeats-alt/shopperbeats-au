@@ -168,7 +168,7 @@ export default function PopularCategories() {
   return (
     <div className="container">
       {/* Heading */}
-      <div className="flex items-center justify-between pt-3 lg:pt-2">
+      <div className="flex items-center justify-between pt-3 lg:pt-0">
         <div>
           <h2 className="fluid-text-18-32 font-bold text-black">
             Popular Categories

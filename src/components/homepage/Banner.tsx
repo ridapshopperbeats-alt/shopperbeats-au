@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 const banners = [
   { id: 1, image: "/images/HomeBanner0.svg" },
@@ -56,26 +55,24 @@ export default function SingleBanner() {
             index === currentBanner || index === prevBannerRef.current;
 
           return (
-            <Link href="/static-category" key={banner.id|| index}>
-              <Image
-                key={banner.id}
-                src={banner.image}
-                alt={`Banner ${index + 1}`}
-                fill
-                priority={index === 0}
-                loading={index === 0 ? undefined : "eager"}
-                quality={100}
-                sizes="100vw"
-                className={`absolute inset-0 object-cover ease-in-out cursor-pointer ${
-                  isTransitioning ? "transition-transform duration-1500" : ""
-                } ${index === currentBanner ? "" : "pointer-events-none"}`}
-                style={{
-                  transform: `translateX(calc(${getSlideOffset(index, currentBanner, banners.length) * 100}% + ${
-                    getSlideOffset(index, currentBanner, banners.length) * 24
-                  }px))`,
-                }}
-              />
-            </Link>
+            <Image
+              key={banner.id || index}
+              src={banner.image}
+              alt={`Banner ${index + 1}`}
+              fill
+              priority={index === 0}
+              loading={index === 0 ? undefined : "eager"}
+              quality={100}
+              sizes="100vw"
+              className={`absolute inset-0 object-cover ease-in-out ${
+                isTransitioning ? "transition-transform duration-1500" : ""
+              } ${index === currentBanner ? "" : "pointer-events-none"}`}
+              style={{
+                transform: `translateX(calc(${getSlideOffset(index, currentBanner, banners.length) * 100}% + ${
+                  getSlideOffset(index, currentBanner, banners.length) * 24
+                }px))`,
+              }}
+            />
           );
         })}
       </div>

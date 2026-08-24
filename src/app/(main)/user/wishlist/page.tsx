@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ShoppingBag } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -9,6 +10,7 @@ import ProductCard from "@/components/common/ProductCard";
 import {
   useGetWishlistQuery,
   useAddToCartMutation,
+  useRemoveFromWishlistMutation,
 } from "@/lib/redux/apis/cart-api";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { getPriceDetails, getImageUrl } from "@/lib/utils/main-utils";
@@ -21,7 +23,9 @@ export default function WishlistPage() {
     refetchOnMountOrArgChange: true,
   });
   const [addToCart] = useAddToCartMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
   const { postcode } = useGlobalPostcode();
+  const [isTransferring, setIsTransferring] = useState(false);
 
   const items = wishlist?.items ?? [];
 
@@ -31,12 +35,16 @@ export default function WishlistPage() {
   }));
 
   const handleAddAllToCart = async () => {
-    const inStockItems = items.filter(
-      (item) => (item.available_stock ?? item.stock ?? 0) > 0,
-    );
+    // Guard against double-clicks/re-entrancy and an empty wishlist.
+    if (isTransferring || items.length === 0) return;
 
+    setIsTransferring(true);
     try {
-      await Promise.all(
+      const inStockItems = items.filter(
+        (item) => (item.available_stock ?? item.stock ?? 0) > 0,
+      );
+
+      const results = await Promise.allSettled(
         inStockItems.map((item) =>
           addToCart({
             productId: item.product_id,
@@ -47,9 +55,29 @@ export default function WishlistPage() {
           }).unwrap(),
         ),
       );
-      toast.success(`Added ${inStockItems.length} item to cart`);
-    } catch {
-      toast.error("Failed to add some items to cart.");
+
+      const movedItems = inStockItems.filter(
+        (_, index) => results[index].status === "fulfilled",
+      );
+
+      await Promise.allSettled(
+        movedItems.map((item) =>
+          removeFromWishlist({
+            product_id: item.product_id,
+            variant_id: item.variant_id ?? undefined,
+          }).unwrap(),
+        ),
+      );
+
+      const failedCount = inStockItems.length - movedItems.length;
+      if (movedItems.length > 0) {
+        toast.success(`Added ${movedItems.length} item(s) to cart`);
+      }
+      if (failedCount > 0) {
+        toast.error(`Failed to add ${failedCount} item(s) to cart.`);
+      }
+    } finally {
+      setIsTransferring(false);
     }
   };
 
@@ -69,7 +97,7 @@ export default function WishlistPage() {
           onClick={handleAddAllToCart}
           className="flex shrink-0 items-center justify-center gap-1.5 sm:gap-2 rounded-[10px] bg-sb-red px-3.5 sm:px-5 py-2 sm:py-2.5 text-[0.75rem]! sm:text-[0.75rem] font-normal text-white whitespace-nowrap cursor-pointer"
           debounceDelay={500}
-          disabled={items.length === 0}
+          disabled={items.length === 0 || isTransferring}
         >
           <ShoppingBag size={14} />
           Add All to Cart

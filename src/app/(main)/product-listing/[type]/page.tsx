@@ -279,19 +279,13 @@ export default async function ProductListingPage({
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join("; ");
 
-  // API data fetch
-  const {
-    products,
-    totalItems,
-    filters,
-    category,
-    bannerImage,
-  } = await fetchProductData(
-    type,
-    resolvedSearchParams,
-    allCookies
-  );
-  const megaMenuData = await getMegaMenuData();
+  const [
+    { products, totalItems, filters, category, bannerImage },
+    megaMenuData,
+  ] = await Promise.all([
+    fetchProductData(type, resolvedSearchParams, allCookies),
+    getMegaMenuData(),
+  ]);
 
   const isHighlight = [
     "best-sellers",
