@@ -121,10 +121,6 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "perfumesw.com",
       },
-      {
-        protocol: "https",
-        hostname: "perfumesw.com",
-      },
     ],
   },
 };

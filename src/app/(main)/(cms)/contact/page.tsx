@@ -241,7 +241,7 @@ export default function ContactPage() {
                 debounceDelay={0}
                 className="flex !h-[38.75px] w-fit min-w-[171.217px] cursor-pointer items-center justify-center gap-2 whitespace-nowrap !rounded-[30px] border-none bg-[var(--secondary)] px-7 py-2.5 text-center font-montserrat text-xs font-bold leading-[18.75px] text-white shadow-[0_4px_12px_rgba(253,21,27,0.25)] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                <Send size={13} strokeWidth={1.08} />
+                <Send size={13} strokeWidth={2.5} />
                 {isSubmitting ? "Sending..." : "Send Message"}
               </Button>
             </form>
