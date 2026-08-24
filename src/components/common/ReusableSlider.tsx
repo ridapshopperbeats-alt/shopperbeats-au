@@ -250,7 +250,17 @@ function SliderComponent<T>(
   const centerOffset =
     centered && !isFade ? (containerSize - slideSize) / 2 : 0;
 
-  const trackOffset = -(current * (slideSize + spaceBetween)) + centerOffset;
+  const slideUnit = slideSize + spaceBetween;
+
+  const maxOffsetPx =
+    !isLoopEnabled && !isFade && slides.length > 0
+      ? Math.max(0, slides.length * slideUnit - spaceBetween - containerSize)
+      : Infinity;
+
+  const rawOffsetPx = current * slideUnit;
+  const clampedOffsetPx = Math.min(rawOffsetPx, maxOffsetPx);
+
+  const trackOffset = -clampedOffsetPx + centerOffset;
 
   // -----------------------------
   // NAVIGATION
@@ -263,7 +273,7 @@ function SliderComponent<T>(
 
   const maxNonLoopCurrent = Math.max(
     0,
-    Math.floor(slides.length - slidesPerView),
+    Math.ceil(slides.length - slidesPerView),
   );
 
   const handleNext = useCallback(() => {
@@ -504,7 +514,7 @@ function SliderComponent<T>(
           <button
             type="button"
             onClick={handlePrev}
-            className="handlePrev !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)] cursor-pointer disabled:!opacity-100"
+            className="handlePrev !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)] cursor-pointer disabled:cursor-not-allowed"
             disabled={!canGoPrev}
             aria-label="Previous slide"
           >
@@ -514,7 +524,7 @@ function SliderComponent<T>(
           <button
             type="button"
             onClick={handleNext}
-            className="handleNext !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)] ml-20 cursor-pointer disabled:!opacity-100"
+            className="handleNext !w-[30px] !h-[31px] bg-white border border-[#EAEAEA] shadow-[0_0_6px_0_rgba(0,0,0,0.15)] ml-20 cursor-pointer disabled:cursor-not-allowed"
             disabled={!canGoNext}
             aria-label="Next slide"
           >

@@ -96,6 +96,7 @@ export interface Product {
     total_reviews: number;
   };
   handling_time_days?: number;
+  handling_time_max_days?: number | null;
   variants?: Variant[];
   reviews?: Review[];
   return_policy?: string | null;
@@ -185,6 +186,7 @@ export interface ProductApiResponse {
   country_of_origin: string;
   ean: null;
   handling_time_days?: number;
+  handling_time_max_days?: number | null;
   asin: null;
   mpn: null;
   free_shipping: boolean;
@@ -248,6 +250,7 @@ export interface ProductCardProps {
   vendor_id?: string;
   ships_from_location?: string;
   handling_time_days?: number;
+  handling_time_max_days?: number | null;
   shippingCharge?: number | null;
 }
 

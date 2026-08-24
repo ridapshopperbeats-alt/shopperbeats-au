@@ -2,10 +2,11 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
+import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 import { Product, Filter } from "@/types/product";
 import Sidebar from "../product-listing/Sidebar";
@@ -37,10 +38,6 @@ const SearchPageClient = ({
   const [persistedFilters, setPersistedFilters] = useState<Filter[]>(filters);
   const [prevQuery, setPrevQuery] = useState(query);
 
-  // Adjust persistedFilters during render (React's "adjusting state when a
-  // prop changes" pattern, using state instead of a ref since refs cannot be
-  // read/written during render) instead of inside a useEffect, to avoid an
-  // extra cascading render.
   if (query !== prevQuery) {
     setPrevQuery(query);
     setPersistedFilters(filters);
@@ -53,6 +50,8 @@ const SearchPageClient = ({
       setBreadcrumbs([{ name: `Search: "${query}"`, path: `/search?q=${encodeURIComponent(query)}` }])
     );
   }, [query, dispatch]);
+
+  const [isPending, startTransition] = useTransition();
 
   const {
     sortBy,
@@ -68,7 +67,9 @@ const SearchPageClient = ({
     maxPrice,
     setMaxPrice,
     clearFilters,
-  } = useProductFilters(persistedFilters);
+  } = useProductFilters(persistedFilters, undefined, {
+    wrapNavigation: startTransition,
+  });
 
   const handleSortChangeWithSkeleton = useCallback((value: string) => {
     handleSortChange(value);
@@ -140,7 +141,28 @@ const SearchPageClient = ({
 
   const effectiveTotal = data?.total ?? totalItems;
 
+  const isFilterFetching = isPending || (isFetching && allProducts.length === 0);
+  const wasFilterFetchingRef = useRef(false);
 
+  useEffect(() => {
+    if (isFilterFetching && !wasFilterFetchingRef.current) {
+      wasFilterFetchingRef.current = true;
+      dispatch(pushLoader());
+    } else if (!isFilterFetching && wasFilterFetchingRef.current) {
+      wasFilterFetchingRef.current = false;
+      dispatch(popLoader());
+    }
+  }, [isFilterFetching, dispatch]);
+
+  useEffect(() => {
+    return () => {
+      if (wasFilterFetchingRef.current) {
+        wasFilterFetchingRef.current = false;
+        dispatch(popLoader());
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const currentParams = new URLSearchParams(searchParams.toString());
   currentParams.delete("page");
@@ -224,6 +246,7 @@ const SearchPageClient = ({
               <Sidebar
                 filters={persistedFilters}
                 onClose={() => setIsSidebarOpen(false)}
+                wrapNavigation={startTransition}
               />
             </div>
           </div>
@@ -233,6 +256,7 @@ const SearchPageClient = ({
             onClose={() => setIsSidebarOpen(false)}
             onClearAll={clearFilters}
             filters={persistedFilters}
+            wrapNavigation={startTransition}
           />
 
           <div className="flex  w-full">

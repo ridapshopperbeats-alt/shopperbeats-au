@@ -106,7 +106,7 @@ export default function ProductCarousel({
 
                 return (
                   <div
-                    className="w-[180px] h-[320px] md:w-[260px] md:h-[410px]"
+                    className="w-[180px] h-[320px] md:w-[260px] md:h-[400px]"
                     key={product.id || product.unique_code}
                   >
                     <ProductCard

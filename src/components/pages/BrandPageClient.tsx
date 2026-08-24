@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
+import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 import { Filter, Product } from "@/types/product";
@@ -74,6 +75,8 @@ const BrandPageClient = ({
     setPersistedFilters(filters);
   }
 
+  const [isPending, startTransition] = useTransition();
+
   const {
     sortBy,
     handleSortChange,
@@ -88,7 +91,9 @@ const BrandPageClient = ({
     maxPrice,
     setMaxPrice,
     clearFilters,
-  } = useProductFilters(persistedFilters, brand);
+  } = useProductFilters(persistedFilters, brand, {
+    wrapNavigation: startTransition,
+  });
 
   const filterTags = useMemo(
     () =>
@@ -210,7 +215,28 @@ const BrandPageClient = ({
 
   const effectiveTotal = data?.total ?? totalItems;
 
-  useEffect(() => {}, [isFetching, data]);
+  const isFilterFetching = isPending || (isFetching && allProducts.length === 0);
+  const wasFilterFetchingRef = useRef(false);
+
+  useEffect(() => {
+    if (isFilterFetching && !wasFilterFetchingRef.current) {
+      wasFilterFetchingRef.current = true;
+      dispatch(pushLoader());
+    } else if (!isFilterFetching && wasFilterFetchingRef.current) {
+      wasFilterFetchingRef.current = false;
+      dispatch(popLoader());
+    }
+  }, [isFilterFetching, dispatch]);
+
+  useEffect(() => {
+    return () => {
+      if (wasFilterFetchingRef.current) {
+        wasFilterFetchingRef.current = false;
+        dispatch(popLoader());
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [prevProductSyncDeps, setPrevProductSyncDeps] = useState({
     data,
@@ -307,6 +333,7 @@ const BrandPageClient = ({
               filters={persistedFilters}
               category={brand}
               onClose={() => setIsSidebarOpen(false)}
+              wrapNavigation={startTransition}
             />
           </div>
 
@@ -316,6 +343,7 @@ const BrandPageClient = ({
             onClearAll={clearFilters}
             filters={persistedFilters}
             category={brand}
+            wrapNavigation={startTransition}
           />
 
           <div className="flex w-full">

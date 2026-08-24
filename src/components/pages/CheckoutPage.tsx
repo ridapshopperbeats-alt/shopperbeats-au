@@ -120,20 +120,19 @@ export default function SecureCheckout() {
     );
   }, [checkoutProducts]);
 
-  const shippingLocation = useMemo(() => {
-    const locations = checkoutProducts
-      .map((item) => item.ships_from_location)
-      .filter(Boolean);
-    if (locations.includes("China") || locations.includes("USA"))
-      return "China";
-    if (locations.includes("SBAU") || locations.includes("Local 3PL"))
-      return "SBAU";
-    return locations[0] || "SBAU";
+  const maxHandlingMaxDays = useMemo(() => {
+    if (checkoutProducts.length === 0) return 0;
+    return Math.max(
+      ...checkoutProducts.map(
+        (item) => item.handling_time_max_days ?? item.handling_time_days ?? 0,
+      ),
+      0,
+    );
   }, [checkoutProducts]);
 
   const estimatedDeliveryRange = getEstimatedDeliveryRange(
-    shippingLocation,
     maxHandlingDays,
+    maxHandlingMaxDays,
   );
 
   const {
@@ -467,6 +466,7 @@ export default function SecureCheckout() {
           ships_from_location: item.ships_from_location || null,
           ean_code: item.ean_code || null,
           handling_time_days: item.handling_time_days || 0,
+          handling_time_max_days: item.handling_time_max_days ?? null,
           supplier: item.supplier || null,
           brand: item.brand || null,
         })),

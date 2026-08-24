@@ -26,6 +26,7 @@ export interface CartItem extends Product {
   ships_from_location?: string;
   ean_code?: string | null;
   handling_time_days?: number;
+  handling_time_max_days?: number | null;
   supplier?: string | null;
   brand?: string | null;
 }

@@ -4,8 +4,7 @@ import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 
-
-const SAFETY_TIMEOUT_MS = 8000;
+const SAFETY_TIMEOUT_MS = 25000;
 
 function toAbsoluteUrl(href: string): string {
   return new URL(href, window.location.href).href;
@@ -38,6 +37,33 @@ function findClosestAnchor(el: EventTarget | null): HTMLAnchorElement | null {
   return node as HTMLAnchorElement | null;
 }
 
+const INTERACTIVE_TAGS = new Set(["button", "input", "select", "textarea"]);
+
+// True if a nested control (Add to Cart, wishlist toggle, quantity stepper,
+// etc.) sits between the click target and the surrounding link — e.g. a
+// product card wraps its whole layout in <Link>, with action buttons nested
+// inside it. Those buttons call preventDefault()/stopPropagation() on click,
+// but this listener is on `document` (the same node React's own delegated
+// handler uses), so stopPropagation from a descendant never reaches it —
+// only checking the DOM structure itself reliably tells the two apart.
+function hasInteractiveControlBefore(
+  target: EventTarget | null,
+  anchor: HTMLAnchorElement,
+): boolean {
+  let node = target as HTMLElement | null;
+  while (node && node !== anchor) {
+    const tag = node.tagName?.toLowerCase();
+    if (
+      (tag && INTERACTIVE_TAGS.has(tag)) ||
+      node.getAttribute?.("role") === "button"
+    ) {
+      return true;
+    }
+    node = node.parentElement;
+  }
+  return false;
+}
+
 
 export default function RouteChangeLoader() {
   const dispatch = useDispatch();
@@ -62,7 +88,12 @@ export default function RouteChangeLoader() {
       if (!pendingRef.current) return;
       pendingRef.current = false;
       if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
-      queueMicrotask(() => dispatch(popLoader()));
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          dispatch(popLoader());
+        });
+      });
     };
 
     const handleClick = (e: MouseEvent) => {
@@ -70,6 +101,7 @@ export default function RouteChangeLoader() {
         const anchor = findClosestAnchor(e.target);
         const href = anchor?.href;
         if (!anchor || !href) return;
+        if (hasInteractiveControlBefore(e.target, anchor)) return;
 
         const currentUrl = window.location.href;
         const opensNewTab = anchor.target !== "";

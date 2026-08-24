@@ -1,53 +1,12 @@
-const addBusinessDays = (date: Date, days: number) => {
-  const result = new Date(date);
-  let addedDays = 0;
+import { getHandlingDeliveryRange } from "./get-handling-delivery-range";
 
-  while (addedDays < days) {
-    result.setDate(result.getDate() + 1);
-    const day = result.getDay();
-
-    if (day !== 0 && day !== 6) {
-      addedDays++;
-    }
-  }
-
-  return result;
-};
-
+// Thin wrapper kept for call sites already importing this name — the
+// calculation itself lives in get-handling-delivery-range.ts so every
+// "delivery date" display in the app (product card, PDP, cart) uses the
+// exact same handling_time_days / handling_time_max_days logic.
 const getEstimatedDeliveryRange = (
-  location: string|undefined,
-  handlingDays: number
-) => {
-  const today = new Date();
-
-  let minShippingDays = 6;
-  let maxShippingDays = 10;
-
-  if (location === "China" || location === "USA") {
-    minShippingDays = 7;
-    maxShippingDays = 15;
-  } else if (location === "SBAU" || location === "Local 3PL") {
-    minShippingDays = 6;
-    maxShippingDays = 10;
-  }
-
-  const minTotalDays = handlingDays + minShippingDays;
-  const maxTotalDays = handlingDays + maxShippingDays;
-
-  const startDate = addBusinessDays(today, minTotalDays);
-  const endDate = addBusinessDays(today, maxTotalDays);
-
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: "short",
-    day: "2-digit",
-    month: "short",
-  };
-
-  const formattedStart = startDate.toLocaleDateString("en-AU", options);
-  const formattedEnd = endDate.toLocaleDateString("en-AU", options);
-
-  // return `Estimated delivery between ${formattedStart} - ${formattedEnd}`;
-  return ` ${formattedStart} - ${formattedEnd}`;
-};
+  handlingTimeDays: number,
+  handlingTimeMaxDays?: number | null,
+) => getHandlingDeliveryRange(handlingTimeDays, handlingTimeMaxDays);
 
 export default getEstimatedDeliveryRange;

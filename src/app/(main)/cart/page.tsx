@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/redux/store";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import * as yup from "yup";
 import { useMemo, useRef, useState, useEffect } from "react";
@@ -38,6 +40,9 @@ function getCartItemHref(item: { product_id: string; unique_code?: string }) {
 }
 
 const Cart = () => {
+  const { isAuthenticated, authChecked } = useSelector(
+    (state: RootState) => state.auth,
+  );
   const { postcode, updatePostcode } = useGlobalPostcode();
   const {
     data: cartData,
@@ -445,7 +450,10 @@ const Cart = () => {
                   )}
                   <p className="fluid-text-xs leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
                     {deliveryPrefix}{" "}
-                    {getHandlingDeliveryRange(item.handling_time_days ?? 0)}
+                    {getHandlingDeliveryRange(
+                      item.handling_time_days ?? 0,
+                      item.handling_time_max_days,
+                    )}
                   </p>
 
                   {item.variant_attributes &&
@@ -775,12 +783,14 @@ const Cart = () => {
               <h5 className="fluid-text-base font-bold leading-[normal] text-black">
                 Order Summary
               </h5>
-              <Link
-                href="/login"
-                className="fluid-text-12-16 font-semibold text-black underline leading-[normal]"
-              >
-                Sign in
-              </Link>
+              {authChecked && !isAuthenticated && (
+                <Link
+                  href="/login"
+                  className="fluid-text-12-16 font-semibold text-black underline leading-[normal]"
+                >
+                  Sign in
+                </Link>
+              )}
             </div>
 
             <div className="flex flex-col gap-3 pb-4 border-b border-[#e5e5e5]">
