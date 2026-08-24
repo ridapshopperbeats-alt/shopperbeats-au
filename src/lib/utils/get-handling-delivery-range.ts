@@ -1,24 +1,28 @@
-const addBusinessDays = (date: Date, days: number) => {
-  const result = new Date(date);
-  let added = 0;
-
-  while (added < days) {
-    result.setDate(result.getDate() + 1);
-    const day = result.getDay();
-
-    if (day !== 0 && day !== 6) added++;
-  }
-
-  return result;
-};
-
 const formatDeliveryDate = (date: Date) =>
   date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
-export const getHandlingDeliveryRange = (handlingDays: number) => {
-  const today = new Date();
-  const start = addBusinessDays(today, 1);
-  const end = addBusinessDays(today, Math.max(handlingDays, 1));
+// Computes the delivery date range from a product's handling-time window:
+// minimum date = today + handling_time_days, maximum date = today +
+// handling_time_max_days. Collapses to a single date when both resolve to
+// the same day (equal min/max, or a missing max falling back to min).
+export const getHandlingDeliveryRange = (
+  handlingTimeDays: number,
+  handlingTimeMaxDays?: number | null,
+): string => {
+  const minDays = handlingTimeDays;
+  const maxDays = handlingTimeMaxDays ?? handlingTimeDays;
 
-  return `${formatDeliveryDate(start)} – ${formatDeliveryDate(end)}`;
+  const today = new Date();
+
+  const minDate = new Date(today);
+  minDate.setDate(minDate.getDate() + minDays);
+
+  if (maxDays === minDays) {
+    return formatDeliveryDate(minDate);
+  }
+
+  const maxDate = new Date(today);
+  maxDate.setDate(maxDate.getDate() + maxDays);
+
+  return `${formatDeliveryDate(minDate)} - ${formatDeliveryDate(maxDate)}`;
 };

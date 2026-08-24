@@ -2,7 +2,13 @@
 
 import dynamic from "next/dynamic";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useTransition,
+} from "react";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
@@ -12,8 +18,7 @@ import {
   setBreadcrumbs,
   addBreadcrumb,
 } from "@/lib/redux/slices/breadcrumb-slice";
-
-import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
+import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 
 import { findCategoryPath } from "@/lib/utils/main-utils";
 
@@ -77,16 +82,23 @@ const CategoryClient = ({
   const [persistedFilters, setPersistedFilters] = useState<Filter[]>(filters);
 
   const [prevSlug, setPrevSlug] = useState(slug);
-  const [hasHydratedInitialProducts, setHasHydratedInitialProducts] =
-    useState(false);
 
   if (slug !== prevSlug) {
     setPrevSlug(slug);
     setPersistedFilters(filters);
-    setHasHydratedInitialProducts(false);
   } else if (filters?.length > persistedFilters.length) {
     setPersistedFilters(filters);
   }
+
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (!isPending) return;
+    dispatch(pushLoader());
+    return () => {
+      dispatch(popLoader());
+    };
+  }, [isPending, dispatch]);
 
   const {
     sortBy,
@@ -102,7 +114,9 @@ const CategoryClient = ({
     maxPrice,
     setMaxPrice,
     clearFilters,
-  } = useProductFilters(persistedFilters, category);
+  } = useProductFilters(persistedFilters, category, {
+    wrapNavigation: startTransition,
+  });
 
   const filterTags = useMemo(
     () =>
@@ -139,24 +153,12 @@ const CategoryClient = ({
     [handleSortChange],
   );
 
-  const pageFromUrl = Number(searchParams.get("page")) || 1;
+  const currentPage = Number(searchParams.get("page")) || 1;
 
-  const limitFromUrl = Number(searchParams.get("limit")) || 20;
+  const uiLimit = Number(searchParams.get("limit")) || 20;
 
-  const [currentPage, setCurrentPage] = useState(pageFromUrl);
-
-  const [uiLimit, setUiLimit] = useState(limitFromUrl);
-
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
-
-  if (
-    products?.length > 0 &&
-    allProducts.length === 0 &&
-    !hasHydratedInitialProducts
-  ) {
-    setHasHydratedInitialProducts(true);
-    setAllProducts(products);
-  }
+  const allProducts = products;
+  const effectiveTotal = totalItems;
 
   const activePriceRange = useMemo(
     () => resolvePriceRange(minPrice, maxPrice, selectedPrices),
@@ -167,8 +169,6 @@ const CategoryClient = ({
     () => filterProductsByPriceRange(allProducts, activePriceRange),
     [allProducts, activePriceRange],
   );
-
-  const [isLoadingNewFilter, setIsLoadingNewFilter] = useState(false);
 
   useEffect(() => {
     if (!megaMenuData?.length || !slug) return;
@@ -189,64 +189,6 @@ const CategoryClient = ({
     }
   }, [slug, megaMenuData, category?.name, dispatch]);
 
-  const queryParams = useMemo(
-    () => ({
-      ...Object.fromEntries(searchParams.entries()),
-      category_slug: slug,
-      page: currentPage,
-      limit: uiLimit,
-    }),
-    [searchParams, slug, currentPage, uiLimit],
-  );
-
-  const { data, isLoading, isFetching } = useGetProductsQuery(queryParams, {
-    skip: !slug,
-    refetchOnMountOrArgChange: false,
-    refetchOnFocus: false,
-    refetchOnReconnect: false,
-  });
-
-  const effectiveTotal = data?.total ?? totalItems;
-
-  const currentFilterString = useMemo(() => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    params.delete("page");
-    params.delete("limit");
-
-    return params.toString();
-  }, [searchParams]);
-
-  const [prevFilterString, setPrevFilterString] = useState(currentFilterString);
-
-  if (currentFilterString !== prevFilterString) {
-    setPrevFilterString(currentFilterString);
-
-    setCurrentPage(1);
-    setUiLimit(limitFromUrl);
-    setAllProducts([]);
-    setIsLoadingNewFilter(true);
-  } else {
-    if (pageFromUrl !== currentPage) {
-      setCurrentPage(pageFromUrl);
-    }
-
-    if (limitFromUrl !== uiLimit) {
-      setUiLimit(limitFromUrl);
-    }
-  }
-
-  const [prevQueryData, setPrevQueryData] = useState(data);
-
-  if (data !== prevQueryData) {
-    setPrevQueryData(data);
-
-    if (data) {
-      setAllProducts(data.data || []);
-      setIsLoadingNewFilter(false);
-    }
-  }
-
   const handlePageChange = useCallback(
     (page: number) => {
       window.scrollTo({
@@ -258,11 +200,13 @@ const CategoryClient = ({
 
       params.set("page", page.toString());
 
-      router.push(`${pathname}?${params.toString()}`, {
-        scroll: false,
+      startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`, {
+          scroll: false,
+        });
       });
     },
-    [pathname, router, searchParams],
+    [pathname, router, searchParams, startTransition],
   );
 
   const handleItemsPerPageChange = useCallback(
@@ -278,11 +222,13 @@ const CategoryClient = ({
 
       params.set("page", newPage.toString());
 
-      router.push(`${pathname}?${params.toString()}`, {
-        scroll: false,
+      startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`, {
+          scroll: false,
+        });
       });
     },
-    [pathname, router, searchParams, currentPage, uiLimit],
+    [pathname, router, searchParams, currentPage, uiLimit, startTransition],
   );
 
   const handleLoadMore = useCallback(() => {}, []);
@@ -364,6 +310,7 @@ const CategoryClient = ({
               filters={persistedFilters}
               category={category}
               onClose={() => setIsSidebarOpen(false)}
+              wrapNavigation={startTransition}
             />
           </div>
 
@@ -373,6 +320,7 @@ const CategoryClient = ({
             onClearAll={clearFilters}
             filters={persistedFilters}
             category={category}
+            wrapNavigation={startTransition}
           />
 
           <div className="flex w-full">
@@ -389,17 +337,11 @@ const CategoryClient = ({
               categoryName={category?.name}
               tags={filterTags}
               onClearFilters={clearFilters}
-              isLoading={
-                isLoading ||
-                (isFetching && allProducts.length === 0) ||
-                isLoadingNewFilter
-              }
+              isLoading={isPending && allProducts.length === 0}
               onLoadMore={handleLoadMore}
               infiniteScroll={false}
               hasMore={false}
-              isFetchingMore={
-                (isFetching && allProducts.length > 0) || isLoadingNewFilter
-              }
+              isFetchingMore={isPending && allProducts.length > 0}
             />
           </div>
         </div>

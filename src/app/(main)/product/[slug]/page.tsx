@@ -46,6 +46,7 @@ async function getProduct(
       key_features: data.key_features,
       brand_name: data.brand_name,
       handling_time_days: data.handling_time_days,
+      handling_time_max_days: data.handling_time_max_days,
       height: data.height,
       weight: data.weight,
       length: data.length,

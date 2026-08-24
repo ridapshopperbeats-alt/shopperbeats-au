@@ -17,8 +17,9 @@ const API_REDUCER_PATHS = [
 
 const BACKGROUND_ENDPOINTS: Partial<Record<(typeof API_REDUCER_PATHS)[number], string[]>> = {
   cartApi: ["getWishlist", "getCart"],
-  authApi: ["getSocialMediaLinks"],
+  authApi: ["getSocialMediaLinks", "getUserDetails"],
   geocodeApi: ["reverseGeocode"],
+  productsApi: ["getRecommendations"],
 };
 
 interface RTKQueryEntry {

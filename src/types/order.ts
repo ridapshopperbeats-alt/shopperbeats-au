@@ -129,6 +129,7 @@ export interface OrderItemPayload {
   ships_from_location?: string | null;
   ean_code?: string | null;
   handling_time_days?: number;
+  handling_time_max_days?: number | null;
   supplier?: string | null;
   brand?: string | null;
 }

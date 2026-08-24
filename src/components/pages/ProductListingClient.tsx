@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import {
@@ -67,6 +67,8 @@ const ProductListingClient = ({
     setPersistedFilters(filters);
   }
 
+  const [isPending, startTransition] = useTransition();
+
   const {
     sortBy,
     handleSortChange,
@@ -82,7 +84,9 @@ const ProductListingClient = ({
     setMaxPrice,
     clearFilters,
     isPendingApply,
-  } = useProductFilters(persistedFilters, category);
+  } = useProductFilters(persistedFilters, category, {
+    wrapNavigation: startTransition,
+  });
 
   const handleClearAllFilters = () => {
     setSelectedCategorySlug(null);
@@ -99,6 +103,15 @@ const ProductListingClient = ({
   );
 
   const [renderingLimit, setRenderingLimit] = useState(uiLimit);
+
+  const initialParamsRef = useRef(searchParams.toString());
+  const [hasChangedFromInitial, setHasChangedFromInitial] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.toString() !== initialParamsRef.current) {
+      setHasChangedFromInitial(true);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (!megaMenuData?.length || !slug) return;
@@ -146,11 +159,11 @@ const ProductListingClient = ({
   const { data: rtkData, isLoading: rtkIsLoading, isFetching: rtkIsFetching } = useGetProductsQuery(
     queryObject,
     {
-      skip: isHighlight,
+      skip: isHighlight || !hasChangedFromInitial,
     }
   );
 
-  const isFilterFetching = !isHighlight && (rtkIsFetching || isPendingApply);
+  const isFilterFetching = !isHighlight && (rtkIsFetching || isPendingApply || isPending);
   const wasFilterFetchingRef = useRef(false);
 
   useEffect(() => {
@@ -500,6 +513,7 @@ const extractedBrands = useMemo(() => {
                 onClearAllFilters={handleClearAllFilters}
                 extractedBrands={extractedBrands}
                 slug={slug}
+                wrapNavigation={startTransition}
               />
             )}
           </div>
@@ -516,6 +530,7 @@ const extractedBrands = useMemo(() => {
               onCategorySelect={handleCategorySelect}
               selectedPriceRange={isHighlight ? selectedPriceRange : undefined}
               onPriceSelect={isHighlight ? handlePriceSelect : undefined}
+              wrapNavigation={startTransition}
               isHighlightPage={isHighlight}
               priceCounts={isHighlight ? priceCounts : undefined}
               extractedBrands={extractedBrands}

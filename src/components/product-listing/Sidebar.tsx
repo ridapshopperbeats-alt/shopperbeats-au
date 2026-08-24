@@ -41,8 +41,9 @@ export interface SidebarProps {
     between100and200: number;
     above200: number;
   };
- 
+
   hideHeader?: boolean;
+  wrapNavigation?: (fn: () => void) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -58,6 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onExpandedChange,
   hideHeader,
   slug,
+  wrapNavigation,
 }) => {
   const {
     brandSearch,
@@ -79,7 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     colorFilter,
     sizeFilter,
     allCategories,
-  } = useProductFilters(filters, category);
+  } = useProductFilters(filters, category, { wrapNavigation });
 
   const params = useParams();
   const activeSlug = params?.slug;

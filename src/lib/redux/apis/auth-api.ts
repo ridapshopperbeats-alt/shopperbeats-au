@@ -137,11 +137,7 @@ export const authApi = createApi({
         try {
           await queryFulfilled;
           dispatch(setAuthenticated(true));
-        } catch (err) {
-          const status = (err as { error?: { status?: number | string } })?.error?.status;
-          if (status === 401 || status === 403) {
-            dispatch(setAuthenticated(false));
-          }
+        } catch {
         }
       },
     }),

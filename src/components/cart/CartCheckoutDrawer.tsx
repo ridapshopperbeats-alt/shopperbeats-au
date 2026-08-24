@@ -122,9 +122,10 @@ export default function CartCheckoutDrawer({
                     {item.product_name}
                   </p>
                   <p className="cart-drawer-item-handling">
-                    {item.handling_time_days === 1
-                      ? "Estimated Delivery in"
-                      : `Estimated Delivery in ${getHandlingDeliveryRange(item.handling_time_days ?? 2)}`}
+                    {`Estimated Delivery in ${getHandlingDeliveryRange(
+                      item.handling_time_days ?? 2,
+                      item.handling_time_max_days,
+                    )}`}
                   </p>
                   {/* {size && ( */}
                     <p className="cart-drawer-item-attr-label">

@@ -1,8 +1,9 @@
+import { cache } from "react";
 import CategoryPageClient from "@/components/pages/CategoryPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import { Category, ProductsResponse } from "@/types/product";
+import { ProductsResponse } from "@/types/product";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 
 // ---------- Generate Metadata ----------
@@ -49,8 +50,7 @@ export async function generateMetadata(
   };
 }
 
-// ---------- Fetch Category Details ----------
-async function getCategoryDetails(slug: string) {
+const getCategoryDetails = cache(async (slug: string) => {
   const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
 
   if (!baseUrl) {
@@ -101,7 +101,7 @@ async function getCategoryDetails(slug: string) {
     console.warn("Error fetching category details:", error);
     return null;
   }
-}
+});
 
 
 
@@ -136,7 +136,8 @@ async function getProducts(
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?${queryParams.toString()}`
+      `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?${queryParams.toString()}`,
+      { next: { revalidate: 60 } }
     );
     if (!res.ok) {
       throw new Error("Failed to fetch products");
@@ -163,11 +164,12 @@ export default async function CategoryPage({
   const { slug } = await params;
   const resolvedSearchParams = await searchParams;
 
-  const category = await getCategoryDetails(slug);
-  const { data: products, filters, totalItems } = await getProducts(
-    slug,
-    resolvedSearchParams
-  );
+  const [category, { data: products, filters, totalItems }, megaMenuData] =
+    await Promise.all([
+      getCategoryDetails(slug),
+      getProducts(slug, resolvedSearchParams),
+      getMegaMenuData(),
+    ]);
 
   let sidebarFilters = filters;
 
@@ -189,8 +191,6 @@ export default async function CategoryPage({
       console.warn("Failed to load fallback filters:", error);
     }
   }
-
-  const megaMenuData: Category[] = await getMegaMenuData();
 
   return (
     <>
