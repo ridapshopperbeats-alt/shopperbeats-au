@@ -17,12 +17,6 @@ const refreshBaseQuery = fetchBaseQuery({
 });
 
 
-// "refreshed": got a new access token, safe to retry the original request.
-// "invalid": the backend definitively rejected the refresh token (401/403)
-// or there simply isn't one — the session really is over, log out.
-// "transient": the refresh call itself failed (network blip, 5xx, timeout).
-// This is NOT proof the session is invalid, so the session is left alone —
-// only this one request fails, instead of silently wiping the whole login.
 type RefreshOutcome = "refreshed" | "invalid" | "transient";
 
 let pendingRefresh: Promise<RefreshOutcome> | null = null;
@@ -34,8 +28,6 @@ function refreshAccessToken(
   if (!pendingRefresh) {
     const refresh_token = getRefreshToken();
     if (!refresh_token) {
-      // Expected for guests / logged-out sessions — not an actual error, so
-      // this shouldn't trip Next's console.error dev overlay.
       console.warn("No refresh_token cookie found; cannot refresh access token.");
       return Promise.resolve("invalid");
     }
@@ -54,8 +46,6 @@ function refreshAccessToken(
       .then((result) => {
         if (result.error) {
           const status = result.error.status;
-          // Only a definitive rejection from the server means the refresh
-          // token is actually invalid/expired — end the session for that.
           // Anything else (network error, timeout, 5xx) is transient.
           if (status === 401 || status === 403) {
             console.warn("Refresh token rejected by server:", result.error);
@@ -86,6 +76,23 @@ function refreshAccessToken(
   return pendingRefresh;
 }
 
+export function triggerSilentRefresh(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dispatch: (action: any) => unknown,
+): Promise<RefreshOutcome> {
+  return refreshAccessToken(
+    { getState: () => ({}), dispatch } as unknown as Parameters<BaseQueryFn>[1],
+    {},
+  );
+}
+
+function isAuthRequiredError(error: FetchBaseQueryError | undefined): boolean {
+  if (!error) return false;
+  if (error.status === 401 || error.status === 403) return true;
+  const data = error.data as { detail?: { code?: string } } | undefined;
+  return data?.detail?.code === "AUTH_REQUIRED";
+}
+
 export const createBaseQuery = (
   baseUrl: string,
   prepareHeaders: typeof prepareAuthHeaders = prepareAuthHeaders
@@ -99,7 +106,7 @@ export const createBaseQuery = (
   return async (args, api, extraOptions) => {
     let result = await rawBaseQuery(args, api, extraOptions);
 
-    if (result.error?.status === 401) {
+    if (isAuthRequiredError(result.error)) {
       const outcome = await refreshAccessToken(api, extraOptions);
 
       if (outcome === "refreshed") {
@@ -109,10 +116,6 @@ export const createBaseQuery = (
         api.dispatch(logout());
         return result;
       } else {
-        // "transient": don't log the user out over a refresh hiccup. Mark
-        // the error as non-401 so callers (e.g. getUserDetails) that treat a
-        // 401 as "session is dead" don't mistakenly flip the UI to logged
-        // out — this request just failed once, the session itself is fine.
         return {
           error: {
             status: "CUSTOM_ERROR",

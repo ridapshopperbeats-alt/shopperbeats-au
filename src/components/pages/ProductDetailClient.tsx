@@ -16,10 +16,7 @@ import {
 } from "@/lib/redux/apis/cart-api";
 import CartCheckoutDrawer from "@/components/cart/CartCheckoutDrawer";
 import { CartItem } from "@/types/cart";
-import {
-  useGetProductBySlugQuery,
-  useGetRecommendationsQuery,
-} from "@/lib/redux/apis/products-api";
+import { useGetRecommendationsQuery } from "@/lib/redux/apis/products-api";
 import { useCalculateShippingMutation } from "@/lib/redux/apis/order-api";
 import Image from "next/image";
 import ProductGallery from "../product-listing/ProductGallery";
@@ -86,10 +83,7 @@ export default function ProductDetailClient({
   recentlyViewed?: Product[] | null;
   popularProducts?: Product[] | null;
 }) {
-  const { data: latestProduct } = useGetProductBySlugQuery(slug, {
-    skip: !slug,
-  });
-  const product = latestProduct || initialProduct;
+  const product = initialProduct;
 
   const { data: recommendationsData, isFetching: isRecommendationsFetching } =
     useGetRecommendationsQuery(
@@ -1089,8 +1083,8 @@ export default function ProductDetailClient({
 
                     <p className="font-normal text-[#535766]">
                       {getEstimatedDeliveryRange(
-                        product.ships_from_location,
                         product.handling_time_days || 0,
+                        product.handling_time_max_days,
                       )}
                     </p>
                   </div>
@@ -1481,8 +1475,8 @@ export default function ProductDetailClient({
                   <span className="pdp-delivery-date fluid-text-xs font-normal text-[#1A2553] leading-[20px]">
                     (
                     {getEstimatedDeliveryRange(
-                      product.ships_from_location,
                       product.handling_time_days || 0,
+                      product.handling_time_max_days,
                     )}
                     )
                   </span>

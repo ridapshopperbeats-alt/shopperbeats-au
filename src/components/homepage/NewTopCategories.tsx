@@ -119,7 +119,6 @@ export default function NewTopCategories() {
           href: `/category/${category.slug}`,
         }));
 
-        console.log("MAPPED CATEGORIES:", mappedCategories);
 
         setCategories(mappedCategories);
       } catch (error) {

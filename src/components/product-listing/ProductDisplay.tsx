@@ -234,6 +234,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
                   tags={product.tags}
                   ships_from_location={product.ships_from_location}
                   handling_time_days={product.handling_time_days}
+                  handling_time_max_days={product.handling_time_max_days}
                 />
               );
             })}

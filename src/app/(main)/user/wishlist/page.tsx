@@ -144,6 +144,7 @@ export default function WishlistPage() {
                   tags={item.tags}
                   ships_from_location={item.ships_from_location}
                   handling_time_days={item.handling_time_days}
+                  handling_time_max_days={item.handling_time_max_days}
                 />
               </div>
             );

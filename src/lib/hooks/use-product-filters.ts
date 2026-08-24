@@ -61,7 +61,13 @@ const deriveFiltersFromUrl = (searchParams: URLSearchParams) => {
 export const useProductFilters = (
   filters: Filter[],
   category?: Category | null,
+  options?: { wrapNavigation?: (fn: () => void) => void },
 ) => {
+  const optionsWrapNavigation = options?.wrapNavigation;
+  const wrapNavigation = useCallback(
+    (fn: () => void) => (optionsWrapNavigation ?? ((f: () => void) => f()))(fn),
+    [optionsWrapNavigation],
+  );
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -168,8 +174,11 @@ export const useProductFilters = (
     const nextQueryString = params.toString();
     if (nextQueryString === searchParams.toString()) return;
 
-    router.push(`${pathname}?${nextQueryString}`, { scroll: false });
+    wrapNavigation(() => {
+      router.push(`${pathname}?${nextQueryString}`, { scroll: false });
+    });
   }, [
+    wrapNavigation,
     router,
     pathname,
     searchParams,
@@ -285,11 +294,13 @@ export const useProductFilters = (
 
     if (currentLimit) params.set("limit", currentLimit);
 
-    router.push(
-      `${pathname}${params.toString() ? `?${params.toString()}` : ""}`,
-      { scroll: false },
-    );
-  }, [q, categorySlug, categoryId, currentLimit, router, pathname]);
+    wrapNavigation(() => {
+      router.push(
+        `${pathname}${params.toString() ? `?${params.toString()}` : ""}`,
+        { scroll: false },
+      );
+    });
+  }, [wrapNavigation, q, categorySlug, categoryId, currentLimit, router, pathname]);
 
   const brandFilter = filters.find(
     (f) => f.attribute.toLowerCase() === "brand",

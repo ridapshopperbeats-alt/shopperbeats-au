@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { authApi } from './apis/auth-api';
 import { setAccessToken } from './slices/auth-slice';
 import { getAccessTokenCookie } from '@/lib/utils/access-token';
+import TokenRefreshManager from '@/components/TokenRefreshManager';
 
 export default function StoreProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function StoreProvider({ children }: { children: React.ReactNode 
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  return <Provider store={store}>{children}<ToastContainer
+  return <Provider store={store}>{children}<TokenRefreshManager /><ToastContainer
     position="top-right"
     autoClose={4000}
     hideProgressBar={false}

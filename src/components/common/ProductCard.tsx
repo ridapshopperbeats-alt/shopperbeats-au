@@ -42,6 +42,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   stock,
   ships_from_location,
   handling_time_days,
+  handling_time_max_days,
   shippingCharge,
 }) => {
   const [addToCart, { isLoading: isAddingToCart }] = useAddToCartMutation();
@@ -252,8 +253,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     Estimated delivery between{" "}
                     <span className="font-medium">
                       {getEstimatedDeliveryRange(
-                        ships_from_location,
                         handling_time_days || 0,
+                        handling_time_max_days,
                       )}
                     </span>
                   </p>

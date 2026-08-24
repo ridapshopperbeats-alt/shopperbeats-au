@@ -16,6 +16,7 @@ const CSP = [
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  devIndicators: false,
   async headers() {
     return [
       {
@@ -116,6 +117,14 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "dngnxcmxnkyl5.cloudfront.net",
+      },
+      {
+        protocol: "https",
+        hostname: "perfumesw.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.ccdemostore.com",
       },
       {
         protocol: "https",
