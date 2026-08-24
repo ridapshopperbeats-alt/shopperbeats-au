@@ -244,6 +244,6 @@ export const personalInfoSchema = yup.object().shape({
 export const contactInfoSchema = yup.object().shape({
   name: nameField("Name"),
   email: email,
-  phone: phoneNumber,
+  subject: requiredString("Subject"),
   message: requiredMessage("Message", 5),
 });

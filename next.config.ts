@@ -121,6 +121,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "img.fragrancex.com",
       },
+      {
+        protocol: "https",
+        hostname: "perfumesw.com",
+      },
     ],
   },
 };

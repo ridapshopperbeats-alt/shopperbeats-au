@@ -45,21 +45,29 @@ import { addBreadcrumb } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
 import { useDebounceValue } from "@/lib/hooks/use-debounce";
 
+export interface MegaMenuSubcategory {
+  name: string;
+  id: string;
+  slug?: string;
+  links: {
+    name: string;
+    href: string;
+    children?: { name: string; href: string }[];
+  }[];
+  // A subcategory can itself have further nested subcategories (e.g. a
+  // "Women"/"Men" segment sits between the category and its real
+  // leaf groupings like "Accessories"/"Clothing"). When present, the
+  // mega menu treats this subcategory's siblings as tabs and renders
+  // this array as the mega-menu columns instead of `links`.
+  subcategories?: MegaMenuSubcategory[];
+  viewAll?: string;
+}
+
 export interface MegaMenuCategory {
   name: string;
   id: string;
   slug?: string;
-  subcategories: {
-    name: string;
-    id: string;
-    slug?: string;
-    links: {
-      name: string;
-      href: string;
-      children?: { name: string; href: string }[];
-    }[];
-    viewAll?: string;
-  }[];
+  subcategories: MegaMenuSubcategory[];
 }
 
 interface HeaderProps {
@@ -83,18 +91,6 @@ const getCategoryIcon = (name: string) => {
   if (n.includes("jewel")) return Gem;
   if (n.includes("sale") || n.includes("sparkle")) return Sparkles;
   return Tag;
-};
-
-const GENDER_KEYWORDS: Record<"women" | "men", RegExp> = {
-  women: /women|woman|ladies/i,
-  men: /\bmen\b|\bman\b|gentlemen/i,
-};
-
-const matchesGenderTab = (name: string, tab: "women" | "men") => {
-  const isWomen = GENDER_KEYWORDS.women.test(name);
-  const isMen = GENDER_KEYWORDS.men.test(name);
-  if (!isWomen && !isMen) return true;
-  return tab === "women" ? isWomen : isMen;
 };
 
 const getCategoryPromo = (name: string) => {
@@ -159,7 +155,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
   const locationRequestedRef = useRef(false);
   const [triggerReverseGeocode] = useLazyReverseGeocodeQuery();
-
+console.log(megaMenuData, "megaMenuData===========");
   const requestLocation = useCallback(() => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -262,9 +258,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
       ? (megaMenuData[0].slug ?? megaMenuData[0].id)
       : null,
   );
-  const [activeGenderTab, setActiveGenderTab] = useState<"women" | "men">(
-    "women",
-  );
+  const [activeSubTabId, setActiveSubTabId] = useState<string | null>(null);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [openSubCategories, setOpenSubCategories] = useState<
     Record<string, boolean>
@@ -700,138 +694,112 @@ export default function Header({ megaMenuData }: HeaderProps) {
                             .includes("fashion");
                           const promo = getCategoryPromo(cat.name);
 
+                          // Fashion-style categories have an extra nested
+                          // level: cat.subcategories are segments (e.g.
+                          // "Women"/"Men") rendered as tabs, and the active
+                          // segment's own subcategories (e.g. "Accessories",
+                          // "Clothing") become the mega-menu columns. Other
+                          // categories keep the old behaviour: their
+                          // subcategories ARE the columns directly.
+                          const tabs = isFashionCat ? cat.subcategories : [];
+                          const activeTab =
+                            tabs.find(
+                              (tab) => (tab.slug ?? tab.id) === activeSubTabId,
+                            ) ?? tabs[0];
+                          const columns = isFashionCat
+                            ? activeTab
+                              ? activeTab.subcategories?.length
+                                ? activeTab.subcategories
+                                : [activeTab]
+                              : []
+                            : cat.subcategories;
+
                           return (
                             <div className="mega-content-inner">
-                              {isFashionCat && (
+                              {tabs.length > 0 && (
                                 <div className="mega-gender-tabs">
-                                  <button
-                                    type="button"
-                                    className={
-                                      activeGenderTab === "women"
-                                        ? "active"
-                                        : ""
-                                    }
-                                    onClick={() =>
-                                      setActiveGenderTab("women")
-                                    }
-                                  >
-                                    Women
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className={
-                                      activeGenderTab === "men" ? "active" : ""
-                                    }
-                                    onClick={() => setActiveGenderTab("men")}
-                                  >
-                                    Men
-                                  </button>
+                                  {tabs.map((tab) => {
+                                    const tabKey = tab.slug ?? tab.id;
+                                    return (
+                                      <button
+                                        key={tabKey}
+                                        type="button"
+                                        className={
+                                          activeTab &&
+                                          (activeTab.slug ?? activeTab.id) ===
+                                            tabKey
+                                            ? "active"
+                                            : ""
+                                        }
+                                        onClick={() =>
+                                          setActiveSubTabId(tabKey)
+                                        }
+                                      >
+                                        {tab.name}
+                                      </button>
+                                    );
+                                  })}
                                 </div>
                               )}
                               <div className="mega-content-row">
                                 <div className="mega-cat">
-                                  {cat.subcategories.map((subCat) => {
-                                    if (
-                                      isFashionCat &&
-                                      !matchesGenderTab(
-                                        subCat.name,
-                                        activeGenderTab,
-                                      )
-                                    ) {
-                                      return null;
-                                    }
-
-                                    const visibleLinks = isFashionCat
-                                      ? subCat.links.filter((link) =>
-                                          matchesGenderTab(
-                                            link.name,
-                                            activeGenderTab,
-                                          ),
-                                        )
-                                      : subCat.links;
-
-                                    if (
-                                      isFashionCat &&
-                                      visibleLinks.length === 0
-                                    ) {
-                                      return null;
-                                    }
-
-                                    // The red gender tab above already says
-                                    // "Women"/"Men" — skip the redundant
-                                    // black subcategory heading when its name
-                                    // is just the gender term again.
-                                    const isGenderNameHeading =
-                                      isFashionCat &&
-                                      (GENDER_KEYWORDS.women.test(
-                                        subCat.name,
-                                      ) ||
-                                        GENDER_KEYWORDS.men.test(
-                                          subCat.name,
-                                        ));
-
-                                    return (
-                                      <div
-                                        key={subCat.name}
-                                        className="mega-column"
-                                      >
-                                        {!isGenderNameHeading && (
-                                          <Link
-                                            prefetch={false}
-                                            href={resolveCategoryHref(
-                                              subCat.slug ?? subCat.id,
-                                            )}
-                                            onClick={closeMegaMenu}
-                                          >
-                                            <h5>{subCat.name}</h5>
-                                          </Link>
+                                  {columns.map((subCat) => (
+                                    <div
+                                      key={subCat.id}
+                                      className="mega-column"
+                                    >
+                                      <Link
+                                        prefetch={false}
+                                        href={resolveCategoryHref(
+                                          subCat.slug ?? subCat.id,
                                         )}
-                                        <ul>
-                                          {visibleLinks.map((link) => (
-                                            <li
-                                              key={link.name}
+                                        onClick={closeMegaMenu}
+                                      >
+                                        <h5>{subCat.name}</h5>
+                                      </Link>
+                                      <ul>
+                                        {subCat.links.slice(0, 10).map((link) => (
+                                          <li key={link.name}>
+                                            <Link
+                                              prefetch={false}
+                                              href={link.href}
+                                              onClick={closeMegaMenu}
                                             >
-                                              <Link
-                                                prefetch={false}
-                                                href={link.href}
-                                                onClick={closeMegaMenu}
-                                              >
-                                                {link.name}
-                                              </Link>
-                                            </li>
-                                          ))}
+                                              {link.name}
+                                            </Link>
+                                          </li>
+                                        ))}
 
-                                          {subCat.viewAll && (
-                                            <li>
-                                              <Link
-                                                href={resolveCategoryHref(
-                                                  subCat.slug ?? subCat.id,
-                                                )}
-                                                className="view-link"
-                                                prefetch={false}
-                                                onClick={() => {
-                                                  dispatch(
-                                                    addBreadcrumb({
-                                                      name: cat.name,
-                                                      path: resolveCategoryHref(
-                                                        cat.slug ?? cat.id,
-                                                      ),
-                                                    }),
-                                                  );
-                                                  closeMegaMenu();
-                                                }}
-                                              >
-                                                View All
-                                              </Link>
-                                            </li>
-                                          )}
-                                        </ul>
-                                      </div>
-                                    );
-                                  })}
+                                        {subCat.viewAll && (
+                                          <li>
+                                            <Link
+                                              href={resolveCategoryHref(
+                                                subCat.slug ?? subCat.id,
+                                              )}
+                                              className="view-link"
+                                              prefetch={false}
+                                              onClick={() => {
+                                                dispatch(
+                                                  addBreadcrumb({
+                                                    name: cat.name,
+                                                    path: resolveCategoryHref(
+                                                      cat.slug ?? cat.id,
+                                                    ),
+                                                  }),
+                                                );
+                                                closeMegaMenu();
+                                              }}
+                                            >
+                                              View All
+                                            </Link>
+                                          </li>
+                                        )}
+                                      </ul>
+                                    </div>
+                                  ))}
                                 </div>
 
-                                <div className="mega-promo !w-[340px] !h-[307px] opacity-100 rounded-[10px] pt-[40px] pr-[24px] pb-[40px] pl-[24px] bg-[#FFF0F1]">
+                                {/* <div className="mega-promo !w-[340px] !h-[307px] opacity-100 rounded-[10px] pt-[40px] pr-[24px] pb-[40px] pl-[24px] bg-[#FFF0F1]">
                                   {promo.image && (
                                     <div className="mega-promo-image">
                                       <Image
@@ -860,7 +828,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                       Shop Now
                                     </Link>
                                   </div>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
                           );
@@ -971,6 +939,19 @@ export default function Header({ megaMenuData }: HeaderProps) {
           >
             {megaMenuData.map((cat) => {
               const isMainOpen = openSubCategories[cat.id];
+              const isFashionCat = cat.name.toLowerCase().includes("fashion");
+              const tabs = isFashionCat ? cat.subcategories : [];
+              const activeTab =
+                tabs.find(
+                  (tab) => (tab.slug ?? tab.id) === activeSubTabId,
+                ) ?? tabs[0];
+              const subCategories = isFashionCat
+                ? activeTab
+                  ? activeTab.subcategories?.length
+                    ? activeTab.subcategories
+                    : [activeTab]
+                  : []
+                : cat.subcategories;
 
               return (
                 <div key={cat.id} className="new-mega-column">
@@ -1013,7 +994,29 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
                   {isMainOpen && (
                     <div className="mobile-subcategories">
-                      {cat.subcategories.map((subCat) => {
+                      {tabs.length > 0 && (
+                        <div className="mega-gender-tabs">
+                          {tabs.map((tab) => {
+                            const tabKey = tab.slug ?? tab.id;
+                            return (
+                              <button
+                                key={tabKey}
+                                type="button"
+                                className={
+                                  activeTab &&
+                                  (activeTab.slug ?? activeTab.id) === tabKey
+                                    ? "active"
+                                    : ""
+                                }
+                                onClick={() => setActiveSubTabId(tabKey)}
+                              >
+                                {tab.name}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                      {subCategories.map((subCat) => {
                         const isSubOpen = openSubSubCategories[subCat.id];
 
                         return (
