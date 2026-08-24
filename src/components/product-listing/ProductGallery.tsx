@@ -531,7 +531,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
             onSlideChange={(slideIndex) => setMobileSlide(slideIndex)}
             renderItem={(item, index) => (
               <div
-                className="relative w-full h-[320px] sm:h-[380px] overflow-hidden rounded-[15px] flex items-center  xl:justify-center"
+                className="relative w-full h-[320px] sm:h-[380px] lg:h-[360px] lg:bg-white overflow-hidden rounded-[15px] flex items-center  xl:justify-center"
                 key={item.image_url || item.video_url}
               >
                 {item?.video_url && !item?.image_url ? (
@@ -578,7 +578,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                       draggable={false}
                       onLoad={() => markLoaded(safeUrl(item.image_url))}
                       onClick={() => openPreview(safeUrl(item.image_url))}
-                      className="w-full h-full object-cover rounded-[15px]  "
+                      className="w-full h-full object-cover lg:object-contain rounded-[15px]  "
                       style={{
                         opacity: isLoaded(safeUrl(item.image_url)) ? 1 : 0,
                         transition: "opacity 0.3s ease",

@@ -1467,18 +1467,18 @@ export default function ProductDetailClient({
             )}
           </div>
 
-          <div className="hidden lg:flex flex-col gap-5 w-full lg:w-[300px] lg:shrink-0 xl:w-[381px] lg:sticky lg:top-32 lg:self-start">
-            <div className="w-full lg:min-h-[489px] border border-[#F8F8F8] shadow shadow-[#000000]/10 rounded-[7px] p-5 flex flex-col gap-4">
+          <div className="hidden lg:flex flex-col gap-5 w-full lg:w-[300px] lg:shrink-0 xl:w-[381px] lg:sticky lg:top-32 lg:self-start pdp-sidebar-col">
+            <div className="w-full lg:min-h-[489px] border border-[#F8F8F8] shadow shadow-[#000000]/10 rounded-[7px] p-5 flex flex-col gap-4 pdp-sidebar-card">
               <div className="flex items-baseline gap-3 flex-wrap">
-                <span className="fluid-text-20-36 leading-[18px] font-bold text-[#FD151B]">
+                <span className="pdp-price fluid-text-20-36 leading-[18px] font-bold text-[#FD151B]">
                   ${formatPrice(mainPrice)}
                 </span>
               </div>
 
               {!isOutOfStock && (
-                <p className="font-bold text-[#1D265F] text-[14px]">
+                <p className="pdp-delivery-fee font-bold text-[#1D265F] text-[14px]">
                   Delivery Fee - ${formatPrice(shippingCharge)}{" "}
-                  <span className="fluid-text-xs font-normal text-[#1A2553] leading-[20px]">
+                  <span className="pdp-delivery-date fluid-text-xs font-normal text-[#1A2553] leading-[20px]">
                     (
                     {getEstimatedDeliveryRange(
                       product.ships_from_location,
@@ -1491,7 +1491,7 @@ export default function ProductDetailClient({
 
               <div className="pdp-section-divider"></div>
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 pdp-deliver-row">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-start gap-2">
                     <MapPin
@@ -1522,7 +1522,7 @@ export default function ProductDetailClient({
                   <button
                     type="button"
                     onClick={() => setShowLocationPopup(true)}
-                    className="fluid-text-xs font-bold text-[#0B38D7]  cursor-pointer shrink-0"
+                    className="pdp-change-btn fluid-text-xs font-bold text-[#0B38D7]  cursor-pointer shrink-0"
                   >
                     Change
                   </button>
@@ -1531,7 +1531,7 @@ export default function ProductDetailClient({
 
               <div className="pdp-section-divider"></div>
 
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1.5 pdp-qty-row">
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="product-quantity"
@@ -1572,7 +1572,7 @@ export default function ProductDetailClient({
                   return (
                     <div
                       id="product-quantity"
-                      className="flex items-center justify-between w-[120px] h-[42px] border border-[#F8F8F8] rounded-[8px] px-4"
+                      className="flex items-center justify-between w-[120px] h-[42px] border border-[#F8F8F8] rounded-[8px] px-4 pdp-qty-stepper"
                     >
                       <button
                         type="button"
@@ -1582,7 +1582,7 @@ export default function ProductDetailClient({
                       >
                         &minus;
                       </button>
-                      <span className="text-[14px] font-bold text-black">
+                      <span className="pdp-qty-value text-[14px] font-bold text-black">
                         {quantity}
                       </span>
                       <button
@@ -1603,12 +1603,12 @@ export default function ProductDetailClient({
 
               {/* Error message for non-shippable */}
               {shippingStatus === "unavailable" && (
-                <p className="text-red-500 text-[13px] -mt-2">
+                <p className="pdp-shipping-warning text-red-500 text-[13px] -mt-2">
                   This product cannot be shipped to your selected region.
                 </p>
               )}
 
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3 pdp-cta-group">
                 {(() => {
                   const hasVariants =
                     product.variants && product.variants.length > 0;
@@ -1621,7 +1621,7 @@ export default function ProductDetailClient({
                     return (
                       <Button
                         disabled
-                        className="w-full h-[46px] rounded-full bg-gray-300 text-white font-semibold cursor-not-allowed"
+                        className="pdp-cta-btn w-full h-[46px] rounded-full bg-gray-300 text-white font-semibold cursor-not-allowed"
                         debounceDelay={0}
                       >
                         Out of Stock
@@ -1640,7 +1640,7 @@ export default function ProductDetailClient({
                             ? handleDisabledAddToCart
                             : handleCartButtonClick
                         }
-                        className={`w-full h-[46px] rounded-full font-semibold text-white transition-colors cursor-pointer
+                        className={`pdp-cta-btn w-full h-[46px] rounded-full font-semibold text-white transition-colors cursor-pointer
               ${isProductInCart ? "bg-[#FD151B]" : "bg-[#FD151B]"}
               ${shouldDisableAddToCart ? "opacity-50 cursor-not-allowed" : ""}
             `}
@@ -1657,7 +1657,7 @@ export default function ProductDetailClient({
                       <Button
                         onClick={handleBuyNow}
                         disabled={shippingStatus === "unavailable"}
-                        className="w-full h-[46px] rounded-full font-semibold text-[#FD151B] border border-[#FD151B] bg-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="pdp-cta-btn w-full h-[46px] rounded-full font-semibold text-[#FD151B] border border-[#FD151B] bg-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         debounceDelay={500}
                       >
                         Buy Now
@@ -1667,7 +1667,7 @@ export default function ProductDetailClient({
                 })()}
               </div>
 
-              <div className=" flex mx-auto items-center gap-2 fluid-text-xs text-center font-medium text-[#657689] leading-[20px]  ">
+              <div className="pdp-safe-checkout flex mx-auto items-center gap-2 fluid-text-xs text-center font-medium text-[#657689] leading-[20px]  ">
                 <ShieldCheck /> Guaranteed Safe & Secured Checkout
               </div>
 
@@ -1726,7 +1726,7 @@ export default function ProductDetailClient({
                   </div>
                 </div> */}
 
-                <div className="flex flex-wrap gap-2 justify-center">
+                <div className="pdp-payment-icons flex flex-wrap gap-2 justify-center">
                   {[
                     "visa",
                     "payment",

@@ -11,7 +11,7 @@ export default function ErrorBoundary({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Unhandled page error, digest:", error.digest);
+    console.error("Unhandled page error:", error.message, "digest:", error.digest, error.stack);
   }, [error]);
 
   return (

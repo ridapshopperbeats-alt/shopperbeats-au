@@ -150,7 +150,7 @@ const categoryImages = [
   },
   {
     id: 9,
-    title: "Earnings",
+    title: "Earings",
     image: "/images/home/card-earrings.svg",
   },
   {

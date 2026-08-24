@@ -117,6 +117,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "dngnxcmxnkyl5.cloudfront.net",
       },
+      {
+        protocol: "https",
+        hostname: "img.fragrancex.com",
+      },
     ],
   },
 };
