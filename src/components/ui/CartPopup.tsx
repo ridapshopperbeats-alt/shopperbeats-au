@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useGetCartQuery } from "@/lib/redux/apis/cart-api";
 import { CartItem } from "@/types/cart";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
-import { useStaticCart } from "@/lib/hooks/useStaticCart";
 
 interface CartPopupProps {
   isVisible: boolean;
@@ -20,11 +19,9 @@ const CartPopup = ({ isVisible }: CartPopupProps) => {
       refetchOnMountOrArgChange: true,
     }
   );
-  const { count: staticCartCount } = useStaticCart();
-
 
   const cartItems: CartItem[] = (cartData?.items ?? []).filter(item => item.is_active && (item.available_stock === undefined || item.available_stock > 0));
-  const totalCartCount = cartItems.length + staticCartCount;
+  const totalCartCount = cartItems.length;
 
   return (
     <div className={`header-link cart ${isVisible ? "is-visible" : ""}`}>

@@ -110,11 +110,7 @@ export const getFeaturesContent = (
   <>
     <div className="py-4">
       {!options?.hideHeading && <b>Features:</b>}
-      <ul className="list-disc pl-5 space-y-1 marker:text-black">
-        {/* <li className={TEXT_CLASS}>
-          Static Data
-        </li> */}
-      </ul>
+      <ul className="list-disc pl-5 space-y-1 marker:text-black"></ul>
 
       <div className="mt-4">
         <Image
@@ -133,12 +129,8 @@ export const getFeaturesContent = (
 export const getProductDetailsContent = (product: Product) => (
   <>
     <div className="py-4">
-      <b>Product Details: Statistic Data</b>
-      <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}>
-        {/* <li className={TEXT_CLASS}>
-          Static Data
-        </li> */}
-      </ul>
+      <b>Product Details</b>
+      <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}></ul>
 
       <div className="mt-4">
         <Image
@@ -153,48 +145,3 @@ export const getProductDetailsContent = (product: Product) => (
   </>
 );
 
-// export const getStyleGuideContent = (product: Product) => (
-//   <>
-//     <div className="py-4">
-//       <b>Style Guide</b>
-//       <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}>
-//         {/* <li className={TEXT_CLASS}>
-//           Static Data
-//         </li> */}
-//       </ul>
-
-//       <div className="mt-4">
-//         <Image
-//           src={getImageUrl(product)}
-//           alt={product.title || "Product image"}
-//           width={1300}
-//           height={260}
-//           className="tab-content-image"
-//         />
-//       </div>
-//     </div>
-//   </>
-// );
-
-// export const getItemsDetailsContent = (product: Product) => (
-//   <>
-//     <div className="py-4">
-//       <b>Item Details: Statistic Data</b>
-//       <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}>
-//         {/* <li className={TEXT_CLASS}>
-//           Static Data
-//         </li> */}
-//       </ul>
-
-//       <div className="mt-4">
-//         <Image
-//           src={getImageUrl(product)}
-//           alt={product.title || "Product image"}
-//           width={1300}
-//           height={260}
-//           className="tab-content-image"
-//         />
-//       </div>
-//     </div>
-//   </>
-// );

@@ -17,9 +17,7 @@ import {
 } from "@/lib/utils/main-utils";
 import NoProductsFound from "@/components/NoProductFound";
 import { Input } from "@/components/common/input";
-import { ShieldCheck, ThumbsUp } from "lucide-react";
-import { useStaticCart } from "@/lib/hooks/useStaticCart";
-import type { StaticCartItem } from "@/lib/utils/staticStorage";
+import { ShieldCheck } from "lucide-react";
 import { getHandlingDeliveryRange } from "@/lib/utils/get-handling-delivery-range";
 import {
   useGetCartQuery,
@@ -35,104 +33,8 @@ const pincodeSchema = yup.object().shape({
   pincode: pincode,
 });
 
-// ---------------- DUMMY DATA (kept for reference only — no longer used, cart now comes from the real get-cart API) ----------------
-// const DUMMY_CART_ITEMS = [
-//   {
-//     id: "item-1",
-//     product_id: "prod-1",
-//     variant_id: undefined as string | undefined,
-//     unique_code: "SKU001",
-//     product_name:
-//       "Saint Laurent Classic Biker Leather Jacket (Black) — Signature Biker Silhouette In Supple Lambskin",
-//     quantity: 1,
-//     unit_price: 1290,
-//     rrp_price_snapshot: 1490,
-//     discount_percentage: 50,
-//     discounted_price: 1290,
-//     oldPrice: 1490,
-//     discount: 50,
-//     final_price: 1290,
-//     subtotal: 1290,
-//     promotion_discount: 0,
-//     is_active: true,
-//     available_stock: 15,
-//     stock: 15,
-//     is_shippable: true,
-//     shipping_cost: 0,
-//     handling_time_days: 2,
-//     delivery_prefix: "Estimated delivery in",
-//     promoCode: "GET500",
-//     images:
-//       "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&q=80",
-//     variant_attributes: [
-//       { name: "Size", value: "M" },
-//       { name: "Colour", value: "Black" },
-//     ],
-//   },
-//   {
-//     id: "item-2",
-//     product_id: "prod-2",
-//     variant_id: "var-2",
-//     unique_code: "SKU002",
-//     product_name:
-//       "GUCCI Ace Sneaker (Tan Leather, Gold Buckle) — Low-Top Lace-Up Sneaker With Signature",
-//     quantity: 1,
-//     unit_price: 450,
-//     rrp_price_snapshot: 520,
-//     discount_percentage: 20,
-//     discounted_price: 450,
-//     oldPrice: 520,
-//     discount: 20,
-//     final_price: 450,
-//     subtotal: 450,
-//     promotion_discount: 0,
-//     is_active: true,
-//     available_stock: 5,
-//     stock: 5,
-//     is_shippable: true,
-//     shipping_cost: 0,
-//     handling_time_days: 2,
-//     delivery_prefix: "FREE Delivery",
-//     saleBadge: "Sale 20% Off",
-//     images:
-//       "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&q=80",
-//     variant_attributes: [
-//       { name: "Size", value: "US 8" },
-//       { name: "Colour", value: "Tan" },
-//     ],
-//   },
-// ];
-
-function getCartItemHref(item: { product_id: string; unique_code: string }) {
-  return item.product_id.startsWith("static-")
-    ? `/static-product/${item.product_id.replace(/^static-/, "")}`
-    : `/product/${item.unique_code || item.product_id}`;
-}
-
-function buildCartFromItems(items: StaticCartItem[], id?: string) {
-  const items_total = items.reduce(
-    (acc, item) => acc + (item.final_price ?? item.subtotal ?? 0),
-    0,
-  );
-  const items_discount = items.reduce(
-    (acc, item) => acc + (item.promotion_discount || 0),
-    0,
-  );
-  const shipping = items
-    .filter((i) => i.is_shippable)
-    .reduce((acc, item) => acc + (item.shipping_cost || 0), 0);
-
-  return {
-    id: id || "",
-    items,
-    items_total,
-    subtotal: items_total,
-    items_discount,
-    shipping,
-    taxes: [{ name: "GST", rate: 10, amount: (items_total * 0.1).toFixed(2) }],
-    total_price: items_total + shipping,
-    grand_total: items_total + shipping,
-  };
+function getCartItemHref(item: { product_id: string; unique_code?: string }) {
+  return `/product/${item.unique_code || item.product_id}`;
 }
 
 const Cart = () => {
@@ -153,24 +55,7 @@ const Cart = () => {
   const [validatePromoCode, { isLoading: isApplyingPromo }] =
     useValidatePromoCodeMutation();
 
-  const realCartItems = useMemo(() => cartData?.items ?? [], [cartData]);
-
-  const {
-    items: staticCartItems,
-    updateQuantity: updateStaticCartQuantity,
-    removeItem: removeStaticCartItemById,
-  } = useStaticCart();
-  const combinedCartItems = useMemo(
-    () => [
-      ...(realCartItems as unknown as StaticCartItem[]),
-      ...staticCartItems,
-    ],
-    [realCartItems, staticCartItems],
-  );
-  const cart = useMemo(
-    () => buildCartFromItems(combinedCartItems, cartData?.id),
-    [combinedCartItems, cartData?.id],
-  );
+  const cart = cartData;
 
   const clickLockRef = useRef(false);
   const orderSummaryRef = useRef<HTMLDivElement>(null);
@@ -204,7 +89,7 @@ const Cart = () => {
 
   useEffect(() => {
     const el = orderSummaryRef.current;
-    if (!el || !isXlUp || cart.items.length < 3) {
+    if (!el || !isXlUp || (cart?.items.length ?? 0) < 3) {
       setMatchedHeight(null);
       return;
     }
@@ -215,7 +100,7 @@ const Cart = () => {
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [isXlUp, cart.items.length, appliedPromoCode, discountAmount]);
+  }, [isXlUp, cart?.items.length, appliedPromoCode, discountAmount]);
 
   const totalSaveAmount = useMemo(() => {
     if (!cart?.items) return 0;
@@ -281,15 +166,16 @@ const Cart = () => {
         ? Number.parseFloat(result.max_discount)
         : null;
 
+      const cartTotalPrice = cart?.total_price ?? 0;
       let discount =
         result.discount_type === "percentage"
-          ? cart.total_price * (discountValue / 100)
+          ? cartTotalPrice * (discountValue / 100)
           : discountValue;
 
       if (maxDiscount !== null) discount = Math.min(discount, maxDiscount);
-      discount = Math.min(discount, cart.total_price);
+      discount = Math.min(discount, cartTotalPrice);
 
-      const newTotal = Math.max(cart.total_price - discount, 0);
+      const newTotal = Math.max(cartTotalPrice - discount, 0);
 
       setAppliedPromoCode(promoCodeInput);
       setDiscountAmount(discount);
@@ -311,10 +197,6 @@ const Cart = () => {
 
   // ---------------- REMOVE ITEM ----------------
   const handleRemoveItem = async (id: string, variant_id?: string) => {
-    if (id.startsWith("static-")) {
-      removeStaticCartItemById(id);
-      return;
-    }
     if (clickLockRef.current) return;
     clickLockRef.current = true;
     if (isRemoving || isUpdating) {
@@ -382,14 +264,6 @@ const Cart = () => {
     item_id?: string,
   ) => {
     if (quantity < 1 || Number.isNaN(quantity)) return;
-
-    if (product_id.startsWith("static-")) {
-      updateStaticCartQuantity(product_id, quantity);
-      if (item_id != null) {
-        setLocalQtyMap((prev) => ({ ...prev, [item_id]: String(quantity) }));
-      }
-      return;
-    }
 
     if (isUpdating || isRemoving) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -562,22 +436,6 @@ const Cart = () => {
                   ) : (
                     <p className="flex items-center flex-wrap gap-1.5 fluid-text-11-12 lg:leading-[100%] font-bold text-[#01295F] mb-0.5 lg:mb-1.5">
                       <span className="">In Stock</span>
-                      {item.promoCode && (
-                        <span className="text-[#049950] fluid-text-xs font-medium leading-[100%] capitalize">
-                          Code Applied - {" "}
-                          <span className="font-bold">
-                            ({item.promoCode}){" "} {item.discount_percentage}% Off
-                          </span>
-                        </span>
-                      )}
-                      {item.saleBadge && (
-                        <span className="inline-flex items-center justify-center gap-1 w-[108px] h-[19px] rounded-[5px] bg-[#01295F] p-0.5">
-                          <ThumbsUp className="w-[11.853px] h-[11.289px] fill-white" />
-                          <span className="text-white font-montserrat fluid-text-xs font-medium leading-[18px] capitalize">
-                            {item.saleBadge}
-                          </span>
-                        </span>
-                      )}
                     </p>
                   )}
                   {item.shipping_cost === 0 && (
@@ -587,7 +445,7 @@ const Cart = () => {
                   )}
                   <p className="fluid-text-xs leading-[16px] text-[#726969] mb-0.5 lg:mb-1.5 font-medium">
                     {deliveryPrefix}{" "}
-                    {getHandlingDeliveryRange(item.handling_time_days)}
+                    {getHandlingDeliveryRange(item.handling_time_days ?? 0)}
                   </p>
 
                   {item.variant_attributes &&
@@ -830,11 +688,6 @@ const Cart = () => {
                       </div>
                     </div>
 
-                    {item.promoCode && (
-                      <span className="inline-flex mt-1.5 bg-[#01295F] text-white fluid-text-2xs leading-[100%] font-semibold w-[88px] h-[20px] rounded-[4px] text-center items-center justify-center">
-                        SALE 20% OFF
-                      </span>
-                    )}
                   </div>
 
                   <div className="hidden lg:grid lg:grid-cols-12 lg:items-center lg:gap-4">

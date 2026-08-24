@@ -67,48 +67,67 @@ export default function GooglePlacesInput({
     }
   };
 
+  const [mapsReady, setMapsReady] = useState(
+    () => typeof window !== "undefined" && !!window.google?.maps?.places
+  );
+
+  useEffect(() => {
+    if (mapsReady) return;
+    const intervalId = setInterval(() => {
+      if (window.google?.maps?.places) {
+        setMapsReady(true);
+        clearInterval(intervalId);
+      }
+    }, 150);
+    return () => clearInterval(intervalId);
+  }, [mapsReady]);
+
   useEffect(() => {
     if (
       !isUserTypingRef.current ||
       isSelectingRef.current ||
+      !mapsReady ||
       !window.google?.maps?.places ||
-      !query ||
-      query.trim().length < 2
+      !query.trim()
     ) {
       setSuggestions([]);
       return;
     }
 
-    setLoading(true);
+    const timeoutId = setTimeout(() => {
+      setLoading(true);
 
-    google.maps.places.AutocompleteSuggestion
-      .fetchAutocompleteSuggestions(
-        mode === "pincode"
-          ? {
-            input: query,
-            includedPrimaryTypes: ["postal_code"],
-            includedRegionCodes: ["US"],
-          }
-          : {
-            input: query,
-            includedRegionCodes: ["US"],
-          }
-      )
-      .then((res) => {
-        const filtered =
+      google.maps.places.AutocompleteSuggestion
+        .fetchAutocompleteSuggestions(
           mode === "pincode"
-            ? res.suggestions.filter((s) => {
-              const types = s.placePrediction?.types || [];
-              return types.includes("postal_code");
-            })
-            : res.suggestions;
-        setSuggestions(filtered);
-      })
-      .catch(() => {
-        setSuggestions([]);
-      })
-      .finally(() => setLoading(false));
-  }, [query, mode]);
+            ? {
+              input: query,
+              includedPrimaryTypes: ["postal_code"],
+              includedRegionCodes: ["US"],
+            }
+            : {
+              input: query,
+              includedRegionCodes: ["US"],
+            }
+        )
+        .then((res) => {
+          const filtered =
+            mode === "pincode"
+              ? res.suggestions.filter((s) => {
+                const types = s.placePrediction?.types || [];
+                return types.includes("postal_code");
+              })
+              : res.suggestions;
+          setSuggestions(filtered);
+        })
+        .catch(() => {
+          setSuggestions([]);
+        })
+        .finally(() => setLoading(false));
+    }, 250);
+
+    return () => clearTimeout(timeoutId);
+  }, [query, mode, mapsReady]);
 
   const handleSelect = async (
     suggestion: google.maps.places.AutocompleteSuggestion
@@ -209,6 +228,8 @@ export default function GooglePlacesInput({
           onValidPlace?.(false);
 
           const val = e.target.value;
+
+          lastSyncedValueRef.current = val;
 
           setQuery(val);
           setActiveIndex(-1);

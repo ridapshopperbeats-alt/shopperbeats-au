@@ -87,6 +87,7 @@ export const useProductFilters = (
   const isInitialMount = useRef(true);
 
   const userInitiatedRef = useRef(false);
+  const [isPendingApply, setIsPendingApply] = useState(false);
 
   const [prevSearchParams, setPrevSearchParams] = useState(searchParams);
   const [isSyncingFromUrl, setIsSyncingFromUrl] = useState(false);
@@ -193,8 +194,14 @@ export const useProductFilters = (
       isInitialMount.current = false;
       return;
     }
-    userInitiatedRef.current = false;
-    handleApplyFilters();
+
+    const timeoutId = setTimeout(() => {
+      userInitiatedRef.current = false;
+      handleApplyFilters();
+      setIsPendingApply(false);
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
   }, [
     selectedCategories,
     selectedPrices,
@@ -208,6 +215,7 @@ export const useProductFilters = (
 
   const handlePriceChange = (price: string) => {
     userInitiatedRef.current = true;
+    setIsPendingApply(true);
     let formattedPrice = price;
 
     if (price.toLowerCase().includes("under")) {
@@ -228,6 +236,7 @@ export const useProductFilters = (
 
   const handleFilterChange = (attribute: string, value: string) => {
     userInitiatedRef.current = true;
+    setIsPendingApply(true);
     const attrKey = attribute.toLowerCase();
     setSelectedFilters((prev) => {
       const currentValues = prev[attrKey] || [];
@@ -241,11 +250,13 @@ export const useProductFilters = (
 
   const handleSortChange = (value: string) => {
     userInitiatedRef.current = true;
+    setIsPendingApply(true);
     setSortBy(value);
   };
 
   const handleCategoryChange = (categoryName: string) => {
     userInitiatedRef.current = true;
+    setIsPendingApply(true);
     setSelectedCategories((prev) =>
       prev.includes(categoryName)
         ? prev.filter((c) => c !== categoryName)
@@ -312,11 +323,13 @@ export const useProductFilters = (
 
   const setMinPriceUserInitiated = useCallback((value: string) => {
     userInitiatedRef.current = true;
+    setIsPendingApply(true);
     setMinPrice(value);
   }, []);
 
   const setMaxPriceUserInitiated = useCallback((value: string) => {
     userInitiatedRef.current = true;
+    setIsPendingApply(true);
     setMaxPrice(value);
   }, []);
 
@@ -337,6 +350,7 @@ export const useProductFilters = (
     handleSortChange,
     handleApplyFilters,
     clearFilters,
+    isPendingApply,
     brandFilter,
     priceFilter,
     categoryFilter,

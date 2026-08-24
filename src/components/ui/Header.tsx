@@ -74,10 +74,7 @@ interface HeaderProps {
   megaMenuData: MegaMenuCategory[];
 }
 
-const resolveCategoryHref = (slugOrId: string) =>
-  slugOrId?.startsWith("static-")
-    ? "/static-category"
-    : `/category/${slugOrId}`;
+const resolveCategoryHref = (slugOrId: string) => `/category/${slugOrId}`;
 
 const getCategoryIcon = (name: string) => {
   const n = name.toLowerCase();

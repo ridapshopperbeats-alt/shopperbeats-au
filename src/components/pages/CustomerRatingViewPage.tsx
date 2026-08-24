@@ -13,6 +13,7 @@ import {
 } from "../common/select";
 import { Review } from "@/types/product";
 import { getReviewImage } from "@/lib/utils/main-utils";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 
 interface DisplayReview {
   id: string;
@@ -22,7 +23,7 @@ interface DisplayReview {
   comment: string;
   verified?: boolean;
   reviewer_profile_image?: string | null;
-  images?: string[] | null;
+  images?: (string | { image_url?: string; url?: string })[] | null;
 }
 
 function formatReviewDate(value: string): string {
@@ -443,8 +444,9 @@ export default function CustomerRatingViewPage({
                   <div className="lg:hidden flex items-start gap-3">
                     <Image
                       src={
-                        review.reviewer_profile_image ||
-                        "/images/default_user_icon.jpg"
+                        review.reviewer_profile_image
+                          ? applyImageVariant(review.reviewer_profile_image, "public")
+                          : "/images/default_user_icon.jpg"
                       }
                       alt={review.name}
                       width={54}
@@ -491,8 +493,9 @@ export default function CustomerRatingViewPage({
                   <div className="hidden lg:flex items-start gap-3 pb-3 border-b border-[#ECECEC]">
                     <Image
                       src={
-                        review.reviewer_profile_image ||
-                        "/images/default_user_icon.jpg"
+                        review.reviewer_profile_image
+                          ? applyImageVariant(review.reviewer_profile_image, "public")
+                          : "/images/default_user_icon.jpg"
                       }
                       alt={review.name}
                       width={54}
@@ -528,7 +531,7 @@ export default function CustomerRatingViewPage({
                     </div>
 
                     <Image
-                      src={getReviewImage(review)}
+                      src={applyImageVariant(getReviewImage(review), "public")}
                       alt="Reviewed product"
                       width={75}
                       height={75}
