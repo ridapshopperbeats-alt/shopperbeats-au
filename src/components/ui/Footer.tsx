@@ -190,6 +190,15 @@ export default function Footer({
                       };
                     }
 
+                    // Send "Contact Us" to the frontend contact form
+                    // instead of the backend-driven CMS page
+                    if (href.includes("contact-us")) {
+                      return {
+                        ...link,
+                        href: "/contact",
+                      };
+                    }
+
                     return link;
                   })
                   .filter((link) => {

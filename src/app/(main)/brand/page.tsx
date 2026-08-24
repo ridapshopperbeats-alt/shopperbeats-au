@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
+import BrandsExplorer from "@/components/pages/BrandsExplorer";
+import Banner from "@/components/common/Banner";
 
 // Types
 interface Brand {
@@ -22,16 +24,6 @@ interface BrandsResponse {
   pages: number;
   data: Brand[];
 }
-
-interface BrandsByLetter {
-  [key: string]: Brand[];
-}
-
-// Alphabet letters
-const alphabet = [
-  "#",
-  ...Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)),
-];
 
 async function fetchBrands() {
   try {
@@ -77,34 +69,42 @@ async function fetchFeaturedBrands() {
   }
 }
 
-const limitWords = (text: any, maxWords = 2) => {
-  if (!text) return "";
-  const words = text.split(" ");
-  if (words.length > maxWords) {
-    return words.slice(0, maxWords).join(" ") + "...";
-  }
-  return text;
-};
-
 export default async function BrandsSection() {
   const [allBrands, featuredBrands] = await Promise.all([
     fetchBrands(),
     fetchFeaturedBrands(),
   ]);
-  // Group brands by first letter
-  const brandsByLetter = allBrands.reduce((acc, brand) => {
-    const firstLetter = brand.name.charAt(0).toUpperCase();
-    const letter = /[A-Z]/.test(firstLetter) ? firstLetter : "#";
-
-    if (!acc[letter]) acc[letter] = [];
-    acc[letter].push(brand);
-    return acc;
-  }, {} as BrandsByLetter);
+  console.log(allBrands, "allBrands=====");
   return (
-    <div className="container">
+    <div>
+      <div className="flex w-full flex-col items-start gap-3 self-stretch border-b border-[#E5E7EB] bg-gradient-to-b from-[#FFF7F3] to-[#FFFDFC] px-5 py-9 lg:hidden">
+        <h1 className="font-montserrat text-[24px] font-bold leading-tight text-[#01295F]">
+          Our Brands
+        </h1>
+        <p className="font-montserrat text-[14px] font-medium text-[#6A7282]">
+          Explore top brands available on ShopperBeats.
+        </p>
+      </div>
+      <Banner
+        title="Our Brands"
+        subtitle="Explore top brands available on ShopperBeats."
+        titleClassName="font-montserrat text-[32px]! font-semibold! leading-[24px]! text-[#01295F]!"
+        subtitleClassName="font-montserrat text-[16px]! font-semibold! leading-[19.5px]! text-[#6A7282]!"
+        image={
+          <Image
+            src="/images/Group 1261155781.png"
+            alt="Our Brands Banner"
+            width={1920}
+            height={218}
+            priority
+            fetchPriority="high"
+          />
+        }
+      />
+      <div className="container">
       {/* ======== Brands Grid Section ======== */}
-      <h4 className="text-[24px] font-bold pt-3">Featured Brands</h4>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
+      {/* <h4 className="text-[24px] font-bold pt-3">Featured Brands</h4> */}
+      <div className="hidden grid-cols-2 gap-5 sm:grid-cols-3 lg:grid lg:grid-cols-6">
         {featuredBrands
           .map((featuredBrand: { brand_id: string }) => {
             const brand = allBrands.find(
@@ -185,66 +185,15 @@ export default async function BrandsSection() {
       </div>
 
       {/* ======== Alphabetic Brands List Section ======== */}
-      <div className="">
-        <h1 className="pb-[30px] text-center text-[24px] font-extrabold text-black">
+      <div className="-mx-5 mt-0 lg:mx-0 lg:mt-8">
+        {/* <h1 className="pb-[30px] text-center text-[24px] font-extrabold text-black">
           ALL Brands
-        </h1>
+        </h1> */}
 
-        {/* Alphabet Navigation */}
-        <ul className="mb-10 flex flex-wrap justify-center gap-y-2 rounded-lg bg-[#f5f5f5] p-3.5">
-          {alphabet.map((letter) => (
-            <li key={letter} className="flex-1 text-center sm:flex-1">
-              <a
-                className="text-[16px] font-semibold text-black"
-                href={`#brands-${letter}`}
-                data-discover={letter !== "#" ? "true" : undefined}
-              >
-                {letter}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        {/* Brands under each letter */}
-        {alphabet.map((letter) => {
-          const brands = brandsByLetter[letter] || [];
-          if (!brands.length) return null;
-
-          return (
-            <div
-              key={letter}
-              className="mb-10 scroll-mt-[150px]"
-              id={`brands-${letter}`}
-            >
-              <h5 className="mb-5 text-[20px] font-bold text-[#012961]">
-                {letter}
-              </h5>
-              <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-9">
-                {brands.map((brand) => {
-                  // 1. Pehle pure name ka first letter Capitalize aur baaki small kiya
-                  const formattedName =
-                    brand.name.charAt(0).toUpperCase() +
-                    brand.name.slice(1).toLowerCase();
-
-                  return (
-                    <Link
-                      href={`/brand/${brand.slug}`}
-                      key={brand.id}
-                      className="block h-full"
-                    >
-                      <li className="flex h-full min-h-[52px] items-center justify-center border border-[#d9d9d9] rounded-[8px] px-3 py-2 text-center text-[15px] font-medium capitalize text-black transition-colors hover:border-[#012961] hover:bg-[#012961] hover:text-white">
-                        {/* 2. Ab us formatted name par word limit (Max 2 words) apply kar di */}
-                        {limitWords(formattedName, 2)}
-                      </li>
-                    </Link>
-                  );
-                })}
-              </ul>
-            </div>
-          );
-        })}
+        <BrandsExplorer brands={allBrands} />
       </div>
       <ScrollToTopButton />
+      </div>
     </div>
   );
 }

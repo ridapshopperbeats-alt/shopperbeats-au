@@ -46,7 +46,7 @@ export const FOOTER_LINKS_STATIC = [
       { label: "Return & Warranty", href: "/cms/return-refunds" },
       { label: "Shop With Peace Of Mind", href: "/shop-with-peace" },
       { label: "Payment Policy", href: "/cms/payment-policy" },
-      { label: "Contact Us", href: "/cms/contact-us" },
+      { label: "Contact Us", href: "/contact" },
       { label: "FAQ", href: "/cms/faq" },
     ],
   },
