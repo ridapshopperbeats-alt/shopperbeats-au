@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronDown, Plus, X } from "lucide-react";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
@@ -41,7 +41,6 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
 
   const isReplacing = isReplacingOrder || isReplacingItem;
 
-  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,30 +51,26 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
       customer_comment: "",
     });
 
-  const [prevOrderForAddress, setPrevOrderForAddress] = useState(order);
-  if (prevOrderForAddress !== order) {
-    setPrevOrderForAddress(order);
-    if (order?.order_details) {
-      const addr = order.order_details;
-      setSelectedAddress({
-        title: "Shipping Address",
-        first_name: addr.shipping_first_name,
-        last_name: addr.shipping_last_name,
-        address: addr.shipping_address,
-        city: addr.shipping_city,
-        state: addr.shipping_state,
-        pincode: addr.shipping_postal_code,
-        country: addr.shipping_country,
-        phone_number: addr.shipping_phone,
-      });
-    }
-  }
+  const selectedAddress = useMemo<Address | null>(() => {
+    if (!order?.order_details) return null;
+    const addr = order.order_details;
+    return {
+      title: "Shipping Address",
+      first_name: addr.shipping_first_name,
+      last_name: addr.shipping_last_name,
+      address: addr.shipping_address,
+      city: addr.shipping_city,
+      state: addr.shipping_state,
+      pincode: addr.shipping_postal_code,
+      country: addr.shipping_country,
+      phone_number: addr.shipping_phone,
+    };
+  }, [order]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const selectedFiles = Array.from(e.target.files);
       setAttachedFiles((prev) => [...prev, ...selectedFiles]);
-      // Reset input value so the same file could be selected again if needed
       e.target.value = "";
     }
   };

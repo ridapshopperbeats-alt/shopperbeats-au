@@ -5,7 +5,7 @@ import {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS } from "../../constants/api";
-import { clearRefreshToken, getRefreshToken } from "@/lib/utils/refresh-token-cokkie";
+import { clearRefreshToken, getRefreshToken, setRefreshToken } from "@/lib/utils/refresh-token-cokkie";
 import { clearAccessTokenCookie, setAccessTokenCookie } from "@/lib/utils/access-token";
 import { logout, setAccessToken } from "../slices/auth-slice";
 import { prepareAuthHeaders } from "./prepare-auth-headers";
@@ -21,10 +21,17 @@ type RefreshOutcome = "refreshed" | "invalid" | "transient";
 
 let pendingRefresh: Promise<RefreshOutcome> | null = null;
 
+const REFRESH_COOLDOWN_MS = 5000;
+let lastRefreshSucceededAt = 0;
+
 function refreshAccessToken(
   api: Parameters<BaseQueryFn>[1],
   extraOptions: Parameters<BaseQueryFn>[2],
 ): Promise<RefreshOutcome> {
+  if (Date.now() - lastRefreshSucceededAt < REFRESH_COOLDOWN_MS) {
+    return Promise.resolve("refreshed");
+  }
+
   if (!pendingRefresh) {
     const refresh_token = getRefreshToken();
     if (!refresh_token) {
@@ -56,7 +63,13 @@ function refreshAccessToken(
           return "transient" as const;
         }
 
-        const data = result.data as { access_token?: string; response?: { access_token?: string } } | undefined;
+        const data = result.data as
+          | {
+              access_token?: string;
+              refresh_token?: string;
+              response?: { access_token?: string; refresh_token?: string };
+            }
+          | undefined;
         const newAccessToken = data?.access_token || data?.response?.access_token;
         if (!newAccessToken) {
           console.warn("Refresh token response missing access_token:", result.data);
@@ -64,8 +77,15 @@ function refreshAccessToken(
           return "invalid" as const;
         }
 
+        lastRefreshSucceededAt = Date.now();
         api.dispatch(setAccessToken(newAccessToken));
         setAccessTokenCookie(newAccessToken);
+
+        const newRefreshToken = data?.refresh_token || data?.response?.refresh_token;
+        if (newRefreshToken) {
+          setRefreshToken(newRefreshToken);
+        }
+
         return "refreshed" as const;
       })
       .finally(() => {
