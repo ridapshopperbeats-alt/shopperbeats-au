@@ -21,10 +21,17 @@ type RefreshOutcome = "refreshed" | "invalid" | "transient";
 
 let pendingRefresh: Promise<RefreshOutcome> | null = null;
 
+const REFRESH_COOLDOWN_MS = 5000;
+let lastRefreshSucceededAt = 0;
+
 function refreshAccessToken(
   api: Parameters<BaseQueryFn>[1],
   extraOptions: Parameters<BaseQueryFn>[2],
 ): Promise<RefreshOutcome> {
+  if (Date.now() - lastRefreshSucceededAt < REFRESH_COOLDOWN_MS) {
+    return Promise.resolve("refreshed");
+  }
+
   if (!pendingRefresh) {
     const refresh_token = getRefreshToken();
     if (!refresh_token) {
@@ -70,6 +77,7 @@ function refreshAccessToken(
           return "invalid" as const;
         }
 
+        lastRefreshSucceededAt = Date.now();
         api.dispatch(setAccessToken(newAccessToken));
         setAccessTokenCookie(newAccessToken);
 

@@ -1,6 +1,5 @@
 const REFRESH_TOKEN_COOKIE = "refresh_token";
-// Matches the backend's refresh token cookie lifetime (60 * 60 * 24 * 20 seconds).
-const REFRESH_TOKEN_MAX_AGE = 60 * 60 * 24 * 20;
+const REFRESH_TOKEN_MAX_AGE = 60 * 60 * 24 * 7;
 
 export function setRefreshToken(token: string): void {
   if (typeof document === "undefined") return;
