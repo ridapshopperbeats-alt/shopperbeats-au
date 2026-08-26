@@ -3,7 +3,8 @@ import SingleBanner from "./Banner";
 import TopCategories from "./TopCategories";
 import {
   getBestSellers,
-  getTrendingProducts,
+  getPopularProducts,
+  getNewReleases,
   transformProductData,
 } from "@/lib/utils/main-utils";
 import PopularCategories from "./AllBanner";
@@ -11,13 +12,15 @@ import TopBrands from "./TopRated";
 import ProductCarousel from "../common/ProductCarousel";
 
 const Home = async () => {
-  const [bestSellers, trending] = await Promise.all([
+  const [bestSellers, popular, newReleases] = await Promise.all([
     getBestSellers().catch(() => []),
-    getTrendingProducts().catch(() => []),
+    getPopularProducts().catch(() => []),
+    getNewReleases().catch(() => []),
   ]);
 
   const products = transformProductData(bestSellers);
-  const trendingProducts = transformProductData(trending);
+  const popularProducts = transformProductData(popular);
+  const newArrivals = transformProductData(newReleases);
 
   return (
     <TopCategories>
@@ -28,7 +31,7 @@ const Home = async () => {
             <ProductCarousel
               title="Best Sellers"
               products={products}
-              link="#"
+              link="/product-listing/best-sellers"
             />
           )}
         </div>
@@ -36,11 +39,11 @@ const Home = async () => {
         <PopularCategories />
 
         <div className="container pt-4 md:py-3 lg:py-2">
-          {trendingProducts.length > 0 && (
+          {popularProducts.length > 0 && (
             <ProductCarousel
-              title="Trending Products"
-              products={trendingProducts}
-              link="#"
+              title="Popular Products"
+              products={popularProducts}
+              link="/product-listing/popular"
             />
           )}
         </div>
@@ -48,11 +51,11 @@ const Home = async () => {
         <TopBrands />
 
         <div className="container py-4 md:py-3 lg:py-0">
-          {products.length > 0 && (
+          {newArrivals.length > 0 && (
             <ProductCarousel
               title="New Arrivals"
-              products={products}
-              link="#"
+              products={newArrivals}
+              link="/product-listing/new-releases"
             />
           )}
         </div>

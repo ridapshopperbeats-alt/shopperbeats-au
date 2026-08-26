@@ -5,76 +5,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { API_ENDPOINTS } from "@/lib/constants/api";
-import type { Category } from "@/types/product";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
+
+interface TopCategoryApiItem {
+  id: string;
+  category_name: string;
+  title: string;
+  image: string;
+  slug: string;
+  cta_text?: string;
+  cta_link?: string;
+}
 
 interface NewTopCategoryItem {
   title: string;
   image: string;
   href: string;
 }
-
-// const FALLBACK_TOP_CATEGORIES: NewTopCategoryItem[] = [
-//   {
-//     title: "Women's Clothing",
-//     image: "/images/womentop.png",
-//     href: "/",
-//   },
-//   {
-//     title: "Fragrance",
-//     image: "/images/fragrance.png",
-//     href: "/",
-//   },
-//   {
-//     title: "Furniture",
-//     image: "/images/furniture.png",
-//     href: "/",
-//   },
-//   {
-//     title: "Patio Furniture",
-//     image: "/images/patioFurniture.png",
-//     href: "/",
-//   },
-//   {
-//     title: "Baby & Kids",
-//     image: "/images/baby-kids.png",
-//     href: "/",
-//   },
-//   {
-//     title: "Home Decor",
-//     image: "/images/homeDecor.png",
-//     href: "/",
-//   },
-//   {
-//     title: "Jewelry",
-//     image: "/images/jewelry.png",
-//     href: "/",
-//   },
-//   {
-//     image: "/images/menClothing.png",
-//     title: "Men's Clothing",
-//     href: "/",
-//   },
-//   {
-//     title: "Footwear",
-//     image: "/images/footwear.png",
-//     href: "/",
-//   },
-//   {
-//     title: "Watches",
-//     image: "/images/watches.png",
-//     href: "/",
-//   },
-//   {
-//     title: "Children Clothing",
-//     image: "/images/baby-kids.png",
-//     href: "/",
-//   },
-//   {
-//     title: "Fashion",
-//     image: "/images/womentop.png",
-//     href: "/",
-//   },
-// ];
 
 export default function NewTopCategories() {
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -85,40 +32,27 @@ export default function NewTopCategories() {
 
     async function loadCategories() {
       try {
-        const url = `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.CATEGORIES.LIST}`;
-
-        // console.log("CATEGORY API URL:", url);
+        const url = `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.HOMEPAGE_SECTION_BY_ID(
+          API_ENDPOINTS.PRODUCTS.TOP_CATEGORIES,
+        )}`;
 
         const res = await fetch(url);
 
-        // console.log("CATEGORY API STATUS:", res.status);
-        // console.log("CATEGORY API OK:", res.ok);
-
         if (!res.ok) return;
 
-        const data: Category[] = await res.json();
+        const data: { config?: { items?: TopCategoryApiItem[] } } = await res.json();
 
-        // console.log("CATEGORY API RESULT:", data);
-        // console.log("CATEGORY COUNT:", data.length);
+        const items = Array.isArray(data?.config?.items) ? data.config.items : [];
 
-        const topLevel = (Array.isArray(data) ? data : []).filter(
-          (category) => !category.parent_id,
-        );
+        if (!isMounted || items.length === 0) return;
 
-        // console.log("TOP LEVEL CATEGORIES:", topLevel);
-        // console.log("TOP LEVEL COUNT:", topLevel.length);
-
-        if (!isMounted || topLevel.length === 0) return;
-
-        const mappedCategories = topLevel.map((category) => ({
-          title: category.name,
-          image:
-            category.icon_url ||
-            category.image_url ||
-            "/images/image-coming-soon.jpg",
-          href: `/category/${category.slug}`,
+        const mappedCategories = items.map((category) => ({
+          title: category.title || category.category_name,
+          image: category.image
+            ? applyImageVariant(category.image, "public")
+            : "/images/image-coming-soon.jpg",
+          href: category.cta_link || `/category/${category.slug}`,
         }));
-
 
         setCategories(mappedCategories);
       } catch (error) {
@@ -169,25 +103,25 @@ export default function NewTopCategories() {
           ref={sliderRef}
           className="flex items-start gap-[16px] lg:gap-[35px] overflow-x-auto scroll-smooth no-scrollbar py-6"
         >
-          {categories.map((item) => (
-            <Link
-              key={item.title}
+         {categories.map((item, index) => (
+          <Link
+            key={`${item.title}-${index}`}
               href={item.href}
-              className="shrink-0 flex flex-col gap-[8px] items-center justify-start cursor-pointer w-[72px] h-[98px] md:w-[138px] md:h-[172px] md:gap-[16px]"
+              className="shrink-0 flex flex-col gap-[8px] items-center justify-start cursor-pointer w-[72px] min-h-[98px] md:w-[138px] md:min-h-[172px] md:gap-[16px]"
             >
-              <div className="relative w-[64px] h-[64px] md:w-[138px] md:h-[138px] rounded-full border border-[#D8D8D8] shadow-[0px_2px_6px_0px_#00000014] md:shadow-none bg-white overflow-hidden">
+              <div className="relative w-[64px] h-[64px] md:w-[138px] md:h-[138px] shrink-0 rounded-full border border-[#D8D8D8] shadow-[0px_2px_6px_0px_#00000014] md:shadow-none bg-white overflow-hidden flex items-center justify-center">
                 <Image
                   src={item.image}
                   alt={item.title}
-                  fill
-                  sizes="(max-width: 768px) 64px, 138px"
+                  width={100}
+                  height={100}
                   quality={100}
                   loading="lazy"
-                  className="object-cover transition-transform duration-800 hover:scale-[1.25] ease-in-out"
+                  className="object-contain w-[46px] h-[46px] md:w-[200px] md:h-[200px] transition-transform duration-500 ease-in-out hover:scale-110"
                 />
               </div>
 
-              <p className="text-12px font-bold leading-[normal] tracking-[0%] text-center capitalize text-[#2B2B2B] whitespace-nowrap">
+              <p className="text-[12px] font-bold leading-tight tracking-[0%] text-center capitalize text-[#2B2B2B] line-clamp-2">
                 {item.title}
               </p>
             </Link>

@@ -1,14 +1,63 @@
 'use client';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Brand as BrandType } from "@/types/product";
+import { API_ENDPOINTS } from "@/lib/constants/api";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 
-interface BrandProps {
-  brands: BrandType[];
+interface BrandApiItem {
+  id: string;
+  name: string;
+  slug: string;
+  image?: string;
+  cta_link?: string;
+  cta_text?: string;
+  subtitle?: string;
 }
 
-const Brand = ({ brands }: BrandProps) => {
+const Brand = () => {
+  const [brands, setBrands] = useState<BrandType[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadBrands() {
+      try {
+        const url = `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.HOMEPAGE_SECTION_BY_ID(
+          API_ENDPOINTS.PRODUCTS.BRANDS,
+        )}`;
+
+        const res = await fetch(url);
+
+        if (!res.ok) return;
+
+        const data: { config?: { items?: BrandApiItem[] } } = await res.json();
+
+        const items = Array.isArray(data?.config?.items) ? data.config.items : [];
+
+        if (!isMounted || items.length === 0) return;
+
+        const mappedBrands: BrandType[] = items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          slug: item.slug,
+          logo_url: item.image ? applyImageVariant(item.image, "public") : null,
+          image_url: null,
+        }));
+
+        setBrands(mappedBrands);
+      } catch (error) {
+        console.error("Error fetching brands:", error);
+      }
+    }
+
+    loadBrands();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   if (!brands || brands.length === 0) {
     return null;

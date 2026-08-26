@@ -1,76 +1,150 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { API_ENDPOINTS } from "@/lib/constants/api";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 
-const brands = [
+interface BrandApiItem {
+  id: string;
+  name: string;
+  slug: string;
+  image?: string;
+  cta_link?: string;
+  cta_text?: string;
+  subtitle?: string;
+}
+
+interface BrandCard {
+  id: string | number;
+  title: string;
+  subtitle: string;
+  image: string;
+  href: string;
+}
+
+const FALLBACK_IMAGE = "/images/home/brand-card.svg";
+
+const FALLBACK_BRANDS: BrandCard[] = [
   {
     id: 1,
     title: "Allen Solly",
     subtitle: "Under $100",
     image: "/images/home/brand-card.svg",
+    href: "/brand",
   },
   {
     id: 2,
     title: "Hivvago",
     subtitle: "Under $80",
     image: "/images/home/brand-card2.svg",
+    href: "/brand",
   },
   {
     id: 3,
     title: "FASHNZFAB",
     subtitle: "Under $60",
     image: "/images/home/brand-card3.svg",
+    href: "/brand",
   },
   {
     id: 4,
     title: "TRUEDAMES",
     subtitle: "Under $90",
     image: "/images/home/brand-card4.svg",
+    href: "/brand",
   },
   {
     id: 5,
     title: "BreeBe",
     subtitle: "Under $50",
     image: "/images/home/brand-card5.svg",
+    href: "/brand",
   },
   {
     id: 6,
     title: "Zara",
     subtitle: "Under $150",
     image: "/images/home/brand-card6.svg",
+    href: "/brand",
   },
   {
     id: 7,
     title: "Levis",
     subtitle: "Under $120",
     image: "/images/home/brand-card.svg",
+    href: "/brand",
   },
   {
     id: 8,
     title: "Nike",
     subtitle: "Under $180",
     image: "/images/home/brand-card2.svg",
+    href: "/brand",
   },
   {
     id: 9,
     title: "Puma",
     subtitle: "Under $140",
     image: "/images/home/brand-card3.svg",
+    href: "/brand",
   },
   {
     id: 10,
     title: "Adidas",
     subtitle: "Under $170",
     image: "/images/home/brand-card4.svg",
+    href: "/brand",
   },
 ];
 
 export default function TopBrands() {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [showAll, setShowAll] = useState(false);
+  const [brands, setBrands] = useState<BrandCard[]>(FALLBACK_BRANDS);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadBrands() {
+      try {
+        const url = `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.HOMEPAGE_SECTION_BY_ID(
+          API_ENDPOINTS.PRODUCTS.BRANDS,
+        )}`;
+
+        const res = await fetch(url);
+
+        if (!res.ok) return;
+
+        const data: { config?: { items?: BrandApiItem[] } } = await res.json();
+
+        const items = Array.isArray(data?.config?.items) ? data.config.items : [];
+
+        if (!isMounted || items.length === 0) return;
+
+        const mappedBrands: BrandCard[] = items.map((item) => ({
+          id: item.id,
+          title: item.name,
+          subtitle: item.subtitle || "",
+          image: item.image ? applyImageVariant(item.image, "public") : FALLBACK_IMAGE,
+          href: item.cta_link || `/brand/${item.slug}`,
+        }));
+
+        setBrands(mappedBrands);
+      } catch (error) {
+        console.error("Error fetching brands:", error);
+      }
+    }
+
+    loadBrands();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const mobileBrands = showAll ? brands : brands.slice(0, 2);
 
   const nextSlide = () => {
@@ -109,9 +183,10 @@ export default function TopBrands() {
       {/* Mobile */}
       <div className="grid grid-cols-2 gap-3 lg:gap-4 lg:hidden pt-3 lg:pt-2">
         {mobileBrands.map((brand) => (
-          <div
+          <Link
             key={brand.id}
-            className="relative h-[120px] w-full rounded-[8px] overflow-hidden group"
+            href={brand.href}
+            className="relative h-[120px] w-full rounded-[8px] overflow-hidden group block"
           >
             <Image
               src={brand.image}
@@ -131,7 +206,7 @@ export default function TopBrands() {
                 {brand.subtitle}
               </p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -156,9 +231,10 @@ export default function TopBrands() {
           className="flex gap-5 overflow-x-auto scroll-smooth no-scrollbar"
         >
           {brands.map((brand) => (
-            <div
+            <Link
               key={brand.id}
-              className="relative shrink-0 w-[275px] h-[360px] rounded-[12px] overflow-hidden group cursor-pointer"
+              href={brand.href}
+              className="relative shrink-0 w-[275px] h-[360px] rounded-[12px] overflow-hidden group cursor-pointer block"
             >
               <Image
                 src={brand.image}
@@ -178,7 +254,7 @@ export default function TopBrands() {
                   {brand.subtitle}
                 </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
