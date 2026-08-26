@@ -117,7 +117,7 @@ export default function NewTopCategories() {
                   height={100}
                   quality={100}
                   loading="lazy"
-                  className="object-contain w-[46px] h-[46px] md:w-[200px] md:h-[200px] transition-transform duration-500 ease-in-out hover:scale-110"
+                  className="object-contain w-[70px] h-[70px] md:w-[200px] md:h-[200px] transition-transform duration-500 ease-in-out hover:scale-110"
                 />
               </div>
 
