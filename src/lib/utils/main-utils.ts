@@ -322,7 +322,7 @@ export function findCategoryPath(
 // Fetch best-selling products from the API, with a default limit of 10
 export async function getBestSellers(limit = 10): Promise<Product[]> {
   const res = await fetch(
-    `${baseUrl}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?limit=${limit}`,
+    `${baseUrl}${API_ENDPOINTS.PRODUCTS.HIGHLIGHTS}${API_ENDPOINTS.PRODUCTS.BESTSELLERS}?limit=${limit}`,
     { next: { revalidate: 60 } },
   );
 
@@ -330,7 +330,7 @@ export async function getBestSellers(limit = 10): Promise<Product[]> {
 
   const data = await res.json();
 
-  return data?.data ?? [];
+  return data?.products?.data ?? [];
 }
 
 // Fetch raw categories from the API, with caching for 1 hour
@@ -344,10 +344,10 @@ export const getRawCategories = cache(async (): Promise<Category[]> => {
   return res.json();
 });
 
-// Fetch trending products from the API, with a fallback to list-products if trending is empty
-async function fetchTrending(limit: number): Promise<Product[]> {
+// Fetch popular products from the API, with a default limit of 10
+export async function getPopularProducts(limit = 10): Promise<Product[]> {
   const res = await fetch(
-    `${baseUrl}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.TRENDING_PRODUCTS}?limit=${limit}`,
+    `${baseUrl}${API_ENDPOINTS.PRODUCTS.HIGHLIGHTS}/${API_ENDPOINTS.PRODUCTS.POPULAR_PRODUCTS}?limit=${limit}`,
     { next: { revalidate: 60 } },
   );
 
@@ -355,16 +355,13 @@ async function fetchTrending(limit: number): Promise<Product[]> {
 
   const data = await res.json();
 
-  // trending-products wraps results in `items`
-  return data?.items ?? data?.data ?? [];
+  return data?.products?.data ?? [];
 }
 
-export async function getTrendingProducts(limit = 10): Promise<Product[]> {
-  const trending = await fetchTrending(limit);
-  if (trending.length > 0) return trending;
-
+// Fetch new-release products from the API, with a default limit of 10
+export async function getNewReleases(limit = 10): Promise<Product[]> {
   const res = await fetch(
-    `${baseUrl}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?limit=${limit}&page=2`,
+    `${baseUrl}${API_ENDPOINTS.PRODUCTS.HIGHLIGHTS}/${API_ENDPOINTS.PRODUCTS.NEW_RELEASES}?limit=${limit}`,
     { next: { revalidate: 60 } },
   );
 
@@ -372,7 +369,7 @@ export async function getTrendingProducts(limit = 10): Promise<Product[]> {
 
   const data = await res.json();
 
-  return data?.data ?? [];
+  return data?.products?.data ?? [];
 }
 
 // Get product details utilities

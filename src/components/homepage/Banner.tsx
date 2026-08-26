@@ -2,8 +2,27 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { API_ENDPOINTS } from "@/lib/constants/api";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 
-const banners = [
+interface HeroBannerContent {
+  image: string;
+  title?: string;
+  subtitle?: string;
+  cta_text?: string;
+  cta_link?: string;
+}
+
+interface HeroBannerItem {
+  content: HeroBannerContent[];
+}
+
+interface BannerSlide {
+  id: number;
+  image: string;
+}
+
+const FALLBACK_BANNERS: BannerSlide[] = [
   { id: 1, image: "/images/HomeBanner0.svg" },
   { id: 2, image: "/images/HomeBanner1.svg" },
   { id: 3, image: "/images/HomeBanner2.svg" },
@@ -24,8 +43,49 @@ function getSlideOffset(index: number, currentBanner: number, total: number) {
 
 export default function SingleBanner() {
   const [currentBanner, setCurrentBanner] = useState(0);
+  const [banners, setBanners] = useState<BannerSlide[]>(FALLBACK_BANNERS);
 
   const prevBannerRef = useRef(0);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadHeroBanner() {
+      try {
+        const url = `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.HOMEPAGE_SECTION_BY_ID(
+          API_ENDPOINTS.PRODUCTS.HERO_BANNER,
+        )}`;
+
+        const res = await fetch(url);
+
+        if (!res.ok) return;
+
+        const data: { config?: { items?: HeroBannerItem[] } } = await res.json();
+
+        const items = Array.isArray(data?.config?.items) ? data.config.items : [];
+
+        const mappedBanners = items
+          .map((item, index) => ({
+            id: index + 1,
+            image: applyImageVariant(item.content?.[0]?.image ?? "", "public"),
+          }))
+          .filter((banner) => banner.image);
+
+        if (!isMounted || mappedBanners.length === 0) return;
+
+        setBanners(mappedBanners);
+        setCurrentBanner(0);
+      } catch (error) {
+        console.error("Error fetching hero banner:", error);
+      }
+    }
+
+    loadHeroBanner();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     prevBannerRef.current = currentBanner;
@@ -37,7 +97,7 @@ export default function SingleBanner() {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [banners.length]);
 
   const handleDotClick = (index: number) => {
     if (index === currentBanner) return;

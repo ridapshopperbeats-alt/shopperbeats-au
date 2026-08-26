@@ -886,7 +886,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center xl:gap-2 hover:text-red-500"
-                  href="#"
+                  href="/product-listing/best-sellers"
                 >
                   <Gem size={16} className="inline-block icons-size" />
                   Best Sellers
@@ -896,7 +896,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center xl:gap-2 hover:text-red-500"
-                  href="#"
+                  href="/product-listing/whats-on-sale"
                 >
                   <Sparkles size={16} className="inline-block icons-size" />
                   What&apos;s On Sale

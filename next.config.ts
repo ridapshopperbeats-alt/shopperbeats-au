@@ -57,6 +57,9 @@ const nextConfig: NextConfig = {
   },
   images: {
     qualities: [75, 100],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: "https",
@@ -123,16 +126,28 @@ const nextConfig: NextConfig = {
         hostname: "perfumesw.com",
       },
       {
-        protocol: "https",
-        hostname: "www.ccdemostore.com",
-      },
-      {
-        protocol: "https",
+        protocol: "http",
         hostname: "perfumesw.com",
       },
       {
         protocol: "https",
+        hostname: "pim-hub.com",
+      },
+      {
+        protocol: "https",
         hostname: "www.ccwholesaleclothing.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.ccwholesaleclothing.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.ccwholesaleclothing.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img.fragrancex.com",
       },
     ],
   },
