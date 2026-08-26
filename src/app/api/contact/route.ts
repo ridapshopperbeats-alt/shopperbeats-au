@@ -1,12 +1,33 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import sgMail from "@sendgrid/mail";
+import * as yup from "yup";
+import { getClientIp, isRateLimited } from "@/lib/utils/rate-limit";
+import { nameField, requiredMessage } from "@/lib/validations/form-schemas";
 
-interface ContactRequestBody {
-  name?: string;
-  email?: string;
-  subject?: string;
-  message?: string;
-}
+export const phoneNumber = yup
+  .string()
+  .required("Phone number is required")
+  .matches(
+    /^(?:\+?61\s?|0)4\d{8}$/,
+    "Enter a valid US mobile number (e.g. 0412345678 or +61412345678)"
+  );
+
+/* ------------------ EMAIL ------------------ */
+
+export const email = yup .string()
+  .email("Invalid email")
+  .required("Email is required")
+  .matches(/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/, "Email must contain a valid domain")
+
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+
+const contactSchema = yup.object().shape({
+  name: nameField("Name"),
+  email: email,
+  // phone: phoneNumber,
+  message: requiredMessage("Message", 5),
+});
 
 const escapeHtml = (value: string) =>
   value
@@ -16,94 +37,51 @@ const escapeHtml = (value: string) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
-export async function POST(request: NextRequest) {
-  const apiKey = process.env.SENDGRID_API_KEY;
-  if (!apiKey) {
-    console.error("Contact form error: SENDGRID_API_KEY is not configured");
+export async function POST(req: Request) {
+  const ip = getClientIp(req.headers);
+
+  if (isRateLimited(`contact:${ip}`, 5, 10 * 60 * 1000)) {
     return NextResponse.json(
-      { error: "Email service is not configured." },
-      { status: 500 },
+      { success: false, error: "Too many requests. Please try again later." },
+      { status: 429 }
     );
   }
 
-  let body: ContactRequestBody;
   try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
-  }
-
-  const name = body.name?.trim();
-  const email = body.email?.trim();
-  const subject = body.subject?.trim();
-  const message = body.message?.trim();
-
-  if (!name || !email || !message) {
-    return NextResponse.json(
-      { error: "Name, email, and message are required." },
-      { status: 400 },
-    );
-  }
-
-  sgMail.setApiKey(apiKey);
-
-  const toEmail = process.env.CONTACT_FORM_TO_EMAIL || "support@shopperbeats.com";
-  const fromEmail = process.env.CONTACT_FORM_FROM_EMAIL || "no-reply@shopperbeats.com";
-
-  try {
-    await sgMail.send({
-      to: toEmail,
-      from: fromEmail,
-      replyTo: email,
-      subject: `Contact Us: ${subject || "New message"} — from ${name}`,
-      text: [
-        `Name: ${name}`,
-        `Email: ${email}`,
-        subject ? `Subject: ${subject}` : null,
-        "",
-        message,
-      ]
-        .filter(Boolean)
-        .join("\n"),
-      html: `
-        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-        ${subject ? `<p><strong>Subject:</strong> ${escapeHtml(subject)}</p>` : ""}
-        <p><strong>Message:</strong></p>
-        <p>${escapeHtml(message).replace(/\n/g, "<br />")}</p>
-      `,
+    const body = await req.json();
+    const { name, email, message } = await contactSchema.validate(body, {
+      abortEarly: false,
+      stripUnknown: true,
     });
 
-    return NextResponse.json({ message: "Message sent successfully." });
-  } catch (error) {
-    const sgError = error as {
-      message?: string;
-      code?: number;
-      response?: { body?: { errors?: { message: string; field?: string }[] } };
+    const msg = {
+      to: "cs@shopperbeats.com.au",
+      from: "noreply@shopperbeats.com.au",
+      subject: "New Contact Form Submission",
+      html: `
+        <h2>New Contact Request</h2>
+        <p><b>Name:</b> ${escapeHtml(name)}</p>
+        <p><b>Email:</b> ${escapeHtml(email)}</p>
+        <p><b>Message:</b> ${escapeHtml(message)}</p>
+      `,
     };
-    const sgMessages = sgError?.response?.body?.errors
-      ?.map((e) => e.message)
-      .join("; ");
 
-    console.error(
-      "Contact form error:",
-      JSON.stringify(
-        {
-          message: sgError?.message,
-          code: sgError?.code,
-          sendgridErrors: sgError?.response?.body?.errors,
-        },
-        null,
-        2,
-      ),
-    );
+    const data = await sgMail.send(msg);
+    console.log(data,"dat===========");
 
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    if (error instanceof yup.ValidationError) {
+      return NextResponse.json(
+        { success: false, error: error.errors[0] || "Invalid input" },
+        { status: 400 }
+      );
+    }
+
+    console.error("[api/contact] Failed to send message:", error);
     return NextResponse.json(
-      {
-        error: "Failed to send message. Please try again.",
-        detail: sgMessages || sgError?.message,
-      },
-      { status: 502 },
+      { success: false, error: "Failed to send message. Please try again later." },
+      { status: 500 }
     );
   }
 }

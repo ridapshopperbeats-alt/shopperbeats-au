@@ -829,7 +829,7 @@ export default function ProductDetailClient({
                   <div className="mr-2 pb-1.5">
                     <div className="flex items-center gap-2">
                       {product.promotion_name && (
-                        <div className="promotion-badge">
+                        <div>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           {/* <img
                             src="/images/sale.svg"
@@ -840,7 +840,7 @@ export default function ProductDetailClient({
 
 
                           <StatusBadge
-                            label="sALE"
+                            label="SALE"
                             color={BadgeColor.BlueDark}
                             icon={
                               <Image
@@ -1356,7 +1356,7 @@ export default function ProductDetailClient({
                       >
                         {renderContent(product.description) ||
                           "ShopperBeats continues to stand as the planet premier shopping destination..."}
-                        <div className="text-[12px] sm:text-[12px] text-[#F51721] mt-4 sm:mt-12 font-semibold px-[10px] lg:px-0">
+                        <div className="text-[12px] sm:text-[12px] text-[#F51721] mt-4 sm:mt-12 font-normal px-[10px] lg:px-0">
                           PROP65 Warning: This product contains a chemical known to the State of California to cause cancer.
                           Decorations and accessories are not included. Images shown are only a representation and may vary.
                         </div>
@@ -1446,7 +1446,7 @@ export default function ProductDetailClient({
                     <div className="tab-pane">{warrantyAndReturnContent}</div>
                   )}
 
-                  <div className="text-[11px] sm:text-[12px] text-[#F51721] mt-8 sm:mt-12 md:mt-20 font-semibold">
+                  <div className="text-[11px] sm:text-[12px] text-[#F51721] mt-8 sm:mt-12 md:mt-20 font-normal">
                     PROP65 Warning: This product contains a chemical known to the State of California to cause cancer.
                     Decorations and accessories are not included. Images shown are only a representation and may vary.
                   </div>

@@ -72,32 +72,27 @@ export default function ContactPage() {
 
   // Form Submit Handler
   const handleFormSubmit = async (data: typeof formData) => {
-    setIsSubmitting(true);
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        
         body: JSON.stringify(data),
       });
+        console.log(resetForm,"res======");
 
       const result = await res.json();
 
       if (!res.ok) {
-        throw new Error(result?.detail || result?.error || "Failed to send message");
+        throw new Error(result?.error || "Failed to send message");
       }
 
       toast.success("Message sent successfully!");
       resetForm();
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Failed to send message. Please try again.";
-      toast.error(message);
-    } finally {
-      setIsSubmitting(false);
+    } catch {
+      toast.error("Failed to send message. Please try again.");
     }
   };
 
@@ -241,7 +236,7 @@ export default function ContactPage() {
                 debounceDelay={0}
                 className="flex !h-[38.75px] w-fit min-w-[171.217px] cursor-pointer items-center justify-center gap-2 whitespace-nowrap !rounded-[30px] border-none bg-[var(--secondary)] px-7 py-2.5 text-center font-montserrat text-xs font-bold leading-[18.75px] text-white shadow-[0_4px_12px_rgba(253,21,27,0.25)] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                <Send size={13} strokeWidth={1.08} />
+                <Send size={13} strokeWidth={2.5} />
                 {isSubmitting ? "Sending..." : "Send Message"}
               </Button>
             </form>

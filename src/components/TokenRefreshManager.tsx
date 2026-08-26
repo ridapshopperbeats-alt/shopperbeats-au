@@ -4,8 +4,13 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
 import { triggerSilentRefresh } from "@/lib/redux/apis/base-query";
+import { getAccessTokenCookie } from "@/lib/utils/access-token";
+import { getMsUntilExpiry } from "@/lib/utils/jwt";
 
-const REFRESH_INTERVAL_MS = 10 * 60 * 1000; // 10 min
+
+const FALLBACK_INTERVAL_MS = 10 * 60 * 1000;
+const REFRESH_MARGIN_MS = 60 * 1000;
+const MIN_REMAINING_MS_TO_SKIP = 2 * 60 * 1000;
 
 export default function TokenRefreshManager() {
   const dispatch = useDispatch();
@@ -16,22 +21,50 @@ export default function TokenRefreshManager() {
   useEffect(() => {
     if (!isAuthenticated) return;
 
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    let cancelled = false;
+
     const refresh = () => {
       triggerSilentRefresh(dispatch);
     };
 
-    const interval = setInterval(refresh, REFRESH_INTERVAL_MS);
+    const scheduleNextRefresh = () => {
+      if (cancelled) return;
+      const token = getAccessTokenCookie();
+      const msUntilExpiry = token ? getMsUntilExpiry(token) : null;
+
+      const delay =
+        msUntilExpiry === null
+          ? FALLBACK_INTERVAL_MS
+          : Math.max(msUntilExpiry - REFRESH_MARGIN_MS, 0);
+
+      timeoutId = setTimeout(() => {
+        refresh();
+        scheduleNextRefresh();
+      }, delay);
+    };
+
+    scheduleNextRefresh();
+
+    const refreshIfStale = () => {
+      const token = getAccessTokenCookie();
+      const msUntilExpiry = token ? getMsUntilExpiry(token) : null;
+      if (msUntilExpiry === null || msUntilExpiry < MIN_REMAINING_MS_TO_SKIP) {
+        refresh();
+      }
+    };
 
     const handleVisibility = () => {
-      if (document.visibilityState === "visible") refresh();
+      if (document.visibilityState === "visible") refreshIfStale();
     };
     document.addEventListener("visibilitychange", handleVisibility);
-    window.addEventListener("online", refresh);
+    window.addEventListener("online", refreshIfStale);
 
     return () => {
-      clearInterval(interval);
+      cancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
       document.removeEventListener("visibilitychange", handleVisibility);
-      window.removeEventListener("online", refresh);
+      window.removeEventListener("online", refreshIfStale);
     };
   }, [isAuthenticated, dispatch]);
 
