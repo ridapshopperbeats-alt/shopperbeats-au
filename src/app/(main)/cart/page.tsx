@@ -894,7 +894,7 @@ const Cart = () => {
               <div className="flex items-center border border-[#15112b2b] rounded-[5px] pl-5 pr-1.5 h-11 w-[430px] md:w-auto max-w-full overflow-hidden">
                 <input
                   type="text"
-                  placeholder="Coupen Code"
+                  placeholder="Coupon Code"
                   value={promoCodeInput}
                   onChange={(e) => setPromoCodeInput(e.target.value)}
                   className="flex-1 min-w-0 h-auto! p-0! bg-transparent! border-0! rounded-none! shadow-none! ring-0! outline-none text-sm placeholder:text-[#726969] font-medium"

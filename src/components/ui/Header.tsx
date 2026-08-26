@@ -482,6 +482,11 @@ export default function Header({ megaMenuData }: HeaderProps) {
           {!hideSearch && <GlobalSearch />}
 
           <div className="login-block">
+            {pathname?.startsWith("/category") && (
+              <div className="flex items-center lg:hidden">
+                <CartPopup isVisible={showCartCard} />
+              </div>
+            )}
             <div className="delivery-block" style={{ position: "relative" }}>
               <div
                 role="button"

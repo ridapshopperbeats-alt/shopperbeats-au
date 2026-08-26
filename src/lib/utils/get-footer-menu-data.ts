@@ -35,7 +35,7 @@ export const FOOTER_LINKS_STATIC = [
       { label: "Sign up", href: "/sign-up" },
       { label: "User Profile", href: "/user/personal-information" },
       { label: "My Cart", href: "/cart" },
-      { label: "Track My Order", href: "/cms/track" },
+      { label: "Track My Order", href: "https://www.test.com/tools/123/track/?l={0}" },
     ],
   },
   {
