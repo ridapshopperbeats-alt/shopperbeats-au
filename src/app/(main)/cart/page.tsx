@@ -27,6 +27,7 @@ import {
   useRemoveFromCartMutation,
   useCheckDeliveryMutation,
   useValidatePromoCodeMutation,
+  useRemoveCouponMutation,
 } from "@/lib/redux/apis/cart-api";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 
@@ -59,6 +60,8 @@ const Cart = () => {
     useCheckDeliveryMutation();
   const [validatePromoCode, { isLoading: isApplyingPromo }] =
     useValidatePromoCodeMutation();
+  const [removeCoupon, { isLoading: isRemovingPromo }] =
+    useRemoveCouponMutation();
 
   const cart = cartData;
 
@@ -81,6 +84,14 @@ const Cart = () => {
   const [newTotalPrice, setNewTotalPrice] = useState<number | null>(null);
 
   const [isXlUp, setIsXlUp] = useState(true);
+
+  useEffect(() => {
+    if (cart?.has_coupon && cart.applied_coupon_code) {
+      setAppliedPromoCode(cart.applied_coupon_code);
+      setDiscountAmount(cart.coupon_discount || 0);
+      setPromoCodeInput(cart.applied_coupon_code);
+    }
+  }, [cart?.has_coupon, cart?.applied_coupon_code, cart?.coupon_discount]);
 
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 1280px)");
@@ -141,8 +152,8 @@ const Cart = () => {
       appliedPromoCode &&
       appliedPromoCode.toLowerCase() === promoCodeInput.trim().toLowerCase()
     ) {
-      setPromoCodeError("already applied");
-      toast.error("already applied");
+      setPromoCodeError("Already applied");
+      toast.error("Already applied");
       return;
     }
 
@@ -185,19 +196,29 @@ const Cart = () => {
       setAppliedPromoCode(promoCodeInput);
       setDiscountAmount(discount);
       setNewTotalPrice(newTotal);
-      toast.success(result.message || "Coupon applied successfully!");
+      toast.success(
+        <span style={{ color: "#16a249" }}>
+          {result.message}
+        </span>,
+      );
     } catch {
       setPromoCodeError("Failed to validate coupon code");
       toast.error("Failed to validate coupon code");
     }
   };
 
-  const handleRemovePromo = () => {
-    setAppliedPromoCode(null);
-    setDiscountAmount(0);
-    setNewTotalPrice(null);
-    setPromoCodeInput("");
-    toast.info("Promo code removed.");
+  const handleRemovePromo = async () => {
+    try {
+      await removeCoupon().unwrap();
+      setAppliedPromoCode(null);
+      setDiscountAmount(0);
+      setNewTotalPrice(null);
+      setPromoCodeInput("");
+      setPromoCodeError(null);
+      toast.info("Promo code removed.");
+    } catch {
+      toast.error("Failed to remove coupon.");
+    }
   };
 
   // ---------------- REMOVE ITEM ----------------
@@ -856,9 +877,10 @@ const Cart = () => {
                     Coupon Discount ({appliedPromoCode})
                     <button
                       onClick={handleRemovePromo}
-                      className="ml-4 text-[#fd151b] fluid-text-12-16 hover:underline"
+                      disabled={isRemovingPromo}
+                      className="ml-4 text-[#fd151b] fluid-text-12-16 hover:underline disabled:opacity-50"
                     >
-                      Remove
+                      {isRemovingPromo ? "Removing..." : "Remove"}
                     </button>
                   </span>
                   <p className="fluid-text-sm font-semibold text-[#16a249]">
@@ -872,7 +894,7 @@ const Cart = () => {
               <div className="flex items-center border border-[#15112b2b] rounded-[5px] pl-5 pr-1.5 h-11 w-[430px] md:w-auto max-w-full overflow-hidden">
                 <input
                   type="text"
-                  placeholder="Promo Code"
+                  placeholder="Coupen Code"
                   value={promoCodeInput}
                   onChange={(e) => setPromoCodeInput(e.target.value)}
                   className="flex-1 min-w-0 h-auto! p-0! bg-transparent! border-0! rounded-none! shadow-none! ring-0! outline-none text-sm placeholder:text-[#726969] font-medium"
@@ -893,7 +915,7 @@ const Cart = () => {
               )}
               {appliedPromoCode && (
                 <p className="text-[#16a249] text-xs mt-1.5">
-                  Promo &quot;{appliedPromoCode}&quot; applied!
+                  Coupon Code&quot;{appliedPromoCode}&quot; applied!
                 </p>
               )}
             </div>

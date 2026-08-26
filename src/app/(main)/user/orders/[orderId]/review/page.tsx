@@ -45,6 +45,15 @@ const EMPTY_REVIEW: ProductReviewState = {
 
 const COMMENT_MAX_LENGTH = 500;
 
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/svg+xml", "image/webp"];
+const ALLOWED_IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "svg", "webp"];
+
+function isAllowedImageFile(file: File): boolean {
+  if (ALLOWED_IMAGE_TYPES.includes(file.type)) return true;
+  const extension = file.name.split(".").pop()?.toLowerCase();
+  return !!extension && ALLOWED_IMAGE_EXTENSIONS.includes(extension);
+}
+
 export default function ReviewForm({ params }: ReviewPageProps) {
   const { orderId } = use(params);
   const router = useRouter();
@@ -97,9 +106,17 @@ export default function ReviewForm({ params }: ReviewPageProps) {
   const handleFileChange = (id: string, e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const selected = Array.from(e.target.files);
-      updateReview(id, {
-        images: [...getReviewState(id).images, ...selected],
-      });
+      const validFiles = selected.filter(isAllowedImageFile);
+
+      if (validFiles.length < selected.length) {
+        toast.error("Only JPG, JPEG, PNG, SVG, and WEBP files are allowed.");
+      }
+
+      if (validFiles.length > 0) {
+        updateReview(id, {
+          images: [...getReviewState(id).images, ...validFiles],
+        });
+      }
       e.target.value = "";
     }
   };
@@ -392,7 +409,7 @@ export default function ReviewForm({ params }: ReviewPageProps) {
               <input
                 id={`image-upload-${selectedId}`}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/svg+xml,image/webp"
                 multiple
                 hidden
                 onChange={(e) => handleFileChange(selectedId, e)}

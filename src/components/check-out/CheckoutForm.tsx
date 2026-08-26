@@ -12,14 +12,13 @@ import {
 } from "@stripe/react-stripe-js";
 import {
   fieldLabels,
-  handleAustralianPhoneNumberChange,
+  handleUSPhoneNumberChange,
 } from "@/lib/utils/main-utils";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { CheckoutFormProps } from "@/types/checkout";
-import { transform } from "next/dist/build/swc";
-import { text } from "stream/consumers";
+
 
 const CheckoutForm: React.FC<CheckoutFormProps> = ({
   formData,
@@ -117,7 +116,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
 
-    const { value, error } = handleAustralianPhoneNumberChange(
+    const { value, error } = handleUSPhoneNumberChange(
       e,
       formData[name as keyof CheckoutFormData] as string,
     );
@@ -164,9 +163,9 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                 error={formErrors.email}
                 className="contact-email-input"
               />
-              <label className="delivery-checkbox-label">
+              {/* <label className="delivery-checkbox-label">
                 <input type="checkbox" /> Email me with news and offers
-              </label>
+              </label> */}
             </div>
           </div>
         </div>

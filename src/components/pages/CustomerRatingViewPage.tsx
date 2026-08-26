@@ -210,7 +210,11 @@ export default function CustomerRatingViewPage({
 
   const productReviews = (reviews ?? []).map(normalizeReview);
 
-  const visibleTabs = TABS;
+  // "Store Reviews" and "Questions" tabs hidden for now (kept in TABS/code,
+  // just filtered out of the visible tab bar so they can be re-enabled later).
+  const visibleTabs = TABS.filter(
+    (tab) => tab !== "Store Reviews" && tab !== "Questions",
+  );
 
   const currentTab = activeTab;
 

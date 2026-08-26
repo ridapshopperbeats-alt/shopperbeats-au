@@ -95,7 +95,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
 
       <div className="fixed inset-0 z-[1200] flex items-center justify-center p-3 sm:p-6">
         <div
-          className="relative bg-white rounded-[15px] w-full max-w-[1700px] h-[92vh] sm:h-[88vh] lg:h-[85vh] xl:h-[800px] xl:max-h-[800px] flex flex-col lg:flex-row gap-5 lg:gap-6 xl:gap-10 p-4 sm:p-6 lg:p-6 xl:p-9 overflow-visible"
+          className="relative bg-white rounded-[15px] max-w-[1796px] h-[80vh] sm:h-[88vh] lg:h-[85vh] overflow-visible"
           onClick={(e) => e.stopPropagation()}
         >
           <button
@@ -107,101 +107,105 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
             <X size={18} strokeWidth={2} className="text-black" />
           </button>
 
-          {/* LEFT: Main preview */}
-          <div className="relative w-full h-[220px] sm:h-[320px] md:h-[420px] lg:w-1/2 lg:h-full xl:w-[800px] xl:h-[700px] shrink-0 rounded-[15px] overflow-hidden bg-white flex items-center justify-center">
-            {isVideo ? (
-              isYouTubeUrl(selectedUrl) ? (
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src={`https://www.youtube.com/embed/${getYouTubeVideoId(
-                    selectedUrl,
-                  )}?autoplay=0&rel=0`}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  title="YouTube video player"
-                  className="absolute inset-0 w-full h-full"
-                ></iframe>
+          <div className="flex flex-col lg:flex-row gap-5 lg:gap-6 xl:gap-10 p-4 sm:p-6 lg:p-6 xl:p-9 w-full h-full rounded-[15px] overflow-y-auto lg:overflow-visible">
+            {/* LEFT: Main preview */}
+            <div className="relative w-full h-[220px] sm:h-[320px] md:h-[420px] lg:w-1/2 lg:h-full xl:w-[800px] xl:h-[700px] shrink-0 rounded-[15px] overflow-hidden bg-white flex items-center justify-center">
+              {isVideo ? (
+                isYouTubeUrl(selectedUrl) ? (
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={`https://www.youtube.com/embed/${getYouTubeVideoId(
+                      selectedUrl,
+                    )}?autoplay=0&rel=0`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    title="YouTube video player"
+                    className="absolute inset-0 w-full h-full"
+                  ></iframe>
+                ) : (
+                  <video
+                    src={selectedUrl}
+                    controls
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-contain"
+                  />
+                )
               ) : (
-                <video
-                  src={selectedUrl}
-                  controls
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-contain"
+                <Image
+                  src={applyImageVariant(selectedUrl, "pdpmain")}
+                  alt={title || "Product Image"}
+                  fill
+                  // sizes="(min-width: 1280px) 800px, 100vw"
+                  // className="object-contain"
                 />
-              )
-            ) : (
-              <Image
-                src={applyImageVariant(selectedUrl, "pdpmain")}
-                alt={title || "Product Image"}
-                fill
-                sizes="(min-width: 1280px) 800px, 100vw"
-                className="object-contain"
-              />
-            )}
-          </div>
+              )}
+            </div>
 
-          <div className="flex flex-col flex-1 min-w-0 ">
-            <h2 className="text-black font-medium text-[20px] leading-[30px]">
-              {title}
-            </h2>
+            <div className="flex flex-col flex-1 min-w-0 w-full h-auto xl:w-[600px] xl:h-[154px]">
+              <h2 className="text-[#000] font-[Montserrat] font-medium text-[20px] leading-[30px]">
+                {title}
+              </h2>
 
-            <div
-              className="flex flex-wrap gap-3 mt-4 overflow-y-auto pr-1"
-              data-lenis-prevent
-              onWheel={(e) => e.stopPropagation()}
-            >
-              {images.map((item, index) => {
-                const mediaUrl = safeUrl(item?.image_url || item?.video_url);
-                const isActive = mediaUrl === selectedUrl;
-                const itemIsVideo = !!item?.video_url && !item?.image_url;
+              <div
+                className="flex flex-wrap gap-3 mt-4"
+                data-lenis-prevent
+                onWheel={(e) => e.stopPropagation()}
+              >
+                {images.map((item, index) => {
+                  const mediaUrl = safeUrl(item?.image_url || item?.video_url);
+                  const isActive = mediaUrl === selectedUrl;
+                  const itemIsVideo = !!item?.video_url && !item?.image_url;
 
-                return (
-                  <div
-                    key={mediaUrl + index}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => setSelectedUrl(mediaUrl)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setSelectedUrl(mediaUrl);
-                      }
-                    }}
-                    className={`w-[100px] h-[110px] rounded-[5px] border overflow-hidden relative cursor-pointer shrink-0 bg-white transition-colors ${
-                      isActive ? "border-[#fd151b] border-2" : "border-gray-300"
-                    }`}
-                  >
-                    {itemIsVideo && isYouTubeUrl(mediaUrl) ? (
-                      <iframe
-                        src={`https://www.youtube.com/embed/${getYouTubeVideoId(
-                          mediaUrl,
-                        )}?autoplay=0&controls=0&mute=1`}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        title={`preview-thumb-${index}`}
-                        className="absolute inset-0 w-full h-full object-cover scale-[1.35]"
-                      ></iframe>
-                    ) : itemIsVideo ? (
-                      <video
-                        src={mediaUrl}
-                        className="img-cover"
-                        muted
-                        playsInline
-                      />
-                    ) : (
-                      <Image
-                        src={applyImageVariant(mediaUrl, "pdptmb")}
-                        alt={`preview-thumb-${index}`}
-                        fill
-                        sizes="100px"
-                        className="object-cover"
-                      />
-                    )}
-                  </div>
-                );
-              })}
+                  return (
+                    <div
+                      key={mediaUrl + index}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => setSelectedUrl(mediaUrl)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedUrl(mediaUrl);
+                        }
+                      }}
+                      className={`w-[100px] h-[110px] rounded-[5px] border overflow-hidden relative cursor-pointer shrink-0 bg-[lightgray] transition-colors ${
+                        isActive
+                          ? "border-[#fd151b] border-2"
+                          : "border-[rgba(224,224,224,0.50)]"
+                      }`}
+                    >
+                      {itemIsVideo && isYouTubeUrl(mediaUrl) ? (
+                        <iframe
+                          src={`https://www.youtube.com/embed/${getYouTubeVideoId(
+                            mediaUrl,
+                          )}?autoplay=0&controls=0&mute=1`}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          title={`preview-thumb-${index}`}
+                          className="absolute inset-0 w-full h-full object-cover scale-[1.35]"
+                        ></iframe>
+                      ) : itemIsVideo ? (
+                        <video
+                          src={mediaUrl}
+                          className="img-cover"
+                          muted
+                          playsInline
+                        />
+                      ) : (
+                        <Image
+                          src={applyImageVariant(mediaUrl, "pdptmb")}
+                          alt={`preview-thumb-${index}`}
+                          fill
+                          sizes="100px"
+                          className="object-cover"
+                        />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

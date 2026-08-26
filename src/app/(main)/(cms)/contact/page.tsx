@@ -72,32 +72,27 @@ export default function ContactPage() {
 
   // Form Submit Handler
   const handleFormSubmit = async (data: typeof formData) => {
-    setIsSubmitting(true);
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        
         body: JSON.stringify(data),
       });
+        console.log(resetForm,"res======");
 
       const result = await res.json();
 
       if (!res.ok) {
-        throw new Error(result?.detail || result?.error || "Failed to send message");
+        throw new Error(result?.error || "Failed to send message");
       }
 
       toast.success("Message sent successfully!");
       resetForm();
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Failed to send message. Please try again.";
-      toast.error(message);
-    } finally {
-      setIsSubmitting(false);
+    } catch {
+      toast.error("Failed to send message. Please try again.");
     }
   };
 
