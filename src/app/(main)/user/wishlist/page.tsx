@@ -9,8 +9,7 @@ import { Card } from "@/components/common/Card";
 import ProductCard from "@/components/common/ProductCard";
 import {
   useGetWishlistQuery,
-  useAddToCartMutation,
-  useRemoveFromWishlistMutation,
+  useMoveWishlistToCartMutation,
 } from "@/lib/redux/apis/cart-api";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { getPriceDetails, getImageUrl } from "@/lib/utils/main-utils";
@@ -22,8 +21,7 @@ export default function WishlistPage() {
   } = useGetWishlistQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
-  const [addToCart] = useAddToCartMutation();
-  const [removeFromWishlist] = useRemoveFromWishlistMutation();
+  const [moveWishlistToCart] = useMoveWishlistToCartMutation();
   const { postcode } = useGlobalPostcode();
   const [isTransferring, setIsTransferring] = useState(false);
 
@@ -44,38 +42,25 @@ export default function WishlistPage() {
         (item) => (item.available_stock ?? item.stock ?? 0) > 0,
       );
 
-      const results = await Promise.allSettled(
-        inStockItems.map((item) =>
-          addToCart({
-            productId: item.product_id,
-            quantity: 1,
-            variant_id: item.variant_id,
-            vendor_id: item.vendor_id,
-            postcode,
-          }).unwrap(),
-        ),
-      );
+      const result = await moveWishlistToCart({
+        items: inStockItems.map((item) => ({
+          product_id: item.product_id,
+          variant_id: item.variant_id,
+        })),
+        postcode,
+      }).unwrap();
 
-      const movedItems = inStockItems.filter(
-        (_, index) => results[index].status === "fulfilled",
-      );
+      const failedCount = result?.failed_items?.length ?? 0;
+      const movedCount = result?.moved_items?.length ?? inStockItems.length - failedCount;
 
-      await Promise.allSettled(
-        movedItems.map((item) =>
-          removeFromWishlist({
-            product_id: item.product_id,
-            variant_id: item.variant_id ?? undefined,
-          }).unwrap(),
-        ),
-      );
-
-      const failedCount = inStockItems.length - movedItems.length;
-      if (movedItems.length > 0) {
-        toast.success(`Added ${movedItems.length} item(s) to cart`);
+      if (movedCount > 0) {
+        toast.success(`Added ${movedCount} item(s) to cart`);
       }
       if (failedCount > 0) {
         toast.error(`Failed to add ${failedCount} item(s) to cart.`);
       }
+    } catch {
+      toast.error("Failed to add items to cart.");
     } finally {
       setIsTransferring(false);
     }
