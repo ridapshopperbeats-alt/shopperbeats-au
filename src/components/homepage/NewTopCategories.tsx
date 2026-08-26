@@ -187,7 +187,7 @@ export default function NewTopCategories() {
                 />
               </div>
 
-              <p className="text-12px font-bold leading-[normal] tracking-[0%] text-center capitalize text-[#2B2B2B] line-clamp-2">
+              <p className="text-12px font-bold leading-[normal] tracking-[0%] text-center capitalize text-[#2B2B2B] whitespace-nowrap">
                 {item.title}
               </p>
             </Link>
