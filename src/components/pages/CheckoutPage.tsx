@@ -34,6 +34,7 @@ import {
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import Image from "next/image";
+import { ChevronDown, Tag } from "lucide-react";
 
 export default function SecureCheckout() {
   const { postcode } = useGlobalPostcode();
@@ -729,6 +730,16 @@ export default function SecureCheckout() {
 
   const finalTotal = calculatedSubtotal - (promoData?.discount_amount ?? 0);
 
+  const promotionDiscount = cart?.items_discount || 0;
+  const itemSavings = totalSaveAmount - promotionDiscount;
+  const couponDiscount = promoData?.discount_amount || 0;
+  const discountTotal = totalSaveAmount + couponDiscount;
+  const originalListingPrice = cart?.subtotal ?? cart?.items_total ?? 0;
+  const priceAfterDiscount = Math.max(originalListingPrice - discountTotal, 0);
+
+  const [isDiscountExpanded, setIsDiscountExpanded] = useState(false);
+  const [isTotalExpanded, setIsTotalExpanded] = useState(false);
+
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const effectivePostcode = formData.postcode || postcode;
   const [prevEffectivePostcode, setPrevEffectivePostcode] =
@@ -893,19 +904,135 @@ export default function SecureCheckout() {
                                   ${formatPrice(mainPrice)}
                                 </span>
                               </p>
-                              {item.promotion_discount != null &&
+                              {/* {item.promotion_discount != null &&
                                 item.promotion_discount > 0 && (
-                                  <span className="inline-block mt-1.5 bg-[#fff4f4] text-[#e53e3e] border border-[#fed7d7] rounded-[4px] text-xs font-semibold px-2 py-0.5 whitespace-nowrap">
-                                    🏷 Item Discount: $
-                                    {formatPrice(item.promotion_discount)}
+                                  <span className="inline-flex items-center gap-1 mt-1.5 mx-auto h-4 bg-[#fff4f4] text-[#e53e3e] border border-[#fed7d7] rounded-[4px] text-[10px] font-semibold px-1.5 whitespace-nowrap leading-none">
+                                    <Tag className="w-2.5 h-2.5 shrink-0" strokeWidth={2} />
+                                    Item Discount: ${formatPrice(item.promotion_discount)}
                                   </span>
-                                )}
+                                )} */}
                             </div>
                           </div>
                         );
                       })}
                     </div>
                   )}
+
+                  {/* --- New redesigned order summary totals (matches cart page) — disabled, kept for later use ---
+                  <div className="px-4 py-4 flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <span className="fluid-text-xs text-[#726969] font-normal capitalize leading-[normal]">
+                        Original Listing Price (Total)
+                      </span>
+                      <p className="fluid-text-xs font-bold text-black leading-[normal]">
+                        ${formatPrice(originalListingPrice)}
+                      </p>
+                    </div>
+
+                    {discountTotal > 0 && (
+                      <div>
+                        <button
+                          type="button"
+                          onClick={() => setIsDiscountExpanded((prev) => !prev)}
+                          className="flex items-center justify-between w-full cursor-pointer"
+                        >
+                          <span className="flex items-center gap-1 fluid-text-xs font-normal text-[#16A249] capitalize leading-[normal]">
+                            Discount
+                            <ChevronDown
+                              className={`w-3.5 h-3.5 transition-transform text-black ${isDiscountExpanded ? "rotate-180" : ""}`}
+                            />
+                          </span>
+                          <p className="fluid-text-xs font-bold text-[#16A249] leading-[normal] capitalize">
+                            -${formatPrice(discountTotal)}
+                          </p>
+                        </button>
+
+                        {isDiscountExpanded && (
+                          <div className="flex flex-col gap-2 mt-2">
+                            <div className="flex items-center justify-between">
+                              <span className="fluid-text-xs text-[#726969] font-normal capitalize leading-[normal]">
+                                Marketplace Discount
+                              </span>
+                              <p className="fluid-text-xs text-[#000000] font-normal capitalize leading-[normal]">
+                                ${formatPrice(itemSavings)}
+                              </p>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="fluid-text-xs text-[#726969] font-normal capitalize leading-[normal]">
+                                Item Promotion Discount
+                              </span>
+                              <p className="fluid-text-xs text-[#000000] font-normal capitalize leading-[normal]">
+                                ${formatPrice(promotionDiscount)}
+                              </p>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="fluid-text-xs text-[#726969] font-normal capitalize leading-[normal]">
+                                Coupon Discount
+                              </span>
+                              <p className="fluid-text-xs text-[#000000] font-normal capitalize leading-[normal]">
+                                ${formatPrice(couponDiscount)}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="rounded-[8px] px-4 py-4 mt-2 bg-[#EFF9F0] flex items-center justify-between gap-2">
+                      <span className="fluid-text-xs font-normal text-[#726969] capitalize leading-[normal]">
+                        Price After Discount
+                      </span>
+                      <p className="fluid-text-xs font-bold text-[#16A249] leading-[normal] capitalize shrink-0">
+                        ${formatPrice(priceAfterDiscount)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="px-4 pb-4">
+                    <button
+                      type="button"
+                      onClick={() => setIsTotalExpanded((prev) => !prev)}
+                      className="flex items-center justify-between w-full cursor-pointer"
+                    >
+                      <span className="flex items-center gap-1 fluid-text-xs font-normal text-[#726969] capitalize leading-[normal]">
+                        Total Payable Amount
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform text-[#000000] ${isTotalExpanded ? "rotate-180" : ""}`}
+                        />
+                      </span>
+                      <p className="fluid-text-xs lg:text-[18px] leading-[normal] font-bold text-[#000000] capitalize">
+                        ${formatPrice(finalTotal)}
+                      </p>
+                    </button>
+
+                    {isTotalExpanded && (
+                      <div className="flex flex-col gap-2 mt-3">
+                        <div className="flex items-center justify-between">
+                          <span className="fluid-text-xs font-normal text-[#726969] capitalize leading-[normal]">
+                            Shipping
+                          </span>
+                          {effectiveShipping ? (
+                            <p className="fluid-text-xs text-black font-normal capitalize leading-[normal]">
+                              ${formatPrice(effectiveShipping)}
+                            </p>
+                          ) : (
+                            <p className="fluid-text-xs font-normal text-[#16A249] capitalize leading-[normal]">
+                              FREE
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="fluid-text-xs font-normal text-[#726969] capitalize leading-[normal]">
+                            Tax
+                          </span>
+                          <p className="fluid-text-xs text-black font-normal capitalize leading-[normal]">
+                            ${formatPrice(cart?.tax_total || 0)}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  --- End new design --- */}
 
                   <div className="px-4 py-4 flex flex-col gap-3 bg-white">
                     <div className="flex items-center justify-between">
@@ -1028,6 +1155,122 @@ export default function SecureCheckout() {
                       })}
                     </div>
                   )}
+
+                  {/* --- New redesigned order summary totals (matches cart page) — disabled, kept for later use ---
+                  <div className="px-4 py-4 flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <span className="fluid-text-xs text-[#726969] font-normal capitalize leading-[normal]">
+                        Original Listing Price (Total)
+                      </span>
+                      <p className="fluid-text-xs font-bold text-black leading-[normal]">
+                        ${formatPrice(originalListingPrice)}
+                      </p>
+                    </div>
+
+                    {discountTotal > 0 && (
+                      <div>
+                        <button
+                          type="button"
+                          onClick={() => setIsDiscountExpanded((prev) => !prev)}
+                          className="flex items-center justify-between w-full cursor-pointer"
+                        >
+                          <span className="flex items-center gap-1 fluid-text-xs font-normal text-[#16A249] capitalize leading-[normal]">
+                            Discount
+                            <ChevronDown
+                              className={`w-3.5 h-3.5 transition-transform text-black ${isDiscountExpanded ? "rotate-180" : ""}`}
+                            />
+                          </span>
+                          <p className="fluid-text-xs font-bold text-[#16A249] leading-[normal] capitalize">
+                            -${formatPrice(discountTotal)}
+                          </p>
+                        </button>
+
+                        {isDiscountExpanded && (
+                          <div className="flex flex-col gap-2 mt-2">
+                            <div className="flex items-center justify-between">
+                              <span className="fluid-text-xs text-[#726969] font-normal capitalize leading-[normal]">
+                                Marketplace Discount
+                              </span>
+                              <p className="fluid-text-xs text-[#000000] font-normal capitalize leading-[normal]">
+                                ${formatPrice(itemSavings)}
+                              </p>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="fluid-text-xs text-[#726969] font-normal capitalize leading-[normal]">
+                                Item Promotion Discount
+                              </span>
+                              <p className="fluid-text-xs text-[#000000] font-normal capitalize leading-[normal]">
+                                ${formatPrice(promotionDiscount)}
+                              </p>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="fluid-text-xs text-[#726969] font-normal capitalize leading-[normal]">
+                                Coupon Discount
+                              </span>
+                              <p className="fluid-text-xs text-[#000000] font-normal capitalize leading-[normal]">
+                                ${formatPrice(couponDiscount)}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="rounded-[8px] px-4 py-4 mt-2 bg-[#EFF9F0] flex items-center justify-between gap-2">
+                      <span className="fluid-text-xs font-normal text-[#726969] capitalize leading-[normal]">
+                        Price After Discount
+                      </span>
+                      <p className="fluid-text-xs font-bold text-[#16A249] leading-[normal] capitalize shrink-0">
+                        ${formatPrice(priceAfterDiscount)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="px-4 pb-4">
+                    <button
+                      type="button"
+                      onClick={() => setIsTotalExpanded((prev) => !prev)}
+                      className="flex items-center justify-between w-full cursor-pointer"
+                    >
+                      <span className="flex items-center gap-1 fluid-text-xs font-normal text-[#726969] capitalize leading-[normal]">
+                        Total Payable Amount
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform text-[#000000] ${isTotalExpanded ? "rotate-180" : ""}`}
+                        />
+                      </span>
+                      <p className="fluid-text-xs text-[18px] leading-[normal] font-bold text-[#000000] capitalize">
+                        ${formatPrice(finalTotal)}
+                      </p>
+                    </button>
+
+                    {isTotalExpanded && (
+                      <div className="flex flex-col gap-2 mt-3">
+                        <div className="flex items-center justify-between">
+                          <span className="fluid-text-xs font-normal text-[#726969] capitalize leading-[normal]">
+                            Shipping
+                          </span>
+                          {effectiveShipping ? (
+                            <p className="fluid-text-xs text-black font-normal capitalize leading-[normal]">
+                              ${formatPrice(effectiveShipping)}
+                            </p>
+                          ) : (
+                            <p className="fluid-text-xs font-normal text-[#16A249] capitalize leading-[normal]">
+                              FREE
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="fluid-text-xs font-normal text-[#726969] capitalize leading-[normal]">
+                            Tax
+                          </span>
+                          <p className="fluid-text-xs text-black font-normal capitalize leading-[normal]">
+                            ${formatPrice(cart?.tax_total || 0)}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  --- End new design --- */}
 
                   <div className="px-4 py-4 flex flex-col gap-3 bg-white">
                     <div className="flex items-center justify-between">

@@ -63,6 +63,7 @@ export const API_ENDPOINTS = {
     CREATE: "/create-wishlist",
     GET: "/get-wishlist",
     REMOVE: "/delete-wishlist",
+    MOVE_TO_CART: "/move-to-cart",
   },
   CATEGORIES: {
     LIST: "/api/v1/category/list-category",

@@ -23,6 +23,16 @@ interface RemoveCouponResponse {
   };
 }
 
+interface MoveWishlistToCartResponse {
+  moved_items?: { product_id: string; variant_id?: string | null }[];
+  failed_items?: {
+    product_id: string;
+    variant_id?: string | null;
+    reason?: string;
+  }[];
+  message?: string;
+}
+
 const baseCartQuery = createBaseQuery(API_ENDPOINTS.CART.BASE_URL);
 const baseWishlistQuery = createBaseQuery(API_ENDPOINTS.WISHLIST.BASE_URL);
 const basePromoQuery = createBaseQuery(API_ENDPOINTS.CART.PROMO_BASE_URL);
@@ -253,6 +263,30 @@ export const cartApi = createApi({
         }
       },
     }),
+    moveWishlistToCart: builder.mutation<
+      MoveWishlistToCartResponse,
+      {
+        items?: { product_id: string; variant_id?: string | null }[];
+        postcode?: string | null;
+        remove_from_wishlist?: boolean;
+      } | void
+    >({
+      queryFn: async (arg, api, extraOptions) => {
+        const result = await baseWishlistQuery(
+          {
+            url: API_ENDPOINTS.WISHLIST.MOVE_TO_CART,
+            method: "POST",
+            body: arg || {},
+          },
+          api,
+          extraOptions
+        );
+
+        if (result.error) return { error: result.error };
+        return { data: result.data as MoveWishlistToCartResponse };
+      },
+      invalidatesTags: ["Cart", "Wishlist"],
+    }),
   }),
 });
 
@@ -268,5 +302,6 @@ export const {
   useCreateWishlistMutation,
   useGetWishlistQuery,
   useRemoveFromWishlistMutation,
+  useMoveWishlistToCartMutation,
   useClearCartMutation,
 } = cartApi;
