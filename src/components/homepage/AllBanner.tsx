@@ -100,11 +100,11 @@
 //     </div>
 //   );
 // }
-
 "use client";
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, ChevronDown, ChevronRight } from "lucide-react";
 
 const categoryImages = [
@@ -112,51 +112,61 @@ const categoryImages = [
     id: 1,
     title: "Dresses",
     image: "/images/home/card-dresses.svg",
+    href: "/category/clothing",
   },
   {
     id: 2,
     title: "Tops",
     image: "/images/home/card-tops.svg",
+    href: "#",
   },
   {
     id: 3,
     title: "Lingerie and Sleepwear",
     image: "/images/home/card-lingerie.svg",
+    href: "/category/clothing",
   },
   {
     id: 4,
     title: "Living Room Furniture",
     image: "/images/home/card-living-room.svg",
+    href: "/category/living-room-furniture",
   },
   {
     id: 5,
     title: "Home Office Furniture",
     image: "/images/home/card-home-office.svg",
+    href: "/category/home-office-furniture",
   },
   {
     id: 6,
     title: "Patio Furniture",
     image: "/images/home/card-patio.svg",
+    href: "/categories/furniture",
   },
   {
     id: 7,
     title: "Braclets",
     image: "/images/home/card-bracelets.svg",
+    href: "/category/bracelets",
   },
   {
     id: 8,
     title: "Necklaces",
     image: "/images/home/card-necklaces.svg",
+    href: "/category/necklaces",
   },
   {
     id: 9,
     title: "Earings",
     image: "/images/home/card-earrings.svg",
+    href: "/category/earrings",
   },
   {
     id: 10,
     title: "Rings",
     image: "/images/home/card-rings.svg",
+    href: "/category/rings",
   },
 ];
 
@@ -175,16 +185,23 @@ export default function PopularCategories() {
           </h2>
         </div>
 
-        <button className="flex items-center gap-2 fluid-text-sm text-[#FD151B] font-bold cursor-pointer">
+        <Link
+          href="/categories"
+          className="flex items-center gap-2 fluid-text-sm text-[#FD151B] font-bold cursor-pointer"
+        >
           View All
           <ChevronRight size={13} />
-        </button>
+        </Link>
       </div>
 
       {/* TOP */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-3 md:pt-2 ">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-3 md:pt-2">
         {topCategories.map((item) => (
-          <div key={item.id} className="banner-card banner-card-top group">
+          <Link
+            key={item.id}
+            href={item.href}
+            className="banner-card banner-card-top group block relative overflow-hidden"
+          >
             <Image
               src={item.image}
               alt={item.title}
@@ -201,13 +218,13 @@ export default function PopularCategories() {
                   {item.title}
                 </h3>
 
-                <button className="flex items-center gap-2 text-white fluid-text-2xs font-medium cursor-pointer">
+                <span className="flex items-center gap-2 text-white fluid-text-2xs font-medium mt-1">
                   Shop Now
                   <ArrowRight size={14} />
-                </button>
+                </span>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -231,7 +248,11 @@ export default function PopularCategories() {
         }`}
       >
         {bottomCategories.map((item) => (
-          <div key={item.id} className="banner-card banner-card-bottom group">
+          <Link
+            key={item.id}
+            href={item.href}
+            className="banner-card banner-card-bottom group block relative overflow-hidden"
+          >
             <Image
               src={item.image}
               alt={item.title}
@@ -242,19 +263,19 @@ export default function PopularCategories() {
 
             <div className="absolute bottom-0 left-0 w-full h-[10%] bg-linear-to-t from-[#050B1E]/80 to-transparent" />
 
-            <div className="absolute left-4 bottom-3 md:p-3 ">
+            <div className="absolute left-4 bottom-3 md:p-3">
               <div className="banner-card-content">
                 <h3 className="text-white fluid-text-13-18 font-bold leading-[100%]">
                   {item.title}
                 </h3>
 
-                <button className="flex items-center gap-2 text-white fluid-text-2xs font-medium cursor-pointer">
+                <span className="flex items-center gap-2 text-white fluid-text-2xs font-medium mt-1">
                   Shop Now
                   <ArrowRight size={14} />
-                </button>
+                </span>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

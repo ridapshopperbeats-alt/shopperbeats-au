@@ -22,13 +22,30 @@ type RefreshOutcome = "refreshed" | "invalid" | "transient";
 let pendingRefresh: Promise<RefreshOutcome> | null = null;
 
 const REFRESH_COOLDOWN_MS = 5000;
-let lastRefreshSucceededAt = 0;
+const LAST_REFRESH_KEY = "last-token-refresh-at";
+
+function getLastRefreshAt(): number {
+  if (typeof window === "undefined") return 0;
+  try {
+    return Number(window.localStorage.getItem(LAST_REFRESH_KEY)) || 0;
+  } catch {
+    return 0;
+  }
+}
+
+function setLastRefreshAt(timestamp: number): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(LAST_REFRESH_KEY, String(timestamp));
+  } catch {
+  }
+}
 
 function refreshAccessToken(
   api: Parameters<BaseQueryFn>[1],
   extraOptions: Parameters<BaseQueryFn>[2],
 ): Promise<RefreshOutcome> {
-  if (Date.now() - lastRefreshSucceededAt < REFRESH_COOLDOWN_MS) {
+  if (Date.now() - getLastRefreshAt() < REFRESH_COOLDOWN_MS) {
     return Promise.resolve("refreshed");
   }
 
@@ -36,6 +53,8 @@ function refreshAccessToken(
     const refresh_token = getRefreshToken();
     if (!refresh_token) {
       console.warn("No refresh_token cookie found; cannot refresh access token.");
+      clearAccessTokenCookie();
+      api.dispatch(logout());
       return Promise.resolve("invalid");
     }
 
@@ -57,6 +76,8 @@ function refreshAccessToken(
           if (status === 401 || status === 403) {
             console.warn("Refresh token rejected by server:", result.error);
             clearRefreshToken();
+            clearAccessTokenCookie();
+            api.dispatch(logout());
             return "invalid" as const;
           }
           console.warn("Refresh token request failed (transient, session kept):", result.error);
@@ -67,21 +88,28 @@ function refreshAccessToken(
           | {
               access_token?: string;
               refresh_token?: string;
-              response?: { access_token?: string; refresh_token?: string };
+              response?: string | { access_token?: string; refresh_token?: string };
             }
           | undefined;
-        const newAccessToken = data?.access_token || data?.response?.access_token;
+        const responseField = data?.response;
+        const newAccessToken =
+          data?.access_token ||
+          (typeof responseField === "string" ? responseField : responseField?.access_token);
         if (!newAccessToken) {
           console.warn("Refresh token response missing access_token:", result.data);
           clearRefreshToken();
+          clearAccessTokenCookie();
+          api.dispatch(logout());
           return "invalid" as const;
         }
 
-        lastRefreshSucceededAt = Date.now();
+        setLastRefreshAt(Date.now());
         api.dispatch(setAccessToken(newAccessToken));
         setAccessTokenCookie(newAccessToken);
 
-        const newRefreshToken = data?.refresh_token || data?.response?.refresh_token;
+        const newRefreshToken =
+          data?.refresh_token ||
+          (typeof responseField === "string" ? undefined : responseField?.refresh_token);
         if (newRefreshToken) {
           setRefreshToken(newRefreshToken);
         }
@@ -132,8 +160,6 @@ export const createBaseQuery = (
       if (outcome === "refreshed") {
         result = await rawBaseQuery(args, api, extraOptions);
       } else if (outcome === "invalid") {
-        clearAccessTokenCookie();
-        api.dispatch(logout());
         return result;
       } else {
         return {

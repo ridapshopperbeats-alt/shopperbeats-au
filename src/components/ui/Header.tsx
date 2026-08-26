@@ -152,7 +152,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
   const locationRequestedRef = useRef(false);
   const [triggerReverseGeocode] = useLazyReverseGeocodeQuery();
-console.log(megaMenuData, "megaMenuData===========");
   const requestLocation = useCallback(() => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -869,7 +868,7 @@ console.log(megaMenuData, "megaMenuData===========");
               <li>
                 <Link
                   className="link flex items-center xl:gap-2 hover:text-red-500"
-                  href="#"
+                  href="/category/health-beauty"
                 >
                   <HeartPulse size={16} className="inline-block icons-size" />
                   Health & Beauty

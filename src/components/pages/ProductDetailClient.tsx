@@ -829,7 +829,7 @@ export default function ProductDetailClient({
                   <div className="mr-2 pb-1.5">
                     <div className="flex items-center gap-2">
                       {product.promotion_name && (
-                        <div className="promotion-badge">
+                        <div>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           {/* <img
                             src="/images/sale.svg"
@@ -840,7 +840,7 @@ export default function ProductDetailClient({
 
 
                           <StatusBadge
-                            label="sALE"
+                            label="SALE"
                             color={BadgeColor.BlueDark}
                             icon={
                               <Image

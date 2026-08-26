@@ -4,6 +4,25 @@ import { Cart, PromoValidationResponse } from "@/types/cart";
 import { WishlistItem, Wishlist } from "@/types/wishlist";
 import { createBaseQuery } from "./base-query";
 
+interface RemoveCouponResponse {
+  success: boolean;
+  message: string;
+  new_total: number;
+  cart_summary: {
+    items_total: number;
+    items_discount: number;
+    subtotal: number;
+    coupon_discount: number;
+    shipping: number;
+    tax: number;
+    total_price: number;
+    list_price_savings: number;
+    item_promotion_savings: number;
+    coupon_savings: number;
+    total_saving: number;
+  };
+}
+
 const baseCartQuery = createBaseQuery(API_ENDPOINTS.CART.BASE_URL);
 const baseWishlistQuery = createBaseQuery(API_ENDPOINTS.WISHLIST.BASE_URL);
 const basePromoQuery = createBaseQuery(API_ENDPOINTS.CART.PROMO_BASE_URL);
@@ -101,6 +120,24 @@ export const cartApi = createApi({
         if (result.error) return { error: result.error };
         return { data: result.data as PromoValidationResponse };
       },
+      invalidatesTags: ["Cart"],
+    }),
+
+    removeCoupon: builder.mutation<RemoveCouponResponse, void>({
+      queryFn: async (_arg, api, extraOptions) => {
+        const result = await basePromoQuery(
+          {
+            url: API_ENDPOINTS.CART.REMOVE_COUPON,
+            method: "DELETE",
+          },
+          api,
+          extraOptions
+        );
+
+        if (result.error) return { error: result.error };
+        return { data: result.data as RemoveCouponResponse };
+      },
+      invalidatesTags: ["Cart"],
     }),
 
     // --- WISHLIST ENDPOINTS USING baseWishlistQuery ---
@@ -227,6 +264,7 @@ export const {
   useRemoveFromCartMutation,
   useCheckDeliveryMutation,
   useValidatePromoCodeMutation,
+  useRemoveCouponMutation,
   useCreateWishlistMutation,
   useGetWishlistQuery,
   useRemoveFromWishlistMutation,

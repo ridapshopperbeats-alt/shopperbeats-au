@@ -54,7 +54,8 @@ export const API_ENDPOINTS = {
     CHECK_DELIVERY: "/check-delivery",
     PROMO_BASE_URL: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/coupon`,
     CLEAR: "clear-cart",
-    VALIDATE: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/coupon-tracker/validate`,
+    VALIDATE: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/cart/apply-coupon`,
+    REMOVE_COUPON: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/cart/remove-coupon`,
   },
   WISHLIST: {
     BASE_URL: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/wishlist`,

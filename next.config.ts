@@ -126,6 +126,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.ccdemostore.com",
       },
+      {
+        protocol: "https",
+        hostname: "perfumesw.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.ccwholesaleclothing.com",
+      },
     ],
   },
 };
