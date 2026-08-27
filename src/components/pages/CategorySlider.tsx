@@ -4,6 +4,9 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
+
+const FALLBACK_IMAGE = "/images/image-coming-soon.jpg";
 
 export interface CategorySliderItem {
   id?: string;
@@ -89,7 +92,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
             >
               <div className="w-[56px] h-[56px] md:w-[129px] md:h-[129px] rounded-full border-2 lg:border bg-white overflow-hidden flex items-center justify-center transition-all duration-300 border-[#D8D8D8]">
                 <Image
-                  src={item.image}
+                  src={item.image ? applyImageVariant(item.image, "public") : FALLBACK_IMAGE}
                   alt={item.title}
                   width={98}
                   height={98}

@@ -74,7 +74,6 @@ export default async function BrandsSection() {
     fetchBrands(),
     fetchFeaturedBrands(),
   ]);
-  console.log(allBrands, "allBrands=====");
   return (
     <div>
       <div className="flex w-full flex-col items-start gap-3 self-stretch border-b border-[#E5E7EB] bg-gradient-to-b from-[#FFF7F3] to-[#FFFDFC] px-5 py-9 lg:hidden">

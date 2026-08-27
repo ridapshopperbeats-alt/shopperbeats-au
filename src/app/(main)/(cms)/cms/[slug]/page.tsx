@@ -16,7 +16,6 @@ async function getCmsPage(slug: string): Promise<CmsPage | null> {
 }
 
 const getPageSubtitle = (slug: string) => {
-  console.log("CMS PAGE SLUG:", slug);
   switch (slug) {
     case "faq":
       return "Find answers to the most commonly asked questions.";

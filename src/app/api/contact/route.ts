@@ -67,7 +67,6 @@ export async function POST(req: Request) {
     };
 
     const data = await sgMail.send(msg);
-    console.log(data,"dat===========");
 
     return NextResponse.json({ success: true });
   } catch (error) {
