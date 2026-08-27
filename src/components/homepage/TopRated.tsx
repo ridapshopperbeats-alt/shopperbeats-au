@@ -27,83 +27,83 @@ interface BrandCard {
 
 const FALLBACK_IMAGE = "/images/home/brand-card.svg";
 
-const FALLBACK_BRANDS: BrandCard[] = [
-  {
-    id: 1,
-    title: "Allen Solly",
-    subtitle: "Under $100",
-    image: "/images/home/brand-card.svg",
-    href: "/brand",
-  },
-  {
-    id: 2,
-    title: "Hivvago",
-    subtitle: "Under $80",
-    image: "/images/home/brand-card2.svg",
-    href: "/brand",
-  },
-  {
-    id: 3,
-    title: "FASHNZFAB",
-    subtitle: "Under $60",
-    image: "/images/home/brand-card3.svg",
-    href: "/brand",
-  },
-  {
-    id: 4,
-    title: "TRUEDAMES",
-    subtitle: "Under $90",
-    image: "/images/home/brand-card4.svg",
-    href: "/brand",
-  },
-  {
-    id: 5,
-    title: "BreeBe",
-    subtitle: "Under $50",
-    image: "/images/home/brand-card5.svg",
-    href: "/brand",
-  },
-  {
-    id: 6,
-    title: "Zara",
-    subtitle: "Under $150",
-    image: "/images/home/brand-card6.svg",
-    href: "/brand",
-  },
-  {
-    id: 7,
-    title: "Levis",
-    subtitle: "Under $120",
-    image: "/images/home/brand-card.svg",
-    href: "/brand",
-  },
-  {
-    id: 8,
-    title: "Nike",
-    subtitle: "Under $180",
-    image: "/images/home/brand-card2.svg",
-    href: "/brand",
-  },
-  {
-    id: 9,
-    title: "Puma",
-    subtitle: "Under $140",
-    image: "/images/home/brand-card3.svg",
-    href: "/brand",
-  },
-  {
-    id: 10,
-    title: "Adidas",
-    subtitle: "Under $170",
-    image: "/images/home/brand-card4.svg",
-    href: "/brand",
-  },
-];
+// const FALLBACK_BRANDS: BrandCard[] = [
+//   {
+//     id: 1,
+//     title: "Allen Solly",
+//     subtitle: "Under $100",
+//     image: "/images/home/brand-card.svg",
+//     href: "/brand",
+//   },
+//   {
+//     id: 2,
+//     title: "Hivvago",
+//     subtitle: "Under $80",
+//     image: "/images/home/brand-card2.svg",
+//     href: "/brand",
+//   },
+//   {
+//     id: 3,
+//     title: "FASHNZFAB",
+//     subtitle: "Under $60",
+//     image: "/images/home/brand-card3.svg",
+//     href: "/brand",
+//   },
+//   {
+//     id: 4,
+//     title: "TRUEDAMES",
+//     subtitle: "Under $90",
+//     image: "/images/home/brand-card4.svg",
+//     href: "/brand",
+//   },
+//   {
+//     id: 5,
+//     title: "BreeBe",
+//     subtitle: "Under $50",
+//     image: "/images/home/brand-card5.svg",
+//     href: "/brand",
+//   },
+//   {
+//     id: 6,
+//     title: "Zara",
+//     subtitle: "Under $150",
+//     image: "/images/home/brand-card6.svg",
+//     href: "/brand",
+//   },
+//   {
+//     id: 7,
+//     title: "Levis",
+//     subtitle: "Under $120",
+//     image: "/images/home/brand-card.svg",
+//     href: "/brand",
+//   },
+//   {
+//     id: 8,
+//     title: "Nike",
+//     subtitle: "Under $180",
+//     image: "/images/home/brand-card2.svg",
+//     href: "/brand",
+//   },
+//   {
+//     id: 9,
+//     title: "Puma",
+//     subtitle: "Under $140",
+//     image: "/images/home/brand-card3.svg",
+//     href: "/brand",
+//   },
+//   {
+//     id: 10,
+//     title: "Adidas",
+//     subtitle: "Under $170",
+//     image: "/images/home/brand-card4.svg",
+//     href: "/brand",
+//   },
+// ];
 
 export default function TopBrands() {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [showAll, setShowAll] = useState(false);
-  const [brands, setBrands] = useState<BrandCard[]>(FALLBACK_BRANDS);
+  const [brands, setBrands] = useState<BrandCard[]>([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -162,9 +162,9 @@ export default function TopBrands() {
   };
 
   return (
-    <section className="container pt-3 md:py-0">
+    <section className="container flex flex-col lg:gap-4.5">
       {/* Heading */}
-      <div className="flex items-center justify-between lg:mb-3">
+      <div className="flex items-center justify-between md:pt-2">
         <h2 className="font-montserrat fluid-text-18-32 font-bold leading-[normal] capitalize text-black self-center">
           Top Brands
         </h2>
@@ -243,7 +243,7 @@ export default function TopBrands() {
                 className="object-cover group-hover:scale-[1.5] transition-transform duration-600 ease-in-out"
               />
 
-              <div className="banner-gradient-overlay" />
+              <div className="banner-gradient-overlay" />   
 
               <div className="absolute p-6 w-[226px] flex flex-col ">
                 <h3 className="text-white fluid-text-13-18 font-bold">

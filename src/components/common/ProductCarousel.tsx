@@ -33,7 +33,7 @@ export default function ProductCarousel({
 
     <div className={from == "details" ? "products" : "w-full"}>
         <div className="flex justify-between gap-4">
-          <div className="w-full px-[10px] lg:px-0">
+          <div className="w-full ">
             <div className="flex flex-col gap-1 w-full my-1">
               
               <h3 className="font-bold text-[18px] md:text-[32px] leading-4.5 tracking-[0.78px] text-black">

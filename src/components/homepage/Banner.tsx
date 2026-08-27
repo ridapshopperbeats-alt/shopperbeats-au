@@ -22,14 +22,14 @@ interface BannerSlide {
   image: string;
 }
 
-const FALLBACK_BANNERS: BannerSlide[] = [
-  { id: 1, image: "/images/HomeBanner0.svg" },
-  { id: 2, image: "/images/HomeBanner1.svg" },
-  { id: 3, image: "/images/HomeBanner2.svg" },
-  { id: 4, image: "/images/HomeBanner3.svg" },
-  { id: 5, image: "/images/HomeBanner4.svg" },
-  { id: 6, image: "/images/HomeBanner5.svg" },
-];
+// const FALLBACK_BANNERS: BannerSlide[] = [
+//   { id: 1, image: "/images/HomeBanner0.svg" },
+//   { id: 2, image: "/images/HomeBanner1.svg" },
+//   { id: 3, image: "/images/HomeBanner2.svg" },
+//   { id: 4, image: "/images/HomeBanner3.svg" },
+//   { id: 5, image: "/images/HomeBanner4.svg" },
+//   { id: 6, image: "/images/HomeBanner5.svg" },
+// ];
 
 function getSlideOffset(index: number, currentBanner: number, total: number) {
   let diff = index - currentBanner;
@@ -43,7 +43,7 @@ function getSlideOffset(index: number, currentBanner: number, total: number) {
 
 export default function SingleBanner() {
   const [currentBanner, setCurrentBanner] = useState(0);
-  const [banners, setBanners] = useState<BannerSlide[]>(FALLBACK_BANNERS);
+  const [banners, setBanners] = useState<BannerSlide[]>([]);
 
   const prevBannerRef = useRef(0);
 
@@ -120,10 +120,10 @@ export default function SingleBanner() {
               src={banner.image}
               alt={`Banner ${index + 1}`}
               fill
-              priority={index === 0}
+              // priority={index === 0}
               loading={index === 0 ? undefined : "eager"}
               quality={100}
-              sizes="100vw"
+              // sizes="100vw"
               className={`absolute inset-0 object-cover ease-in-out ${
                 isTransitioning ? "transition-transform duration-1500" : ""
               } ${index === currentBanner ? "" : "pointer-events-none"}`}

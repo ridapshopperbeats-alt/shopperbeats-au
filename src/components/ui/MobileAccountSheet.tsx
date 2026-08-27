@@ -73,7 +73,7 @@ export default function MobileAccountSheet({
       />
 
       <div
-        className={`fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-[24px] bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-in-out lg:hidden ${
+        className={`fixed inset-x-0 bottom-0 z-[1000] max-h-[85vh] overflow-y-auto rounded-t-[24px] bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-in-out lg:hidden ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
       >

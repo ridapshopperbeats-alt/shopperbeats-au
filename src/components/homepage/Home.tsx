@@ -38,7 +38,7 @@ const Home = async () => {
 
         <PopularCategories />
 
-        <div className="container pt-4 md:py-3 lg:py-2">
+        <div className="container  md:py-3 lg:py-3">
           {popularProducts.length > 0 && (
             <ProductCarousel
               title="Popular Products"
@@ -50,7 +50,7 @@ const Home = async () => {
 
         <TopBrands />
 
-        <div className="container py-4 md:py-3 lg:py-0">
+        <div className="container pt-4 md:pt-5 lg:pt-3">
           {newArrivals.length > 0 && (
             <ProductCarousel
               title="New Arrivals"
