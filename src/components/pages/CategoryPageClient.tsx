@@ -250,6 +250,9 @@ const CategoryClient = ({
     [category?.subcategories],
   );
 
+  console.log("category.subcategories (raw):", category?.subcategories);
+  console.log("sliderCategories (mapped for CategorySlider):", sliderCategories);
+
   return (
     <>
       <script

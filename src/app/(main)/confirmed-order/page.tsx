@@ -26,7 +26,6 @@ export default function ConfirmedOrderPage() {
     try {
       setOrderDetails(JSON.parse(stored) as OrderDetailsType);
     } catch {
-      console.log("Failed to parse order confirmation data from sessionStorage.");
       router.replace("/user/orders");
     }
 

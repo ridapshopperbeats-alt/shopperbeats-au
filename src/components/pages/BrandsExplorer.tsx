@@ -89,13 +89,12 @@ export default function BrandsExplorer({
     () =>
       trimmedQuery
         ? brands.filter((brand) =>
-            brand.name.toLowerCase().includes(trimmedQuery),
-          )
+          brand.name.toLowerCase().includes(trimmedQuery),
+        )
         : [],
     [brands, trimmedQuery],
   );
 
-  console.log(filteredBrands, "filteredBrands=======");
   return (
     <Card
       width="100%"

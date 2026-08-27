@@ -81,7 +81,6 @@ export default function ContactPage() {
         
         body: JSON.stringify(data),
       });
-        console.log(resetForm,"res======");
 
       const result = await res.json();
 
