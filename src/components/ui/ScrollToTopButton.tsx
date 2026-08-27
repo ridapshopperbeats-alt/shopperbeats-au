@@ -12,8 +12,6 @@ export default function ScrollToTopButton() {
         return;
       }
 
-      // Hide once the footer scrolls into view so the fixed button never
-      // overlaps/covers footer content.
       const footer = document.querySelector(".page-footer");
       const footerVisible = footer
         ? footer.getBoundingClientRect().top < window.innerHeight

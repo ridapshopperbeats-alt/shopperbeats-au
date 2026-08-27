@@ -18,6 +18,8 @@ services:
       - "traefik.http.routers.frontend.entrypoints=web"
       - "traefik.http.services.frontend.loadbalancer.server.port=3001"
       - "traefik.docker.network=gateway-network"
+    ports:
+      - "3001:3001"
     env_file:
       - .env.production
     environment:
