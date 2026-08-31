@@ -817,7 +817,7 @@ export default function SecureCheckout() {
               <>
                 {/* Desktop (lg and up) — mirrors the mobile/md layout's spacing & structure */}
                 <div className="hidden lg:flex lg:flex-col lg:h-full">
-                  {!isAuthenticated && (
+                  {/* {!isAuthenticated && (
                     <p className="text-center py-4 px-4 fluid-text-sm font-semibold text-black leading-[normal]">
                       Already have an account?{" "}
                       <Link
@@ -827,7 +827,7 @@ export default function SecureCheckout() {
                         Sign in
                       </Link>
                     </p>
-                  )}
+                  )} */}
 
                   <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#E5E5E5]">
                     <h6 className="checkout-total-label">
@@ -1068,7 +1068,7 @@ export default function SecureCheckout() {
 
                 {/* Mobile/md (below lg, <1024px) — compact Figma layout */}
                 <div className="lg:hidden flex flex-col h-full">
-                  {!isAuthenticated && (
+                  {/* {!isAuthenticated && (
                     <p className="text-center py-4 px-4 fluid-text-13-16 font-semibold text-black">
                       Already have an account?{" "}
                       <Link
@@ -1078,7 +1078,7 @@ export default function SecureCheckout() {
                         Sign in
                       </Link>
                     </p>
-                  )}
+                  )} */}
 
                   <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#E5E5E5]">
                     <h6 className="checkout-total-label">
