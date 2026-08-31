@@ -44,6 +44,7 @@ enum OrderStatusCode {
   Pending = "pending",
   InProgress = "in progress",
   ReturnRequested = "return requested",
+  Refunded = "refunded",
 }
 
 const ORDER_STATUS_LABELS: Record<OrderStatusCode, string> = {
@@ -54,6 +55,7 @@ const ORDER_STATUS_LABELS: Record<OrderStatusCode, string> = {
   [OrderStatusCode.Pending]: "Pending",
   [OrderStatusCode.InProgress]: "In Progress",
   [OrderStatusCode.ReturnRequested]: "Return Requested",
+  [OrderStatusCode.Refunded]: "Refunded",
 };
 
 const IN_TRANSIT_CODES = [
@@ -71,6 +73,7 @@ const ORDER_STATUS_COLORS: Record<OrderStatusCode, BadgeColor> = {
   [OrderStatusCode.Delivered]: BadgeColor.Green,
   [OrderStatusCode.Cancelled]: BadgeColor.Red,
   [OrderStatusCode.ReturnRequested]: BadgeColor.Orange,
+  [OrderStatusCode.Refunded]: BadgeColor.Orange,
 };
 
 const getOrderStatusCode = (order: OrderItem): OrderStatusCode => {
@@ -128,6 +131,11 @@ export default function MyOrdersPage() {
       return next;
     });
   };
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [uiLimit, setUiLimit] = useState(10);
@@ -315,7 +323,7 @@ export default function MyOrdersPage() {
     rootMargin: "100px",
   });
 
-  if (isLoading && allOrders.length === 0)
+  if (!mounted || (isLoading && allOrders.length === 0))
     return (
       <div>
         Loading.....

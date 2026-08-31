@@ -543,7 +543,7 @@ const Cart = () => {
                       type="number"
                       onWheel={(e) => e.currentTarget.blur()}
                       min="1"
-                      value={localQtyMap[item.id] ?? item.quantity}
+                      value={localQtyMap[item.id] ?? item.quantity ?? ""}
                       onChange={(e) => {
                         const raw = e.target.value;
                         setLocalQtyMap((prev) => ({
