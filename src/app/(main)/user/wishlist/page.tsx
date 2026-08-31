@@ -54,7 +54,7 @@ export default function WishlistPage() {
       const movedCount = result?.moved_items?.length ?? inStockItems.length - failedCount;
 
       if (movedCount > 0) {
-        toast.success(`Added ${movedCount} item(s) to cart`);
+        toast.success(`Added ${movedCount} items to cart`);
       }
       if (failedCount > 0) {
         toast.error(`Failed to add ${failedCount} item(s) to cart.`);

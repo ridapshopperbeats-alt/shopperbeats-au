@@ -98,12 +98,12 @@ export default function BrandsExplorer({
   return (
     <Card
       width="100%"
-      className="mx-auto h-[655px] max-w-[1129px] shrink-0 overflow-y-auto rounded-none p-5 shadow-[0_2px_16px_0_rgba(0,0,0,0.05)] lg:h-auto lg:overflow-visible lg:rounded-2xl"
+      className="mx-auto flex h-[655px] max-w-[1129px] shrink-0 flex-col overflow-hidden rounded-none p-5 shadow-[0_2px_16px_0_rgba(0,0,0,0.05)] lg:rounded-2xl"
     >
-      <span className="mb-2 block w-full text-left !text-[14px] !font-semibold !text-[#211E22] !leading-[normal] lg:hidden">
+      <span className="mb-2 block w-full shrink-0 text-left !text-[14px] !font-semibold !text-[#211E22] !leading-[normal] lg:hidden">
         Search directory
       </span>
-      <div className="relative mx-auto mb-4 w-full max-w-[1068px]">
+      <div className="relative mx-auto mb-4 w-full max-w-[1068px] shrink-0">
         {/* <Search
           size={16}
           className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#9CA3AF]"
@@ -118,29 +118,31 @@ export default function BrandsExplorer({
         />
       </div>
 
-      {trimmedQuery ? (
-        filteredBrands.length > 0 ? (
+      <div className="min-h-0 w-full flex-1 overflow-y-auto">
+        {trimmedQuery ? (
+          filteredBrands.length > 0 ? (
+            <ul className="grid w-full grid-cols-2 justify-center gap-3 lg:grid-cols-[repeat(auto-fill,258px)]">
+              {filteredBrands.map((brand) => (
+                <li key={brand.id}>
+                  <BrandCard brand={brand} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="w-full py-10 text-center text-[14px] text-[#6B7280]">
+              No brands found for &ldquo;{query}&rdquo;.
+            </p>
+          )
+        ) : (
           <ul className="grid w-full grid-cols-2 justify-center gap-3 lg:grid-cols-[repeat(auto-fill,258px)]">
-            {filteredBrands.map((brand) => (
+            {brands.map((brand) => (
               <li key={brand.id}>
                 <BrandCard brand={brand} />
               </li>
             ))}
           </ul>
-        ) : (
-          <p className="w-full py-10 text-center text-[14px] text-[#6B7280]">
-            No brands found for &ldquo;{query}&rdquo;.
-          </p>
-        )
-      ) : (
-        <ul className="grid w-full grid-cols-2 justify-center gap-3 lg:grid-cols-[repeat(auto-fill,258px)]">
-          {brands.map((brand) => (
-            <li key={brand.id}>
-              <BrandCard brand={brand} />
-            </li>
-          ))}
-        </ul>
-      )}
+        )}
+      </div>
     </Card>
   );
 }

@@ -231,7 +231,7 @@ const CategoryClient = ({
     [pathname, router, searchParams, currentPage, uiLimit, startTransition],
   );
 
-  const handleLoadMore = useCallback(() => {}, []);
+  const handleLoadMore = useCallback(() => { }, []);
 
   // -----------------------------
   // SLIDER
@@ -253,6 +253,8 @@ const CategoryClient = ({
     [category?.subcategories],
   );
 
+  // console.log("category.subcategories (raw):", category?.subcategories);
+  // console.log("sliderCategories (mapped for CategorySlider):", sliderCategories);
 
   return (
     <>
