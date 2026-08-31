@@ -28,7 +28,7 @@ import {
   ShoppingBag,
   Heart
 } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
@@ -142,7 +142,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const dispatch = useDispatch();
-  const router = useRouter();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { postcode, suburb, updatePostcode } = useGlobalPostcode();
   useGetAddressesQuery(undefined, {
@@ -428,8 +427,10 @@ export default function Header({ megaMenuData }: HeaderProps) {
     skip: !isAuthenticated,
   });
 
-  const profileImage = personalData?.response?.profile_image?.trim()
-    ? applyImageVariant(personalData.response.profile_image, "public")
+  const hasCustomAvatar = !!personalData?.response?.profile_image?.trim();
+
+  const profileImage = hasCustomAvatar
+    ? applyImageVariant(personalData!.response!.profile_image!, "public")
     : "/images/user.svg";
 
   const hideSearch =
@@ -498,11 +499,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   }
                 }}
                 onClick={() => {
-                  if (!isAuthenticated) {
-                    setShowPincodeInput(!showPincodeInput);
-                  } else {
-                    router.push("/user/addresses");
-                  }
+                  setShowPincodeInput(!showPincodeInput);
                 }}
                 style={{
                   cursor: "pointer",
@@ -575,18 +572,24 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   <Link
                     href="/user/personal-information"
                     className="relative group items-center justify-center"
+                    style={hasCustomAvatar ? { padding: 0 } : undefined}
                   >
-                    <Image
-                      src={
-                        profileImage?.trim()
-                          ? profileImage
-                          : "/images/user.svg"
-                      }
-                      alt="account"
-                      className="rounded-full object-cover"
-                      width={20}
-                      height={20}
-                    />
+                    {hasCustomAvatar ? (
+                      <Image
+                        src={profileImage}
+                        alt="account"
+                        className="rounded-full object-cover"
+                        fill
+                      />
+                    ) : (
+                      <Image
+                        src={profileImage}
+                        alt="account"
+                        className="rounded-full object-cover"
+                        width={20}
+                        height={20}
+                      />
+                    )}
 
                     <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
                   </Link>
