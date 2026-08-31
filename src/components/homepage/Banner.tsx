@@ -44,6 +44,7 @@ function getSlideOffset(index: number, currentBanner: number, total: number) {
 export default function SingleBanner() {
   const [currentBanner, setCurrentBanner] = useState(0);
   const [banners, setBanners] = useState<BannerSlide[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const prevBannerRef = useRef(0);
 
@@ -77,6 +78,8 @@ export default function SingleBanner() {
         setCurrentBanner(0);
       } catch (error) {
         console.error("Error fetching hero banner:", error);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     }
 
@@ -110,7 +113,10 @@ export default function SingleBanner() {
     <div className="container lg:pt-3">
       {/* Banner */}
       <div className="relative hidden lg:flex w-full aspect-1694/540 overflow-hidden rounded-lg">
-        {banners.map((banner, index) => {
+        {isLoading && (
+          <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+        )}
+        {!isLoading && banners.map((banner, index) => {
           const isTransitioning =
             index === currentBanner || index === prevBannerRef.current;
 
