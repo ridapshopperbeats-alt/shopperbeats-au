@@ -886,7 +886,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className="link flex items-center xl:gap-2 hover:text-red-500"
-                  href="#"
+                  href="/category/outdoor-patio"
                 >
                   <Armchair size={16} className="inline-block icons-size" />
                   Outdoor & Patio
