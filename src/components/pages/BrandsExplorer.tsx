@@ -5,12 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { Card } from "@/components/common/Card";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 
 interface Brand {
   id: string;
   name: string;
   logo_url: string | null;
   image_url: string | null;
+  image: string | null;
   slug: string;
 }
 
@@ -42,9 +44,13 @@ const limitWords = (text: string, maxWords = 2) => {
 };
 
 function BrandCard({ brand }: { brand: Brand }) {
+  const [imageFailed, setImageFailed] = useState(false);
+
   const formattedName =
     brand.name.charAt(0).toUpperCase() + brand.name.slice(1).toLowerCase();
-  const logoSrc = brand.logo_url || brand.image_url;
+  const rawLogoSrc = brand.image || brand.logo_url || brand.image_url;
+  const logoSrc = rawLogoSrc ? applyImageVariant(rawLogoSrc, "public") : null;
+  const showLogo = logoSrc && !imageFailed;
 
   return (
     <Link
@@ -52,17 +58,18 @@ function BrandCard({ brand }: { brand: Brand }) {
       className="group flex h-auto w-full flex-col items-center gap-2 rounded-[12px] border border-[#E5E7EB] bg-[#FFFFFF] p-3 text-center shadow-[0_1px_4px_0_rgba(0,0,0,0.02)] transition-colors hover:border-[#012961] hover:shadow-[0_4px_16px_rgba(1,41,97,0.08)] lg:h-[131px] lg:w-[258px] lg:self-start lg:justify-self-start lg:gap-3 lg:rounded-[14px] lg:border-[#F3F4F6] lg:p-4 lg:shadow-none"
     >
       <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full lg:h-12 lg:w-12"
-        style={!logoSrc ? { backgroundColor: getAvatarColor(brand.name) } : undefined}
+        className="flex h-[50px] w-[50px] shrink-0 items-center justify-center overflow-hidden rounded-full lg:h-12 lg:w-12"
+        style={!showLogo ? { backgroundColor: getAvatarColor(brand.name) } : undefined}
       >
-        {logoSrc ? (
+        {showLogo ? (
           <Image
             src={logoSrc}
             alt={brand.name}
-            width={48}
-            height={48}
+            width={50}
+            height={50}
             loading="lazy"
-            className="h-full w-full object-contain"
+            className="h-full w-full object-cover"
+            onError={() => setImageFailed(true)}
           />
         ) : (
           <span className="text-[14px] font-bold text-white lg:text-[16px]">

@@ -3,6 +3,7 @@ import Link from "next/link";
 import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
 import BrandsExplorer from "@/components/pages/BrandsExplorer";
 import Banner from "@/components/common/Banner";
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 
 // Types
 interface Brand {
@@ -10,6 +11,7 @@ interface Brand {
   name: string;
   logo_url: string | null;
   image_url: string | null;
+  image: string | null;
   is_active: boolean;
   total_products: number;
   active_products: number;
@@ -114,7 +116,11 @@ export default async function BrandsSection() {
           })
           .filter((brand: Brand | undefined): brand is Brand => !!brand)
           .map((brand: Brand) => {
-            const logoSrc = brand.logo_url || brand.image_url || "/no-product-bg.svg";
+            const rawLogoSrc =
+              brand.image || brand.logo_url || brand.image_url;
+            const logoSrc = rawLogoSrc
+              ? applyImageVariant(rawLogoSrc, "public")
+              : "/no-product-bg.svg";
             return (
               <Link
                 key={brand.id}
