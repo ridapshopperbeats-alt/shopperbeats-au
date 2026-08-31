@@ -153,6 +153,22 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.ccdemostore.com",
       },
+      {
+        protocol: "https",
+        hostname: "static.songmics.com",
+      },
+      {
+        protocol: "http",
+        hostname: "www.fastfurnishings.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.homeroots.co",
+      },
+      {
+        protocol: "https",
+        hostname: "img-us.aosomcdn.com",
+      },
     ],
   },
 };
