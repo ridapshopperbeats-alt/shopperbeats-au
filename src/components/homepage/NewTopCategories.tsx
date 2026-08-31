@@ -170,7 +170,7 @@ const DUMMY_TOP_CATEGORIES: NewTopCategoryItem[] = [
   },
   {
     title: "Earrings",
-    image: "/images/home/Earrings.png",
+    image: "/images/home/Earrings1.png",
     href: "/category/earrings",
   },
   {
