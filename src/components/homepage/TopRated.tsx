@@ -104,6 +104,7 @@ export default function TopBrands() {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [showAll, setShowAll] = useState(false);
   const [brands, setBrands] = useState<BrandCard[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -135,6 +136,8 @@ export default function TopBrands() {
         setBrands(mappedBrands);
       } catch (error) {
         console.error("Error fetching brands:", error);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     }
 
@@ -182,7 +185,15 @@ export default function TopBrands() {
 
       {/* Mobile */}
       <div className="grid grid-cols-2 gap-3 lg:gap-4 lg:hidden pt-3 lg:pt-2">
-        {mobileBrands.map((brand) => (
+        {isLoading &&
+          Array.from({ length: 2 }).map((_, index) => (
+            <div
+              key={`mobile-brand-skeleton-${index}`}
+              className="relative h-[120px] w-full rounded-[8px] bg-gray-200 animate-pulse"
+            />
+          ))}
+
+        {!isLoading && mobileBrands.map((brand) => (
           <Link
             key={brand.id}
             href={brand.href}
@@ -230,7 +241,15 @@ export default function TopBrands() {
           ref={sliderRef}
           className="flex gap-5 overflow-x-auto scroll-smooth no-scrollbar"
         >
-          {brands.map((brand) => (
+          {isLoading &&
+            Array.from({ length: 5 }).map((_, index) => (
+              <div
+                key={`desktop-brand-skeleton-${index}`}
+                className="relative shrink-0 w-[275px] h-[360px] rounded-[12px] bg-gray-200 animate-pulse"
+              />
+            ))}
+
+          {!isLoading && brands.map((brand) => (
             <Link
               key={brand.id}
               href={brand.href}

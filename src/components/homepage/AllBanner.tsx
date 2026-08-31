@@ -225,6 +225,7 @@ export default function PopularCategories() {
   const [showAll, setShowAll] = useState(false);
   const [topCategories, setTopCategories] = useState<CategoryGridItem[]>([]);
   const [bottomCategories, setBottomCategories] = useState<CategoryGridItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -255,6 +256,8 @@ export default function PopularCategories() {
         setBottomCategories(bottomRowItems);
       } catch (error) {
         console.error("Error fetching category grid:", error);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     }
 
@@ -286,7 +289,15 @@ export default function PopularCategories() {
 
       {/* TOP */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-3 md:pt-3">
-        {topCategories.map((item, index) => (
+        {isLoading &&
+          Array.from({ length: 4 }).map((_, index) => (
+            <div
+              key={`top-skeleton-${index}`}
+              className="banner-card banner-card-top bg-gray-200 animate-pulse rounded-lg"
+            />
+          ))}
+
+        {!isLoading && topCategories.map((item, index) => (
           <Link
             key={`${item.id}-${index}`}
             href={item.href}
@@ -337,7 +348,15 @@ export default function PopularCategories() {
           showAll ? "grid" : "hidden lg:grid"
         }`}
       >
-        {bottomCategories.map((item, index) => (
+        {isLoading &&
+          Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={`bottom-skeleton-${index}`}
+              className="banner-card banner-card-bottom bg-gray-200 animate-pulse rounded-lg"
+            />
+          ))}
+
+        {!isLoading && bottomCategories.map((item, index) => (
           <Link
             key={`${item.id}-${index}`}
             href={item.href}

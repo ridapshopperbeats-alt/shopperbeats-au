@@ -986,7 +986,14 @@ const Cart = () => {
               )}
             </div>
 
-            <Link href="/check-out" className="mt-auto order-1 xl:order-2">
+            <Link
+              href={
+                isAuthenticated
+                  ? "/check-out"
+                  : `/login?redirect=${encodeURIComponent("/check-out")}`
+              }
+              className="mt-auto order-1 xl:order-2"
+            >
               <Button
                 className="bg-linear-to-r from-[#FF676B] to-[#FD151B] h-[46px] rounded-[74px] text-[#F6F6F6] fluid-text-base font-semibold leadiing-5 w-full shadow-md shadow-[#0E35BF]/25 cursor-pointer"
                 debounceDelay={500}
