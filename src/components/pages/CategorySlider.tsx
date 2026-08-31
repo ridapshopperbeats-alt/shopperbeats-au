@@ -97,7 +97,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
                   width={98}
                   height={98}
                   loading="lazy"
-                  className="object-contain w-[50px] h-[50px] md:h-[98px] md:w-[98px]"
+                  className="object-contain w-[64px] h-[64px] md:h-[138px] md:w-[138px]"
                 />
               </div>
 

@@ -239,19 +239,20 @@ const CategoryClient = ({
 
   const sliderCategories = useMemo(
     () =>
-      category?.subcategories?.map((sub: Category) => ({
-        title: sub.name,
-        image: sub.icon_url
-          ? applyImageVariant(sub.icon_url, "public")
-          : "/images/image-coming-soon.jpg",
-        slug: sub.slug ?? sub.id,
-        product_count: sub.product_count,
-      })) || [],
+      category?.subcategories?.map((sub: Category) => {
+        const rawImage = sub.image_url || sub.icon_url;
+        return {
+          title: sub.name,
+          image: rawImage
+            ? applyImageVariant(rawImage, "public")
+            : "/images/image-coming-soon.jpg",
+          slug: sub.slug ?? sub.id,
+          product_count: sub.product_count,
+        };
+      }) || [],
     [category?.subcategories],
   );
 
-  console.log("category.subcategories (raw):", category?.subcategories);
-  console.log("sliderCategories (mapped for CategorySlider):", sliderCategories);
 
   return (
     <>
