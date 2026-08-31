@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback, useMemo, useTransition } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
-import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
-import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 import { Filter, Product } from "@/types/product";
 import Sidebar from "../product-listing/Sidebar";
 import MobileFilterSheet from "../product-listing/MobileFilterSheet";
@@ -131,173 +129,42 @@ const BrandPageClient = ({
     }
   }, [brand, brandId, dispatch]);
 
-  const CHUNK_SIZE = 20;
-
   const currentPage = Number(searchParams.get("page")) || 1;
+  const uiLimit = Number(searchParams.get("limit")) || 20;
 
-  const uiLimit = Number(searchParams.get("limit") || 100);
+  const handlePageChange = useCallback(
+    (page: number) => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
 
-  const calculateStartFetchingPage = (uiPage: number, limit: number) => {
-    const offset = (uiPage - 1) * limit;
-    return Math.floor(offset / CHUNK_SIZE) + 1;
-  };
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", page.toString());
 
-  const [fetchingPage, setFetchingPage] = useState(
-    calculateStartFetchingPage(
-      Number(searchParams.get("page")) || 1,
-      Number(searchParams.get("limit") || 100),
-    ),
+      startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      });
+    },
+    [pathname, router, searchParams, startTransition],
   );
 
-  const [prevPage, setPrevPage] = useState(currentPage);
-  const [prevUiLimitTracked, setPrevUiLimitTracked] = useState(uiLimit);
+  const handleItemsPerPageChange = useCallback(
+    (newUiLimit: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("limit", newUiLimit.toString());
 
-  const filterParamsKey = useMemo(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("page");
-    params.delete("limit");
-    return params.toString();
-  }, [searchParams]);
-  const [prevFilterParamsKey, setPrevFilterParamsKey] =
-    useState(filterParamsKey);
+      const newPage = Math.max(
+        1,
+        Math.ceil(((currentPage - 1) * uiLimit + 1) / newUiLimit),
+      );
+      params.set("page", newPage.toString());
 
-  if (
-    currentPage !== prevPage ||
-    uiLimit !== prevUiLimitTracked ||
-    filterParamsKey !== prevFilterParamsKey
-  ) {
-    const isOnlyLimitIncrease =
-      currentPage === prevPage &&
-      uiLimit > prevUiLimitTracked &&
-      filterParamsKey === prevFilterParamsKey;
-
-    if (!isOnlyLimitIncrease) {
-      setFetchingPage(calculateStartFetchingPage(currentPage, uiLimit));
-    }
-
-    setPrevPage(currentPage);
-    setPrevUiLimitTracked(uiLimit);
-    setPrevFilterParamsKey(filterParamsKey);
-  }
-
-  const [allProducts, setAllProducts] = useState<Product[]>(products);
-  const initialParams = useRef(searchParams.toString());
-  const initialFetchingPage = useRef(fetchingPage);
-  const [hasChanged, setHasChanged] = useState(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("page");
-    params.delete("limit");
-    return params.toString().length > 0;
-  });
-  const [hasMoreFromApi, setHasMoreFromApi] = useState(true);
-
-  useEffect(() => {
-    if (
-      searchParams.toString() !== initialParams.current ||
-      fetchingPage !== initialFetchingPage.current
-    ) {
-      setHasChanged(true);
-    }
-  }, [searchParams, fetchingPage]);
-
-  const { data, isLoading, isFetching } = useGetProductsQuery(
-    {
-      ...Object.fromEntries(searchParams.entries()),
-      brand_slug: brandId,
-      page: fetchingPage,
-      limit: CHUNK_SIZE,
+      startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      });
     },
-    {
-      skip: !brandId || !hasChanged,
-      refetchOnMountOrArgChange: true,
-    },
+    [pathname, router, searchParams, currentPage, uiLimit, startTransition],
   );
 
-  const effectiveTotal = data?.total ?? totalItems;
-
-  const isFilterFetching = isPending || (isFetching && allProducts.length === 0);
-  const wasFilterFetchingRef = useRef(false);
-
-  useEffect(() => {
-    if (isFilterFetching && !wasFilterFetchingRef.current) {
-      wasFilterFetchingRef.current = true;
-      dispatch(pushLoader());
-    } else if (!isFilterFetching && wasFilterFetchingRef.current) {
-      wasFilterFetchingRef.current = false;
-      dispatch(popLoader());
-    }
-  }, [isFilterFetching, dispatch]);
-
-  useEffect(() => {
-    return () => {
-      if (wasFilterFetchingRef.current) {
-        wasFilterFetchingRef.current = false;
-        dispatch(popLoader());
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const [prevProductSyncDeps, setPrevProductSyncDeps] = useState({
-    data,
-    fetchingPage,
-    currentPage,
-    uiLimit,
-  });
-  const productSyncDepsChanged =
-    data !== prevProductSyncDeps.data ||
-    fetchingPage !== prevProductSyncDeps.fetchingPage ||
-    currentPage !== prevProductSyncDeps.currentPage ||
-    uiLimit !== prevProductSyncDeps.uiLimit;
-
-  if (productSyncDepsChanged) {
-    setPrevProductSyncDeps({ data, fetchingPage, currentPage, uiLimit });
-
-    if (data) {
-      const currentProducts = data.data || [];
-      const startFetching = calculateStartFetchingPage(currentPage, uiLimit);
-
-      setHasMoreFromApi(currentProducts.length >= CHUNK_SIZE);
-
-      if (fetchingPage === startFetching) {
-        setAllProducts(currentProducts);
-      } else if (fetchingPage > startFetching) {
-        setAllProducts((prev) => {
-          const newProducts = currentProducts.filter(
-            (p) => !prev.some((existing) => existing.id === p.id),
-          );
-          return [...prev, ...newProducts];
-        });
-      }
-    }
-  }
-
-  const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", page.toString());
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  };
-
-  const handleItemsPerPageChange = (newUiLimit: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("limit", newUiLimit.toString());
-    const newPage = Math.max(
-      1,
-      Math.ceil(((currentPage - 1) * uiLimit + 1) / newUiLimit),
-    );
-    params.set("page", newPage.toString());
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  };
-
-  const handleLoadMore = () => {
-    if (
-      allProducts.length < uiLimit &&
-      allProducts.length < effectiveTotal &&
-      !isFetching
-    ) {
-      setFetchingPage((prev) => prev + 1);
-    }
-  };
+  const handleLoadMore = useCallback(() => {}, []);
 
   return (
     <>
@@ -348,8 +215,8 @@ const BrandPageClient = ({
 
           <div className="flex w-full">
             <ProductDisplay
-              products={allProducts}
-              totalItems={effectiveTotal}
+              products={products}
+              totalItems={totalItems}
               itemsPerPage={uiLimit}
               currentPage={currentPage}
               onPageChange={handlePageChange}
@@ -359,15 +226,11 @@ const BrandPageClient = ({
               categoryName={brand?.name}
               tags={filterTags}
               onClearFilters={clearFilters}
-              isLoading={isLoading && allProducts.length === 0}
+              isLoading={isPending && products.length === 0}
               onLoadMore={handleLoadMore}
-              infiniteScroll={true}
-              hasMore={
-                allProducts.length < uiLimit &&
-                allProducts.length < effectiveTotal &&
-                hasMoreFromApi
-              }
-              isFetchingMore={isFetching && allProducts.length > 0}
+              infiniteScroll={false}
+              hasMore={false}
+              isFetchingMore={isPending && products.length > 0}
               onToggleSidebar={toggleSidebar}
               wishlistItems={wishlistItems}
             />
@@ -378,4 +241,4 @@ const BrandPageClient = ({
   );
 };
 
-export default BrandPageClient;
+export default React.memo(BrandPageClient);
