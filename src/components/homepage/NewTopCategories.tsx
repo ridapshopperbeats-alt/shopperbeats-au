@@ -282,10 +282,11 @@ export default function NewTopCategories() {
                 <Image
                   src={item.image}
                   alt={item.title}
-                  width={100}
-                  height={100}
+                  width={200}
+                  height={200}
                   quality={100}
                   loading="lazy"
+                  sizes="(min-width: 768px) 200px, 70px"
                   className="object-contain w-[70px] h-[70px] md:w-[200px] md:h-[200px] transition-transform duration-500 ease-in-out hover:scale-110"
                 />
               </div>
