@@ -574,7 +574,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 {isAuthenticated ? (
                   <Link
                     href="/user/personal-information"
-                    className="relative inline-block !p-0"
+                    className="relative group items-center justify-center"
                   >
                     <Image
                       src={
@@ -584,15 +584,16 @@ export default function Header({ megaMenuData }: HeaderProps) {
                       }
                       alt="account"
                       className="rounded-full object-cover"
-                      fill
+                      width={20}
+                      height={20}
                     />
 
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
+                    <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
                   </Link>
                 ) : (
                   <Link
                     href={`/login?redirect=${encodeURIComponent("/user/personal-information")}`}
-                    className="group"
+                    className="group items-center justify-center"
                   >
                     <Image
                       src="/images/user.svg"

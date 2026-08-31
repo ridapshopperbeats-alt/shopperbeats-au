@@ -8,6 +8,7 @@ import {
   useUpdateAddressMutation,
 } from "@/lib/redux/apis/address-api";
 import AddressAutocomplete from "@/components/common/AddressAutocomplete";
+import LocationAutocomplete from "@/components/common/LocationAutocomplete";
 import Button from "@/components/common/Button";
 import { Input } from "@/components/common/input";
 import { Address, AddressFormProps, AddressFormValues } from "@/types/address";
@@ -318,12 +319,12 @@ export default function AddressForm({
       </div>
 
       <div className="flex flex-col gap-1 mb-4">
-        <Input
+        <LocationAutocomplete
           id="country"
           label="Country"
           error={formErrors.country}
-          type="text"
           name="country"
+          type="country"
           placeholder="Country"
           value={formData.country}
           labelClassName="text-[#4A5565] font-semibold!"
@@ -335,12 +336,12 @@ export default function AddressForm({
       </div>
       <div className="form-fields flex-col gap-y-4 sm:flex-row sm:gap-y-0 mb-4">
         <div className="flex flex-col gap-1 w-full">
-          <Input
+          <LocationAutocomplete
             id="city"
             label="City"
             error={formErrors.city}
-            type="text"
             name="city"
+            type="city"
             labelClassName="text-[#4A5565] font-semibold"
             placeholder="City"
             value={formData.city}
@@ -351,12 +352,12 @@ export default function AddressForm({
           />
         </div>
         <div className="flex flex-col gap-1 w-full">
-          <Input
+          <LocationAutocomplete
             id="state"
             label="State"
             error={formErrors.state}
-            type="text"
             name="state"
+            type="state"
             labelClassName="text-[#4A5565] font-semibold"
             placeholder="State"
             value={formData.state}
