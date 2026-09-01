@@ -29,7 +29,7 @@ export default function Logout() {
 
   const [logout, { isLoading }] = useLogoutMutation();
   const [loggedOut, setLoggedOut] = useState(false);
-  const [loggedOutName, setLoggedOutName] = useState("");
+  const [loggedOutName, setLoggedOutName] = useState("there");
 
   const skipQueries = !authChecked || !isAuthenticated || loggedOut;
 
@@ -67,17 +67,23 @@ export default function Logout() {
     router.push("/login");
   };
 
+  const showLoggedOutScreen = loggedOut || (authChecked && !isAuthenticated);
+
   useEffect(() => {
-    if (!loggedOut) return;
+    if (!showLoggedOutScreen) return;
 
     const timer = setTimeout(() => {
       router.push("/");
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [loggedOut, router]);
+  }, [showLoggedOutScreen, router]);
 
-  if (loggedOut) {
+  if (!authChecked) {
+    return null;
+  }
+
+  if (showLoggedOutScreen) {
     return (
       <Card className="mx-auto w-full max-w-[1118px] items-center gap-3 p-6 py-16 text-center">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
@@ -118,7 +124,7 @@ export default function Logout() {
             {fullName || "My Account"}
           </h2>
           <p className="font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-normal leading-[18px] text-[#99A1AF]">
-            {profile?.email ? maskEmail(profile.email) : "rida@gmail.com"}
+            {profile?.email ? maskEmail(profile.email) : ""}
           </p>
         </div>
       </div>

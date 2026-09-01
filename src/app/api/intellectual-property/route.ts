@@ -463,7 +463,8 @@ export async function POST(req: Request) {
       .replace(/{{\s*proofOfOwnershipRow\s*}}/g, () => proofOfOwnershipRow);
 
     const msg = {
-      to: "ridapshopperbeats@gmail.com",
+      to: "cs@shopperbeats.com",
+      cc:"ridapshopperbeats@gmail.com",
       from: "noreply@shopperbeats.com.au",
       subject: "New Intellectual Property Complaint",
       html,

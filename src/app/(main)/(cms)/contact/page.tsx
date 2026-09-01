@@ -126,26 +126,26 @@ export default function ContactPage() {
       <div className="container">
         <div className="pt-10 font-montserrat">
           {/* Top contact options */}
-          <div className="mx-auto mb-[22px] grid w-full max-w-[1118px] grid-cols-2 gap-5 max-[992px]:grid-cols-1">
-            <ContactCard
+          {/* <div className="mx-auto mb-[22px] grid w-full max-w-[1118px] grid-cols-2 gap-5 max-[992px]:grid-cols-1"> */}
+            {/* <ContactCard
               icon={Phone}
               title="Call Us"
               highlight="1800-123-4567"
               subtitle="Mon-Sat, 9 AM - 7 PM IST"
-            />
-            <ContactCard
+            /> */}
+            {/* <ContactCard
               icon={Mail}
               title="Email Us"
               highlight="support@shopperbeats.com"
               subtitle="Response within 24 hours"
-            />
+            /> */}
             {/* <ContactCard
               icon={MessageCircle}
               title="Live Chat"
               highlight="Chat with an agent"
               subtitle="Mon-Sat, 9 AM - 9 PM IST"
             /> */}
-          </div>
+          {/* </div> */}
 
           {/* Send us a Message */}
           <Card className="mx-auto mb-[22px] w-full max-w-[1118px] min-h-[488.25px] rounded-[16px] p-[35px] !shadow-[0_2px_16px_0_rgba(0,0,0,0.05)] max-[600px]:p-[25px]">
