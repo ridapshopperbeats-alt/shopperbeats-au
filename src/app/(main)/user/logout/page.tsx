@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -35,7 +35,10 @@ export default function Logout() {
 
   const { data: personalData } = useGetPersonalDataQuery(undefined, { skip: skipQueries });
   const { data: ordersData } = useListOrdersQuery({ per_page: 1 }, { skip: skipQueries });
-  const { data: wishlistData } = useGetWishlistQuery(undefined, { skip: skipQueries });
+  const { data: wishlistData } = useGetWishlistQuery(undefined, {
+    skip: skipQueries,
+    refetchOnMountOrArgChange: true,
+  });
   const { data: addresses } = useGetAddressesQuery(undefined, { skip: skipQueries });
 
   const profile = personalData?.response;
@@ -63,6 +66,16 @@ export default function Logout() {
     router.refresh();
     router.push("/login");
   };
+
+  useEffect(() => {
+    if (!loggedOut) return;
+
+    const timer = setTimeout(() => {
+      router.push("/");
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [loggedOut, router]);
 
   if (loggedOut) {
     return (

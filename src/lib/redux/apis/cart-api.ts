@@ -40,7 +40,7 @@ const basePromoQuery = createBaseQuery(API_ENDPOINTS.CART.PROMO_BASE_URL);
 // --- GUEST WISHLIST (localStorage-backed, used when the user isn't logged in) ---
 const GUEST_WISHLIST_STORAGE_KEY = "guest_wishlist";
 
-interface GuestWishlistEntry {
+export interface GuestWishlistEntry {
   product_id: string;
   variant_id: string | null;
   snapshot?: WishlistProductSnapshot;
@@ -51,7 +51,7 @@ function isUserAuthenticated(api: { getState: () => unknown }): boolean {
   return Boolean(state?.auth?.isAuthenticated);
 }
 
-function readGuestWishlist(): GuestWishlistEntry[] {
+export function readGuestWishlist(): GuestWishlistEntry[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = window.localStorage.getItem(GUEST_WISHLIST_STORAGE_KEY);
@@ -64,6 +64,11 @@ function readGuestWishlist(): GuestWishlistEntry[] {
 function writeGuestWishlist(items: GuestWishlistEntry[]): void {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(GUEST_WISHLIST_STORAGE_KEY, JSON.stringify(items));
+}
+
+export function clearGuestWishlist(): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(GUEST_WISHLIST_STORAGE_KEY);
 }
 
 function guestWishlistToWishlist(items: GuestWishlistEntry[]): Wishlist {
@@ -276,6 +281,7 @@ export const cartApi = createApi({
           patch.undo();
         }
       },
+      invalidatesTags: ["Wishlist"],
     }),
     getWishlist: builder.query<Wishlist, void>({
        queryFn: async (_arg, api, extraOptions) => {
@@ -365,6 +371,7 @@ export const cartApi = createApi({
           patch.undo();
         }
       },
+      invalidatesTags: ["Wishlist"],
     }),
     moveWishlistToCart: builder.mutation<
       MoveWishlistToCartResponse,

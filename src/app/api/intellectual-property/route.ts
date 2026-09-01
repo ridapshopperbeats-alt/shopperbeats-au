@@ -1,32 +1,20 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import sgMail from "@sendgrid/mail";
 import * as yup from "yup";
 import { getClientIp, isRateLimited } from "@/lib/utils/rate-limit";
-import { nameField, requiredMessage } from "@/lib/validations/form-schemas";
-
-export const phoneNumber = yup
-  .string()
-  .required("Phone number is required")
-  .matches(
-    /^(?:\+?61\s?|0)4\d{8}$/,
-    "Enter a valid US mobile number (e.g. 0412345678 or +61412345678)"
-  );
-
-/* ------------------ EMAIL ------------------ */
-
-export const email = yup .string()
-  .email("Invalid email")
-  .required("Email is required")
-  .matches(/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/, "Email must contain a valid domain")
-
+import { nameField, requiredString, requiredMessage, email } from "@/lib/validations/form-schemas";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
-const contactSchema = yup.object().shape({
-  name: nameField("Name"),
+const ipComplaintSchema = yup.object().shape({
+  fullName: nameField("Full name"),
   email: email,
-  // phone: phoneNumber,
-  message: requiredMessage("Message", 5),
+  companyName: requiredString("Company / brand name"),
+  country: requiredString("Country"),
+  ipType: requiredString("Type of IP right"),
+  listingUrls: requiredString("Infringing listing URL(s)"),
+  description: requiredMessage("Description of infringement", 10),
+  proofOfOwnership: yup.string(),
 });
 
 const escapeHtml = (value: string) =>
@@ -41,7 +29,7 @@ const emailTemplate = `<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ShopperBeats - Contact Form Submission</title>
+<title>ShopperBeats - Intellectual Property Complaint</title>
 <link
   href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap"
   rel="stylesheet"
@@ -123,6 +111,22 @@ style="width:600px; background:#ffffff;">
 
   <!-- TOP BAR -->
 
+  <!-- LOGO -->
+  <tr>
+    <td align="center" style="padding:10px ; background:#ffffff;">
+
+      <!-- LOGO IMAGE -->
+      <table width="100%" bgcolor="#f3f3f3" cellpadding="0" cellspacing="0">
+<tr>
+<td align="center">
+
+<!-- MAIN CONTAINER -->
+
+<table width="600" cellpadding="0" cellspacing="0" class="container"
+style="width:600px; background:#ffffff;">
+
+  <!-- TOP BAR -->
+
   <tr>
     <td style="height:18px; background:#032b6b;"></td>
   </tr>
@@ -162,7 +166,7 @@ style="width:600px; background:#ffffff;">
     line-height:23px;
     font-weight:900;
     ">
-    New Contact Form
+    New Intellectual Property
   </div>
 
   <div
@@ -172,7 +176,7 @@ style="width:600px; background:#ffffff;">
     margin-top:8px;
     font-weight:400;
     ">
-    Submission Received
+    Complaint Submitted
   </div>
 
   <!-- FEATURES -->
@@ -233,7 +237,7 @@ style="width:600px; background:#ffffff;">
         font-weight:600;
         color:#111111;
         ">
-          New Contact Form Submission
+          New Intellectual Property Complaint
         </h2>
 
         <p style="
@@ -243,22 +247,39 @@ style="width:600px; background:#ffffff;">
         line-height:22px;
         color:#9A9A9A;
         ">
-          A new message has been submitted through the ShopperBeats contact form. Details are below.
+          A new intellectual property complaint has been submitted through ShopperBeats. Details are below.
         </p>
 
         <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
           <tr>
-            <td style="padding:6px 0; font-size:12px; font-weight:600; color:#111111; width:170px; vertical-align:top;">Name</td>
-            <td style="padding:6px 0; font-size:12px; color:#333333; vertical-align:top;">{{ name }}</td>
+            <td style="padding:6px 0; font-size:12px; font-weight:600; color:#111111; width:170px; vertical-align:top;">Full Name</td>
+            <td style="padding:6px 0; font-size:12px; color:#333333; vertical-align:top;">{{ fullName }}</td>
           </tr>
           <tr>
             <td style="padding:6px 0; font-size:12px; font-weight:600; color:#111111; vertical-align:top;">Email</td>
             <td style="padding:6px 0; font-size:12px; color:#333333; vertical-align:top;">{{ email }}</td>
           </tr>
           <tr>
-            <td style="padding:6px 0; font-size:12px; font-weight:600; color:#111111; vertical-align:top;">Message</td>
-            <td style="padding:6px 0; font-size:12px; color:#333333; vertical-align:top; white-space:pre-wrap;">{{ message }}</td>
+            <td style="padding:6px 0; font-size:12px; font-weight:600; color:#111111; vertical-align:top;">Company / Brand</td>
+            <td style="padding:6px 0; font-size:12px; color:#333333; vertical-align:top;">{{ companyName }}</td>
           </tr>
+          <tr>
+            <td style="padding:6px 0; font-size:12px; font-weight:600; color:#111111; vertical-align:top;">Country</td>
+            <td style="padding:6px 0; font-size:12px; color:#333333; vertical-align:top;">{{ country }}</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0; font-size:12px; font-weight:600; color:#111111; vertical-align:top;">Type of IP Right</td>
+            <td style="padding:6px 0; font-size:12px; color:#333333; vertical-align:top;">{{ ipType }}</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0; font-size:12px; font-weight:600; color:#111111; vertical-align:top;">Infringing URL(s)</td>
+            <td style="padding:6px 0; font-size:12px; color:#333333; vertical-align:top;">{{ listingUrls }}</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0; font-size:12px; font-weight:600; color:#111111; vertical-align:top;">Description</td>
+            <td style="padding:6px 0; font-size:12px; color:#333333; vertical-align:top;">{{ description }}</td>
+          </tr>
+          {{ proofOfOwnershipRow }}
         </table>
 
         <p style="
@@ -285,7 +306,7 @@ style="width:600px; background:#ffffff;">
         line-height:18px;
         color:#9A9A9A;
         ">
-          This is an automated notification from the ShopperBeats contact form.
+          This is an automated notification from the ShopperBeats Intellectual Property complaint form.
         </p>
 
       </td>
@@ -384,6 +405,16 @@ style="width:600px; background:#ffffff;">
 </tr>
 </table>
 
+  </tr>
+
+
+
+</table>
+
+</td>
+</tr>
+</table>
+
 
 </body>
 </html>`;
@@ -391,7 +422,7 @@ style="width:600px; background:#ffffff;">
 export async function POST(req: Request) {
   const ip = getClientIp(req.headers);
 
-  if (isRateLimited(`contact:${ip}`, 5, 10 * 60 * 1000)) {
+  if (isRateLimited(`intellectual-property:${ip}`, 5, 10 * 60 * 1000)) {
     return NextResponse.json(
       { success: false, error: "Too many requests. Please try again later." },
       { status: 429 }
@@ -400,24 +431,45 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { name, email, message } = await contactSchema.validate(body, {
+    const {
+      fullName,
+      email,
+      companyName,
+      country,
+      ipType,
+      listingUrls,
+      description,
+      proofOfOwnership,
+    } = await ipComplaintSchema.validate(body, {
       abortEarly: false,
       stripUnknown: true,
     });
 
+    const proofOfOwnershipRow = proofOfOwnership
+      ? `<tr>
+          <td style="padding:6px 0; font-size:12px; font-weight:600; color:#111111; vertical-align:top;">Proof of Ownership</td>
+          <td style="padding:6px 0; font-size:12px; color:#333333; vertical-align:top;">${escapeHtml(proofOfOwnership)}</td>
+        </tr>`
+      : "";
+
     const html = emailTemplate
-      .replace(/{{\s*name\s*}}/g, () => escapeHtml(name))
+      .replace(/{{\s*fullName\s*}}/g, () => escapeHtml(fullName))
       .replace(/{{\s*email\s*}}/g, () => escapeHtml(email))
-      .replace(/{{\s*message\s*}}/g, () => escapeHtml(message));
+      .replace(/{{\s*companyName\s*}}/g, () => escapeHtml(companyName))
+      .replace(/{{\s*country\s*}}/g, () => escapeHtml(country))
+      .replace(/{{\s*ipType\s*}}/g, () => escapeHtml(ipType))
+      .replace(/{{\s*listingUrls\s*}}/g, () => escapeHtml(listingUrls))
+      .replace(/{{\s*description\s*}}/g, () => escapeHtml(description))
+      .replace(/{{\s*proofOfOwnershipRow\s*}}/g, () => proofOfOwnershipRow);
 
     const msg = {
       to: "ridapshopperbeats@gmail.com",
       from: "noreply@shopperbeats.com.au",
-      subject: "New Contact Form Submission",
+      subject: "New Intellectual Property Complaint",
       html,
     };
 
-    const data = await sgMail.send(msg);
+    await sgMail.send(msg);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -428,9 +480,9 @@ export async function POST(req: Request) {
       );
     }
 
-    console.error("[api/contact] Failed to send message:", error);
+    console.error("[api/intellectual-property] Failed to send complaint:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to send message. Please try again later." },
+      { success: false, error: "Failed to submit complaint. Please try again later." },
       { status: 500 }
     );
   }

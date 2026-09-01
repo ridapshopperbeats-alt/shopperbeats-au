@@ -21,6 +21,7 @@ export default function UserLayout({
   const visibleSidebarLinks = isAuthenticated
     ? sidebarLinks
     : sidebarLinks.filter((link) => link.label === "Wishlist");
+  const hideSidebar = pathname === "/user/logout" && !isAuthenticated;
   const isPersonalInformation = pathname === "/user/personal-information";
   const usesCardLayout =
     isPersonalInformation ||
@@ -99,7 +100,9 @@ export default function UserLayout({
       <div className="py-7">
         <div className="container">
           <div className="flex flex-col md:flex-row items-start gap-6 justify-center">
-            <Sidebar links={visibleSidebarLinks} variant="account" />
+            {!hideSidebar && (
+              <Sidebar links={visibleSidebarLinks} variant="account" />
+            )}
 
             <div
               className="flex w-full max-w-[1118px] items-start"
