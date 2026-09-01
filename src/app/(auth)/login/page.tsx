@@ -17,7 +17,11 @@ import {
   useLoginMutation,
   useResendVerificationCodeMutation,
 } from "@/lib/redux/apis/auth-api";
-import { useCreateWishlistMutation } from "@/lib/redux/apis/cart-api";
+import {
+  useCreateWishlistMutation,
+  readGuestWishlist,
+  clearGuestWishlist,
+} from "@/lib/redux/apis/cart-api";
 import { loginSchema } from "@/lib/validations/form-schemas";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { Input } from "@/components/common/input";
@@ -93,6 +97,34 @@ export default function LoginPage() {
     } catch {
       toast.error(
         "Could not add your saved item to wishlist. Try again from the product page.",
+      );
+    }
+  };
+
+  // Items wishlisted while logged out live only in this browser's localStorage.
+  // Once the user logs in, push them into the real account wishlist so nothing
+  // they saved as a guest gets left behind.
+  const syncGuestWishlist = async () => {
+    const guestItems = readGuestWishlist();
+    if (guestItems.length === 0) return;
+
+    const results = await Promise.allSettled(
+      guestItems.map((item) =>
+        createWishlist({
+          product_id: item.product_id,
+          variant_id: item.variant_id ?? undefined,
+        }).unwrap(),
+      ),
+    );
+
+    clearGuestWishlist();
+
+    const syncedCount = results.filter((r) => r.status === "fulfilled").length;
+    if (syncedCount > 0) {
+      toast.success(
+        syncedCount === 1
+          ? "1 saved item was added to your wishlist!"
+          : `${syncedCount} saved items were added to your wishlist!`,
       );
     }
   };
@@ -187,6 +219,7 @@ export default function LoginPage() {
 
       toast.success("Login successful!");
       await flushPendingWishlist(response);
+      await syncGuestWishlist();
       router.push(redirectUrl || "/");
     } catch (err) {
       const error = err as { data?: { detail?: string; message?: string } };

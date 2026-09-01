@@ -247,3 +247,17 @@ export const contactInfoSchema = yup.object().shape({
   subject: requiredString("Subject"),
   message: requiredMessage("Message", 5),
 });
+
+export const intellectualPropertySchema = yup.object().shape({
+  fullName: nameField("Full name"),
+  email: email,
+  companyName: requiredString("Company / brand name"),
+  country: requiredString("Country"),
+  ipType: requiredString("Type of IP right"),
+  listingUrls: requiredString("Infringing listing URL(s)"),
+  description: requiredMessage("Description of infringement", 10),
+  proofOfOwnership: yup.string(),
+  declaration: yup
+    .boolean()
+    .oneOf([true], "Please confirm the declaration before submitting"),
+});
