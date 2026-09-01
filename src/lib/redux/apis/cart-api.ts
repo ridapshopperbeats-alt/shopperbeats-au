@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS } from "../../constants/api";
 import { Cart, PromoValidationResponse } from "@/types/cart";
-import { WishlistItem, Wishlist } from "@/types/wishlist";
+import { WishlistItem, Wishlist, WishlistProductSnapshot } from "@/types/wishlist";
 import { createBaseQuery } from "./base-query";
 
 interface RemoveCouponResponse {
@@ -36,6 +36,74 @@ interface MoveWishlistToCartResponse {
 const baseCartQuery = createBaseQuery(API_ENDPOINTS.CART.BASE_URL);
 const baseWishlistQuery = createBaseQuery(API_ENDPOINTS.WISHLIST.BASE_URL);
 const basePromoQuery = createBaseQuery(API_ENDPOINTS.CART.PROMO_BASE_URL);
+
+// --- GUEST WISHLIST (localStorage-backed, used when the user isn't logged in) ---
+const GUEST_WISHLIST_STORAGE_KEY = "guest_wishlist";
+
+interface GuestWishlistEntry {
+  product_id: string;
+  variant_id: string | null;
+  snapshot?: WishlistProductSnapshot;
+}
+
+function isUserAuthenticated(api: { getState: () => unknown }): boolean {
+  const state = api.getState() as { auth?: { isAuthenticated?: boolean } };
+  return Boolean(state?.auth?.isAuthenticated);
+}
+
+function readGuestWishlist(): GuestWishlistEntry[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(GUEST_WISHLIST_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeGuestWishlist(items: GuestWishlistEntry[]): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(GUEST_WISHLIST_STORAGE_KEY, JSON.stringify(items));
+}
+
+function guestWishlistToWishlist(items: GuestWishlistEntry[]): Wishlist {
+  return {
+    items: items.map((item) => {
+      const snap = item.snapshot;
+      const hasDiscount = Boolean(snap?.showWasPrice && snap?.wasPrice);
+
+      return {
+        product_id: item.product_id,
+        product_name: snap?.title || "",
+        title: snap?.title,
+        variant_id: item.variant_id,
+        is_active: true,
+        brand_name: snap?.brand_name,
+        thumbnail: snap?.image,
+        price: snap?.mainPrice != null ? String(snap.mainPrice) : undefined,
+        rrp_price: hasDiscount ? String(snap!.wasPrice) : undefined,
+        discounted_price: hasDiscount ? snap!.mainPrice : undefined,
+        discount_percentage: snap?.discountPercentage,
+        unique_code: snap?.unique_code,
+        promotion_name: snap?.promotion_name,
+        stock: snap?.stock,
+        available_stock: snap?.stock,
+        tags: snap?.tags,
+        vendor_id: snap?.vendor_id,
+        ships_from_location: snap?.ships_from_location,
+        handling_time_days: snap?.handling_time_days,
+        handling_time_max_days: snap?.handling_time_max_days,
+        variants: snap?.variants,
+        review_stats: {
+          average_rating: snap?.rating ?? 0,
+          total_reviews: snap?.reviewCount ?? 0,
+        },
+        created_at: new Date().toISOString(),
+      } as WishlistItem;
+    }),
+    total_items: items.length,
+  };
+}
 export const cartApi = createApi({
   reducerPath: "cartApi",
   baseQuery: baseCartQuery,
@@ -153,9 +221,24 @@ export const cartApi = createApi({
     // --- WISHLIST ENDPOINTS USING baseWishlistQuery ---
     createWishlist: builder.mutation<
       Wishlist,
-      { product_id: string; variant_id?: string }
+      { product_id: string; variant_id?: string; snapshot?: WishlistProductSnapshot }
     >({
-      queryFn: async ({ product_id, variant_id }, api, extraOptions) => {
+      queryFn: async ({ product_id, variant_id, snapshot }, api, extraOptions) => {
+        if (!isUserAuthenticated(api)) {
+          const normalizedVariantId = variant_id ?? null;
+          const current = readGuestWishlist();
+          const alreadyExists = current.some(
+            (item) =>
+              item.product_id === product_id &&
+              item.variant_id === normalizedVariantId
+          );
+          const updated = alreadyExists
+            ? current
+            : [...current, { product_id, variant_id: normalizedVariantId, snapshot }];
+          writeGuestWishlist(updated);
+          return { data: guestWishlistToWishlist(updated) };
+        }
+
         const result = await baseWishlistQuery(
           {
             url: API_ENDPOINTS.WISHLIST.CREATE,
@@ -183,6 +266,7 @@ export const cartApi = createApi({
                 variant_id: variantId,
                 created_at: new Date().toISOString(),
               } as WishlistItem);
+              draft.total_items = draft.items.length;
             }
           })
         );
@@ -195,6 +279,10 @@ export const cartApi = createApi({
     }),
     getWishlist: builder.query<Wishlist, void>({
        queryFn: async (_arg, api, extraOptions) => {
+         if (!isUserAuthenticated(api)) {
+           return { data: guestWishlistToWishlist(readGuestWishlist()) };
+         }
+
          const result = await baseWishlistQuery(
            {
              url: API_ENDPOINTS.WISHLIST.GET,
@@ -226,6 +314,20 @@ export const cartApi = createApi({
       { product_id: string; variant_id?: string }
     >({
       queryFn: async ({ product_id, variant_id }, api, extraOptions) => {
+        if (!isUserAuthenticated(api)) {
+          const normalizedVariantId = variant_id ?? null;
+          const current = readGuestWishlist();
+          const updated = current.filter(
+            (item) =>
+              !(
+                item.product_id === product_id &&
+                item.variant_id === normalizedVariantId
+              )
+          );
+          writeGuestWishlist(updated);
+          return { data: guestWishlistToWishlist(updated) };
+        }
+
         const result = await baseWishlistQuery(
           {
             url: API_ENDPOINTS.WISHLIST.REMOVE,
@@ -253,6 +355,7 @@ export const cartApi = createApi({
                 (item) =>
                   !(item.product_id === product_id && item.variant_id === normalizedVariantId)
               );
+              draft.total_items = draft.items.length;
             }
           })
         );

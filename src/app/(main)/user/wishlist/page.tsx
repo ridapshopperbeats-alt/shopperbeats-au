@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ShoppingBag } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -14,6 +14,13 @@ import {
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { getPriceDetails, getImageUrl } from "@/lib/utils/main-utils";
 export default function WishlistPage() {
+  // Guest wishlists live in localStorage, which the server can never see —
+  // so the server always renders an empty list. Reading the real value only
+  // after mount keeps the first client render identical to the server's,
+  // avoiding a hydration mismatch.
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => setHasMounted(true), []);
+
   const {
     data: wishlist,
     isLoading,
@@ -25,7 +32,8 @@ export default function WishlistPage() {
   const { postcode } = useGlobalPostcode();
   const [isTransferring, setIsTransferring] = useState(false);
 
-  const items = wishlist?.items ?? [];
+  const items = hasMounted ? (wishlist?.items ?? []) : [];
+  const showLoading = !hasMounted || isLoading || isFetching;
 
   const wishlistKeys = items.map((item) => ({
     product_id: item.product_id,
@@ -89,7 +97,7 @@ export default function WishlistPage() {
         </Button>
       </Card>
 
-      {isLoading || isFetching ? (
+      {showLoading ? (
         <Card className="w-full items-center p-10 text-center">
           <p className="text-sm text-gray-400">Loading your wishlist...</p>
         </Card>

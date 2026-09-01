@@ -52,6 +52,9 @@ export default function MobileAccountSheet({
   const { data: personalData } = useGetPersonalDataQuery(undefined, {
     skip: !authChecked || !isAuthenticated,
   });
+  const visibleSidebarLinks = isAuthenticated
+    ? sidebarLinks
+    : sidebarLinks.filter((link) => link.label === "Wishlist");
 
   const firstName = personalData?.response?.first_name;
   const lastName = personalData?.response?.last_name;
@@ -102,7 +105,7 @@ export default function MobileAccountSheet({
         </div>
 
         <ul className="flex flex-col px-4 pb-6">
-          {sidebarLinks.map((link) => {
+          {visibleSidebarLinks.map((link) => {
             const Icon = ACCOUNT_ICONS[link.label];
             const isLogout = link.label === "Logout";
 

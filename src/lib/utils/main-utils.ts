@@ -323,7 +323,7 @@ export function findCategoryPath(
 export async function getBestSellers(limit = 10): Promise<Product[]> {
   const res = await fetch(
     `${baseUrl}${API_ENDPOINTS.PRODUCTS.HIGHLIGHTS}${API_ENDPOINTS.PRODUCTS.BESTSELLERS}?limit=${limit}`,
-    { next: { revalidate: 60 } },
+    { cache: "no-store" },
   );
 
   if (!res.ok) return [];
@@ -348,7 +348,7 @@ export const getRawCategories = cache(async (): Promise<Category[]> => {
 export async function getPopularProducts(limit = 10): Promise<Product[]> {
   const res = await fetch(
     `${baseUrl}${API_ENDPOINTS.PRODUCTS.HIGHLIGHTS}/${API_ENDPOINTS.PRODUCTS.POPULAR_PRODUCTS}?limit=${limit}`,
-    { next: { revalidate: 60 } },
+    { cache: "no-store" },
   );
 
   if (!res.ok) return [];
@@ -362,7 +362,7 @@ export async function getPopularProducts(limit = 10): Promise<Product[]> {
 export async function getNewReleases(limit = 10): Promise<Product[]> {
   const res = await fetch(
     `${baseUrl}${API_ENDPOINTS.PRODUCTS.HIGHLIGHTS}/${API_ENDPOINTS.PRODUCTS.NEW_RELEASES}?limit=${limit}`,
-    { next: { revalidate: 60 } },
+    { cache: "no-store" },
   );
 
   if (!res.ok) return [];

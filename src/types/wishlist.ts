@@ -1,4 +1,4 @@
-import { Product, VariantAttribute } from "./product";
+import { Product, Variant, VariantAttribute } from "./product";
 
 export interface WishlistItem extends Product {
   variant_id: string;
@@ -22,6 +22,30 @@ export interface WishlistKey {
   variant_id: string | null;
 }
 
+// Display data captured at the moment a guest wishlists a product, since a
+// logged-out wishlist lives only in localStorage and has no backend record
+// to fetch full product details from later.
+export interface WishlistProductSnapshot {
+  image: string;
+  title?: string;
+  brand_name?: string;
+  mainPrice?: number;
+  wasPrice?: number;
+  showWasPrice?: boolean;
+  discountPercentage?: number;
+  unique_code?: string;
+  promotion_name?: string | null;
+  stock?: number;
+  tags?: string[];
+  vendor_id?: string;
+  ships_from_location?: string;
+  handling_time_days?: number;
+  handling_time_max_days?: number | null;
+  variants?: Variant[];
+  rating?: number;
+  reviewCount?: number;
+}
+
 export interface UseWishlistToggleArgs {
   productId?: string;
   variantId?: string | null;
@@ -30,4 +54,5 @@ export interface UseWishlistToggleArgs {
   requireVariant?: boolean;
   hasVariants?: boolean;
   matchAnyVariant?: boolean;
+  productSnapshot?: WishlistProductSnapshot;
 }

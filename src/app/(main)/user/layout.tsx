@@ -5,6 +5,8 @@ import Sidebar from "@/components/common/Sidebar";
 import { usePathname } from "next/navigation";
 import "../../../styles/account.css";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/redux/store";
 import { sidebarLinks } from "@/lib/utils/main-utils";
 
 export default function UserLayout({
@@ -13,6 +15,12 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
+  const visibleSidebarLinks = isAuthenticated
+    ? sidebarLinks
+    : sidebarLinks.filter((link) => link.label === "Wishlist");
   const isPersonalInformation = pathname === "/user/personal-information";
   const usesCardLayout =
     isPersonalInformation ||
@@ -91,7 +99,7 @@ export default function UserLayout({
       <div className="py-7">
         <div className="container">
           <div className="flex flex-col md:flex-row items-start gap-6 justify-center">
-            <Sidebar links={sidebarLinks} variant="account" />
+            <Sidebar links={visibleSidebarLinks} variant="account" />
 
             <div
               className="flex w-full max-w-[1118px] items-start"
