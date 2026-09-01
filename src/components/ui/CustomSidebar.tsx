@@ -68,7 +68,7 @@ export default function CustomSidebar({ products }: Props) {
         size: false,
     });
 
-    const brandCounts: Record<string, number> = {};
+    const brandCounts: Record<string, number> = {}; 
 
     products.forEach((product) => {
         if (product.brand_name) {

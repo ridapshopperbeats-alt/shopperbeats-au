@@ -416,8 +416,8 @@
 
 .mega-cat {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 16px 32px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px 24px;
   flex: 1;
   min-width: 0;
 }
@@ -519,7 +519,7 @@
   line-height: 130%;
   letter-spacing: 0%;
   color: #1A1A1A;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .mega-column {
@@ -778,7 +778,7 @@ span.wishlist-num {
   line-height: 130%;
   letter-spacing: 0%;
   color: #1A1A1A;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .mega-column > a,
