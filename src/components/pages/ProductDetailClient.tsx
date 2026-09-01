@@ -325,6 +325,11 @@ export default function ProductDetailClient({
 
   const hasVariants = (product?.variants?.length ?? 0) > 0;
 
+  const wishlistPriceDetails = useMemo(
+    () => getPriceDetails(product, selectedVariant),
+    [product, selectedVariant],
+  );
+
   const {
     isWishlisted: isProductInWishlist,
     isLoading: isWishlistLoading,
@@ -336,6 +341,26 @@ export default function ProductDetailClient({
     requireVariant: true,
     hasVariants,
     matchAnyVariant: true,
+    productSnapshot: {
+      image: getImageUrl(product, "public"),
+      title: product.title,
+      brand_name: product.brand_name,
+      mainPrice: wishlistPriceDetails.mainPrice,
+      wasPrice: wishlistPriceDetails.wasPrice,
+      showWasPrice: wishlistPriceDetails.showWasPrice,
+      discountPercentage: wishlistPriceDetails.discountPercentage,
+      unique_code: product.unique_code,
+      promotion_name: product.promotion_name,
+      stock: selectedVariant?.stock ?? product.stock,
+      tags: product.tags,
+      vendor_id: product.vendor_id,
+      ships_from_location: product.ships_from_location,
+      handling_time_days: product.handling_time_days,
+      handling_time_max_days: product.handling_time_max_days,
+      variants: product.variants,
+      rating: product.review_stats?.average_rating,
+      reviewCount: product.review_stats?.total_reviews,
+    },
   });
 
   const [quantity, setQuantity] = useState(1);

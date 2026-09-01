@@ -561,7 +561,11 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 alt="wishlist"
                 className="wishlist"
                 count={
-                  wishlistData?.total_items ?? wishlistData?.items?.length ?? 0
+                  mounted
+                    ? (wishlistData?.total_items ??
+                      wishlistData?.items?.length ??
+                      0)
+                    : 0
                 }
               />
 

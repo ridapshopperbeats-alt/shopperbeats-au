@@ -15,6 +15,7 @@ export function useWishlistToggle({
   requireVariant = false,
   hasVariants = false,
   matchAnyVariant = false,
+  productSnapshot,
 }: UseWishlistToggleArgs) {
   const [createWishlist, { isLoading: isAddingToWishlist }] =
     useCreateWishlistMutation();
@@ -77,6 +78,7 @@ export function useWishlistToggle({
         await createWishlist({
           product_id: productId,
           variant_id: variantId ?? undefined,
+          snapshot: productSnapshot,
         }).unwrap();
         toast.success("Product added to wishlist!");
       }

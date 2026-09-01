@@ -44,6 +44,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   handling_time_days,
   handling_time_max_days,
   shippingCharge,
+  promotion_name,
+  tags,
 }) => {
   const [addToCart, { isLoading: isAddingToCart }] = useAddToCartMutation();
 
@@ -55,6 +57,26 @@ const ProductCard: React.FC<ProductCardProps> = ({
     productId: id,
     variantId: defaultVariantId ?? null,
     wishlistItems,
+    productSnapshot: {
+      image,
+      title,
+      brand_name,
+      mainPrice,
+      wasPrice,
+      showWasPrice,
+      discountPercentage,
+      unique_code,
+      promotion_name,
+      tags,
+      stock,
+      vendor_id,
+      ships_from_location,
+      handling_time_days,
+      handling_time_max_days,
+      variants,
+      rating,
+      reviewCount,
+    },
   });
 
   const { postcode } = useGlobalPostcode();
