@@ -76,6 +76,23 @@ interface HeaderProps {
 
 const resolveCategoryHref = (slugOrId: string) => `/category/${slugOrId}`;
 
+const findTopCategorySlug = (
+  categories: MegaMenuCategory[],
+  targetSlug: string,
+): string | undefined => {
+  const containsSlug = (node: MegaMenuSubcategory): boolean =>
+    node.slug === targetSlug ||
+    (node.subcategories?.some(containsSlug) ?? false);
+
+  const match = categories.find(
+    (cat) =>
+      cat.slug === targetSlug ||
+      cat.subcategories?.some(containsSlug),
+  );
+
+  return match?.slug;
+};
+
 const getCategoryIcon = (name: string) => {
   const n = name.toLowerCase();
   if (n.includes("fashion") || n.includes("apparel") || n.includes("clothing"))
@@ -141,16 +158,26 @@ export default function Header({ megaMenuData }: HeaderProps) {
   const [showPincodeInput, setShowPincodeInput] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const currentCategorySlug = pathname?.match(/^\/category\/([^/]+)/)?.[1];
+  const activeTopCategorySlug = currentCategorySlug
+    ? findTopCategorySlug(megaMenuData, currentCategorySlug)
+    : undefined;
+
+  const otherNavSlugs = [
+    "home-garden",
+    "furniture",
+    "health-beauty",
+    "outdoor-patio",
+  ];
   const otherNavHrefs = [
-    "/category/home-garden",
-    "/category/furniture",
-    "/category/health-beauty",
-    "/category/outdoor-patio",
     "/product-listing/best-sellers",
     "/product-listing/whats-on-sale",
   ];
+  const isOtherNavActive =
+    (!!activeTopCategorySlug && otherNavSlugs.includes(activeTopCategorySlug)) ||
+    otherNavHrefs.some((href) => pathname === href);
   const isFashionAccessoriesActive =
-    pathname === "/category/fashion-accessories" || !otherNavHrefs.includes(pathname ?? "");
+    activeTopCategorySlug === "fashion-accessories" || !isOtherNavActive;
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { postcode, suburb, updatePostcode } = useGlobalPostcode();
@@ -864,7 +891,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-                    pathname === "/category/home-garden" ? "active" : ""
+                    activeTopCategorySlug === "home-garden" ? "active" : ""
                   }`}
                   href="/category/home-garden"
                 >
@@ -875,7 +902,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-                    pathname === "/category/furniture" ? "active" : ""
+                    activeTopCategorySlug === "furniture" ? "active" : ""
                   }`}
                   href="/category/furniture"
                 >
@@ -897,7 +924,10 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-                    pathname === "/category/health-beauty" ? "active" : ""
+                    pathname === "/category/health-beauty" ||
+                    pathname?.startsWith("/category/health-beauty/")
+                      ? "active"
+                      : ""
                   }`}
                   href="/category/health-beauty"
                 >
@@ -908,7 +938,10 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-                    pathname === "/category/outdoor-patio" ? "active" : ""
+                    pathname === "/category/outdoor-patio" ||
+                    pathname?.startsWith("/category/outdoor-patio/")
+                      ? "active"
+                      : ""
                   }`}
                   href="/category/outdoor-patio"
                 >
