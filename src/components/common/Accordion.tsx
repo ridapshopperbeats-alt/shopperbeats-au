@@ -152,7 +152,7 @@ const Accordion = ({
                   className={`w-full overflow-y-auto overscroll-contain flex flex-col gap-3 items-start text-left ${
                     item.id === "price"
                       ? "h-auto max-h-none overflow-visible"
-                      : "h-[294px] max-h-[210px]"
+                      : "h-auto max-h-[210px]"
                   }`}
                   data-lenis-prevent
                   onWheel={(e) => e.stopPropagation()}

@@ -322,7 +322,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   className="w-full [&_[data-slot=slider-range]]:bg-red-500 [&_[data-slot=slider-thumb]]:border-red-500 [&_[data-slot=slider-thumb]]:bg-red-500"
                 />
                 {(!isHighlightPage ||
-                  ["clearance", "whats-on-sale"].includes(String(slug))) && (
+                  ["clearance", "whats-on-sale", "best-sellers"].includes(String(slug))) && (
                   <div className="flex items-center align-center !gap-2 pt-5">
                     <span className="text-[16px] text-[#000000]">$</span>
                     <Input
