@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, Search } from "lucide-react";
@@ -95,6 +96,23 @@ const faqCategories: FaqCategory[] = [
 ];
 
 export default function FaqPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const trimmedQuery = searchQuery.trim().toLowerCase();
+
+  const filteredCategories = useMemo(() => {
+    if (!trimmedQuery) return faqCategories;
+    return faqCategories
+      .map((category) => ({
+        ...category,
+        items: category.items.filter(
+          (item) =>
+            item.question.toLowerCase().includes(trimmedQuery) ||
+            item.answer.toLowerCase().includes(trimmedQuery),
+        ),
+      }))
+      .filter((category) => category.items.length > 0);
+  }, [trimmedQuery]);
+
   return (
     <>
       <div className="flex w-full flex-col items-start gap-3 self-stretch border-b border-[#E5E7EB] bg-gradient-to-b from-[#FFF7F3] to-[#FFFDFC] px-5 py-9 lg:hidden">
@@ -137,22 +155,30 @@ export default function FaqPage() {
               Contact our support team
             </Link>
           </div>
-          {/* <div className="relative w-full">
+          <div className="relative w-full">
             <Search
               size={16}
-              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#99A1AF]"
+              className="!pointer-events-none !absolute !left-4 !top-1/2 !-translate-y-1/2 !text-[#99A1AF]"
               strokeWidth={2}
             />
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search questions..."
-              className="box-border h-10 w-full rounded-[14px] border border-[#E5E7EB] bg-[#F9FAFB] pl-10 pr-4 font-montserrat text-[13px] text-[#9CA3AF] outline-none"
+              className="!box-border !h-10 !w-full !rounded-[14px] !border !border-[#E5E7EB] !bg-[#F9FAFB] !pl-10 !pr-4 font-montserrat text-[13px] !text-[#9CA3AF] !outline-none"
             />
-          </div> */}
+          </div>
         </div>
 
+        {trimmedQuery && filteredCategories.length === 0 && (
+          <div className={`${CARD_CLASS} p-6 text-center font-montserrat text-12px text-[#99A1AF]`}>
+            No FAQs match &quot;{searchQuery.trim()}&quot;.
+          </div>
+        )}
+
         {/* Category cards */}
-        {faqCategories.map((category) => (
+        {filteredCategories.map((category) => (
           <div key={category.title} className={`${CARD_CLASS} overflow-hidden`}>
             <div className="flex h-[49.5px] items-center border-b border-[#F3F4F6] px-6 font-montserrat text-12px font-bold leading-[16.5px] text-[#FD151B]">
               {category.title}
