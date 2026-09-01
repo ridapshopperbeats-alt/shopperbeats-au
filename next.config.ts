@@ -169,6 +169,18 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "img-us.aosomcdn.com",
       },
+      {
+        protocol: "https",
+        hostname: "benzara.com",
+      },
+      {
+        protocol: "https",
+        hostname: "melrose.solovue.com",
+      },
+      {
+        protocol: "https",
+        hostname: "dropship.nearlynatural.com",
+      },
     ],
   },
 };
