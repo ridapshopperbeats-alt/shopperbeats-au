@@ -381,7 +381,7 @@ export default function IntellectualPropertyComplaintsPage() {
         </div>
 
         {/* Footer help bar */}
-        <div
+        {/* <div
           className={`${CARD_CLASS} flex flex-col items-start justify-between gap-4 p-5 md:flex-row md:items-center md:gap-0 md:px-6`}
         >
           <div className="flex items-center gap-3.5">
@@ -404,7 +404,7 @@ export default function IntellectualPropertyComplaintsPage() {
             <Mail size={14} color="#FFFFFF" strokeWidth={2} />
             Email Us
           </a>
-        </div>
+        </div> */}
       </div>
     </>
   );
