@@ -39,7 +39,7 @@ function CarouselSkeleton({ title, link }: { title: string; link: string }) {
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="w-[180px] h-[320px] md:w-[260px] md:h-[400px] bg-gray-200 animate-pulse rounded-lg shrink-0"
+              className="w-[180px] h-[320px] md:w-[260px] md:h-[410px] bg-gray-200 animate-pulse rounded-lg shrink-0"
             />
           ))}
         </div>
