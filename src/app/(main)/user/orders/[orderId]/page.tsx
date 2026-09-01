@@ -67,7 +67,10 @@ const getStatusBadgeLabel = (order: {
     (r) => r?.status?.toLowerCase() === "requested",
   );
   if (hasReturnRequested) return "Return Requested";
-  return order.status || "N/A";
+  if (!order.status) return "N/A";
+  return order.status
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 };
 
 interface OrderDetailProps {

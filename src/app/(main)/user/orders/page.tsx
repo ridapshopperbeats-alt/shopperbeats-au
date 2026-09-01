@@ -44,6 +44,7 @@ enum OrderStatusCode {
   Pending = "pending",
   InProgress = "in progress",
   ReturnRequested = "return requested",
+  ReplacementRequested = "replacement_requested",
   Refunded = "refunded",
 }
 
@@ -55,6 +56,7 @@ const ORDER_STATUS_LABELS: Record<OrderStatusCode, string> = {
   [OrderStatusCode.Pending]: "Pending",
   [OrderStatusCode.InProgress]: "In Progress",
   [OrderStatusCode.ReturnRequested]: "Return Requested",
+  [OrderStatusCode.ReplacementRequested]: "Replacement Requested",
   [OrderStatusCode.Refunded]: "Refunded",
 };
 
@@ -73,6 +75,7 @@ const ORDER_STATUS_COLORS: Record<OrderStatusCode, BadgeColor> = {
   [OrderStatusCode.Delivered]: BadgeColor.Green,
   [OrderStatusCode.Cancelled]: BadgeColor.Red,
   [OrderStatusCode.ReturnRequested]: BadgeColor.Orange,
+  [OrderStatusCode.ReplacementRequested]: BadgeColor.Orange,
   [OrderStatusCode.Refunded]: BadgeColor.Orange,
 };
 
