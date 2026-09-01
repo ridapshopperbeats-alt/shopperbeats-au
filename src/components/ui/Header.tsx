@@ -141,6 +141,16 @@ export default function Header({ megaMenuData }: HeaderProps) {
   const [showPincodeInput, setShowPincodeInput] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const otherNavHrefs = [
+    "/category/home-garden",
+    "/category/furniture",
+    "/category/health-beauty",
+    "/category/outdoor-patio",
+    "/product-listing/best-sellers",
+    "/product-listing/whats-on-sale",
+  ];
+  const isFashionAccessoriesActive =
+    pathname === "/category/fashion-accessories" || !otherNavHrefs.includes(pathname ?? "");
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { postcode, suburb, updatePostcode } = useGlobalPostcode();
@@ -853,7 +863,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
             <ul className="menu">
               <li>
                 <Link
-                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
+                    pathname === "/category/home-garden" ? "active" : ""
+                  }`}
                   href="/category/home-garden"
                 >
                   <Leaf size={16} className="inline-block text-center icons-size" />
@@ -862,7 +874,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
+                    pathname === "/category/furniture" ? "active" : ""
+                  }`}
                   href="/category/furniture"
                 >
                   <Armchair size={16} className="inline-block icons-size" />
@@ -871,7 +885,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className="link flex items-center  xl:gap-2 hover:text-red-500"
+                  className={`link flex items-center  xl:gap-2 hover:text-red-500 ${
+                    isFashionAccessoriesActive ? "active" : ""
+                  }`}
                   href="/category/fashion-accessories"
                 >
                   <HandbagIcon size={16} className="inline-block icons-size" />
@@ -880,7 +896,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
+                    pathname === "/category/health-beauty" ? "active" : ""
+                  }`}
                   href="/category/health-beauty"
                 >
                   <HeartPulse size={16} className="inline-block icons-size" />
@@ -889,7 +907,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
+                    pathname === "/category/outdoor-patio" ? "active" : ""
+                  }`}
                   href="/category/outdoor-patio"
                 >
                   <Armchair size={16} className="inline-block icons-size" />
@@ -898,7 +918,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
+                    pathname === "/product-listing/best-sellers" ? "active" : ""
+                  }`}
                   href="/product-listing/best-sellers"
                 >
                   <Gem size={16} className="inline-block icons-size" />
@@ -908,7 +930,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
               <li>
                 <Link
-                  className="link flex items-center xl:gap-2 hover:text-red-500"
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
+                    pathname === "/product-listing/whats-on-sale" ? "active" : ""
+                  }`}
                   href="/product-listing/whats-on-sale"
                 >
                   <Sparkles size={16} className="inline-block icons-size" />
