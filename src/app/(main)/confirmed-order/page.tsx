@@ -55,51 +55,53 @@ export default function ConfirmedOrderPage() {
               </div>
 
               {/* Products */}
-              {orderDetails.products.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex justify-between items-stretch py-4 px-4 border-b border-[#D9D2D2] gap-2"
-                >
-                  <div className="flex gap-3 sm:gap-4 min-w-0">
-                    <div className="w-[60px] h-[60px] sm:w-[80px] sm:h-[80px] shrink-0">
-                      {item.image && (
-                        <Image
-                          src={item.image}
-                          height={80}
-                          width={80}
-                          alt={item.name}
-                          className="object-cover w-full h-full"
-                        />
-                      )}
-                    </div>
-
-                    <div className="min-w-0">
-                      <p className="font-montserrat font-semibold text-[12px] leading-[16px] tracking-[0%] max-w-[160px] sm:max-w-[300px]">{item.name}</p>
-                      <div className="flex flex-wrap gap-2 my-2 sm:my-4">
-                        <p className="font-montserrat font-semibold text-[12px] leading-[16px] tracking-[0%]">QTY - {item.quantity || 0}</p>
-                        {orderDetails.couponCode && (
-                          <p className="px-2 rounded-[4px] flex items-center gap-1">
-                            <span className="font-montserrat font-medium text-[12px] leading-none tracking-normal capitalize text-[#049950]">
-                              Code Applied -
-                            </span>
-
-                            <span className="font-montserrat font-bold text-[12px] leading-none tracking-normal capitalize text-[#049950]">
-                              {orderDetails.couponCode}
-                            </span>
-                          </p>
+              <div className="max-h-[320px] overflow-y-auto">
+                {orderDetails.products.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex justify-between items-stretch py-4 px-4 border-b border-[#D9D2D2] gap-2"
+                  >
+                    <div className="flex gap-3 sm:gap-4 min-w-0">
+                      <div className="w-[60px] h-[60px] sm:w-[80px] sm:h-[80px] shrink-0">
+                        {item.image && (
+                          <Image
+                            src={item.image}
+                            height={80}
+                            width={80}
+                            alt={item.name}
+                            className="object-cover w-full h-full"
+                          />
                         )}
                       </div>
+
+                      <div className="min-w-0">
+                        <p className="font-montserrat font-semibold text-[12px] leading-[16px] tracking-[0%] max-w-[160px] sm:max-w-[300px]">{item.name}</p>
+                        <div className="flex flex-wrap gap-2 my-2 sm:my-4">
+                          <p className="font-montserrat font-semibold text-[12px] leading-[16px] tracking-[0%]">QTY - {item.quantity || 0}</p>
+                          {orderDetails.couponCode && (
+                            <p className="px-2 rounded-[4px] flex items-center gap-1">
+                              <span className="font-montserrat font-medium text-[12px] leading-none tracking-normal capitalize text-[#049950]">
+                                Code Applied -
+                              </span>
+
+                              <span className="font-montserrat font-bold text-[12px] leading-none tracking-normal capitalize text-[#049950]">
+                                {orderDetails.couponCode}
+                              </span>
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right whitespace-nowrap flex flex-col justify-end shrink-0">
+                      {item.originalPrice && item.originalPrice !== item.price && (
+                        <p className="font-montserrat font-normal text-[12px] leading-[20px] tracking-[0%] text-right align-middle line-through text-[#049950]">{item.originalPrice}</p>
+                      )}
+                      <p className="text-[14px] text-[#FD151B] font-semibold">{item.price}</p>
                     </div>
                   </div>
-
-                  <div className="text-right whitespace-nowrap flex flex-col justify-end shrink-0">
-                    {item.originalPrice && item.originalPrice !== item.price && (
-                      <p className="font-montserrat font-normal text-[12px] leading-[20px] tracking-[0%] text-right align-middle line-through text-[#049950]">{item.originalPrice}</p>
-                    )}
-                    <p className="text-[14px] text-[#FD151B] font-semibold">{item.price}</p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
 
               {/* Delivery */}
               <div className="flex justify-between py-3 px-4 border-b border-[#D9D2D2]">

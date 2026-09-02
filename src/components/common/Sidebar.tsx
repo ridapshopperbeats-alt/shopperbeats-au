@@ -75,7 +75,7 @@ export default function Sidebar({
          
           isOpen ? "translate-x-0" : "translate-x-full"
         
-        } lg:static lg:h-[320px] lg:w-[250px] lg:translate-x-0 lg:rounded-[14px] ${
+        } lg:static lg:h-auto lg:w-[250px] lg:translate-x-0 lg:rounded-[14px] ${
           extraClass || ""
         }`}
         style={style}

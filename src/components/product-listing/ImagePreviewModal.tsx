@@ -95,7 +95,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
 
       <div className="fixed inset-0 z-[1200] flex items-center justify-center p-3 sm:p-6">
         <div
-          className="relative bg-white rounded-[15px] max-w-[1796px] h-[80vh] sm:h-[88vh] lg:h-[85vh] overflow-visible"
+          className="relative bg-white rounded-[15px]! max-w-[1796px] h-[80vh] sm:h-[88vh] lg:h-[85vh] overflow-visible"
           onClick={(e) => e.stopPropagation()}
         >
           <button
@@ -107,9 +107,9 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
             <X size={18} strokeWidth={2} className="text-black" />
           </button>
 
-          <div className="flex flex-col lg:flex-row gap-5 lg:gap-6 xl:gap-10 p-4 sm:p-6 lg:p-6 xl:p-9 w-full h-full rounded-[15px] overflow-y-auto lg:overflow-visible">
+          <div className="flex flex-col lg:flex-row gap-5 lg:gap-6 p-4 sm:p-6 lg:p-6 xl:p-9 w-full h-full rounded-[15px] overflow-y-auto lg:overflow-visible">
             {/* LEFT: Main preview */}
-            <div className="relative w-full h-[220px] sm:h-[320px] md:h-[420px] lg:w-1/2 lg:h-full xl:w-[800px] xl:h-[700px] shrink-0 rounded-[15px] overflow-hidden bg-white flex items-center justify-center">
+            <div className="relative w-full h-[220px] sm:h-[320px] md:h-[420px] lg:w-1/2 lg:h-full xl:w-[500px] shrink-0 rounded-[15px] overflow-hidden bg-white flex items-center justify-center">
               {isVideo ? (
                 isYouTubeUrl(selectedUrl) ? (
                   <iframe
@@ -137,8 +137,8 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
                   src={applyImageVariant(selectedUrl, "pdpmain")}
                   alt={title || "Product Image"}
                   fill
-                  // sizes="(min-width: 1280px) 800px, 100vw"
-                  // className="object-contain"
+                  sizes="(min-width: 1280px) 800px, 100vw"
+                  className="object-contain rounded-[15px]!"
                 />
               )}
             </div>
@@ -198,7 +198,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
                           src={applyImageVariant(mediaUrl, "pdptmb")}
                           alt={`preview-thumb-${index}`}
                           fill
-                          sizes="100px"
+                          // sizes="100px"
                           className="object-cover"
                         />
                       )}

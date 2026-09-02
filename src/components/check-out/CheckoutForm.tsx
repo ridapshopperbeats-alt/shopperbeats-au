@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import Button from "@/components/common/Button";
 import { Input } from "@/components/common/input";
 import AddressAutocomplete from "../common/AddressAutocomplete";
+import LocationAutocomplete from "../common/LocationAutocomplete";
 import DeliveryDetailsForm from "./DeliveryDetailsForm";
 import { CheckoutFormData } from "@/types/order";
 import {
@@ -302,8 +303,9 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     <p className="payment-method-name">Billing Address</p>
                   </div>
                   <div className="form-item select-field">
-                    <Input
-                      type="text"
+                    <LocationAutocomplete
+                      id="billingCountry"
+                      type="country"
                       name="billingCountry"
                       placeholder="Country"
                       value={formData.billingCountry}
@@ -414,9 +416,9 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                       />
                     </div>
                     <div className="form-item select-field">
-                      <Input
+                      <LocationAutocomplete
                         id="billingState"
-                        type="text"
+                        type="state"
                         name="billingState"
                         placeholder="State"
                         value={formData.billingState}

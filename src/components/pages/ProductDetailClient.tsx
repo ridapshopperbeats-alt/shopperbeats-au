@@ -1470,12 +1470,12 @@ export default function ProductDetailClient({
                   {activeTab === "warranty" && (
                     <div className="tab-pane">{warrantyAndReturnContent}</div>
                   )}
-
-                  <div className="text-[11px] sm:text-[12px] text-[#F51721] mt-8 sm:mt-12 md:mt-20 font-normal">
-                    PROP65 Warning: This product contains a chemical known to the State of California to cause cancer.
-                    Decorations and accessories are not included. Images shown are only a representation and may vary.
-                  </div>
                 </div>
+              </div>
+
+              <div className="text-[11px] sm:text-[12px] text-[#F51721] mt-auto font-normal">
+                PROP65 Warning: This product contains a chemical known to the State of California to cause cancer.
+                Decorations and accessories are not included. Images shown are only a representation and may vary.
               </div>
             </div>
 

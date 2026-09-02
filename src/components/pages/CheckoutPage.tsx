@@ -310,7 +310,7 @@ export default function SecureCheckout() {
         return (
           acc +
           Number(item.unit_price ?? item.rrp_price_snapshot ?? 0) *
-            item.quantity
+            Number(item.quantity ?? 0)
         );
       }, 0);
       const shippingCost = effectiveShipping;
@@ -461,7 +461,7 @@ export default function SecureCheckout() {
           unit_price: Number(item.unit_price ?? item.rrp_price_snapshot ?? 0),
           total_price:
             Number(item.unit_price ?? item.rrp_price_snapshot ?? 0) *
-            item.quantity,
+            Number(item.quantity ?? 0),
           image: getImageUrl(item),
           vendor_id: item.vendor_id,
           ships_from_location: item.ships_from_location || null,
@@ -691,8 +691,8 @@ export default function SecureCheckout() {
   };
 
   const orderSummary = checkoutProducts;
-  const effectiveShipping = cart?.shipping ?? 0;
-  const calculatedSubtotal = cart?.total_price ?? 0;
+  const effectiveShipping = Number(cart?.shipping) || 0;
+  const calculatedSubtotal = Number(cart?.total_price) || 0;
 
   const totalSaveAmount = ((): number => {
     if (orderSummary.length === 0) return 0;
@@ -710,7 +710,7 @@ export default function SecureCheckout() {
       return acc + saveAmount * Number(item.quantity);
     }, 0);
 
-    const promotionDiscount = cart?.items_discount || 0;
+    const promotionDiscount = Number(cart?.items_discount) || 0;
 
     return itemSavings + promotionDiscount;
   })();
@@ -730,7 +730,7 @@ export default function SecureCheckout() {
 
   const finalTotal = calculatedSubtotal - (promoData?.discount_amount ?? 0);
 
-  const promotionDiscount = cart?.items_discount || 0;
+  const promotionDiscount = Number(cart?.items_discount) || 0;
   const itemSavings = totalSaveAmount - promotionDiscount;
   const couponDiscount = promoData?.discount_amount || 0;
   const discountTotal = totalSaveAmount + couponDiscount;

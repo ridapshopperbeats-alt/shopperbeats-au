@@ -163,21 +163,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
     ? findTopCategorySlug(megaMenuData, currentCategorySlug)
     : undefined;
 
-  const otherNavSlugs = [
-    "home-garden",
-    "furniture",
-    "health-beauty",
-    "outdoor-patio",
-  ];
-  const otherNavHrefs = [
-    "/product-listing/best-sellers",
-    "/product-listing/whats-on-sale",
-  ];
-  const isOtherNavActive =
-    (!!activeTopCategorySlug && otherNavSlugs.includes(activeTopCategorySlug)) ||
-    otherNavHrefs.some((href) => pathname === href);
   const isFashionAccessoriesActive =
-    activeTopCategorySlug === "fashion-accessories" || !isOtherNavActive;
+    activeTopCategorySlug === "fashion-accessories";
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { postcode, suburb, updatePostcode } = useGlobalPostcode();
