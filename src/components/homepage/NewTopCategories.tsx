@@ -159,9 +159,9 @@ const DUMMY_TOP_CATEGORIES: NewTopCategoryItem[] = [
     href: "/category/outfit-sets",
   },
   {
-    title: "Blouses",
-    image: "/images/home/Blouses.png",
-    href: "/category/blouses",
+    title: "Tops",
+    image: "/images/home/tops.svg",
+    href: "/category/tops",
   },
   {
     title: "Bras",

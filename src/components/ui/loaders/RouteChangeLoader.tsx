@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { usePathname } from "next/navigation";
 import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 
 const SAFETY_TIMEOUT_MS = 25000;
@@ -67,8 +68,22 @@ function hasInteractiveControlBefore(
 
 export default function RouteChangeLoader() {
   const dispatch = useDispatch();
+  const pathname = usePathname();
   const pendingRef = useRef(false);
   const safetyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isFirstPathnameCommitRef = useRef(true);
+
+  const complete = useCallback(() => {
+    if (!pendingRef.current) return;
+    pendingRef.current = false;
+    if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        dispatch(popLoader());
+      });
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     const start = () => {
@@ -82,18 +97,6 @@ export default function RouteChangeLoader() {
           dispatch(popLoader());
         }
       }, SAFETY_TIMEOUT_MS);
-    };
-
-    const complete = () => {
-      if (!pendingRef.current) return;
-      pendingRef.current = false;
-      if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          dispatch(popLoader());
-        });
-      });
     };
 
     const handleClick = (e: MouseEvent) => {
@@ -128,44 +131,36 @@ export default function RouteChangeLoader() {
       }
     };
 
-    const originalPushState = window.history.pushState.bind(window.history);
-    const originalReplaceState = window.history.replaceState.bind(
-      window.history,
-    );
-
-    window.history.pushState = (
-      ...args: Parameters<typeof window.history.pushState>
-    ) => {
-      complete();
-      return originalPushState(...args);
-    };
-    window.history.replaceState = (
-      ...args: Parameters<typeof window.history.replaceState>
-    ) => {
-      complete();
-      return originalReplaceState(...args);
-    };
-
-    const handlePopState = () => complete();
     const handlePageHide = () => complete();
 
     document.addEventListener("click", handleClick);
-    window.addEventListener("popstate", handlePopState);
     window.addEventListener("pagehide", handlePageHide);
 
     return () => {
       document.removeEventListener("click", handleClick);
-      window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("pagehide", handlePageHide);
-      window.history.pushState = originalPushState;
-      window.history.replaceState = originalReplaceState;
       if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
       if (pendingRef.current) {
         pendingRef.current = false;
         dispatch(popLoader());
       }
     };
-  }, [dispatch]);
+  }, [dispatch, complete]);
+
+  // Complete only once the destination route has actually committed.
+  // `usePathname()` updates when Next.js swaps in the new page's tree,
+  // which only happens once that page's data is ready — unlike
+  // history.pushState, which can fire while the transition is still in
+  // flight and was popping the loader before the new page (e.g. a
+  // product detail page's server-side data fetches) had actually
+  // rendered.
+  useEffect(() => {
+    if (isFirstPathnameCommitRef.current) {
+      isFirstPathnameCommitRef.current = false;
+      return;
+    }
+    complete();
+  }, [pathname, complete]);
 
   return null;
 }
