@@ -295,7 +295,7 @@ export default function Footer({
           {/* Bottom bar */}
           <div className="footer-bottom-bar">
             <p className="footer-copyright-desktop">
-              © 2026 Shopperbeats Pty Ltd (ABN 32 637 549 770). All Rights
+              © 2026 ShopperBeats Technologies LLC. All Rights
               Reserved
             </p>
 
