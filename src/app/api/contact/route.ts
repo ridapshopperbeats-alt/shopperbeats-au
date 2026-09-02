@@ -412,7 +412,6 @@ export async function POST(req: Request) {
 
     const msg = {
       to: "cs@shopperbeats.com",
-      cc:"ridapshopperbeats@gmail.com",
       from: "noreply@shopperbeats.com.au",
       subject: "New Contact Form Submission",
       html,
