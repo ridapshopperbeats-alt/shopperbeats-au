@@ -313,7 +313,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                             label={`${attr.name}: ${attr.value}`}
                             color={BadgeColor.Gray}
                             showDot={false}
-                            className="text-[11px]"
+                            className="text-[12px] capitalize"
                           />
                         ))
                       ) : (
@@ -323,7 +323,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                               label={`Size: ${product.size}`}
                               color={BadgeColor.Gray}
                               showDot={false}
-                              className="text-[11px]"
+                              className="text-[12px] capitalize"
                             />
                           )}
                           {product.color && (
@@ -331,7 +331,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                               label={`Colour: ${product.color}`}
                               color={BadgeColor.Gray}
                               showDot={false}
-                              className="text-[11px]"
+                              className="text-[12px] capitalize"
                             />
                           )}
                         </>
@@ -341,7 +341,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
                         label={`Qty: ${product.quantity}`}
                         color={BadgeColor.Gray}
                         showDot={false}
-                        className="text-[11px]"
+                        className="text-[12px] capitalize"
                       />
                     </div>
 
