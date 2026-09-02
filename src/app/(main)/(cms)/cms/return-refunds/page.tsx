@@ -19,7 +19,7 @@ const returnSteps: ReturnStep[] = [
   },
   {
     number: "02",
-    title: "Schedule Pickup",
+    title: "Provide Details",
     bullets: [
       "Package condition picture",
       "Shipping label picture",
