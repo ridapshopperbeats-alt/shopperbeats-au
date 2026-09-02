@@ -574,6 +574,7 @@ export default function MyOrdersPage() {
                             label={`${attr.name}: ${attr.value}`}
                             color={BadgeColor.Gray}
                             showDot={false}
+                            className="capitalize"
                           />
                         ))}
 
@@ -581,6 +582,7 @@ export default function MyOrdersPage() {
                           label={`Qty: ${product.quantity}`}
                           color={BadgeColor.Gray}
                           showDot={false}
+                          className="capitalize"
                         />
                       </div>
                     </div>
