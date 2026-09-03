@@ -231,6 +231,7 @@ function SliderComponent<T>(
   const startIndex = isLoopEnabled ? cloneCount : 0;
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsTransitioning(false);
     setCurrent(startIndex);
     const raf = requestAnimationFrame(() => setIsTransitioning(true));

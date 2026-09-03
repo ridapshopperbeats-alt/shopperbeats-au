@@ -29,6 +29,7 @@ import {
   useRemoveCouponMutation,
 } from "@/lib/redux/apis/cart-api";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 
 const pincodeSchema = yup.object().shape({
   pincode: pincode,
@@ -81,24 +82,16 @@ const Cart = () => {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [newTotalPrice, setNewTotalPrice] = useState<number | null>(null);
 
-  const [isXlUp, setIsXlUp] = useState(true);
+  const isXlUp = useMediaQuery("(min-width: 1280px)", true);
 
   useEffect(() => {
     if (cart?.has_coupon && cart.applied_coupon_code) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAppliedPromoCode(cart.applied_coupon_code);
       setDiscountAmount(cart.coupon_discount || 0);
       setPromoCodeInput(cart.applied_coupon_code);
     }
   }, [cart?.has_coupon, cart?.applied_coupon_code, cart?.coupon_discount]);
-
-  useEffect(() => {
-    const mql = window.matchMedia("(min-width: 1280px)");
-    setIsXlUp(mql.matches);
-
-    const handleChange = (e: MediaQueryListEvent) => setIsXlUp(e.matches);
-    mql.addEventListener("change", handleChange);
-    return () => mql.removeEventListener("change", handleChange);
-  }, []);
 
 
   useEffect(() => {
@@ -235,8 +228,11 @@ const Cart = () => {
     }
   };
 
+  // Resets the promo-code UI state (including the user-editable input) once
+  // the cart empties out — an external-system reset, not derivable state.
   useEffect(() => {
     if (cart && cart.items.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAppliedPromoCode(null);
       setDiscountAmount(0);
       setNewTotalPrice(null);
@@ -263,6 +259,7 @@ const Cart = () => {
 
   useEffect(() => {
     if (!cart?.items) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocalQtyMap((prev) => {
       const next = { ...prev };
       cart.items.forEach((item) => {
@@ -494,7 +491,6 @@ const Cart = () => {
                     disabled={
                       updatingItemId === item.id ||
                       isRemoving ||
-                      clickLockRef.current ||
                       !item.is_active ||
                       (item.available_stock !== undefined &&
                         item.available_stock <= 0)

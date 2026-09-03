@@ -3,7 +3,7 @@ import { API_ENDPOINTS } from "../../constants/api";
 import { createBaseQuery } from "./base-query";
 import { Address } from "@/types/address";
 
-const baseQuery = createBaseQuery(API_ENDPOINTS.AUTH.BASE_URL);
+const baseQuery = createBaseQuery(API_ENDPOINTS.AUTH.BASE_URL_CLIENT);
 
 export const addressApi = createApi({
   reducerPath: "addressApi",
