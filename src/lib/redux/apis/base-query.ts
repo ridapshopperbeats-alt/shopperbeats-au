@@ -79,7 +79,7 @@ function refreshAccessToken(
           data?.refresh_token ||
           (typeof responseField === "string" ? undefined : responseField?.refresh_token);
 
-        setLastRefreshAt(Date.now());
+        lastRefreshAt = Date.now();
         if (newAccessToken) {
           api.dispatch(setAccessToken(newAccessToken));
         }

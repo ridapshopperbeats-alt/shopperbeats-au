@@ -2,8 +2,7 @@ import { cache } from "react";
 import CategoryPageClient from "@/components/pages/CategoryPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import { Category, ProductsResponse } from "@/types/product";
+import { ProductsResponse } from "@/types/product";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
@@ -58,11 +57,7 @@ const getCategoryDetails = cache(async (slug: string) => {
     return null;
   }
 
-  // Helper to find category recursively
-  const findCategory = (
-    cats: Category[],
-    targetSlug: string,
-  ): Category | null => {
+  const findCategory = (cats: any[], targetSlug: string): any => {
     for (const cat of cats) {
       if (cat.slug === targetSlug) return cat;
       if (cat.subcategories?.length) {
