@@ -232,7 +232,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
       skip: !debouncedSearchQuery,
     });
 
-  useEffect(() => {}, [searchResults]);
+  useEffect(() => { }, [searchResults]);
   const toggleMegaMenu = () => {
     setIsMegaMenuOpen(true);
   };
@@ -565,18 +565,17 @@ export default function Header({ megaMenuData }: HeaderProps) {
                     activeCategory === (cat.slug ?? cat.id) && (
                       <div
                         key={cat.id}
-                        className={`mega-content ${
-                          activeCategory === (cat.slug ?? cat.id)
+                        className={`mega-content ${activeCategory === (cat.slug ?? cat.id)
                             ? "active"
                             : ""
-                        }`}
+                          }`}
                         id={cat.id}
                       >
                         {(() => {
                           const isFashionCat = cat.name
                             .toLowerCase()
                             .includes("fashion");
-                        
+
                           const tabs = isFashionCat ? cat.subcategories : [];
                           const activeTab =
                             tabs.find(
@@ -594,7 +593,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                             <div className="mega-content-inner">
                               {tabs.length > 0 && (
                                 <div className="mega-gender-tabs">
-                                  {tabs.map((tab) => {
+                                  {tabs.map((tab, index) => {
                                     const tabKey = tab.slug ?? tab.id;
                                     return (
                                       <button
@@ -602,16 +601,17 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                         type="button"
                                         className={
                                           activeTab &&
-                                          (activeTab.slug ?? activeTab.id) ===
-                                            tabKey
+                                            (activeTab.slug ?? activeTab.id) === tabKey
                                             ? "active"
                                             : ""
                                         }
-                                        onClick={() =>
-                                          setActiveSubTabId(tabKey)
-                                        }
+                                        onClick={() => setActiveSubTabId(tabKey)}
                                       >
-                                        {tab.name}
+                                        {index === 0
+                                          ? "Women"
+                                          : index === 1
+                                            ? "Men"
+                                            : tab.name}
                                       </button>
                                     );
                                   })}
@@ -689,9 +689,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
             <ul className="menu">
               <li>
                 <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-                    activeTopCategorySlug === "home-garden" ? "active" : ""
-                  }`}
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${activeTopCategorySlug === "home-garden" ? "active" : ""
+                    }`}
                   href="/category/home-garden"
                 >
                   <Leaf size={16} className="inline-block text-center icons-size" />
@@ -700,9 +699,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-                    activeTopCategorySlug === "furniture" ? "active" : ""
-                  }`}
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${activeTopCategorySlug === "furniture" ? "active" : ""
+                    }`}
                   href="/category/furniture"
                 >
                   <Armchair size={16} className="inline-block icons-size" />
@@ -711,9 +709,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className={`link flex items-center  xl:gap-2 hover:text-red-500 ${
-                    isFashionAccessoriesActive ? "active" : ""
-                  }`}
+                  className={`link flex items-center  xl:gap-2 hover:text-red-500 ${isFashionAccessoriesActive ? "active" : ""
+                    }`}
                   href="/category/fashion-accessories"
                 >
                   <HandbagIcon size={16} className="inline-block icons-size" />
@@ -722,12 +719,11 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-                    pathname === "/category/health-beauty" ||
-                    pathname?.startsWith("/category/health-beauty/")
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/category/health-beauty" ||
+                      pathname?.startsWith("/category/health-beauty/")
                       ? "active"
                       : ""
-                  }`}
+                    }`}
                   href="/category/health-beauty"
                 >
                   <HeartPulse size={16} className="inline-block icons-size" />
@@ -736,12 +732,11 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-                    pathname === "/category/outdoor-patio" ||
-                    pathname?.startsWith("/category/outdoor-patio/")
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/category/outdoor-patio" ||
+                      pathname?.startsWith("/category/outdoor-patio/")
                       ? "active"
                       : ""
-                  }`}
+                    }`}
                   href="/category/outdoor-patio"
                 >
                   <Armchair size={16} className="inline-block icons-size" />
@@ -750,9 +745,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </li>
               <li>
                 <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-                    pathname === "/product-listing/best-sellers" ? "active" : ""
-                  }`}
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/product-listing/best-sellers" ? "active" : ""
+                    }`}
                   href="/product-listing/best-sellers"
                 >
                   <Gem size={16} className="inline-block icons-size" />
@@ -762,9 +756,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
               <li>
                 <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-                    pathname === "/product-listing/whats-on-sale" ? "active" : ""
-                  }`}
+                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/product-listing/whats-on-sale" ? "active" : ""
+                    }`}
                   href="/product-listing/whats-on-sale"
                 >
                   <Sparkles size={16} className="inline-block icons-size" />
@@ -776,11 +769,10 @@ export default function Header({ megaMenuData }: HeaderProps) {
         </div>
 
         <div
-          className={`fixed inset-0 bg-black/40 z-998 transition-opacity duration-300 ${
-            isMobileNavOpen
+          className={`fixed inset-0 bg-black/40 z-998 transition-opacity duration-300 ${isMobileNavOpen
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
-          }`}
+            }`}
           onClick={() => setIsMobileNavOpen(false)}
         />
 
@@ -809,7 +801,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
               const activeTab =
                 tabs.find(
                   (tab) => (tab.slug ?? tab.id) === activeSubTabId,
-                ) ?? tabs[0];
+                ) ?? tabs[1];
+              console.log("activeTab", activeTab);
               const subCategories = isFashionCat
                 ? activeTab
                   ? activeTab.subcategories?.length
@@ -817,7 +810,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                     : [activeTab]
                   : []
                 : cat.subcategories;
-
               return (
                 <div key={cat.id} className="new-mega-column">
                   <div className="mobile-main-category">
@@ -869,7 +861,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                 type="button"
                                 className={
                                   activeTab &&
-                                  (activeTab.slug ?? activeTab.id) === tabKey
+                                    (activeTab.slug ?? activeTab.id) === tabKey
                                     ? "active"
                                     : ""
                                 }
@@ -976,3 +968,13 @@ export default function Header({ megaMenuData }: HeaderProps) {
     </div>
   );
 }
+function useIsClient() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  return isClient;
+}
+
