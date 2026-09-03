@@ -320,7 +320,32 @@ export default function Header({ megaMenuData }: HeaderProps) {
   if (pathname === "/check-out") {
     return null;
   }
+  useEffect(() => {
+    const activeCat = megaMenuData.find(
+      (cat) => (cat.slug ?? cat.id) === activeCategory
+    );
 
+    if (!activeCat) return;
+
+    const isFashionCat = activeCat.name
+      ?.toLowerCase()
+      .includes("fashion");
+
+    if (!isFashionCat) return;
+
+    const tabs = activeCat.subcategories ?? [];
+
+    const womenTab = tabs.find((tab) => {
+      const slug = String(tab.slug ?? "").toLowerCase();
+      const name = String(tab.name ?? "").toLowerCase();
+
+      return slug === "women" || name === "women";
+    });
+
+    if (womenTab) {
+      setActiveSubTabId(womenTab.slug ?? womenTab.id);
+    }
+  }, [activeCategory, megaMenuData]);
   return (
     <div className="header-fixed ">
       <div className="px-[10px] xl:px-[40px] flex flex-col">
@@ -565,51 +590,112 @@ export default function Header({ megaMenuData }: HeaderProps) {
                     activeCategory === (cat.slug ?? cat.id) && (
                       <div
                         key={cat.id}
-                        className={`mega-content ${activeCategory === (cat.slug ?? cat.id)
-                            ? "active"
-                            : ""
+                        className={`mega-content ${activeCategory === (cat.slug ?? cat.id) ? "active" : ""
                           }`}
                         id={cat.id}
                       >
                         {(() => {
                           const isFashionCat = cat.name
-                            .toLowerCase()
+                            ?.toLowerCase()
                             .includes("fashion");
 
-                          const tabs = isFashionCat ? cat.subcategories : [];
+                          const tabs = isFashionCat
+                            ? cat.subcategories ?? []
+                            : [];
+
+                          // Find Women tab
+                          const womenTab = tabs.find((tab) => {
+                            const slug = String(tab.slug ?? "").toLowerCase();
+                            const name = String(tab.name ?? "").toLowerCase();
+
+                            return slug === "women" || name === "women";
+                          });
+
+                          // Find Men tab
+                          const menTab = tabs.find((tab) => {
+                            const slug = String(tab.slug ?? "").toLowerCase();
+                            const name = String(tab.name ?? "").toLowerCase();
+
+                            return (
+                              slug === "men" ||
+                              slug === "man" ||
+                              name === "men" ||
+                              name === "man"
+                            );
+                          });
+
+                          /**
+                           * IMPORTANT:
+                           * Women first, Men second
+                           */
+                          const orderedTabs = [
+                            ...(womenTab ? [womenTab] : []),
+                            ...(menTab ? [menTab] : []),
+                            ...tabs.filter(
+                              (tab) =>
+                                tab !== womenTab &&
+                                tab !== menTab
+                            ),
+                          ];
+
+                          // Find currently active tab
                           const activeTab =
-                            tabs.find(
-                              (tab) => (tab.slug ?? tab.id) === activeSubTabId,
-                            ) ?? tabs[0];
+                            orderedTabs.find(
+                              (tab) =>
+                                String(tab.slug ?? tab.id) ===
+                                String(activeSubTabId)
+                            ) ?? womenTab ?? orderedTabs[0];
+
+                          // Only active tab's data will be displayed
                           const columns = isFashionCat
-                            ? activeTab
-                              ? activeTab.subcategories?.length
-                                ? activeTab.subcategories
-                                : [activeTab]
-                              : []
-                            : cat.subcategories;
+                            ? activeTab?.subcategories ?? []
+                            : cat.subcategories ?? [];
 
                           return (
                             <div className="mega-content-inner">
-                              {tabs.length > 0 && (
+
+                              {/* =========================
+                  WOMEN / MEN TABS
+              ========================= */}
+                              {orderedTabs.length > 0 && (
                                 <div className="mega-gender-tabs">
-                                  {tabs.map((tab, index) => {
+                                  {orderedTabs.map((tab) => {
                                     const tabKey = tab.slug ?? tab.id;
+
+                                    const slug = String(
+                                      tab.slug ?? ""
+                                    ).toLowerCase();
+
+                                    const name = String(
+                                      tab.name ?? ""
+                                    ).toLowerCase();
+
+                                    const isWomen =
+                                      slug === "women" ||
+                                      name === "women";
+
+                                    const isMen =
+                                      slug === "men" ||
+                                      slug === "man" ||
+                                      name === "men" ||
+                                      name === "man";
+
+                                    const isActive =
+                                      String(activeSubTabId) ===
+                                      String(tabKey);
+
                                     return (
                                       <button
                                         key={tabKey}
                                         type="button"
-                                        className={
-                                          activeTab &&
-                                            (activeTab.slug ?? activeTab.id) === tabKey
-                                            ? "active"
-                                            : ""
-                                        }
-                                        onClick={() => setActiveSubTabId(tabKey)}
+                                        className={isActive ? "active" : ""}
+                                        onClick={() => {
+                                          setActiveSubTabId(tabKey);
+                                        }}
                                       >
-                                        {index === 0
+                                        {isWomen
                                           ? "Women"
-                                          : index === 1
+                                          : isMen
                                             ? "Men"
                                             : tab.name}
                                       </button>
@@ -617,6 +703,10 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                   })}
                                 </div>
                               )}
+
+                              {/* =========================
+                  ACTIVE TAB DATA
+              ========================= */}
                               <div className="mega-content-row">
                                 <div className="mega-cat">
                                   {columns.map((subCat) => (
@@ -627,30 +717,33 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                       <Link
                                         prefetch={false}
                                         href={resolveCategoryHref(
-                                          subCat.slug ?? subCat.id,
+                                          subCat.slug ?? subCat.id
                                         )}
                                         onClick={closeMegaMenu}
                                       >
                                         <h5>{subCat.name}</h5>
                                       </Link>
+
                                       <ul>
-                                        {subCat.links.slice(0, 10).map((link) => (
-                                          <li key={link.name}>
-                                            <Link
-                                              prefetch={false}
-                                              href={link.href}
-                                              onClick={closeMegaMenu}
-                                            >
-                                              {link.name}
-                                            </Link>
-                                          </li>
-                                        ))}
+                                        {subCat.links
+                                          ?.slice(0, 10)
+                                          .map((link) => (
+                                            <li key={link.name}>
+                                              <Link
+                                                prefetch={false}
+                                                href={link.href}
+                                                onClick={closeMegaMenu}
+                                              >
+                                                {link.name}
+                                              </Link>
+                                            </li>
+                                          ))}
 
                                         {subCat.viewAll && (
                                           <li>
                                             <Link
                                               href={resolveCategoryHref(
-                                                subCat.slug ?? subCat.id,
+                                                subCat.slug ?? subCat.id
                                               )}
                                               className="view-link"
                                               prefetch={false}
@@ -659,14 +752,15 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                                   addBreadcrumb({
                                                     name: cat.name,
                                                     path: resolveCategoryHref(
-                                                      cat.slug ?? cat.id,
+                                                      cat.slug ?? cat.id
                                                     ),
-                                                  }),
+                                                  })
                                                 );
+
                                                 closeMegaMenu();
                                               }}
                                             >
-                                              View All
+                                              View All →
                                             </Link>
                                           </li>
                                         )}
@@ -675,11 +769,12 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                   ))}
                                 </div>
                               </div>
+
                             </div>
                           );
                         })()}
                       </div>
-                    ),
+                    )
                 )}
               </div>
             </div>
@@ -720,9 +815,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/category/health-beauty" ||
-                      pathname?.startsWith("/category/health-beauty/")
-                      ? "active"
-                      : ""
+                    pathname?.startsWith("/category/health-beauty/")
+                    ? "active"
+                    : ""
                     }`}
                   href="/category/health-beauty"
                 >
@@ -733,9 +828,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
               <li>
                 <Link
                   className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/category/outdoor-patio" ||
-                      pathname?.startsWith("/category/outdoor-patio/")
-                      ? "active"
-                      : ""
+                    pathname?.startsWith("/category/outdoor-patio/")
+                    ? "active"
+                    : ""
                     }`}
                   href="/category/outdoor-patio"
                 >
@@ -770,8 +865,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
         <div
           className={`fixed inset-0 bg-black/40 z-998 transition-opacity duration-300 ${isMobileNavOpen
-              ? "opacity-100 pointer-events-auto"
-              : "opacity-0 pointer-events-none"
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
             }`}
           onClick={() => setIsMobileNavOpen(false)}
         />
