@@ -1,13 +1,16 @@
 "use client";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import Banner from "@/components/common/Banner";
 import Sidebar from "@/components/common/Sidebar";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import "../../../styles/account.css";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
 import { sidebarLinks } from "@/lib/utils/main-utils";
+
+// Guests are allowed on these /user/* routes; every other route requires auth.
+const GUEST_ALLOWED_PATHS = ["/user/wishlist", "/user/logout"];
 
 export default function UserLayout({
   children,
@@ -15,9 +18,18 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
+  const router = useRouter();
+  const { isAuthenticated, authChecked } = useSelector(
+    (state: RootState) => state.auth,
   );
+  const isGuestAllowed = GUEST_ALLOWED_PATHS.includes(pathname ?? "");
+
+  useEffect(() => {
+    if (authChecked && !isAuthenticated && !isGuestAllowed) {
+      router.replace(`/login?redirect=${encodeURIComponent(pathname ?? "/user")}`);
+    }
+  }, [authChecked, isAuthenticated, isGuestAllowed, pathname, router]);
+
   const visibleSidebarLinks = isAuthenticated
     ? sidebarLinks
     : sidebarLinks.filter((link) => link.label === "Wishlist");
@@ -108,11 +120,13 @@ export default function UserLayout({
 
             <div
               className="flex w-full max-w-[1118px] items-start"
-              
+
             >
-              <Suspense fallback={<div>Loading...</div>}>
-                {children}
-              </Suspense>
+              {(!authChecked || isAuthenticated || isGuestAllowed) && (
+                <Suspense fallback={<div>Loading...</div>}>
+                  {children}
+                </Suspense>
+              )}
             </div>
 
           </div>

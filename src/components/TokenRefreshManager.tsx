@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
 import { triggerSilentRefresh } from "@/lib/redux/apis/base-query";
-import { getAccessTokenCookie } from "@/lib/utils/access-token";
 import { getMsUntilExpiry } from "@/lib/utils/jwt";
 
 
@@ -17,6 +16,11 @@ export default function TokenRefreshManager() {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   );
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const accessTokenRef = useRef(accessToken);
+  useEffect(() => {
+    accessTokenRef.current = accessToken;
+  }, [accessToken]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -30,7 +34,7 @@ export default function TokenRefreshManager() {
 
     const scheduleNextRefresh = () => {
       if (cancelled) return;
-      const token = getAccessTokenCookie();
+      const token = accessTokenRef.current;
       const msUntilExpiry = token ? getMsUntilExpiry(token) : null;
 
       const delay =
@@ -47,7 +51,7 @@ export default function TokenRefreshManager() {
     scheduleNextRefresh();
 
     const refreshIfStale = () => {
-      const token = getAccessTokenCookie();
+      const token = accessTokenRef.current;
       const msUntilExpiry = token ? getMsUntilExpiry(token) : null;
       if (msUntilExpiry === null || msUntilExpiry < MIN_REMAINING_MS_TO_SKIP) {
         refresh();

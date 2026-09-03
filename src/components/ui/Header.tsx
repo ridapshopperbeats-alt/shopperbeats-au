@@ -86,7 +86,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [showCartCard] = useState(false);
   const [showPincodeInput, setShowPincodeInput] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const pathname = usePathname();
   const currentCategorySlug = pathname?.match(/^\/category\/([^/]+)/)?.[1];
   const activeTopCategorySlug = currentCategorySlug
@@ -182,10 +182,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
       requestLocation();
     }
   }, [requestLocation]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const checkLocationAndPostcode = async () => {
@@ -980,3 +976,13 @@ export default function Header({ megaMenuData }: HeaderProps) {
     </div>
   );
 }
+function useIsClient() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  return isClient;
+}
+

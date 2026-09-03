@@ -102,11 +102,7 @@ export default function FAQPage() {
     });
   }, [faqsByType]);
 
-  useEffect(() => {
-    if (dynamicTabs.length > 0 && !activeTab) {
-      setActiveTab(dynamicTabs[0].key);
-    }
-  }, [dynamicTabs, activeTab]);
+  const effectiveActiveTab = activeTab || dynamicTabs[0]?.key || "";
 
 
   return (
@@ -218,7 +214,7 @@ export default function FAQPage() {
                 <button
                   key={grid.key}
                   type="button"
-                  className={`bg-card py-30 ${activeTab === grid.key ? "active" : ""}`}
+                  className={`bg-card py-30 ${effectiveActiveTab === grid.key ? "active" : ""}`}
                   onClick={() => {
                     setActiveTab(grid.key);
 
@@ -253,7 +249,7 @@ export default function FAQPage() {
                     shadow-md 
                     transition-all duration-200
                     group-hover:bg-yellow-500 group-hover:scale-105
-                    ${activeTab === grid.key ? "bg-yellow-500" : ""}
+                    ${effectiveActiveTab === grid.key ? "bg-yellow-500" : ""}
                   `}
                     >
                       <Image
@@ -271,13 +267,13 @@ export default function FAQPage() {
             </div>
           )}
 
-          {!isLoading && !isSearching && activeTab && faqsByType[activeTab] && (
+          {!isLoading && !isSearching && effectiveActiveTab && faqsByType[effectiveActiveTab] && (
             <div
               id="faq-accordion-section"
               className="mt-40"
             >
               <Accordion
-                items={faqsByType[activeTab].map((item: FAQItem) => ({
+                items={faqsByType[effectiveActiveTab].map((item: FAQItem) => ({
                   id: String(item.id),
                   title: item.question,
                   content: <p>{item.answer}</p>,

@@ -33,6 +33,7 @@ import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useWishlistToggle } from "@/lib/hooks/use-wishlist-toggle";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 
 import DeliveryDetailsPopup from "../ui/DeliveryDetailsPopup";
 import {
@@ -192,6 +193,7 @@ export default function ProductDetailClient({
 
   useEffect(() => {
     if (!cart?.items) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocalQtyMap((prev) => {
       const next = { ...prev };
       cart.items.forEach((item) => {
@@ -306,8 +308,7 @@ export default function ProductDetailClient({
     "idle" | "checking" | "available" | "unavailable"
   >("idle");
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useIsClient();
 
   const [selectedLocation, setSelectedLocation] = useState<{
     pincode: string;
@@ -456,7 +457,7 @@ export default function ProductDetailClient({
         item.product_id === product.id &&
         item.variant_id === selectedVariant.id,
     );
-  }, [cart?.items, product.id, selectedVariant?.id]);
+  }, [cart?.items, product.id, selectedVariant]);
 
   const handleBuyNow = async () => {
     const hasVariants = product?.variants && product.variants.length > 0;

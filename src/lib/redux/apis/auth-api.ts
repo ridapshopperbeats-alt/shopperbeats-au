@@ -4,8 +4,7 @@ import { API_ENDPOINTS } from "../../constants/api";
 import { UserDetails, PersonalData, LoginResponse, UpdatePersonalDataRequest, SocialMediaLink } from "@/types/auth";
 import { createBaseQuery } from "./base-query";
 import { logout, setAuthenticated, setAccessToken } from "../slices/auth-slice";
-import { clearRefreshToken, setRefreshToken } from "@/lib/utils/refresh-token-cokkie";
-import { clearAccessTokenCookie, setAccessTokenCookie } from "@/lib/utils/access-token";
+import { clearRefreshToken, setRefreshToken } from "@/lib/utils/refresh-token-store";
 import { clearCart } from "../slices/cart-slice";
 import { addressApi } from "./address-api";
 import { cartApi } from "./cart-api";
@@ -13,7 +12,7 @@ import { orderApi } from "./order-api";
 import { paymentApi } from "./payment-api";
 import { vendorApi } from "./vendor-api";
 
-const baseQuery = createBaseQuery(API_ENDPOINTS.AUTH.BASE_URL);
+const baseQuery = createBaseQuery(API_ENDPOINTS.AUTH.BASE_URL_CLIENT);
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -40,7 +39,6 @@ export const authApi = createApi({
           dispatch(setAuthenticated(true));
           if (data?.response?.access_token) {
             dispatch(setAccessToken(data.response.access_token));
-            setAccessTokenCookie(data.response.access_token);
           }
           if (data?.response?.refresh_token) {
             setRefreshToken(data.response.refresh_token);
@@ -69,7 +67,6 @@ export const authApi = createApi({
           if (data?.response?.access_token) {
             dispatch(setAuthenticated(true));
             dispatch(setAccessToken(data.response.access_token));
-            setAccessTokenCookie(data.response.access_token);
           }
           if (data?.response?.refresh_token) {
             setRefreshToken(data.response.refresh_token);
@@ -115,7 +112,6 @@ export const authApi = createApi({
           console.warn("Logout request failed; clearing local session anyway, status:", (err as { status?: number | string })?.status);
         } finally {
           clearRefreshToken();
-          clearAccessTokenCookie();
           dispatch(clearCart());
           dispatch(authApi.util.resetApiState());
           dispatch(addressApi.util.resetApiState());
@@ -168,7 +164,6 @@ export const authApi = createApi({
           if (data?.access_token) {
             dispatch(setAuthenticated(true));
             dispatch(setAccessToken(data.access_token));
-            setAccessTokenCookie(data.access_token);
           }
           if (data?.refresh_token) {
             setRefreshToken(data.refresh_token);
@@ -224,7 +219,6 @@ export const authApi = createApi({
           dispatch(setAuthenticated(true));
           if (data?.response?.access_token) {
             dispatch(setAccessToken(data.response.access_token));
-            setAccessTokenCookie(data.response.access_token);
           }
           if (data?.response?.refresh_token) {
             setRefreshToken(data.response.refresh_token);

@@ -5,15 +5,12 @@ import {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS } from "../../constants/api";
-import { clearRefreshToken, getRefreshToken, setRefreshToken } from "@/lib/utils/refresh-token-cokkie";
-import { clearAccessTokenCookie, getAccessTokenCookie, setAccessTokenCookie } from "@/lib/utils/access-token";
 import { logout, setAccessToken } from "../slices/auth-slice";
-import { prepareAuthHeaders } from "./prepare-auth-headers";
-import type { RootState } from "../store";
+import { clearRefreshToken, getRefreshToken, setRefreshToken } from "@/lib/utils/refresh-token-store";
 
 
 const refreshBaseQuery = fetchBaseQuery({
-  baseUrl: API_ENDPOINTS.AUTH.BASE_URL,
+  baseUrl: API_ENDPOINTS.AUTH.BASE_URL_CLIENT,
   credentials: "include",
 });
 
@@ -40,24 +37,14 @@ function refreshAccessToken(
   }
 
   if (!pendingRefresh) {
-    const refresh_token = getRefreshToken();
-    if (!refresh_token) {
-      
-      const state = api.getState() as RootState;
-      if (state.auth?.isAuthenticated) {
-        console.warn("No refresh_token cookie found; cannot refresh access token.");
-        clearAccessTokenCookie();
-        api.dispatch(logout());
-      }
-      return Promise.resolve("invalid");
-    }
+    const storedRefreshToken = getRefreshToken();
 
     pendingRefresh = Promise.resolve(
       refreshBaseQuery(
         {
           url: API_ENDPOINTS.AUTH.REFRESH_TOKEN,
           method: "POST",
-          body: { refresh_token },
+          body: storedRefreshToken ? { refresh_token: storedRefreshToken } : {},
         },
         api,
         extraOptions,
@@ -70,7 +57,6 @@ function refreshAccessToken(
           if (status === 401 || status === 403) {
             console.warn("Refresh token rejected by server:", result.error);
             clearRefreshToken();
-            clearAccessTokenCookie();
             api.dispatch(logout());
             return "invalid" as const;
           }
@@ -89,21 +75,14 @@ function refreshAccessToken(
         const newAccessToken =
           data?.access_token ||
           (typeof responseField === "string" ? responseField : responseField?.access_token);
-        if (!newAccessToken) {
-          console.warn("Refresh token response missing access_token:", result.data);
-          clearRefreshToken();
-          clearAccessTokenCookie();
-          api.dispatch(logout());
-          return "invalid" as const;
-        }
-
-        lastRefreshAt = Date.now();
-        api.dispatch(setAccessToken(newAccessToken));
-        setAccessTokenCookie(newAccessToken);
-
         const newRefreshToken =
           data?.refresh_token ||
           (typeof responseField === "string" ? undefined : responseField?.refresh_token);
+
+        setLastRefreshAt(Date.now());
+        if (newAccessToken) {
+          api.dispatch(setAccessToken(newAccessToken));
+        }
         if (newRefreshToken) {
           setRefreshToken(newRefreshToken);
         }
@@ -137,12 +116,10 @@ function isAuthRequiredError(error: FetchBaseQueryError | undefined): boolean {
 
 export const createBaseQuery = (
   baseUrl: string,
-  prepareHeaders: typeof prepareAuthHeaders = prepareAuthHeaders
 ): BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> => {
   const rawBaseQuery = fetchBaseQuery({
     baseUrl,
     credentials: "include",
-    prepareHeaders,
   });
 
   return async (args, api, extraOptions) => {

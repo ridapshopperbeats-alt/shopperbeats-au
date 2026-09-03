@@ -90,7 +90,7 @@ async function fetchProductData(
     const value = searchParams[key];
 
     if (value !== undefined) {
-      const formatPriceRange = (val: any) =>
+      const formatPriceRange = (val: string | string[]) =>
         String(val)
           .replace(/\$/g, "")
           .replace(/\+/g, " ")
@@ -130,17 +130,10 @@ async function fetchProductData(
 
   let productApiUrl = "";
 
-  // The products API expects the JWT as a Bearer header, not a Cookie header
-  // — forward it explicitly, since access_token only reaches this server
-  // component as a raw cookie (see access-token.ts).
-  const accessTokenMatch = allCookies?.match(/(?:^|; )access_token=([^;]*)/);
-  const accessToken = accessTokenMatch ? decodeURIComponent(accessTokenMatch[1]) : null;
-
   const fetchOptions: RequestInit = {
     cache: "no-store",
     headers: {
       Cookie: allCookies || "",
-      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     },
   };
 

@@ -25,8 +25,8 @@ import { useCancelOrderMutation, useListOrdersQuery } from "@/lib/redux/apis/ord
 import { formatPrice } from "@/lib/utils/main-utils";
 import { getOrderProductImage, getReviewProductId, mapOrderProducts } from "@/lib/utils/order-products";
 import { API_ENDPOINTS } from "@/lib/constants/api";
-import { getAccessTokenCookie } from "@/lib/utils/access-token";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/common/select";
 import CancelOrderPopup from "@/components/common/CancelOrderPopup";
 import ReturnOrderPopup from "@/components/common/ReturnOrderPopup";
@@ -135,10 +135,7 @@ export default function MyOrdersPage() {
     });
   };
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [uiLimit, setUiLimit] = useState(10);
@@ -204,6 +201,7 @@ export default function MyOrdersPage() {
     const startFetching = calculateStartFetchingPage(currentPage, uiLimit);
 
     if (fetchingPage === startFetching) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAllOrders(mapped);
     } else if (fetchingPage > startFetching) {
       // Append logic
@@ -265,14 +263,10 @@ export default function MyOrdersPage() {
     orderNumber?: string,
   ) => {
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL_ORDER || "";
-      const endpoint = API_ENDPOINTS.ORDER.GET_INVOICE(orderId);
-      const url = `${baseUrl}${endpoint}`;
+      const url = `${API_ENDPOINTS.ORDER.BASE_URL}${API_ENDPOINTS.ORDER.GET_INVOICE(orderId)}`;
 
-      const token = getAccessTokenCookie();
       const response = await fetch(url, {
         credentials: "include",
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
 
       if (!response.ok) {
