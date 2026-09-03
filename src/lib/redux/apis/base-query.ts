@@ -5,8 +5,11 @@ import {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS } from "../../constants/api";
+import { clearRefreshToken, getRefreshToken, setRefreshToken } from "@/lib/utils/refresh-token-cokkie";
+import { clearAccessTokenCookie, getAccessTokenCookie, setAccessTokenCookie } from "@/lib/utils/access-token";
 import { logout, setAccessToken } from "../slices/auth-slice";
-import { clearRefreshToken, getRefreshToken, setRefreshToken } from "@/lib/utils/refresh-token-store";
+import { prepareAuthHeaders } from "./prepare-auth-headers";
+import type { RootState } from "../store";
 
 
 const refreshBaseQuery = fetchBaseQuery({
@@ -20,35 +23,34 @@ type RefreshOutcome = "refreshed" | "invalid" | "transient";
 let pendingRefresh: Promise<RefreshOutcome> | null = null;
 
 const REFRESH_COOLDOWN_MS = 5000;
-const LAST_REFRESH_KEY = "last-token-refresh-at";
 
-function getLastRefreshAt(): number {
-  if (typeof window === "undefined") return 0;
-  try {
-    return Number(window.localStorage.getItem(LAST_REFRESH_KEY)) || 0;
-  } catch {
-    return 0;
-  }
-}
 
-function setLastRefreshAt(timestamp: number): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(LAST_REFRESH_KEY, String(timestamp));
-  } catch {
-  }
-}
+let lastRefreshAt = 0;
 
 function refreshAccessToken(
   api: Parameters<BaseQueryFn>[1],
   extraOptions: Parameters<BaseQueryFn>[2],
 ): Promise<RefreshOutcome> {
-  if (Date.now() - getLastRefreshAt() < REFRESH_COOLDOWN_MS) {
-    return Promise.resolve("refreshed");
+ 
+  if (Date.now() - lastRefreshAt < REFRESH_COOLDOWN_MS) {
+    const hasToken = !!getAccessTokenCookie();
+    if (hasToken) {
+      return Promise.resolve("refreshed");
+    }
   }
 
   if (!pendingRefresh) {
-    const storedRefreshToken = getRefreshToken();
+    const refresh_token = getRefreshToken();
+    if (!refresh_token) {
+      
+      const state = api.getState() as RootState;
+      if (state.auth?.isAuthenticated) {
+        console.warn("No refresh_token cookie found; cannot refresh access token.");
+        clearAccessTokenCookie();
+        api.dispatch(logout());
+      }
+      return Promise.resolve("invalid");
+    }
 
     pendingRefresh = Promise.resolve(
       refreshBaseQuery(
@@ -86,6 +88,18 @@ function refreshAccessToken(
         const newAccessToken =
           data?.access_token ||
           (typeof responseField === "string" ? responseField : responseField?.access_token);
+        if (!newAccessToken) {
+          console.warn("Refresh token response missing access_token:", result.data);
+          clearRefreshToken();
+          clearAccessTokenCookie();
+          api.dispatch(logout());
+          return "invalid" as const;
+        }
+
+        lastRefreshAt = Date.now();
+        api.dispatch(setAccessToken(newAccessToken));
+        setAccessTokenCookie(newAccessToken);
+
         const newRefreshToken =
           data?.refresh_token ||
           (typeof responseField === "string" ? undefined : responseField?.refresh_token);

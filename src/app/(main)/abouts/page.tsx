@@ -7,7 +7,6 @@ import Banner from "@/components/common/Banner";
 import ContactBanner from "@/components/common/ContactBanner";
 import "../../../styles/about.css";
 
-// Types
 interface AboutLink {
     href: string;
     label: string;
@@ -23,7 +22,6 @@ interface AboutSection {
 }
 
 
-// JSON-like data
 const aboutLinks: AboutLink[] = [
     { href: "#1", label: "Who we are" },
     { href: "#2", label: "Why buy from us" },
@@ -78,10 +76,8 @@ export default function AboutPage() {
             <div className="about-page py-5">
                 <div className="container">
                     <div className="  block md:flex  gap-6">
-                        {/* Sidebar */}
                         <Sidebar links={aboutLinks} active={active} onChange={setActive} extraClass="md:w-15-imp mb-4  md:mb-0" />
 
-                        {/* Content */}
                         {currentSection && (
                             <div className="about-section dflex mvb">
                                 <div className="about-content">

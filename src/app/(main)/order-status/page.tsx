@@ -63,8 +63,7 @@ const {
     const token = searchParams.get("token");
     const payerId = searchParams.get("PayerID");
     const paymentIntent = searchParams.get("payment_intent");
-    const redirectStatus = searchParams.get("redirect_status");
-    
+
     // Do not process payment capture if status is cancel or failed
     if (status === "cancel" || actualRedirectStatus === "failed") return;
 
@@ -165,6 +164,7 @@ const {
         handleStripeSuccess();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, capturePayment, cart?.id, clearCart, router, isProcessingPayment, isCartLoaded, status]);
 
   useEffect(() => {

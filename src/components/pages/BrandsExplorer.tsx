@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search } from "lucide-react";
 import { Card } from "@/components/common/Card";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 

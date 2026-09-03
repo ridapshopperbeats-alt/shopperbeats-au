@@ -8,8 +8,7 @@ import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Button from "@/components/common/Button";
 
-import { LoginResponse } from "@/types/auth";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
 
 import Link from "next/link";
@@ -24,11 +23,9 @@ import {
 } from "@/lib/redux/apis/cart-api";
 import { loginSchema } from "@/lib/validations/form-schemas";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
-import { Input } from "@/components/common/input";
 import { Card } from "@/components/common/Card";
 
 export default function LoginPage() {
-  const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
   const [resendVerificationCode, { isLoading: isResending }] =
     useResendVerificationCodeMutation();
@@ -67,7 +64,7 @@ export default function LoginPage() {
   const { formData, formErrors, handleChange, handleSubmit } =
     useFormValidation(loginSchema, { email: "", password: "" });
 
-  const flushPendingWishlist = async (_loginResponse: LoginResponse) => {
+  const flushPendingWishlist = async () => {
     const raw = sessionStorage.getItem("pendingWishlist");
     if (!raw) return;
 
@@ -101,9 +98,7 @@ export default function LoginPage() {
     }
   };
 
-  // Items wishlisted while logged out live only in this browser's localStorage.
-  // Once the user logs in, push them into the real account wishlist so nothing
-  // they saved as a guest gets left behind.
+
   const syncGuestWishlist = async () => {
     const guestItems = readGuestWishlist();
     if (guestItems.length === 0) return;
@@ -197,7 +192,7 @@ export default function LoginPage() {
     }
 
     try {
-      const response: LoginResponse = await login({
+      await login({
         ...formData,
         recaptcha_token: recaptcha_token || "",
         remember_me: rememberMe,
@@ -218,7 +213,7 @@ export default function LoginPage() {
       // }
 
       toast.success("Login successful!");
-      await flushPendingWishlist(response);
+      await flushPendingWishlist();
       await syncGuestWishlist();
       router.push(redirectUrl || "/");
     } catch (err) {

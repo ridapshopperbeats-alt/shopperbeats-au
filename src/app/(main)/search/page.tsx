@@ -5,6 +5,7 @@ import { API_ENDPOINTS } from "@/lib/constants/api";
 import { Product, ProductsResponse } from "@/types/product";
 import type { Metadata } from "next";
 import "../../../styles/Product.css";
+import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 // ---------- Generate Metadata ----------
 export async function generateMetadata(
@@ -103,6 +104,24 @@ export default async function SearchPage({
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: toSafeJsonLd({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: `Search results for "${query}"`,
+            url: `/search?q=${query}`,
+            numberOfItems: products.length,
+            itemListElement: products.map((product: any, index: number) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              name: product.title,
+              url: `/product/${product.unique_code || product.slug}`,
+            })),
+          }),
+        }}
+      />
       <Breadcrumb />
       <SearchPageClient
         query={query}

@@ -18,7 +18,6 @@ import {
   formatPrice,
 } from "@/lib/utils/main-utils";
 import NoProductsFound from "@/components/NoProductFound";
-import { Input } from "@/components/common/input";
 import { ShieldCheck } from "lucide-react";
 import { getHandlingDeliveryRange } from "@/lib/utils/get-handling-delivery-range";
 import {
@@ -32,7 +31,6 @@ import {
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 
-// ---------------- SCHEMAS ----------------
 const pincodeSchema = yup.object().shape({
   pincode: pincode,
 });
@@ -133,7 +131,6 @@ const Cart = () => {
     return itemSavings + promotionDiscount + couponDiscount;
   }, [cart, discountAmount]);
 
-  // ---------------- APPLY PROMO CODE ----------------
   const handleApplyPromoCode = async () => {
     if (!promoCodeInput.trim()) {
       setPromoCodeError("Please enter a promo code.");
@@ -214,7 +211,6 @@ const Cart = () => {
     }
   };
 
-  // ---------------- REMOVE ITEM ----------------
   const handleRemoveItem = async (id: string, variant_id?: string) => {
     if (clickLockRef.current) return;
     clickLockRef.current = true;
@@ -244,7 +240,6 @@ const Cart = () => {
     }
   }, [cart]);
 
-  // ---------------- CHECK DELIVERY ----------------
   const handleCheckDelivery = handleSubmit(async (data) => {
     try {
       const result = await checkDelivery(data.pincode).unwrap();
@@ -260,7 +255,6 @@ const Cart = () => {
     }
   });
 
-  // Per-item local quantity display (allows user to clear & retype)
   const [localQtyMap, setLocalQtyMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -277,7 +271,6 @@ const Cart = () => {
     });
   }, [cart]);
 
-  // ---------------- QUANTITY DEBOUNCED UPDATE ----------------
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleUpdateQuantity = (
@@ -335,7 +328,6 @@ const Cart = () => {
     }, 800);
   };
 
-  // ---------------- LOADING / EMPTY STATES ----------------
   if (isCartLoading || (isCartFetching && !cartData))
     return (
       <div className="flex flex-col justify-center items-center text-center p-8 min-h-[40vh]">
@@ -766,13 +758,7 @@ const Cart = () => {
                             </span>
                           )}
                         </div>
-                        {/* {item.promotion_discount != null &&
-                          item.promotion_discount > 0 && (
-                            <span className="inline-block mt-1.5 bg-[#fff4f4] text-[#e53e3e] border border-[#fed7d7] rounded px-2 py-0.5 text-xs font-semibold whitespace-nowrap">
-                              🏷 Item Discount: $
-                              {formatPrice(item.promotion_discount)}
-                            </span>
-                          )} */}
+                       
                       </div>
                     </div>
 
@@ -850,22 +836,6 @@ const Cart = () => {
                   </p>
                 </div>
               )}
-
-              {/* {cart.taxes &&
-                cart.taxes.length > 0 &&
-                cart.taxes.map((tax) => (
-                  <div
-                    key={tax.name}
-                    className="flex items-center justify-between"
-                  >
-                    <span className="text-base text-[#726969]">
-                      {tax.name} ({tax.rate}%)
-                    </span>
-                    <p className="text-base font-semibold text-black">
-                      ${formatPrice(Number.parseFloat(tax.amount))}
-                    </p>
-                  </div>
-                ))} */}
 
               {appliedPromoCode && discountAmount > 0 && (
                 <div className="flex items-center justify-between">

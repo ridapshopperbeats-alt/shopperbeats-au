@@ -8,7 +8,7 @@ import {
   useClearCartMutation,
   useGetCartQuery,
 } from "@/lib/redux/apis/cart-api";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import CheckoutForm from "@/components/check-out/CheckoutForm";
@@ -34,7 +34,6 @@ import {
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import Image from "next/image";
-import { ChevronDown, Tag } from "lucide-react";
 
 export default function SecureCheckout() {
   const { postcode } = useGlobalPostcode();
@@ -70,7 +69,6 @@ export default function SecureCheckout() {
   });
 
   const router = useRouter();
-  const pathname = usePathname();
 
   const combinedCartItems: CartItem[] = useMemo(
     () => cart?.items ?? [],
@@ -183,7 +181,6 @@ export default function SecureCheckout() {
     }));
   }, [postcode, setFormData]);
 
-  // Pre-fill email from user details
   useEffect(() => {
     if (userDetails?.response?.email) {
       setFormData((prev) => ({
@@ -315,7 +312,6 @@ export default function SecureCheckout() {
       }, 0);
       const shippingCost = effectiveShipping;
 
-      // Order total limit check
       const promoDataForCheck = (() => {
         try {
           const stored = sessionStorage.getItem("appliedPromoCode");
@@ -361,7 +357,6 @@ export default function SecureCheckout() {
 
       const finalTotal = calculatedSubtotal + shippingCost - promoDiscount;
 
-      // Create order (status: pending payment)
       const orderData = {
         warehouse_id: "warehouse-123",
         courier: "",
@@ -648,7 +643,6 @@ export default function SecureCheckout() {
           buildProductsForConfirmation(),
         );
 
-        // Persist the order details so /confirmed-order can render them
         sessionStorage.setItem(
           "orderConfirmation",
           JSON.stringify(orderConfirmation),
@@ -730,16 +724,6 @@ export default function SecureCheckout() {
 
   const finalTotal = calculatedSubtotal - (promoData?.discount_amount ?? 0);
 
-  const promotionDiscount = Number(cart?.items_discount) || 0;
-  const itemSavings = totalSaveAmount - promotionDiscount;
-  const couponDiscount = promoData?.discount_amount || 0;
-  const discountTotal = totalSaveAmount + couponDiscount;
-  const originalListingPrice = cart?.subtotal ?? cart?.items_total ?? 0;
-  const priceAfterDiscount = Math.max(originalListingPrice - discountTotal, 0);
-
-  const [isDiscountExpanded, setIsDiscountExpanded] = useState(false);
-  const [isTotalExpanded, setIsTotalExpanded] = useState(false);
-
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const effectivePostcode = formData.postcode || postcode;
   const [prevEffectivePostcode, setPrevEffectivePostcode] =
@@ -789,7 +773,6 @@ export default function SecureCheckout() {
             handlePayNow={handlePayNow}
             setFormData={setFormData}
             isCreatingOrder={isCreatingOrder || isProcessingPayment}
-            /*  SAVED ADDRESS PROPS */
             useSavedAddress={useSavedAddress}
             setUseSavedAddress={setUseSavedAddress}
             savedAddresses={savedAddresses}
@@ -804,7 +787,6 @@ export default function SecureCheckout() {
           />
         </div>
 
-        {/* ORDER SUMMARY */}
         <div className="w-full xl:!w-[570px] xl:shrink-0 order-2 flex flex-col gap-4 xl:sticky xl:top-32 h-auto">
           <div className="w-full xl:!w-full h-auto bg-white opacity-100 rounded-[7px] border border-[#F8F8F8] shadow-[0_0_4px_0_rgba(0,0,0,0.10)]">
             {isLoading ? (
@@ -815,20 +797,7 @@ export default function SecureCheckout() {
               />
             ) : (
               <>
-                {/* Desktop (lg and up) — mirrors the mobile/md layout's spacing & structure */}
                 <div className="hidden lg:flex lg:flex-col lg:h-full">
-                  {/* {!isAuthenticated && (
-                    <p className="text-center py-4 px-4 fluid-text-sm font-semibold text-black leading-[normal]">
-                      Already have an account?{" "}
-                      <Link
-                        href={`/login?redirect=${encodeURIComponent(pathname)}`}
-                        className="text-[#fd151b] font-semibold underline leading-[normal] hover:underline"
-                      >
-                        Sign in
-                      </Link>
-                    </p>
-                  )} */}
-
                   <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#E5E5E5]">
                     <h6 className="checkout-total-label">
                       Order Summary
@@ -904,13 +873,7 @@ export default function SecureCheckout() {
                                   ${formatPrice(mainPrice)}
                                 </span>
                               </p>
-                              {/* {item.promotion_discount != null &&
-                                item.promotion_discount > 0 && (
-                                  <span className="inline-flex items-center gap-1 mt-1.5 mx-auto h-4 bg-[#fff4f4] text-[#e53e3e] border border-[#fed7d7] rounded-[4px] text-[10px] font-semibold px-1.5 whitespace-nowrap leading-none">
-                                    <Tag className="w-2.5 h-2.5 shrink-0" strokeWidth={2} />
-                                    Item Discount: ${formatPrice(item.promotion_discount)}
-                                  </span>
-                                )} */}
+                             
                             </div>
                           </div>
                         );
@@ -1068,18 +1031,6 @@ export default function SecureCheckout() {
 
                 {/* Mobile/md (below lg, <1024px) — compact Figma layout */}
                 <div className="lg:hidden flex flex-col h-full">
-                  {/* {!isAuthenticated && (
-                    <p className="text-center py-4 px-4 fluid-text-13-16 font-semibold text-black">
-                      Already have an account?{" "}
-                      <Link
-                        href={`/login?redirect=${encodeURIComponent(pathname)}`}
-                        className="text-[#fd151b] font-bold underline"
-                      >
-                        Sign in
-                      </Link>
-                    </p>
-                  )} */}
-
                   <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#E5E5E5]">
                     <h6 className="checkout-total-label">
                       Order Summary

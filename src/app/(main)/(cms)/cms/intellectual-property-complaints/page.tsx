@@ -14,7 +14,7 @@ import {
 import { toast } from "react-toastify";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { intellectualPropertySchema } from "@/lib/validations/form-schemas";
-import { TriangleAlert, Mail } from "lucide-react";
+import { TriangleAlert } from "lucide-react";
 
 const CARD_CLASS =
   "w-full max-w-[1118px] rounded-2xl border border-[#F3F4F6] shadow-[0px_2px_16px_0px_#0000000D] bg-white box-border";

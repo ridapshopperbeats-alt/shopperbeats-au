@@ -1,4 +1,4 @@
-import { Pencil, X } from "lucide-react";
+import { X } from "lucide-react";
 
 interface SizeGuidePopupProps {
   open: boolean;

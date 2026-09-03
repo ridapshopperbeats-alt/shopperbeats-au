@@ -19,31 +19,32 @@ import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { contactInfoSchema } from "@/lib/validations/form-schemas";
 import { Phone, Mail, MessageCircle, Send } from "lucide-react";
 
-interface ContactCardProps {
-  icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;
-  title: string;
-  highlight: string;
-  subtitle: string;
-}
+// interface ContactCardProps {
+//   icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;
+//   title: string;
+//   highlight: string;
+//   subtitle: string;
+// }
 
-const ContactCard = ({ icon: Icon, title, highlight, subtitle }: ContactCardProps) => (
-  <Card className="w-full h-[100.75px] flex-row items-start gap-4 rounded-2xl p-5 !shadow-[0_2px_10px_0_rgba(0,0,0,0.04)]">
-    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#fff0f0] text-[var(--secondary)]">
-      <Icon size={17} strokeWidth={1.5} />
-    </div>
-    <div>
-      <h4 className="m-0 mb-1 font-montserrat text-sm font-bold leading-[19.5px] text-[#211E22]">
-        {title}
-      </h4>
-      <p className="m-0 mb-1 font-montserrat text-[13px] font-bold leading-[18px] text-[var(--secondary)]">
-        {highlight}
-      </p>
-      <p className="m-0 font-montserrat text-xs font-normal leading-[16.5px] text-[#99A1AF]">
-        {subtitle}
-      </p>
-    </div>
-  </Card>
-);
+// Hide for the future, as per the design, we are not showing the contact cards for now. If needed in future, we can uncomment this component and use it.
+// const ContactCard = ({ icon: Icon, title, highlight, subtitle }: ContactCardProps) => (
+//   <Card className="w-full h-[100.75px] flex-row items-start gap-4 rounded-2xl p-5 !shadow-[0_2px_10px_0_rgba(0,0,0,0.04)]">
+//     <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#fff0f0] text-[var(--secondary)]">
+//       <Icon size={17} strokeWidth={1.5} />
+//     </div>
+//     <div>
+//       <h4 className="m-0 mb-1 font-montserrat text-sm font-bold leading-[19.5px] text-[#211E22]">
+//         {title}
+//       </h4>
+//       <p className="m-0 mb-1 font-montserrat text-[13px] font-bold leading-[18px] text-[var(--secondary)]">
+//         {highlight}
+//       </p>
+//       <p className="m-0 font-montserrat text-xs font-normal leading-[16.5px] text-[#99A1AF]">
+//         {subtitle}
+//       </p>
+//     </div>
+//   </Card>
+// );
 
 export default function ContactPage() {
   const {
@@ -61,7 +62,7 @@ export default function ContactPage() {
     message: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting] = useState(false);
 
   const handleSubjectChange = (value: string) => {
     setFormData((prev) => ({ ...prev, subject: value }));

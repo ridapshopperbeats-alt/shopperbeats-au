@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { Check, CircleCheck, Lock } from "lucide-react";
 import Button from "@/components/common/Button";
@@ -34,11 +33,9 @@ export default function ChangePasswordPage() {
   const [logout] = useLogoutMutation();
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-  const { data: personalData } = useGetPersonalDataQuery(undefined, {
+  useGetPersonalDataQuery(undefined, {
     skip: !isAuthenticated,
   });
-  const loggedOutName = personalData?.response?.first_name || "";
-
   const { formData, formErrors, handleChange, handleSubmit, resetForm } =
     useFormValidation(changePasswordValidationSchema, {
       current_password: "",
@@ -71,7 +68,6 @@ export default function ChangePasswordPage() {
     formData.new_password.trim() !== "" &&
     formData.confirm_password.trim() !== "";
 
-  const router = useRouter();
   const onSubmit = async (data: ChangePasswordFormData) => {
     try {
       await changePassword({

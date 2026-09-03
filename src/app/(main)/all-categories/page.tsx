@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-// import '../../../styles/Category.css'
 import { getCategoryData } from "@/lib/utils/get-category-data";
 
 interface PageProps {

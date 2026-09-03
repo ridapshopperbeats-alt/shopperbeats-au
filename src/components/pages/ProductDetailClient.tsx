@@ -53,11 +53,10 @@ import {
 } from "@/components/ui/product-tab-content";
 import Link from "next/link";
 import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
-import { ChevronDownIcon, Clock, MapPin, ShieldCheck } from "lucide-react";
+import { ChevronDownIcon, MapPin, ShieldCheck } from "lucide-react";
 import ColorPopup from "./ColorPopup";
 import LocationPopup from "./LocationPopup";
 import CustomerRatingViewPage from "./CustomerRatingViewPage";
-import StarRating from "../common/StarRating";
 import {
   findCategoryPath,
   formatPrice,
@@ -74,7 +73,6 @@ export default function ProductDetailClient({
   slug,
   seo,
   recentlyViewed,
-  popularProducts: _popularProducts,
 }: {
   product: Product;
   recommendations: Product[];
@@ -185,8 +183,8 @@ export default function ProductDetailClient({
     },
   );
 
-  // ---------------- CART CHECKOUT DRAWER ----------------
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
+
   const [removeCartItem, { isLoading: isRemovingCartItem }] =
     useRemoveFromCartMutation();
   const [updateCartItemQuantity, { isLoading: isUpdatingCartItem }] =
@@ -449,11 +447,8 @@ export default function ProductDetailClient({
     }
   };
 
-  const productTabItems = [
-    { key: "description", label: "Description" },
-    // { key: "delivery", label: "Delivery" },
-    // { key: "warranty", label: "Warranty and Return" },
-  ];
+  const productTabItems = [{ key: "description", label: "Description" }];
+
   const isProductInCart = useMemo(() => {
     if (!selectedVariant?.id) return false;
 
@@ -665,7 +660,6 @@ export default function ProductDetailClient({
         ]
         : []),
 
-      //  Show Warranty only if exists
       ...(warranty
         ? [
           {
@@ -856,15 +850,6 @@ export default function ProductDetailClient({
                     <div className="flex items-center gap-2">
                       {product.promotion_name && (
                         <div>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          {/* <img
-                            src="/images/sale.svg"
-                            alt="Sale"
-                            className="badge-img"
-                          />
-                          <span className="badge-text">SALE</span> */}
-
-
                           <StatusBadge
                             label="SALE"
                             color={BadgeColor.BlueDark}
@@ -903,30 +888,10 @@ export default function ProductDetailClient({
                             }
                           />
                         )}
-
-                      {/* {product.tags && product.tags.length > 0 && (
-                        <div className="promotion-badge tag-badge">
-                          <Button className="btn-yellow btn-outline btn-rounded promotion-tag">
-                            {product.tags[0]}
-                          </Button>
-                        </div>
-                      )} */}
                     </div>
                     <h5 className="fluid-text-14-20 font-medium text-black leading-[20px] lg:leading-[30px]">
                       {productTitle || "Product Title"}
                     </h5>
-
-                    {/* <div className="flex items-center w-auto h-[18px] gap-1">
-                      {(product.review_stats?.average_rating ?? 0) > 0 && (
-                        <StarRating
-                          rating={product.review_stats?.average_rating ?? 0}
-                          size={17}
-                        />
-                      )}
-                      <span className="text-[14px] leading-[18px] font-bold text-[#162DC3]">
-                        {product.review_stats?.total_reviews ?? 0} Reviews
-                      </span>
-                    </div> */}
                     <p className="mt-1 font-bold fluid-text-12-14 leading-[18px] text-[#162DC3]">
                       <Link href={`/brand/${product.brand_slug}`}>
                         <span className="text-[#535766]">By</span>{" "}
@@ -1160,24 +1125,6 @@ export default function ProductDetailClient({
                     >
                       Quantity:
                     </label>
-                    {/* {(() => {
-                      const stockValue = selectedVariant
-                        ? selectedVariant.stock
-                        : product.stock;
-
-                      return stockValue !== undefined &&
-                        stockValue !== null &&
-                        stockValue > 0 &&
-                        stockValue < 10 ? (
-                          <span className="fluid-text-xs  font-bold text-[#FD151B]">
-                          <Clock
-                            size={16}
-                            className="inline-flex mb-1 font-bold"
-                          />{" "}
-                          Only {stockValue} items left
-                        </span>
-                      ) : null;
-                    })()} */}
                   </div>
                   {(() => {
                     const maxQty = Math.max(
@@ -1359,23 +1306,6 @@ export default function ProductDetailClient({
                       Product Description
                     </h6>
                     <div className="product-content">
-                      {/* <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "flex-start",
-                          width: "100%",
-                        }}
-                      >
-                        <Image
-                          src={getImageUrl(product, "public")}
-                          alt="Product Image"
-                          width={100}
-                          height={500}
-                          loading="lazy"
-                          className="w-full h-[500px] object-contain"
-                        />
-                      </div> */}
-
                       <div
                         className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black px-[10px] lg:px-0"
                         style={{ textAlign: "left", marginTop: "15px" }}
@@ -1429,23 +1359,6 @@ export default function ProductDetailClient({
                             Product Description
                           </h6>
                           <div className="product-content">
-                            {/* <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "flex-start",
-                                width: "100%",
-                              }}
-                            >
-                              <Image
-                                src={getImageUrl(product, "public")}
-                                alt="Product Image"
-                                width={100}
-                                height={500}
-                                loading="lazy"
-                                className="w-full h-[500px] object-contain"
-                              />
-                            </div> */}
-
                             <div
                               className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black"
                               style={{ textAlign: "left", marginTop: "15px" }}
@@ -1559,24 +1472,6 @@ export default function ProductDetailClient({
                   >
                     Quantity:
                   </label>
-                  {/* {(() => {
-                    const stockValue = selectedVariant
-                      ? selectedVariant.stock
-                      : product.stock;
-
-                    return stockValue !== undefined &&
-                      stockValue !== null &&
-                      stockValue > 0 &&
-                      stockValue < 10 ? (
-                      <span className="text-[12px] font-bold text-[#FD151B]">
-                        <Clock
-                          size={16}
-                          className="inline-flex mb-1 font-bold"
-                        />{" "}
-                        Only {stockValue} items left
-                      </span>
-                    ) : null;
-                  })()} */}
                 </div>
                 {(() => {
                   const maxQty = Math.max(
@@ -1621,7 +1516,6 @@ export default function ProductDetailClient({
               </div>
               <div className="pdp-section-divider"></div>
 
-              {/* Error message for non-shippable */}
               {shippingStatus === "unavailable" && (
                 <p className="pdp-shipping-warning text-red-500 text-[13px] -mt-2">
                   This product cannot be shipped to your selected region.
@@ -1692,60 +1586,6 @@ export default function ProductDetailClient({
               </div>
 
               <div>
-                {/* <div className="flex flex-wrap gap-2">
-                  <div className="pdp-qty-box-lg">
-                    {" "}
-                    <Image
-                      src="/images/visa.svg"
-                      alt="Visa"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
-                  <div className="pdp-qty-box-lg">
-                    <Image
-                      src="/images/payment.svg"
-                      alt="Payment"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
-                  <div className="pdp-qty-box-lg">
-                    <Image
-                      src="/images/american.svg"
-                      alt="American Express"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
-                  <div className="pdp-qty-box-lg">
-                    <Image
-                      src="/images/paypal.svg"
-                      alt="PayPal"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
-                  <div className="pdp-qty-box-lg">
-                    {" "}
-                    <Image
-                      src="/images/afterpay.svg"
-                      alt="Afterpay"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
-                  <div className="pdp-qty-box-lg">
-                    {" "}
-                    <Image
-                      src="/images/zip.svg"
-                      alt="Zip"
-                      width={50}
-                      height={25}
-                    />
-                  </div>
-                </div> */}
-
                 <div className="pdp-payment-icons flex flex-wrap gap-2 justify-center">
                   {[
                     "visa",

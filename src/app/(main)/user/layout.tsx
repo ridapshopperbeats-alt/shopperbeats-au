@@ -34,12 +34,14 @@ export default function UserLayout({
     ? sidebarLinks
     : sidebarLinks.filter((link) => link.label === "Wishlist");
   const hideSidebar = pathname === "/user/logout" && !isAuthenticated;
-  const isPersonalInformation = pathname === "/user/personal-information";
-  const usesCardLayout =
-    isPersonalInformation ||
-    pathname === "/user/logout" ||
-    pathname === "/user/wishlist" ||
-    pathname === "/user/orders";
+
+  // For hide menu use this condtion in future.
+  // const isPersonalInformation = pathname === "/user/personal-information";
+  // const usesCardLayout =
+  //   isPersonalInformation ||
+  //   pathname === "/user/logout" ||
+  //   pathname === "/user/wishlist" ||
+  //   pathname === "/user/orders";
 
   const getPageTitle = () => {
     switch (pathname) {

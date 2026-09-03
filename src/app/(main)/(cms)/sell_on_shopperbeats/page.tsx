@@ -75,7 +75,6 @@ export default function SellPage() {
 
   return (
     <>
-      {/* Banner */}
       <div className="sell-banner">
         <div className="container">
           <div className="dflex items-center no-wrap">
@@ -112,19 +111,15 @@ export default function SellPage() {
         </div>
       </div>
 
-      {/* Main */}
       <div className=" pt-[40px] pb-[70px]">
         <div className="container">
           <div className="flex flex-col md:flex-row gap-6">
 
-            {/* Sidebar */}
             <Sidebar links={sidebarLinks} extraClass="w-full max-w-[400px]" active={active} onChange={setActive} textStyle={{ fontSize: "13px", fontWeight: "700", }} />
 
-            {/* Section Content */}
             <div
               className=" w-full min-h-auto xl:min-h-[569px] bg-white rounded-[8px] flex flex-col lg:flex-row items-center justify-between gap-8  p-5 sm:p-8 md:p-10 lg:p-12"
             >
-              {/* Left Image */}
               <div className="w-full lg:w-[42%] flex justify-center">
                 <Image
                   src={section.image}
@@ -136,7 +131,6 @@ export default function SellPage() {
                 />
               </div>
 
-              {/* Right Content */}
               <div
                 className=" w-full lg:w-[58%] text-center lg:text-left
           "
@@ -178,7 +172,6 @@ export default function SellPage() {
         </div>
       </div>
 
-      {/* Background CTA */}
       <div
         className="mb-[70px] py-[70px] relative overflow-hidden"
       >

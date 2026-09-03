@@ -20,7 +20,6 @@ import {
   HeartPulse,
   Sparkles,
   Armchair,
-  Home,
   Gem,
   Tag,
   Leaf,
@@ -40,36 +39,10 @@ import { useLockBodyScroll } from "@/lib/hooks/use-lock-body-scroll";
 import GooglePlacesInput from "../common/AddressAutocomplete";
 import Button from "../common/Button";
 import GlobalSearch from "../common/GlobalSearch";
-import CategoryNavbar from "./CategoryNavbar";
 import { addBreadcrumb } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
 import { useDebounceValue } from "@/lib/hooks/use-debounce";
-import { useIsClient } from "@/lib/hooks/use-is-client";
-
-export interface MegaMenuSubcategory {
-  name: string;
-  id: string;
-  slug?: string;
-  links: {
-    name: string;
-    href: string;
-    children?: { name: string; href: string }[];
-  }[];
-  // A subcategory can itself have further nested subcategories (e.g. a
-  // "Women"/"Men" segment sits between the category and its real
-  // leaf groupings like "Accessories"/"Clothing"). When present, the
-  // mega menu treats this subcategory's siblings as tabs and renders
-  // this array as the mega-menu columns instead of `links`.
-  subcategories?: MegaMenuSubcategory[];
-  viewAll?: string;
-}
-
-export interface MegaMenuCategory {
-  name: string;
-  id: string;
-  slug?: string;
-  subcategories: MegaMenuSubcategory[];
-}
+import { MegaMenuCategory, MegaMenuSubcategory } from "@/types/megamenu";
 
 interface HeaderProps {
   megaMenuData: MegaMenuCategory[];
@@ -81,7 +54,7 @@ const findTopCategorySlug = (
   categories: MegaMenuCategory[],
   targetSlug: string,
 ): string | undefined => {
-  const containsSlug = (node: MegaMenuSubcategory): boolean =>
+  const containsSlug = (node: MegaMenuCategory): boolean =>
     node.slug === targetSlug ||
     (node.subcategories?.some(containsSlug) ?? false);
 
@@ -108,50 +81,6 @@ const getCategoryIcon = (name: string) => {
   return Tag;
 };
 
-const getCategoryPromo = (name: string) => {
-  const n = name.toLowerCase();
-  if (n.includes("fashion"))
-    return {
-      label: "New Collection",
-      title: "Women's Fashion",
-      desc: "Explore the latest trends this season.",
-      image: "/images/womentop.png",
-    };
-  if (n.includes("home") && n.includes("garden"))
-    return {
-      label: "Trending Now",
-      title: "Home & Garden",
-      desc: "Refresh your space for less.",
-      image: "/images/home-garden-banner.jpg",
-    };
-  if (n.includes("furniture"))
-    return {
-      label: "New Arrivals",
-      title: "Furniture",
-      desc: "Comfort meets style.",
-      image: "/images/furniture.png",
-    };
-  if (n.includes("health") || n.includes("beauty"))
-    return {
-      label: "Self Care",
-      title: "Health & Beauty",
-      desc: "Feel good, look good.",
-      image: "/images/health-beauty-banner.jpg",
-    };
-  if (n.includes("outdoor") || n.includes("patio"))
-    return {
-      label: "Outdoor Living",
-      title: "Outdoor & Patio",
-      desc: "Make the most of the outdoors.",
-      image: "/images/patioFurniture.png",
-    };
-  return {
-    label: "New In",
-    title: name,
-    desc: "Explore our latest picks.",
-    image: null as string | null,
-  };
-};
 
 export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -298,85 +227,12 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounceValue(searchQuery, 1000);
-  const { data: searchResults, isLoading: isSearchLoading } =
+  const { data: searchResults } =
     useGetSearchSuggestionsQuery(debouncedSearchQuery, {
       skip: !debouncedSearchQuery,
     });
 
   useEffect(() => {}, [searchResults]);
-
-  interface SuggestionItem {
-    id: string;
-    type: "product" | "category" | "brand";
-    displayLabel: string;
-    linkHref: string;
-    thumbnailUrl?: string | null;
-    price?: number;
-  }
-
-  const query = searchQuery.toLowerCase();
-
-  const filteredProducts: SuggestionItem[] = React.useMemo(() => {
-    return (searchResults?.products || [])
-      .filter((p) => p.title?.toLowerCase().includes(query))
-      .map((p) => ({
-        id: p.id,
-        type: "product" as const,
-        displayLabel: p.title,
-        linkHref: `/product/${p.slug}`,
-        thumbnailUrl: p.thumbnail_url
-          ? applyImageVariant(p.thumbnail_url, "public")
-          : p.thumbnail_url,
-        price: p.price,
-      }));
-  }, [searchResults, query]);
-
-  const filteredCategories: SuggestionItem[] = React.useMemo(() => {
-    return (searchResults?.categories || [])
-      .filter((c) => c.name?.toLowerCase().includes(query))
-      .map((c) => ({
-        id: c.id,
-        type: "category" as const,
-        displayLabel: c.name,
-        linkHref: `/category/${c.slug}`,
-      }));
-  }, [searchResults, query]);
-
-  const filteredBrands: SuggestionItem[] = React.useMemo(() => {
-    return (searchResults?.brands || [])
-      .filter((b) => b.name?.toLowerCase().includes(query))
-      .map((b) => ({
-        id: b.id,
-        type: "brand" as const,
-        displayLabel: b.name,
-        linkHref: `/brand/${b.slug}`,
-      }));
-  }, [searchResults, query]);
-
-  const filteredResults: SuggestionItem[] = React.useMemo(
-    () => [...filteredProducts, ...filteredCategories, ...filteredBrands],
-    [filteredProducts, filteredCategories, filteredBrands],
-  );
-
-  // const handleSearch = () => {
-  //   if (
-  //     selectedResultIndex !== -1 &&
-  //     filteredResults &&
-  //     filteredResults[selectedResultIndex]
-  //   ) {
-  //     const selectedItem = filteredResults[selectedResultIndex];
-  //     setIsSearching(true);
-  //     router.push(selectedItem.linkHref);
-  //     setShowSearchResults(false);
-  //     setSelectedResultIndex(-1);
-  //   } else {
-  //     if (searchQuery.trim() == "") return;
-  //     setIsSearching(true);
-  //     router.push(`/search?q=${searchQuery.trim()}`);
-  //     setShowSearchResults(false);
-  //   }
-  // };
-
   const toggleMegaMenu = () => {
     setIsMegaMenuOpen(true);
   };
@@ -461,8 +317,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
     pathname === "/user/addresses" ||
     pathname === "/check-out";
 
-  // Checkout has its own minimal header (see CheckoutHeader) instead of the
-  // full site header.
   if (pathname === "/check-out") {
     return null;
   }
@@ -722,15 +576,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                           const isFashionCat = cat.name
                             .toLowerCase()
                             .includes("fashion");
-                          const promo = getCategoryPromo(cat.name);
-
-                          // Fashion-style categories have an extra nested
-                          // level: cat.subcategories are segments (e.g.
-                          // "Women"/"Men") rendered as tabs, and the active
-                          // segment's own subcategories (e.g. "Accessories",
-                          // "Clothing") become the mega-menu columns. Other
-                          // categories keep the old behaviour: their
-                          // subcategories ARE the columns directly.
+                        
                           const tabs = isFashionCat ? cat.subcategories : [];
                           const activeTab =
                             tabs.find(
@@ -828,37 +674,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                     </div>
                                   ))}
                                 </div>
-
-                                {/* <div className="mega-promo !w-[340px] !h-[307px] opacity-100 rounded-[10px] pt-[40px] pr-[24px] pb-[40px] pl-[24px] bg-[#FFF0F1]">
-                                  {promo.image && (
-                                    <div className="mega-promo-image">
-                                      <Image
-                                        src={promo.image}
-                                        alt={promo.title}
-                                        fill
-                                        sizes="220px"
-                                        style={{ objectFit: "cover" }}
-                                      />
-                                    </div>
-                                  )}
-                                  <div className="mega-promo-content">
-                                    <span className="mega-promo-label">
-                                      {promo.label}
-                                    </span>
-                                    <h4>{promo.title}</h4>
-                                    <p>{promo.desc}</p>
-                                    <Link
-                                      href={resolveCategoryHref(
-                                        cat.slug ?? cat.id,
-                                      )}
-                                      prefetch={false}
-                                      className="mega-promo-btn"
-                                      onClick={closeMegaMenu}
-                                    >
-                                      Shop Now
-                                    </Link>
-                                  </div>
-                                </div> */}
                               </div>
                             </div>
                           );
@@ -1126,9 +941,9 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                       {link.name}
                                     </Link>
 
-                                    {link.children && (
+                                    {Array.isArray(link.children) && (
                                       <ul className="mobile-child-links">
-                                        {link.children.map((child) => (
+                                        {link.children.map((child: any) => (
                                           <li key={child.name}>
                                             <Link
                                               href={child.href}

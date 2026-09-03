@@ -11,14 +11,26 @@ import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 import { findCategoryPath } from "@/lib/utils/main-utils";
 import { Category, Filter, Product } from "@/types/product";
-import Sidebar from "../product-listing/Sidebar";
-import MobileFilterSheet from "../product-listing/MobileFilterSheet";
+import dynamic from "next/dynamic";
+import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
-import ProductDisplay from "../product-listing/ProductDisplay";
+
+const Sidebar = dynamic(() => import("../product-listing/Sidebar"), {
+  loading: DynamicImportLoader,
+});
+
+const MobileFilterSheet = dynamic(
+  () => import("../product-listing/MobileFilterSheet"),
+  { loading: DynamicImportLoader }
+);
+
+const ProductDisplay = dynamic(
+  () => import("../product-listing/ProductDisplay"),
+  { loading: DynamicImportLoader }
+);
 import NoProductsFound from "../NoProductFound";
 import { resolvePriceRange, filterProductsByPriceRange, getProductPrice } from "@/lib/utils/price-filter";
 import { buildFilterTags, formatPriceRangeLabel } from "@/lib/utils/filter-tags";
-import { toSafeJsonLd } from "@/lib/utils/main-utils";
 import "../../styles/Product.css";
 interface ProductListingClientProps {
   slug: string;
@@ -466,24 +478,6 @@ const extractedBrands = useMemo(() => {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: toSafeJsonLd({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            name: category?.name || slug,
-            url: `/product-listing/${slug}`,
-            numberOfItems: products.length,
-            itemListElement: products.map((product, index) => ({
-              "@type": "ListItem",
-              position: index + 1,
-              name: product.title,
-              url: `/product/${product.slug}`,
-            })),
-          }),
-        }}
-      />
         <div className="flex  flex-col mb-10 relative gap-6 lg:flex-row lg:items-start">
           <div
             className="hidden lg:block shrink-0 lg:w-[300px] xl:w-[320px] filter-sidebar-sticky no-scrollbar"
@@ -574,4 +568,4 @@ const extractedBrands = useMemo(() => {
   );
 };
 
-export default ProductListingClient;
+export default React.memo(ProductListingClient);

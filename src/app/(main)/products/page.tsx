@@ -3,6 +3,7 @@ import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import { Product } from "@/types/product";
+import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 // ---------- Generate Metadata ----------
 export async function generateMetadata(): Promise<Metadata> {
@@ -91,6 +92,24 @@ export default async function ProductsPage({
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: toSafeJsonLd({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: "All Products",
+            url: "/products",
+            numberOfItems: products.length,
+            itemListElement: products.map((product: any, index: number) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              name: product.title,
+              url: `/product/${product.unique_code || product.slug}`,
+            })),
+          }),
+        }}
+      />
       <Breadcrumb />
       <ProductsPageClient
         products={products}

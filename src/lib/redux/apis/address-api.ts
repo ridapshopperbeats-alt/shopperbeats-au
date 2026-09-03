@@ -49,7 +49,7 @@ export const addressApi = createApi({
           patchResult.undo();
         }
       },
-      invalidatesTags: (_result, _error) => [{ type: 'Address', id: 'LIST' }],
+      invalidatesTags: () => [{ type: 'Address', id: 'LIST' }],
     }),
     deleteAddress: builder.mutation<{ success: boolean; id: number }, { id: number }>({
       query: (body) => ({

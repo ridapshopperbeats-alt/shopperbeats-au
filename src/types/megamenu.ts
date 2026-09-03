@@ -9,6 +9,7 @@ export interface CategoryItem {
 }
 
 export interface MegaMenuLink {
+  children: import("react").JSX.Element;
   name: string;
   href: string;
   product_count: number;
@@ -23,4 +24,17 @@ export interface MegaMenuCategory {
   viewAll?: string;
   subcategories: MegaMenuCategory[];
   links: MegaMenuLink[];
+}
+
+export interface MegaMenuSubcategory {
+  name: string;
+  id: string;
+  slug?: string;
+  links: {
+    name: string;
+    href: string;
+    children?: { name: string; href: string }[];
+  }[];
+  subcategories?: MegaMenuSubcategory[];
+  viewAll?: string;
 }

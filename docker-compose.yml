@@ -14,7 +14,7 @@ services:
         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`shopperbeats.com.au`) || Host(`www.shopperbeats.com.au`)"
+      - "traefik.http.routers.frontend.rule=Host(`shopperbeats.com.us`) || Host(`www.shopperbeats.com.us`)"
       - "traefik.http.routers.frontend.entrypoints=web"
       - "traefik.http.services.frontend.loadbalancer.server.port=3001"
       - "traefik.docker.network=gateway-network"

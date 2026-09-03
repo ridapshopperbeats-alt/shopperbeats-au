@@ -67,7 +67,7 @@ export default function ProductCarousel({
               autoResponsive
               className="pc-carousel"
               slideClassName=""
-              renderItem={(item, _index) => {
+              renderItem={(item) => {
                 if (bundleProducts) {
                   const bundleItem = item as BundleProduct;
 

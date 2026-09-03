@@ -1,6 +1,7 @@
 import { MegaMenuCategory } from "@/types/megamenu";
 import { Category } from "@/types/product";
 import { getRawCategories } from "@/lib/utils/main-utils";
+import { createElement, Fragment } from "react";
 
 const MAIN_CATEGORY_ORDER = [
   "Home & Garden",
@@ -44,6 +45,7 @@ function transformCategory(category: Category, level = 1): MegaMenuCategory {
         name: child.name,
         href: `/category/${child.slug ?? ""}`,
         product_count: child.product_count ?? 0,
+        children: createElement(Fragment),
       })),
   };
 }

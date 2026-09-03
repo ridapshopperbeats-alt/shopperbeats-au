@@ -9,12 +9,24 @@ import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 import { Product, Filter } from "@/types/product";
-import Sidebar from "../product-listing/Sidebar";
-import MobileFilterSheet from "../product-listing/MobileFilterSheet";
+import dynamic from "next/dynamic";
+import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
-import ProductDisplay from "../product-listing/ProductDisplay";
+
+const Sidebar = dynamic(() => import("../product-listing/Sidebar"), {
+  loading: DynamicImportLoader,
+});
+
+const MobileFilterSheet = dynamic(
+  () => import("../product-listing/MobileFilterSheet"),
+  { loading: DynamicImportLoader }
+);
+
+const ProductDisplay = dynamic(
+  () => import("../product-listing/ProductDisplay"),
+  { loading: DynamicImportLoader }
+);
 import { buildFilterTags } from "@/lib/utils/filter-tags";
-import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 
 interface SearchPageClientProps {
@@ -219,25 +231,6 @@ const SearchPageClient = ({
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: toSafeJsonLd({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            name: `Search results for "${query}"`,
-            url: `/search?q=${query}`,
-            numberOfItems: products.length,
-            itemListElement: products.map((product, index) => ({
-              "@type": "ListItem",
-              position: index + 1,
-              name: product.title,
-              url: `/product/${product.unique_code || product.slug}`,
-            })),
-          }),
-        }}
-      />
-
       <div className="container" style={{ marginTop: "30px" }}>
         <div className="flex flex-col  relative lg:gap-6 lg:flex-row lg:items-start">
 
@@ -287,4 +280,4 @@ const SearchPageClient = ({
   );
 };
 
-export default SearchPageClient;
+export default React.memo(SearchPageClient);

@@ -10,7 +10,6 @@ import Button from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { resetPasswordSchema } from "@/lib/validations/form-schemas";
-import { Link } from "lucide-react";
 
 interface PageProps {
   params: Promise<{ key: string }>;

@@ -72,10 +72,6 @@ export function cleanText(str: string): string {
   );
 }
 
-function escapeRegExp(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
 // function extractSectionBody(html: string, label: string): string | null {
 //   const labelMatch = html.match(
 //     new RegExp(`<(strong|b)>\\s*${escapeRegExp(label)}\\s*:?\\s*<\\/\\1>`, "i")

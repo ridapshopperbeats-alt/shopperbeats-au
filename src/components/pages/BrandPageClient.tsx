@@ -6,12 +6,24 @@ import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
 import { Filter, Product } from "@/types/product";
-import Sidebar from "../product-listing/Sidebar";
-import MobileFilterSheet from "../product-listing/MobileFilterSheet";
+import dynamic from "next/dynamic";
+import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
-import ProductDisplay from "../product-listing/ProductDisplay";
+
+const Sidebar = dynamic(() => import("../product-listing/Sidebar"), {
+  loading: DynamicImportLoader,
+});
+
+const MobileFilterSheet = dynamic(
+  () => import("../product-listing/MobileFilterSheet"),
+  { loading: DynamicImportLoader }
+);
+
+const ProductDisplay = dynamic(
+  () => import("../product-listing/ProductDisplay"),
+  { loading: DynamicImportLoader }
+);
 import { buildFilterTags } from "@/lib/utils/filter-tags";
-import { toSafeJsonLd } from "@/lib/utils/main-utils";
 import "../../styles/Product.css";
 import Breadcrumb from "../common/Breadcrumb";
 
@@ -168,25 +180,6 @@ const BrandPageClient = ({
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: toSafeJsonLd({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            name: brand?.name || brandId,
-            url: `/brand/${brandId}`,
-            numberOfItems: products.length,
-            itemListElement: products.map((product, index) => ({
-              "@type": "ListItem",
-              position: index + 1,
-              name: product.title,
-              url: `/product/${product.unique_code || product.slug}`,
-            })),
-          }),
-        }}
-      />
-
       <div className="banner-bg ">
         <div className="content-inner">
           <h2 className="brandName">{brand?.name || ""}</h2>

@@ -11,7 +11,7 @@ import { useGetPersonalDataQuery, useUpdatePersonalDataMutation } from "@/lib/re
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { PersonalInfoFormData } from "@/types/auth";
 import { RootState } from "@/lib/redux/store";
-import { handleAustralianPhoneNumberChange, handleUSPhoneNumberChange, toYYYYMMDD } from "@/lib/utils/main-utils";
+import { handleUSPhoneNumberChange, toYYYYMMDD } from "@/lib/utils/main-utils";
 import { toast } from "react-toastify";
 import Button from "@/components/common/Button";
 import { Input } from "@/components/common/input";
@@ -25,11 +25,6 @@ const personalInfoSchema = yup.object().shape({
   phonenumber: phoneNumber,
   date_of_birth: dateOfBirth,
 });
-function resolveProfileImage(url?: string | null): string | null {
-  if (!url) return null;
-  return applyImageVariant(url, "public");
-}
-
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/svg+xml", "image/gif", "image/webp"];
 const ALLOWED_IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "svg", "gif", "webp"];
 

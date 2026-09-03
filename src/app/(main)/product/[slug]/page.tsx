@@ -222,7 +222,7 @@ export default async function ProductPage(props: {
   const cookieStore = await cookies();
   const clientCookies = cookieStore.toString();
 
-  const { product, setCookie, seo } = await getProduct(slug, clientCookies);
+  const { product, seo } = await getProduct(slug, clientCookies);
 
   if (!product) {
     return <div className="py-10"><NoProductsFound /></div>;

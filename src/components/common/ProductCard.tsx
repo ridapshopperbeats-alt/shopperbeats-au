@@ -9,7 +9,6 @@ import { useAddToCartMutation } from "@/lib/redux/apis/cart-api";
 import { useWishlistToggle } from "@/lib/hooks/use-wishlist-toggle";
 
 import { formatPrice } from "@/lib/utils/main-utils";
-import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 
 import { ProductCardProps } from "@/types/product";
@@ -43,7 +42,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   ships_from_location,
   handling_time_days,
   handling_time_max_days,
-  shippingCharge,
   promotion_name,
   tags,
 }) => {
