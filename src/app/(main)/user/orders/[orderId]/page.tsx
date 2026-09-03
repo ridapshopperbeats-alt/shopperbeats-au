@@ -14,7 +14,6 @@ import "../../../../../styles/Checkout.css";
 import "../../../../../styles/Cart.css";
 import "../../../../../styles/Product.css";
 import { API_ENDPOINTS } from "@/lib/constants/api";
-import { getAccessTokenCookie } from "@/lib/utils/access-token";
 import Image from "next/image";
 import {
   useCancelOrderItemMutation,
@@ -132,14 +131,10 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
   const handleDownloadInvoice = async () => {
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL_ORDER || "";
-      const endpoint = API_ENDPOINTS.ORDER.GET_INVOICE(orderId);
-      const url = `${baseUrl}${endpoint}`;
+      const url = `${API_ENDPOINTS.ORDER.BASE_URL}${API_ENDPOINTS.ORDER.GET_INVOICE(orderId)}`;
 
-      const token = getAccessTokenCookie();
       const response = await fetch(url, {
         credentials: "include",
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
 
       if (!response.ok) throw new Error("Failed to fetch invoice");

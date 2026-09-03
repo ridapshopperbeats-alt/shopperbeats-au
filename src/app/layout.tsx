@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Montserrat } from "next/font/google";
 import Script from "next/script";
+import { headers } from "next/headers";
 import "./globals.css";
 import StoreProvider from "../lib/redux/store-provider";
 import { SEOProvider } from "@/contexts/SEOContext";
@@ -77,19 +78,25 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <html lang="en">
+      <head>
+        {nonce && <meta name="csp-nonce" content={nonce} />}
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} font-sans antialiased`}
       >
         <Script
           src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&libraries=places&v=beta&loading=async`}
           strategy="afterInteractive"
+          nonce={nonce}
         />
         <StoreProvider>
           <SEOProvider>{children}</SEOProvider>

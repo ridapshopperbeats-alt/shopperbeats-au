@@ -26,7 +26,7 @@ import {
 } from "react-icons/fa";
 import { FaXTwitter, FaTiktok, FaThreads, FaChevronDown } from "react-icons/fa6";
 
-const SOCIAL_ICONS: Record<string, React.ComponentType> = {
+const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   facebook: FaFacebookF,
   facebook_f: FaFacebookF,
   "facebook-f": FaFacebookF,
@@ -72,8 +72,7 @@ export default function Footer({
   const renderSocialIcons = () => (
     <ul className="social">
       {socialItems.map((item) => {
-        // cast to any to allow passing className prop to icon components
-        const Icon = SOCIAL_ICONS[item.icon_class.toLowerCase()] as any;
+        const Icon = SOCIAL_ICONS[item.icon_class.toLowerCase()];
         return (
           <li key={item.id}>
             <a href={item.url} target="_blank" rel="noopener noreferrer">

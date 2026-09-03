@@ -14,6 +14,7 @@ import {
 import { Review } from "@/types/product";
 import { getReviewImage } from "@/lib/utils/main-utils";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 
 interface DisplayReview {
   id: string;
@@ -66,20 +67,12 @@ export default function CustomerRatingViewPage({
   reviews,
 }: CustomerRatingViewPageProps) {
   const [sortBy, setSortBy] = useState("latest");
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 1023px)");
   const pageSize = isMobile ? 1 : REVIEWS_PAGE_SIZE;
   const [visibleCount, setVisibleCount] = useState(REVIEWS_PAGE_SIZE);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 1023px)");
-    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
-
-    updateIsMobile();
-    mediaQuery.addEventListener("change", updateIsMobile);
-    return () => mediaQuery.removeEventListener("change", updateIsMobile);
-  }, []);
-
-  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisibleCount(pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);

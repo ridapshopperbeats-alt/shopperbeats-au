@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
@@ -46,7 +46,7 @@ export default function SingleBanner() {
   const [banners, setBanners] = useState<BannerSlide[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const prevBannerRef = useRef(0);
+  const [prevBanner, setPrevBanner] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -91,7 +91,8 @@ export default function SingleBanner() {
   }, []);
 
   useEffect(() => {
-    prevBannerRef.current = currentBanner;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPrevBanner(currentBanner);
   }, [currentBanner]);
 
   useEffect(() => {
@@ -105,7 +106,7 @@ export default function SingleBanner() {
   const handleDotClick = (index: number) => {
     if (index === currentBanner) return;
 
-    prevBannerRef.current = currentBanner;
+    setPrevBanner(currentBanner);
     setCurrentBanner(index);
   };
 
@@ -118,7 +119,7 @@ export default function SingleBanner() {
         )}
         {!isLoading && banners.map((banner, index) => {
           const isTransitioning =
-            index === currentBanner || index === prevBannerRef.current;
+            index === currentBanner || index === prevBanner;
 
           return (
             <Image

@@ -1,22 +1,53 @@
 substitutions:
-  _REGION: australia-southeast2
+  _REGION: us-central1
   _REPO: shopper-repo
   _IMAGE: shopperbeats-frontend
-  _NEXT_PUBLIC_API_URL_USERS: https://<users-api-domain>
-  _NEXT_PUBLIC_API_URL_PRODUCTS: https://shopper-beats-products-877627218975.australia-southeast2.run.app
- 
+  _NEXT_PUBLIC_API_URL_USERS: https://api-us.shopperbeats.cloud
+  _NEXT_PUBLIC_API_URL_PRODUCTS: https://api-us.shopperbeats.cloud/products
+  _NEXT_PUBLIC_API_URL_CART: https://api-us.shopperbeats.cloud/cart
+  _NEXT_PUBLIC_API_URL_ORDER: https://api-us.shopperbeats.cloud/orders
+  _NEXT_PUBLIC_API_URL_HELPDESK: https://api-us.shopperbeats.cloud
+  _NEXT_PUBLIC_API_URL_PAYMENT: https://api-us.shopperbeats.cloud/payment
+  _NEXT_PUBLIC_API_URL_PAYMENTS: https://api-us.shopperbeats.cloud/payment
+  _NEXT_PUBLIC_RECAPTCHA_SITE_KEY: 6LduS98sAAAAABJnRkjOHXWt3SnodPrO8hhPVszu
+  _NEXT_PUBLIC_GOOGLE_MAPS_KEY: AIzaSyB7Ploi9rWk-gf0oa4eurhtP1a5A9_fCU8
+  _NEXT_GEOLOCATION_API_KEY: AIzaSyB7Ploi9rWk-gf0oa4eurhtP1a5A9_fCU8
+  _NEXT_PUBLIC_GOOGLE_CLIENT_ID: AIzaSyB7Ploi9rWk-gf0oa4eurhtP1a5A9_fCU8
+  _NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_51MD0Z6HK1NpD5ozy9myeqd8aKyzbOYmOSHcSNGoauFR8yFhhdt2smj7IclucH7LlUxWCCaQD4RHX6WqeGMErQ6Wa0048oO31PU
+
 steps:
-# Debug: List files
-- name: gcr.io/cloud-builders/docker
-  entrypoint: bash
-  args:
-    - -c
-    - |
-      echo "Files in /workspace:"
-      ls -la /workspace
- 
+# Install deps once, reused by the quality-gate steps below.
+- name: gcr.io/cloud-builders/npm
+  id: install
+  entrypoint: npm
+  args: ["ci"]
+
+# Quality gate: lint. Fails the build on any lint error.
+- name: gcr.io/cloud-builders/npm
+  id: lint
+  waitFor: ["install"]
+  entrypoint: npm
+  args: ["run", "lint"]
+
+# Quality gate: type check. Fails the build on any TypeScript error.
+- name: gcr.io/cloud-builders/npm
+  id: typecheck
+  waitFor: ["install"]
+  entrypoint: npm
+  args: ["run", "typecheck"]
+
+# Quality gate: dependency audit. Fails the build on any high/critical
+# severity vulnerability.
+- name: gcr.io/cloud-builders/npm
+  id: audit
+  waitFor: ["install"]
+  entrypoint: npm
+  args: ["audit", "--audit-level=high"]
+
 # Build
 - name: gcr.io/cloud-builders/docker
+  id: build
+  waitFor: ["lint", "typecheck", "audit"]
   args:
     - build
     - -t
@@ -25,14 +56,38 @@ steps:
     - NEXT_PUBLIC_API_URL_USERS=${_NEXT_PUBLIC_API_URL_USERS}
     - --build-arg
     - NEXT_PUBLIC_API_URL_PRODUCTS=${_NEXT_PUBLIC_API_URL_PRODUCTS}
+    - --build-arg
+    - NEXT_PUBLIC_API_URL_CART=${_NEXT_PUBLIC_API_URL_CART}
+    - --build-arg
+    - NEXT_PUBLIC_API_URL_ORDER=${_NEXT_PUBLIC_API_URL_ORDER}
+    - --build-arg
+    - NEXT_PUBLIC_API_URL_HELPDESK=${_NEXT_PUBLIC_API_URL_HELPDESK}
+    - --build-arg
+    - NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${_NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+    - --build-arg
+    - NEXT_PUBLIC_GOOGLE_MAPS_KEY=${_NEXT_PUBLIC_GOOGLE_MAPS_KEY}
+    - --build-arg
+    - NEXT_PUBLIC_API_URL_PAYMENT=${_NEXT_PUBLIC_API_URL_PAYMENT}
+    - --build-arg
+    - NEXT_PUBLIC_API_URL_PAYMENTS=${_NEXT_PUBLIC_API_URL_PAYMENTS}
+    - --build-arg
+    - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+    - --build-arg
+    - NEXT_GEOLOCATION_API_KEY=${_NEXT_GEOLOCATION_API_KEY}
+    - --build-arg
+    - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${_NEXT_PUBLIC_GOOGLE_CLIENT_ID}
     - .
- 
+
 # Push
 - name: gcr.io/cloud-builders/docker
+  id: push
+  waitFor: ["build"]
   args: ["push", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA"]
- 
+
 # Deploy
 - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  id: deploy
+  waitFor: ["push"]
   args:
     - run
     - deploy
@@ -41,8 +96,8 @@ steps:
     - --region=${_REGION}
     - --platform=managed
     - --allow-unauthenticated
-    - --memory=512Mi
+    - --memory=1Gi
     - --concurrency=40
- 
+
 images:
   - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA
