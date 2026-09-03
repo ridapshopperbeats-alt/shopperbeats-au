@@ -28,13 +28,8 @@ export default function TokenRefreshManager() {
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
     let cancelled = false;
 
-    const refresh = () => {
-      triggerSilentRefresh(dispatch);
-    };
-
-    const scheduleNextRefresh = () => {
+    const scheduleNextRefresh = (token: string | null) => {
       if (cancelled) return;
-      const token = accessTokenRef.current;
       const msUntilExpiry = token ? getMsUntilExpiry(token) : null;
 
       const delay =
@@ -42,19 +37,25 @@ export default function TokenRefreshManager() {
           ? FALLBACK_INTERVAL_MS
           : Math.max(msUntilExpiry - REFRESH_MARGIN_MS, 0);
 
-      timeoutId = setTimeout(() => {
-        refresh();
-        scheduleNextRefresh();
+      timeoutId = setTimeout(async () => {
+        // Wait for the refresh to actually land before scheduling the next
+        // one off its result — using the pre-refresh token here (via a
+        // ref updated by a later effect) raced ahead of the dispatch and
+        // scheduled a second refresh almost immediately, which then hit
+        // the backend with an already-rotated/invalidated refresh token.
+        const result = await triggerSilentRefresh(dispatch);
+        if (cancelled) return;
+        scheduleNextRefresh(result.accessToken ?? accessTokenRef.current);
       }, delay);
     };
 
-    scheduleNextRefresh();
+    scheduleNextRefresh(accessTokenRef.current);
 
     const refreshIfStale = () => {
       const token = accessTokenRef.current;
       const msUntilExpiry = token ? getMsUntilExpiry(token) : null;
       if (msUntilExpiry === null || msUntilExpiry < MIN_REMAINING_MS_TO_SKIP) {
-        refresh();
+        triggerSilentRefresh(dispatch);
       }
     };
 
