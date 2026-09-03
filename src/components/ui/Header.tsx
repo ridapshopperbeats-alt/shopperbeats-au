@@ -760,7 +760,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                                 closeMegaMenu();
                                               }}
                                             >
-                                              View All →
+                                              View All
                                             </Link>
                                           </li>
                                         )}
