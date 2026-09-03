@@ -802,7 +802,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 tabs.find(
                   (tab) => (tab.slug ?? tab.id) === activeSubTabId,
                 ) ?? tabs[1];
-              console.log("activeTab", activeTab);
               const subCategories = isFashionCat
                 ? activeTab
                   ? activeTab.subcategories?.length

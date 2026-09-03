@@ -11,29 +11,28 @@ import { clearRefreshToken, getRefreshToken, setRefreshToken } from "@/lib/utils
 
 const refreshBaseQuery = fetchBaseQuery({
   baseUrl: API_ENDPOINTS.AUTH.BASE_URL_CLIENT,
-  credentials: "include",
+  credentials: "omit",
 });
 
 
 type RefreshOutcome = "refreshed" | "invalid" | "transient";
+type RefreshResult = { outcome: RefreshOutcome; accessToken?: string };
 
-let pendingRefresh: Promise<RefreshOutcome> | null = null;
+let pendingRefresh: Promise<RefreshResult> | null = null;
 
 const REFRESH_COOLDOWN_MS = 5000;
 
 
 let lastRefreshAt = 0;
+let lastAccessToken: string | undefined;
 
-function refreshAccessToken(
+function refreshAccessTokenDetailed(
   api: Parameters<BaseQueryFn>[1],
   extraOptions: Parameters<BaseQueryFn>[2],
-): Promise<RefreshOutcome> {
- 
+): Promise<RefreshResult> {
+
   if (Date.now() - lastRefreshAt < REFRESH_COOLDOWN_MS) {
-    const hasToken = !!getAccessTokenCookie();
-    if (hasToken) {
-      return Promise.resolve("refreshed");
-    }
+    return Promise.resolve({ outcome: "refreshed", accessToken: lastAccessToken });
   }
 
   if (!pendingRefresh) {
@@ -50,7 +49,7 @@ function refreshAccessToken(
         extraOptions,
       ),
     )
-      .then((result) => {
+      .then((result): RefreshResult => {
         if (result.error) {
           const status = result.error.status;
           // Anything else (network error, timeout, 5xx) is transient.
@@ -58,10 +57,10 @@ function refreshAccessToken(
             console.warn("Refresh token rejected by server:", result.error);
             clearRefreshToken();
             api.dispatch(logout());
-            return "invalid" as const;
+            return { outcome: "invalid" };
           }
           console.warn("Refresh token request failed (transient, session kept):", result.error);
-          return "transient" as const;
+          return { outcome: "transient" };
         }
 
         const data = result.data as
@@ -81,13 +80,14 @@ function refreshAccessToken(
 
         lastRefreshAt = Date.now();
         if (newAccessToken) {
+          lastAccessToken = newAccessToken;
           api.dispatch(setAccessToken(newAccessToken));
         }
         if (newRefreshToken) {
           setRefreshToken(newRefreshToken);
         }
 
-        return "refreshed" as const;
+        return { outcome: "refreshed", accessToken: newAccessToken };
       })
       .finally(() => {
         pendingRefresh = null;
@@ -97,11 +97,18 @@ function refreshAccessToken(
   return pendingRefresh;
 }
 
+function refreshAccessToken(
+  api: Parameters<BaseQueryFn>[1],
+  extraOptions: Parameters<BaseQueryFn>[2],
+): Promise<RefreshOutcome> {
+  return refreshAccessTokenDetailed(api, extraOptions).then((r) => r.outcome);
+}
+
 export function triggerSilentRefresh(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: (action: any) => unknown,
-): Promise<RefreshOutcome> {
-  return refreshAccessToken(
+): Promise<RefreshResult> {
+  return refreshAccessTokenDetailed(
     { getState: () => ({}), dispatch } as unknown as Parameters<BaseQueryFn>[1],
     {},
   );
