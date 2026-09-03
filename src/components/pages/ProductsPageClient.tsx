@@ -8,8 +8,13 @@ import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 import { Product } from "@/types/product";
-import ProductDisplay from "../product-listing/ProductDisplay";
-import { toSafeJsonLd } from "@/lib/utils/main-utils";
+import dynamic from "next/dynamic";
+import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
+
+const ProductDisplay = dynamic(
+  () => import("../product-listing/ProductDisplay"),
+  { loading: DynamicImportLoader }
+);
 import "../../styles/Product.css";
 
 interface ProductsPageClientProps {
@@ -104,25 +109,6 @@ const ProductsPageClient = ({
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: toSafeJsonLd({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            name: "All Products",
-            url: "/products",
-            numberOfItems: products.length,
-            itemListElement: products.map((product, index) => ({
-              "@type": "ListItem",
-              position: index + 1,
-              name: product.title,
-              url: `/product/${product.unique_code || product.slug}`,
-            })),
-          }),
-        }}
-      />
-
       <div className="banner-bg">
         <div className="content-inner">
           <h2 className="textwhite align-center">All Products</h2>
@@ -150,4 +136,4 @@ const ProductsPageClient = ({
   );
 };
 
-export default ProductsPageClient;
+export default React.memo(ProductsPageClient);

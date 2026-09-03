@@ -34,7 +34,7 @@ import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
 import Pagination from "@/components/common/Pagination";
 import { Card } from "@/components/common/Card";
 import { StatusBadge, BadgeColor } from "@/components/common/StatusBadge";
-import { Truck, Eye, ChevronUp, ChevronDown, ArrowUpDown, XCircle, RotateCcw, ChevronRight, Star, RefreshCw } from "lucide-react";
+import { Truck, Eye, ChevronUp, ChevronDown, ArrowUpDown, XCircle, ChevronRight, Star, RefreshCw } from "lucide-react";
 
 enum OrderStatusCode {
   Confirmed = "confirmed",

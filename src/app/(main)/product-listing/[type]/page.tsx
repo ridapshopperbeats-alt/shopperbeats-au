@@ -4,6 +4,7 @@ import { Filter, Category } from "@/types/product";
 import ProductListingClient from "@/components/pages/ProductListingClient";
 import { cookies } from "next/headers";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
+import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 
 interface ProductListingPageProps {
@@ -300,6 +301,24 @@ export default async function ProductListingPage({
   ].includes(type);
   return (
     <div className="">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: toSafeJsonLd({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: category?.name || type,
+            url: `/product-listing/${type}`,
+            numberOfItems: products.length,
+            itemListElement: products.map((product: any, index: number) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              name: product.title,
+              url: `/product/${product.slug}`,
+            })),
+          }),
+        }}
+      />
       {bannerImage && (
         <div
           className="banner-bg"

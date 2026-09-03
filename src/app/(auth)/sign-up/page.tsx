@@ -15,7 +15,6 @@ import {
 } from "@/lib/redux/apis/auth-api";
 import { signupSchema } from "@/lib/validations/form-schemas";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
-import { Input } from "@/components/common/input";
 import { Card } from "@/components/common/Card";
 
 export default function SignupPage() {

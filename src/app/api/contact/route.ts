@@ -2,23 +2,7 @@ import { NextResponse } from "next/server";
 import sgMail from "@sendgrid/mail";
 import * as yup from "yup";
 import { getClientIp, isRateLimited } from "@/lib/utils/rate-limit";
-import { nameField, requiredMessage } from "@/lib/validations/form-schemas";
-
-export const phoneNumber = yup
-  .string()
-  .required("Phone number is required")
-  .matches(
-    /^(?:\+?61\s?|0)4\d{8}$/,
-    "Enter a valid US mobile number (e.g. 0412345678 or +61412345678)"
-  );
-
-/* ------------------ EMAIL ------------------ */
-
-export const email = yup .string()
-  .email("Invalid email")
-  .required("Email is required")
-  .matches(/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/, "Email must contain a valid domain")
-
+import { email, nameField, requiredMessage } from "@/lib/validations/form-schemas";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
@@ -417,7 +401,7 @@ export async function POST(req: Request) {
       html,
     };
 
-    const data = await sgMail.send(msg);
+    await sgMail.send(msg);
 
     return NextResponse.json({ success: true });
   } catch (error) {

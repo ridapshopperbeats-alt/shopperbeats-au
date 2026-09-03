@@ -63,8 +63,6 @@ export default function FAQPage() {
   const trimmedQuery = searchQuery.trim().toLowerCase();
   const isSearching = trimmedQuery.length > 0;
 
-  // When the hero search box has a query, filter every FAQ (across all types)
-  // by question/answer text and show a flat result list instead of the tabs.
   const searchResults = useMemo(() => {
     if (!trimmedQuery || !faqApiData) return [];
     return faqApiData
@@ -195,7 +193,6 @@ export default function FAQPage() {
             </div>
           )}
 
-          {/* Search results view — replaces the tab grid while a query is active */}
           {!isLoading && !isError && isSearching && (
             <div id="faq-accordion-section">
               {searchResults.length > 0 ? (

@@ -44,7 +44,6 @@ export default function ConfirmedOrderPage() {
 
           <div className="w-full lg:w-[582px] bg-white rounded-[8px] border border-[#D9D2D2] flex flex-col">
             <div className="overflow-auto">
-              {/* Header */}
               <div className="text-center py-4 border-b border-[#D9D2D2]">
                 <h6 className="font-montserrat font-bold text-[18px] leading-none tracking-normal capitalize">
                   Order ID:{" "}
@@ -54,7 +53,6 @@ export default function ConfirmedOrderPage() {
                 </h6>
               </div>
 
-              {/* Products */}
               <div className="max-h-[320px] overflow-y-auto">
                 {orderDetails.products.map((item) => (
                   <div
@@ -103,7 +101,6 @@ export default function ConfirmedOrderPage() {
                 ))}
               </div>
 
-              {/* Delivery */}
               <div className="flex justify-between py-3 px-4 border-b border-[#D9D2D2]">
                 <div>
                   <p className="font-semibold text-[14px]">Delivery</p>
@@ -115,7 +112,6 @@ export default function ConfirmedOrderPage() {
               </div>
             </div>
 
-            {/* Total */}
             <div className="w-full h-[54px] flex justify-between items-center p-6 rounded-bl-[8px] rounded-br-[8px] border border-[#D9D2D2] bg-[#F5F5F5]">
               <p className="font-semibold text-[16px]">Total (incl. GST)</p>
               <p className="text-[16px] text-[#FD151B] font-semibold">{orderDetails.totalAmount}</p>

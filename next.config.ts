@@ -1,3 +1,4 @@
+import withBundleAnalyzer from "@next/bundle-analyzer";
 import type { NextConfig } from "next";
 
 const CSP = [
@@ -71,10 +72,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "assets.shopperbeats.cloud",
-      },
-      {
-        protocol: "https",
         hostname: "cdn.shopify.com",
       },
       {
@@ -139,14 +136,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "www.ccwholesaleclothing.com",
-      },
-      {
-        protocol: "https",
-        hostname: "www.ccwholesaleclothing.com",
-      },
-      {
-        protocol: "https",
         hostname: "img.fragrancex.com",
       },
       {
@@ -183,6 +172,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+   compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
 };
 
-export default nextConfig;
+const withAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
+
+export default withAnalyzer(nextConfig);

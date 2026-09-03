@@ -36,7 +36,6 @@ import {
 } from "@/lib/utils/price-filter";
 import { buildFilterTags } from "@/lib/utils/filter-tags";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
-import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 const Sidebar = dynamic(() => import("../product-listing/Sidebar"), {
   loading: DynamicImportLoader,
@@ -258,33 +257,6 @@ const CategoryClient = ({
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: toSafeJsonLd({
-            "@context": "https://schema.org",
-
-            "@type": "ItemList",
-
-            name: category?.name || slug,
-
-            url: `/category/${slug}`,
-
-            numberOfItems: products.length,
-
-            itemListElement: products.map((product, index) => ({
-              "@type": "ListItem",
-
-              position: index + 1,
-
-              name: product.title,
-
-              url: `/product/${product.unique_code || product.slug}`,
-            })),
-          }),
-        }}
-      />
-
       <div className="container">
         {sliderCategories.length > 0 && (
           <CategorySlider

@@ -25,7 +25,6 @@ export default function AddressesPage() {
   const {
     data: addresses,
     isLoading,
-    isError,
   } = useGetAddressesQuery(undefined, {
     skip: !authChecked || !isAuthenticated,
   });

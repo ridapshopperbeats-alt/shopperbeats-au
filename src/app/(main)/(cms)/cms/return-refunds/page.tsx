@@ -540,14 +540,9 @@ export default function ReturnRefundsPage() {
               We only have 30 days return and refund policy.
             </div>
           </div>
-          {/*
-          <table className="rw-table" style={{ width: "100%", borderCollapse: "collapse", boxSizing: "border-box" }}>
-            ...warranty period table intentionally left disabled, matching source design...
-          </table>
-          */}
+        
         </div>
 
-        {/* Footer contact bar */}
         <div
           className="rw-footer"
           style={{

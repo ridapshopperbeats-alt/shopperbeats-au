@@ -1,8 +1,8 @@
 import BrandPageClient from "@/components/pages/BrandPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
-import Breadcrumb from "@/components/common/Breadcrumb";
 import { ProductsResponse } from "@/types/product";
+import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 // ---------- Generate Metadata ----------
 export async function generateMetadata(
@@ -96,7 +96,6 @@ async function getProducts(
     }
   }
 
-  // Ensure page and limit are set
   queryParams.set("page", typeof searchParams.page === "string" ? searchParams.page : "1");
   queryParams.set("limit", typeof searchParams.limit === "string" ? searchParams.limit : "20");
 
@@ -116,7 +115,6 @@ async function getProducts(
   }
 }
 
-// ---------- Page Component ----------
 export default async function BrandPage({
   params,
   searchParams,
@@ -127,16 +125,6 @@ export default async function BrandPage({
   const { brandId } = await params;
   const resolvedSearchParams = await searchParams;
 
-  const page =
-    typeof resolvedSearchParams.page === "string"
-      ? Number(resolvedSearchParams.page)
-      : 1;
-
-  const limit =
-    typeof resolvedSearchParams.limit === "string"
-      ? Number(resolvedSearchParams.limit)
-      : 10;
-
   const brand = await getBrandDetails(brandId);
   const { data: products, filters, totalItems } = await getProducts(
     brandId,
@@ -145,6 +133,24 @@ export default async function BrandPage({
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: toSafeJsonLd({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: brand?.name || brandId,
+            url: `/brand/${brandId}`,
+            numberOfItems: products.length,
+            itemListElement: products.map((product: any, index: number) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              name: product.title,
+              url: `/product/${product.unique_code || product.slug}`,
+            })),
+          }),
+        }}
+      />
       {/* <Breadcrumb /> */}
       <BrandPageClient
         brandId={brandId}

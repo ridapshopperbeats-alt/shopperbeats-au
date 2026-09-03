@@ -308,6 +308,7 @@ function SliderComponent<T>(
       return;
     }
     goTo(isLoopEnabled ? current - 1 : Math.max(current - 1, 0));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFade, isLoopEnabled, current, goTo]);
 
   const handleTransitionEnd = () => {

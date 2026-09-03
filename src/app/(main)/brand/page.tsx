@@ -5,7 +5,6 @@ import BrandsExplorer from "@/components/pages/BrandsExplorer";
 import Banner from "@/components/common/Banner";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 
-// Types
 interface Brand {
   id: string;
   name: string;
@@ -103,8 +102,7 @@ export default async function BrandsSection() {
         }
       />
       <div className="container">
-      {/* ======== Brands Grid Section ======== */}
-      {/* <h4 className="text-[24px] font-bold pt-3">Featured Brands</h4> */}
+   
       <div className="hidden grid-cols-2 gap-5 sm:grid-cols-3 lg:grid lg:grid-cols-6">
         {featuredBrands
           .map((featuredBrand: { brand_id: string }) => {
@@ -141,7 +139,6 @@ export default async function BrandsSection() {
               hover:border-[#01296120]
             "
               >
-                {/* Background Glow */}
                 <div
                   className="
                 absolute inset-0 opacity-0 group-hover:opacity-100
@@ -150,7 +147,6 @@ export default async function BrandsSection() {
               "
                 />
 
-                {/* Logo */}
                 <div className="relative z-10 flex items-center justify-center">
                   <Image
                     src={logoSrc}
@@ -168,7 +164,6 @@ export default async function BrandsSection() {
                   />
                 </div>
 
-                {/* Bottom Brand Name */}
                 <div
                   className="
                 absolute bottom-3 left-0 right-0
@@ -189,12 +184,7 @@ export default async function BrandsSection() {
           })}
       </div>
 
-      {/* ======== Alphabetic Brands List Section ======== */}
       <div className="-mx-5 mt-0 lg:mx-0 lg:mt-8">
-        {/* <h1 className="pb-[30px] text-center text-[24px] font-extrabold text-black">
-          ALL Brands
-        </h1> */}
-
         <BrandsExplorer brands={allBrands} />
       </div>
       <ScrollToTopButton />

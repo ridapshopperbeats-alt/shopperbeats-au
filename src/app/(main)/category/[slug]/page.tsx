@@ -2,9 +2,9 @@ import { cache } from "react";
 import CategoryPageClient from "@/components/pages/CategoryPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
-import Breadcrumb from "@/components/common/Breadcrumb";
 import { ProductsResponse } from "@/types/product";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
+import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 // ---------- Generate Metadata ----------
 export async function generateMetadata(
@@ -30,7 +30,7 @@ export async function generateMetadata(
       url: `https://shopperbeats.com/category/${slug}`,
       images: [
         {
-          url: "https://shopperbeats.com/images/logo.svg", // Replace 
+          url: "https://shopperbeats.com/images/logo.svg", 
           alt: category?.name || "Shopperbeats Category",
         },
       ],
@@ -45,7 +45,7 @@ export async function generateMetadata(
       description:
         category?.description ||
         `Browse products in the ${category?.name || "selected"} category on Shopperbeats.`,
-      images: ["https://shopperbeats.com/images/logo.svg"], // Replace 
+      images: ["https://shopperbeats.com/images/logo.svg"], 
     },
   };
 }
@@ -57,7 +57,6 @@ const getCategoryDetails = cache(async (slug: string) => {
     return null;
   }
 
-  // Helper to find category recursively
   const findCategory = (cats: any[], targetSlug: string): any => {
     for (const cat of cats) {
       if (cat.slug === targetSlug) return cat;
@@ -70,7 +69,6 @@ const getCategoryDetails = cache(async (slug: string) => {
   };
 
   try {
-    // 1. Try direct fetch
     const res = await fetch(
       `${baseUrl}${API_ENDPOINTS.CATEGORIES.BY_SLUG(slug)}`,
       {
@@ -84,7 +82,6 @@ const getCategoryDetails = cache(async (slug: string) => {
 
     console.warn(`Failed to fetch category details directly (${res.status}). Attempting fallback to list...`);
 
-    // 2. Fallback: Fetch the entire list and find the category by slug
     const listRes = await fetch(`${baseUrl}${API_ENDPOINTS.CATEGORIES.LIST}`, {
       next: { revalidate: 60 },
     });
@@ -103,9 +100,6 @@ const getCategoryDetails = cache(async (slug: string) => {
   }
 });
 
-
-
-// ---------- Fetch Products ----------
 async function getProducts(
   categorySlug: string,
   searchParams: { [key: string]: string | string[] | undefined }
@@ -116,7 +110,6 @@ async function getProducts(
   for (const key in searchParams) {
     const value = searchParams[key];
     if (value !== undefined) {
-      // Exclude price filters from SSR — they restrict the filter list returned by the API
       if (["price_ranges", "min_price", "max_price"].includes(key.toLowerCase())) continue;
       if (Array.isArray(value)) {
         value.forEach((v) => queryParams.append(key, v));
@@ -130,7 +123,6 @@ async function getProducts(
     queryParams.set("sort_by", String(searchParams.sort_by));
   }
 
-  // Ensure page and limit are set for SSR (limit strictly capped to 10 to prevent 422 API errors if user selects 150)
   if (!queryParams.has("page")) queryParams.set("page", "1");
   queryParams.set("limit", "20");
 
@@ -151,7 +143,6 @@ async function getProducts(
   }
 }
 
-// ---------- Page Component ----------
 export default async function CategoryPage({
   params,
   searchParams,
@@ -160,7 +151,6 @@ export default async function CategoryPage({
   searchParams: { [key: string]: string | string[] | undefined };
 
 }) {
-  //  Await both async props
   const { slug } = await params;
   const resolvedSearchParams = await searchParams;
 
@@ -173,7 +163,6 @@ export default async function CategoryPage({
 
   let sidebarFilters = filters;
 
-  // If current category has no filters, fetch global filters
   if (sidebarFilters.length === 0) {
     try {
       const fallbackRes = await fetch(
@@ -194,7 +183,24 @@ export default async function CategoryPage({
 
   return (
     <>
-
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: toSafeJsonLd({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: category?.name || slug,
+            url: `/category/${slug}`,
+            numberOfItems: products.length,
+            itemListElement: products.map((product: any, index: number) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              name: product.title,
+              url: `/product/${product.unique_code || product.slug}`,
+            })),
+          }),
+        }}
+      />
       <CategoryPageClient
         megaMenuData={megaMenuData}
         slug={slug}

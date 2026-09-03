@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Accordion from "../common/Accordion";
 import { Review } from "@/types/product";
-import { warrantyAndReturnContent } from "../ui/product-tab-content";
 import CustomerRatingViewPage from "./CustomerRatingViewPage";
 
 interface ProductDetailsMobileTabsProps {
@@ -15,7 +14,6 @@ interface ProductDetailsMobileTabsProps {
 
 export default function ProductDetailsMobileTabs({
   descriptionContent,
-  deliveryContent,
   reviews,
 }: ProductDetailsMobileTabsProps) {
   const [activeTab, setActiveTab] = useState<"details" | "reviews">("details");
