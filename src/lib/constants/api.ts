@@ -1,7 +1,7 @@
 export const API_ENDPOINTS = {
   AUTH: {
     BASE_URL: `${process.env.NEXT_PUBLIC_API_URL_USERS}/api/v1/users`,
-    BASE_URL_CLIENT: "/api/v1/user",
+    BASE_URL_CLIENT: "/api/v1/users",
     LOGIN: "login",
     SIGNUP: "signup",
     LOGOUT: "logout",
@@ -58,8 +58,8 @@ export const API_ENDPOINTS = {
     CHECK_DELIVERY: "/check-delivery",
     PROMO_BASE_URL: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/coupon`,
     CLEAR: "clear-cart",
-    VALIDATE: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/cart/apply-coupon`,
-    REMOVE_COUPON: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/cart/remove-coupon`,
+    VALIDATE: "apply-coupon",
+    REMOVE_COUPON: "remove-coupon",
   },
   WISHLIST: {
     BASE_URL: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/wishlist`,
@@ -89,7 +89,7 @@ export const API_ENDPOINTS = {
     REPLACE_ITEM: (item_id: string | number) => `/orders/replace-order-item/${item_id}`,
     ADD_REVIEW: "/orders/add-review",
     RETRY_PAYMENT: (order_id: string) => `/orders/retry-payment/${order_id}`,
-    GET_INVOICE: (order_id: string) => `/api/v1/orders/get-invoice/${order_id}`,
+    GET_INVOICE: (order_id: string) => `/orders/get-invoice/${order_id}`,
   },
   HELPDESK: {
     BASE_URL: `/api/v1/helpdesk`,

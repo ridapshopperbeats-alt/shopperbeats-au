@@ -3,7 +3,7 @@ import CategoryPageClient from "@/components/pages/CategoryPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import { ProductsResponse } from "@/types/product";
+import { Category, ProductsResponse } from "@/types/product";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 
 // ---------- Generate Metadata ----------
@@ -58,7 +58,10 @@ const getCategoryDetails = cache(async (slug: string) => {
   }
 
   // Helper to find category recursively
-  const findCategory = (cats: any[], targetSlug: string): any => {
+  const findCategory = (
+    cats: Category[],
+    targetSlug: string,
+  ): Category | null => {
     for (const cat of cats) {
       if (cat.slug === targetSlug) return cat;
       if (cat.subcategories?.length) {

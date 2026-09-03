@@ -21,7 +21,7 @@ interface CategorySliderProps {
   items: CategorySliderItem[];
   className?: string;
   arrows?: boolean;
-  titleClassName: any;
+  titleClassName?: string;
   onCategoryClick?: (item: CategorySliderItem) => void;
   getHref?: (item: CategorySliderItem) => string;
 }

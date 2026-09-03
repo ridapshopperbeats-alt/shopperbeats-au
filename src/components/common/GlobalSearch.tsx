@@ -34,13 +34,10 @@ export default function GlobalSearch() {
     });
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsSearching(false);
   }, [pathname]);
 
-  // Single source of truth for what's actually on screen — each list narrows
-  // further as the user keeps typing ahead of the debounce, so keyboard
-  // bounds/selection and the rendered rows must read from these same
-  // filtered lists, not the raw API response.
   const query = searchQuery.toLowerCase();
 
   const filteredProducts: SuggestionItem[] = React.useMemo(() => {

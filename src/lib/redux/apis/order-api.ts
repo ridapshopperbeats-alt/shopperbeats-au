@@ -14,7 +14,7 @@ export const orderApi = createApi({
   endpoints: (builder) => ({
     createOrder: builder.mutation<CreateOrderResponse, OrderPayload>({
       query: (orderData) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/orders/create-orders`,
+        url: API_ENDPOINTS.ORDER.CREATE,
         method: "POST",
         body: orderData,
       }),
@@ -22,63 +22,62 @@ export const orderApi = createApi({
 
     getOrderById: builder.query<OrderAPIResponse, string>({
       query: (orderId: string) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/orders/get-order/${orderId}`,
+        url: `${API_ENDPOINTS.ORDER.DETAIL}/${orderId}`,
         method: "GET",
       }),
     }),
 
     listOrders: builder.query<{ data: OrderAPIResponse[]; total_items: number }, ListOrdersParams>({
       query: (params) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/orders/list-orders`,
+        url: API_ENDPOINTS.ORDER.LIST,
         method: "GET",
         params,
       }),
     }),
     cancelOrder: builder.mutation<CancelOrderResponse, { order_id: string; reason?: string }>({
       query: ({ order_id, reason }) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/orders/cancel-order/${order_id}`,
+        url: API_ENDPOINTS.ORDER.CANCEL_ORDER(order_id),
         method: "POST",
         body: reason ? { reason } : undefined,
       }),
     }),
     cancelOrderItem: builder.mutation<OrderActionResponse, { id: string | number; reason?: string }>({
       query: ({ id, reason }) => ({
-         url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/orders/cancel-order-item/${id}`,
-        // url: API_ENDPOINTS.ORDER.CANCEL_ITEM(id),
+        url: API_ENDPOINTS.ORDER.CANCEL_ITEM(id),
         method: "PATCH",
         body: reason ? { reason } : undefined,
       }),
     }),
     getReturnOptions: builder.query<ReturnOption[], void>({
       query: () => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/return-reasons/active`,
+        url: API_ENDPOINTS.ORDER.RETURN_OPTIONS,
         method: "GET",
       }),
     }),
     returnOrder: builder.mutation<OrderActionResponse, ReturnOrderPayload>({
       query: (body) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/orders/return-order/${body.order_id}`,
+        url: API_ENDPOINTS.ORDER.RETURN(body.order_id!),
         method: "POST",
         body,
       }),
     }),
     returnOrderItem: builder.mutation<OrderActionResponse, ReturnOrderPayload>({
       query: (body) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/orders/return-order-item/${body.item_id}`,
+        url: API_ENDPOINTS.ORDER.RETURN_ITEM(body.item_id!),
         method: "POST",
         body,
       }),
     }),
     replaceOrder: builder.mutation<OrderActionResponse, ReturnOrderPayload>({
       query: (body) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/orders/return-order/${body.order_id}`,
+        url: API_ENDPOINTS.ORDER.RETURN(body.order_id!),
         method: "POST",
         body,
       }),
     }),
     replaceOrderItem: builder.mutation<OrderActionResponse, ReturnOrderPayload>({
       query: (body) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/orders/replace-order-item/${body.item_id}`,
+        url: API_ENDPOINTS.ORDER.REPLACE_ITEM(body.item_id!),
         method: "POST",
         body,
       }),
@@ -95,7 +94,7 @@ export const orderApi = createApi({
       { postcode: string; product_identifier?: string }
     >({
       query: ({ postcode, product_identifier }) => ({
-        url:`${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/shipping-rules/calculate-shipping`,
+        url: API_ENDPOINTS.ORDER.SHIPPING_CHARGE,
         method: "GET",
         params: {
           postcode,
@@ -105,7 +104,7 @@ export const orderApi = createApi({
     }),
     addReview: builder.mutation<AddReviewResponse, AddReviewPayload>({
       query: (body) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/orders/add-review`,
+        url: API_ENDPOINTS.ORDER.ADD_REVIEW,
         method: "POST",
         body,
       }),
@@ -124,7 +123,7 @@ export const orderApi = createApi({
       }
     >({
       query: ({ order_id, payment_method }) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1/orders/retry-payment/${order_id}`,
+        url: API_ENDPOINTS.ORDER.RETRY_PAYMENT(order_id),
         method: "POST",
         body: { payment_method },
       }),

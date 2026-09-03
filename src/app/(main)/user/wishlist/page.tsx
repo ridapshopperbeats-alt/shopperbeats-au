@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ShoppingBag } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -12,14 +12,10 @@ import {
   useMoveWishlistToCartMutation,
 } from "@/lib/redux/apis/cart-api";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 import { getPriceDetails, getImageUrl } from "@/lib/utils/main-utils";
 export default function WishlistPage() {
-  // Guest wishlists live in localStorage, which the server can never see —
-  // so the server always renders an empty list. Reading the real value only
-  // after mount keeps the first client render identical to the server's,
-  // avoiding a hydration mismatch.
-  const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => setHasMounted(true), []);
+  const hasMounted = useIsClient();
 
   const {
     data: wishlist,

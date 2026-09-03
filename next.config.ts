@@ -1,19 +1,5 @@
 import type { NextConfig } from "next";
 
-const CSP = [
-  "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://www.google.com https://js.stripe.com https://cdn.tailwindcss.com`,
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "img-src 'self' data: blob: https:",
-  "font-src 'self' data: https://fonts.gstatic.com",
-  "connect-src 'self' https://api-us.shopperbeats.cloud https://admin.shopperbeats.com.au https://www.google-analytics.com https://maps.googleapis.com https://places.googleapis.com https://js.stripe.com https://api.stripe.com",
-  "frame-src https://js.stripe.com https://hooks.stripe.com https://www.google.com",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "frame-ancestors 'self'",
-].join("; ");
-
 const nextConfig: NextConfig = {
   output: "standalone",
   devIndicators: false,
@@ -22,11 +8,11 @@ const nextConfig: NextConfig = {
       {
         source: "/:path*",
         headers: [
-          { key: "Content-Security-Policy", value: CSP },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self)" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
         ],
       },
     ];
@@ -48,6 +34,10 @@ const nextConfig: NextConfig = {
       {
         source: "/api/v1/coupon-tracker/:path*",
         destination: "https://api-us.shopperbeats.cloud/cart/api/v1/coupon-tracker/:path*",
+      },
+      {
+        source: "/api/v1/order/:path*",
+        destination: "https://api-us.shopperbeats.cloud/orders/api/v1/:path*",
       },
       {
         source: "/api/v1/:path*",
@@ -126,10 +116,6 @@ const nextConfig: NextConfig = {
         hostname: "perfumesw.com",
       },
       {
-        protocol: "http",
-        hostname: "perfumesw.com",
-      },
-      {
         protocol: "https",
         hostname: "pim-hub.com",
       },
@@ -158,10 +144,6 @@ const nextConfig: NextConfig = {
         hostname: "static.songmics.com",
       },
       {
-        protocol: "http",
-        hostname: "www.fastfurnishings.com",
-      },
-      {
         protocol: "https",
         hostname: "www.homeroots.co",
       },
@@ -180,6 +162,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "dropship.nearlynatural.com",
+      },
+      {
+        protocol: "http",
+        hostname: "www.fastfurnishings.com",
       },
     ],
   },

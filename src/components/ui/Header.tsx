@@ -44,6 +44,7 @@ import CategoryNavbar from "./CategoryNavbar";
 import { addBreadcrumb } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
 import { useDebounceValue } from "@/lib/hooks/use-debounce";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 
 export interface MegaMenuSubcategory {
   name: string;
@@ -156,7 +157,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [showCartCard] = useState(false);
   const [showPincodeInput, setShowPincodeInput] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const pathname = usePathname();
   const currentCategorySlug = pathname?.match(/^\/category\/([^/]+)/)?.[1];
   const activeTopCategorySlug = currentCategorySlug
@@ -252,10 +253,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
       requestLocation();
     }
   }, [requestLocation]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const checkLocationAndPostcode = async () => {

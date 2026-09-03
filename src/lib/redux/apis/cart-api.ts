@@ -33,9 +33,8 @@ interface MoveWishlistToCartResponse {
   message?: string;
 }
 
-const baseCartQuery = createBaseQuery(API_ENDPOINTS.CART.BASE_URL);
-const baseWishlistQuery = createBaseQuery(API_ENDPOINTS.WISHLIST.BASE_URL);
-const basePromoQuery = createBaseQuery(API_ENDPOINTS.CART.PROMO_BASE_URL);
+const baseCartQuery = createBaseQuery(API_ENDPOINTS.CART.BASE_URL_CLIENT);
+const baseWishlistQuery = createBaseQuery(API_ENDPOINTS.WISHLIST.BASE_URL_CLIENT);
 
 // --- GUEST WISHLIST (localStorage-backed, used when the user isn't logged in) ---
 const GUEST_WISHLIST_STORAGE_KEY = "guest_wishlist";
@@ -190,7 +189,7 @@ export const cartApi = createApi({
       { coupon_code: string; cart_id: string; user_id?: string; order_id?: string; post_code?: string }
     >({
       queryFn: async ({ coupon_code, cart_id = "", user_id = "", order_id = "", post_code = "" }, api, extraOptions) => {
-        const result = await basePromoQuery(
+        const result = await baseCartQuery(
           {
             url: API_ENDPOINTS.CART.VALIDATE,
             method: "POST",
@@ -208,7 +207,7 @@ export const cartApi = createApi({
 
     removeCoupon: builder.mutation<RemoveCouponResponse, void>({
       queryFn: async (_arg, api, extraOptions) => {
-        const result = await basePromoQuery(
+        const result = await baseCartQuery(
           {
             url: API_ENDPOINTS.CART.REMOVE_COUPON,
             method: "DELETE",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 
@@ -17,6 +17,7 @@ import { Loader, Plus } from "lucide-react";
 import Button from "@/components/common/Button";
 import AddressForm from "@/components/common/AddressForm";
 import { Card } from "@/components/common/Card";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 
 export default function AddressesPage() {
   const { isAuthenticated, authChecked } = useSelector(
@@ -37,10 +38,7 @@ export default function AddressesPage() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const formRef = useRef<HTMLDivElement | null>(null);
 
-  const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
+  const hasMounted = useIsClient();
   const showLoader = !hasMounted || isLoading;
 
   const handleEdit = (address: Address) => {

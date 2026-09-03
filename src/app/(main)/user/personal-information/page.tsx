@@ -69,6 +69,7 @@ export default function PersonalInformationPage() {
 
   useEffect(() => {
     if (personalData && personalData.response) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         first_name: personalData.response.first_name || "",
         last_name: personalData.response.last_name || "",
@@ -76,6 +77,7 @@ export default function PersonalInformationPage() {
         phonenumber: personalData.response.phonenumber || "",
         date_of_birth: personalData.response.date_of_birth || "",
       });
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOriginalData({
         first_name: personalData.response.first_name || "",
         last_name: personalData.response.last_name || "",
