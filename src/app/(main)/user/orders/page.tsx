@@ -11,6 +11,7 @@ import {
   OrderItem,
   Status,
   OrderReturn,
+  OrderStatusCode,
 } from "@/types/order";
 
 import { Elements } from "@stripe/react-stripe-js";
@@ -22,7 +23,7 @@ import "../../../../styles/Product.css";
 
 import Image from "next/image";
 import { useCancelOrderMutation, useListOrdersQuery } from "@/lib/redux/apis/order-api";
-import { formatPrice } from "@/lib/utils/main-utils";
+import { formatPrice, IN_TRANSIT_CODES, ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from "@/lib/utils/main-utils";
 import { getOrderProductImage, getReviewProductId, mapOrderProducts } from "@/lib/utils/order-products";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
@@ -35,49 +36,6 @@ import Pagination from "@/components/common/Pagination";
 import { Card } from "@/components/common/Card";
 import { StatusBadge, BadgeColor } from "@/components/common/StatusBadge";
 import { Truck, Eye, ChevronUp, ChevronDown, ArrowUpDown, XCircle, ChevronRight, Star, RefreshCw } from "lucide-react";
-
-enum OrderStatusCode {
-  Confirmed = "confirmed",
-  Shipped = "shipped",
-  Delivered = "delivered",
-  Cancelled = "cancelled",
-  Pending = "pending",
-  InProgress = "in progress",
-  ReturnRequested = "return requested",
-  ReplacementRequested = "replacement_requested",
-  Refunded = "refunded",
-}
-
-const ORDER_STATUS_LABELS: Record<OrderStatusCode, string> = {
-  [OrderStatusCode.Confirmed]: "Confirmed",
-  [OrderStatusCode.Shipped]: "Shipped",
-  [OrderStatusCode.Delivered]: "Delivered",
-  [OrderStatusCode.Cancelled]: "Cancelled",
-  [OrderStatusCode.Pending]: "Pending",
-  [OrderStatusCode.InProgress]: "In Progress",
-  [OrderStatusCode.ReturnRequested]: "Return Requested",
-  [OrderStatusCode.ReplacementRequested]: "Replacement Requested",
-  [OrderStatusCode.Refunded]: "Refunded",
-};
-
-const IN_TRANSIT_CODES = [
-  OrderStatusCode.Confirmed,
-  OrderStatusCode.Shipped,
-  OrderStatusCode.Pending,
-  OrderStatusCode.InProgress,
-];
-
-const ORDER_STATUS_COLORS: Record<OrderStatusCode, BadgeColor> = {
-  [OrderStatusCode.Confirmed]: BadgeColor.Blue,
-  [OrderStatusCode.Shipped]: BadgeColor.Blue,
-  [OrderStatusCode.Pending]: BadgeColor.Blue,
-  [OrderStatusCode.InProgress]: BadgeColor.Blue,
-  [OrderStatusCode.Delivered]: BadgeColor.Green,
-  [OrderStatusCode.Cancelled]: BadgeColor.Red,
-  [OrderStatusCode.ReturnRequested]: BadgeColor.Orange,
-  [OrderStatusCode.ReplacementRequested]: BadgeColor.Orange,
-  [OrderStatusCode.Refunded]: BadgeColor.Orange,
-};
 
 const getOrderStatusCode = (order: OrderItem): OrderStatusCode => {
   const hasReturnRequested = order?.returns?.some(
@@ -204,7 +162,6 @@ export default function MyOrdersPage() {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setAllOrders(mapped);
     } else if (fetchingPage > startFetching) {
-      // Append logic
       setAllOrders((prev) => {
         if (prev.length >= uiLimit) return prev;
         const newOrders = mapped.filter(

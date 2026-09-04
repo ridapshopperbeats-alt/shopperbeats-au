@@ -6,6 +6,8 @@ const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
 import { cache } from "react";
 import { AboutLink, AboutSection, ContactContent } from "@/types/cms";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
+import { OrderStatusCode } from "@/types/order";
+import { BadgeColor } from "@/components/common/StatusBadge";
 
 export function toSafeJsonLd(data: unknown): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");
@@ -557,5 +559,35 @@ export const aboutSections: AboutSection[] = [
     },
 ];
 
+export const ORDER_STATUS_LABELS: Record<OrderStatusCode, string> = {
+  [OrderStatusCode.Confirmed]: "Confirmed",
+  [OrderStatusCode.Shipped]: "Shipped",
+  [OrderStatusCode.Delivered]: "Delivered",
+  [OrderStatusCode.Cancelled]: "Cancelled",
+  [OrderStatusCode.Pending]: "Pending",
+  [OrderStatusCode.InProgress]: "In Progress",
+  [OrderStatusCode.ReturnRequested]: "Return Requested",
+  [OrderStatusCode.ReplacementRequested]: "Replacement Requested",
+  [OrderStatusCode.Refunded]: "Refunded",
+};
+
+export const IN_TRANSIT_CODES = [
+  OrderStatusCode.Confirmed,
+  OrderStatusCode.Shipped,
+  OrderStatusCode.Pending,
+  OrderStatusCode.InProgress,
+];
+
+export const ORDER_STATUS_COLORS: Record<OrderStatusCode, BadgeColor> = {
+  [OrderStatusCode.Confirmed]: BadgeColor.Blue,
+  [OrderStatusCode.Shipped]: BadgeColor.Blue,
+  [OrderStatusCode.Pending]: BadgeColor.Blue,
+  [OrderStatusCode.InProgress]: BadgeColor.Blue,
+  [OrderStatusCode.Delivered]: BadgeColor.Green,
+  [OrderStatusCode.Cancelled]: BadgeColor.Red,
+  [OrderStatusCode.ReturnRequested]: BadgeColor.Orange,
+  [OrderStatusCode.ReplacementRequested]: BadgeColor.Orange,
+  [OrderStatusCode.Refunded]: BadgeColor.Orange,
+};
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://shopperbeats.com";

@@ -329,3 +329,15 @@ export type OrderDetailsType = {
   couponCode?: string;
   totalAmount: string;
 };
+
+export enum OrderStatusCode {
+  Confirmed = "confirmed",
+  Shipped = "shipped",
+  Delivered = "delivered",
+  Cancelled = "cancelled",
+  Pending = "pending",
+  InProgress = "in progress",
+  ReturnRequested = "return requested",
+  ReplacementRequested = "replacement_requested",
+  Refunded = "refunded",
+}
