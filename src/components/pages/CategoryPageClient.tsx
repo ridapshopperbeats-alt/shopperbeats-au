@@ -7,10 +7,11 @@ import React, {
   useEffect,
   useMemo,
   useCallback,
+  useRef,
   useTransition,
 } from "react";
 
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { useDispatch } from "react-redux";
 
@@ -25,6 +26,7 @@ import { findCategoryPath } from "@/lib/utils/main-utils";
 import { Category, Filter, Product } from "@/types/product";
 
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
+import { API_ENDPOINTS } from "@/lib/constants/api";
 
 import "../../styles/Product.css";
 import CategorySlider from "./CategorySlider";
@@ -68,7 +70,6 @@ const CategoryClient = ({
   totalItems,
   megaMenuData,
 }: CategoryPageClientProps) => {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
@@ -90,14 +91,6 @@ const CategoryClient = ({
   }
 
   const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    if (!isPending) return;
-    dispatch(pushLoader());
-    return () => {
-      dispatch(popLoader());
-    };
-  }, [isPending, dispatch]);
 
   const {
     sortBy,
@@ -156,8 +149,110 @@ const CategoryClient = ({
 
   const uiLimit = Number(searchParams.get("limit")) || 20;
 
-  const allProducts = products;
-  const effectiveTotal = totalItems;
+  const [allProducts, setAllProducts] = useState<Product[]>(products);
+  const [effectiveTotal, setEffectiveTotal] = useState(totalItems);
+  const [isLoadingPage, setIsLoadingPage] = useState(false);
+
+  // Page the products in state belong to
+  const [loadedKey, setLoadedKey] = useState(`${currentPage}-${uiLimit}`);
+  const inFlightKeyRef = useRef<string | null>(null);
+
+  // A fresh server render (filter change / reload) replaces the list
+  const [prevProducts, setPrevProducts] = useState(products);
+
+  if (prevProducts !== products) {
+    setPrevProducts(products);
+    setAllProducts(products);
+    setEffectiveTotal(totalItems);
+    setLoadedKey(`${currentPage}-${uiLimit}`);
+  }
+
+  const fetchProducts = useCallback(
+    async (page: number, limit: number, key: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      params.set("category_slug", slug);
+      params.set("page", String(page));
+      params.set("limit", String(limit));
+
+      // price filtering happens on the client
+      ["price_ranges", "min_price", "max_price"].forEach((param) =>
+        params.delete(param),
+      );
+
+      inFlightKeyRef.current = key;
+      setIsLoadingPage(true);
+
+      try {
+        const res = await fetch(
+          `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?${params.toString()}`,
+        );
+
+        if (!res.ok) throw new Error(`Failed to fetch products (${res.status})`);
+
+        const data = await res.json();
+
+        setAllProducts(data?.data ?? []);
+        setEffectiveTotal(Number(data?.total ?? 0));
+        setLoadedKey(key);
+      } catch (error) {
+        console.warn("Failed to load products:", error);
+      } finally {
+        inFlightKeyRef.current = null;
+        setIsLoadingPage(false);
+      }
+    },
+    [searchParams, slug],
+  );
+
+  // Fetch whenever the page / limit in the URL is not what we already have
+  useEffect(() => {
+    const key = `${currentPage}-${uiLimit}`;
+
+    if (key === loadedKey || key === inFlightKeyRef.current) return;
+
+    fetchProducts(currentPage, uiLimit, key);
+  }, [currentPage, uiLimit, loadedKey, fetchProducts]);
+
+  useEffect(() => {
+    if (!isPending && !isLoadingPage) return;
+    dispatch(pushLoader());
+    return () => {
+      dispatch(popLoader());
+    };
+  }, [isPending, isLoadingPage, dispatch]);
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (page === currentPage) return;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", String(page));
+
+      window.history.pushState(null, "", `${pathname}?${params.toString()}`);
+    },
+    [currentPage, pathname, searchParams],
+  );
+
+  const handleItemsPerPageChange = useCallback(
+    (newUiLimit: number) => {
+      if (newUiLimit === uiLimit) return;
+
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("limit", String(newUiLimit));
+      params.set(
+        "page",
+        String(
+          Math.max(1, Math.ceil(((currentPage - 1) * uiLimit + 1) / newUiLimit)),
+        ),
+      );
+
+      window.history.pushState(null, "", `${pathname}?${params.toString()}`);
+    },
+    [currentPage, uiLimit, pathname, searchParams],
+  );
 
   const activePriceRange = useMemo(
     () => resolvePriceRange(minPrice, maxPrice, selectedPrices),
@@ -187,48 +282,6 @@ const CategoryClient = ({
       );
     }
   }, [slug, megaMenuData, category?.name, dispatch]);
-
-  const handlePageChange = useCallback(
-    (page: number) => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-
-      const params = new URLSearchParams(searchParams.toString());
-
-      params.set("page", page.toString());
-
-      startTransition(() => {
-        router.push(`${pathname}?${params.toString()}`, {
-          scroll: false,
-        });
-      });
-    },
-    [pathname, router, searchParams, startTransition],
-  );
-
-  const handleItemsPerPageChange = useCallback(
-    (newUiLimit: number) => {
-      const params = new URLSearchParams(searchParams.toString());
-
-      params.set("limit", newUiLimit.toString());
-
-      const newPage = Math.max(
-        1,
-        Math.ceil(((currentPage - 1) * uiLimit + 1) / newUiLimit),
-      );
-
-      params.set("page", newPage.toString());
-
-      startTransition(() => {
-        router.push(`${pathname}?${params.toString()}`, {
-          scroll: false,
-        });
-      });
-    },
-    [pathname, router, searchParams, currentPage, uiLimit, startTransition],
-  );
 
   const handleLoadMore = useCallback(() => { }, []);
 
@@ -315,7 +368,7 @@ const CategoryClient = ({
               categoryName={category?.name}
               tags={filterTags}
               onClearFilters={clearFilters}
-              isLoading={isPending && allProducts.length === 0}
+              isLoading={isLoadingPage || (isPending && allProducts.length === 0)}
               onLoadMore={handleLoadMore}
               infiniteScroll={false}
               hasMore={false}
