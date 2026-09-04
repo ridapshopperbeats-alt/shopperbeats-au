@@ -4,7 +4,7 @@ import { getClientIp, isRateLimited } from "@/lib/utils/rate-limit";
 const RATE_LIMIT = 20;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
-const CACHE_PRECISION = 4; // ~11m grid, enough to dedupe repeat lookups
+const CACHE_PRECISION = 4; 
 
 type CacheEntry = { data: unknown; expiresAt: number };
 const cache = new Map<string, CacheEntry>();

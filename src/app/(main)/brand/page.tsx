@@ -4,27 +4,8 @@ import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
 import BrandsExplorer from "@/components/pages/BrandsExplorer";
 import Banner from "@/components/common/Banner";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
+import { Brand, BrandsResponse } from "@/types/main";
 
-interface Brand {
-  id: string;
-  name: string;
-  logo_url: string | null;
-  image_url: string | null;
-  image: string | null;
-  is_active: boolean;
-  total_products: number;
-  active_products: number;
-  inactive_products: number;
-  slug: string;
-}
-
-interface BrandsResponse {
-  page: number;
-  limit: number;
-  total: number;
-  pages: number;
-  data: Brand[];
-}
 
 async function fetchBrands() {
   try {
@@ -102,28 +83,28 @@ export default async function BrandsSection() {
         }
       />
       <div className="container">
-   
-      <div className="hidden grid-cols-2 gap-5 sm:grid-cols-3 lg:grid lg:grid-cols-6">
-        {featuredBrands
-          .map((featuredBrand: { brand_id: string }) => {
-            const brand = allBrands.find(
-              (b: Brand) => b.id === featuredBrand.brand_id,
-            );
 
-            return brand;
-          })
-          .filter((brand: Brand | undefined): brand is Brand => !!brand)
-          .map((brand: Brand) => {
-            const rawLogoSrc =
-              brand.image || brand.logo_url || brand.image_url;
-            const logoSrc = rawLogoSrc
-              ? applyImageVariant(rawLogoSrc, "public")
-              : "/no-product-bg.svg";
-            return (
-              <Link
-                key={brand.id}
-                href={`/brand/${brand.slug}`}
-                className="
+        <div className="hidden grid-cols-2 gap-5 sm:grid-cols-3 lg:grid lg:grid-cols-6">
+          {featuredBrands
+            .map((featuredBrand: { brand_id: string }) => {
+              const brand = allBrands.find(
+                (b: Brand) => b.id === featuredBrand.brand_id,
+              );
+
+              return brand;
+            })
+            .filter((brand: Brand | undefined): brand is Brand => !!brand)
+            .map((brand: Brand) => {
+              const rawLogoSrc =
+                brand.image || brand.logo_url || brand.image_url;
+              const logoSrc = rawLogoSrc
+                ? applyImageVariant(rawLogoSrc, "public")
+                : "/no-product-bg.svg";
+              return (
+                <Link
+                  key={brand.id}
+                  href={`/brand/${brand.slug}`}
+                  className="
               group
               relative
               overflow-hidden
@@ -138,34 +119,34 @@ export default async function BrandsSection() {
               hover:shadow-[0_10px_30px_rgba(1,41,97,0.08)]
               hover:border-[#01296120]
             "
-              >
-                <div
-                  className="
+                >
+                  <div
+                    className="
                 absolute inset-0 opacity-0 group-hover:opacity-100
                 transition duration-500
                 bg-gradient-to-br from-[#01296108] via-transparent to-[#ff000008]
               "
-                />
+                  />
 
-                <div className="relative z-10 flex items-center justify-center">
-                  <Image
-                    src={logoSrc}
-                    alt={brand.name}
-                    width={140}
-                    height={80}
-                    loading="lazy"
-                    className="
+                  <div className="relative z-10 flex items-center justify-center">
+                    <Image
+                      src={logoSrc}
+                      alt={brand.name}
+                      width={140}
+                      height={80}
+                      loading="lazy"
+                      className="
                   max-h-[70px]
                   w-auto
                   object-contain
                   transition duration-500
                   group-hover:scale-105
                 "
-                  />
-                </div>
+                    />
+                  </div>
 
-                <div
-                  className="
+                  <div
+                    className="
                 absolute bottom-3 left-0 right-0
                 text-center
                 opacity-0
@@ -174,20 +155,20 @@ export default async function BrandsSection() {
                 group-hover:translate-y-0
                 transition-all duration-300
               "
-                >
-                  <span className="text-[13px] font-semibold text-[#012961]">
-                    {brand.name}
-                  </span>
-                </div>
-              </Link>
-            );
-          })}
-      </div>
+                  >
+                    <span className="text-[13px] font-semibold text-[#012961]">
+                      {brand.name}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+        </div>
 
-      <div className="-mx-5 mt-0 lg:mx-0 lg:mt-8">
-        <BrandsExplorer brands={allBrands} />
-      </div>
-      <ScrollToTopButton />
+        <div className="-mx-5 mt-0 lg:mx-0 lg:mt-8">
+          <BrandsExplorer brands={allBrands} />
+        </div>
+        <ScrollToTopButton />
       </div>
     </div>
   );

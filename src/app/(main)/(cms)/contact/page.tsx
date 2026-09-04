@@ -71,7 +71,6 @@ export default function ContactPage() {
     }
   };
 
-  // Form Submit Handler
   const handleFormSubmit = async (data: typeof formData) => {
     try {
       const res = await fetch("/api/contact", {
@@ -126,7 +125,7 @@ export default function ContactPage() {
 
       <div className="container">
         <div className="pt-10 font-montserrat">
-          {/* Top contact options */}
+          {/* Hide for showing future */}
           {/* <div className="mx-auto mb-[22px] grid w-full max-w-[1118px] grid-cols-2 gap-5 max-[992px]:grid-cols-1"> */}
             {/* <ContactCard
               icon={Phone}
@@ -148,7 +147,6 @@ export default function ContactPage() {
             /> */}
           {/* </div> */}
 
-          {/* Send us a Message */}
           <Card className="mx-auto mb-[22px] w-full max-w-[1118px] min-h-[488.25px] rounded-[16px] p-[35px] !shadow-[0_2px_16px_0_rgba(0,0,0,0.05)] max-[600px]:p-[25px]">
             <div className="-mx-[35px] mb-5 w-full border-b border-gray-100 px-[35px] pb-5 max-[600px]:-mx-[25px] max-[600px]:px-[25px]">
               <h3 className="m-0 mb-1 font-montserrat text-sm font-bold leading-[21px] text-[#211E22]">

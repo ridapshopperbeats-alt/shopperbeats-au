@@ -22,17 +22,12 @@ async function getProduct(
       }
       return fetch(url, {
         headers,
-        next: { revalidate: 300 }, // ISR: product data cached 5 min
+        next: { revalidate: 300 },
       });
     };
 
     let res = await fetchWithCookie(true);
 
-    // The products API tries to personalize the response (e.g.
-    // is_wishlisted) from the access_token cookie, and 401s the whole
-    // request if that token is stale/expired rather than degrading to an
-    // anonymous response. Retry once without cookies so a logged-in user
-    // with an expired token still sees the product page.
     if (res.status === 401 && cookieHeader) {
       res = await fetchWithCookie(false);
     }
@@ -239,7 +234,6 @@ export default async function ProductPage(props: {
     return <div className="py-10"><NoProductsFound /></div>;
   }
 
-  // Fetch all secondary data in parallel
   const [recommendations, popularProducts, recentlyViewed, megaMenuData] = await Promise.all([
     product.id ? getRecommendations(product.id) : Promise.resolve(null),
     getPopularProducts(),

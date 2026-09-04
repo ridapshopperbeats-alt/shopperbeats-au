@@ -7,7 +7,6 @@ import type { Metadata } from "next";
 import "../../../styles/Product.css";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
-// ---------- Generate Metadata ----------
 export async function generateMetadata(
   { searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }
 ): Promise<Metadata> {
@@ -39,7 +38,6 @@ export async function generateMetadata(
   };
 }
 
-// ---------- Fetch Products ----------
 async function getProducts(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<ProductsResponse> {
@@ -48,7 +46,6 @@ async function getProducts(
   for (const key in searchParams) {
     const value = searchParams[key];
     if (value !== undefined) {
-      // Exclude price filters from SSR — they restrict the filter list returned by the API
       if (["price_ranges", "min_price", "max_price"].includes(key.toLowerCase())) continue;
       if (key === "q") {
         queryParams.append("name", String(value));
@@ -62,12 +59,10 @@ async function getProducts(
     }
   }
 
-  // Explicitly forward sort_by if it exists
   if (searchParams.sort_by) {
     queryParams.set("sort_by", String(searchParams.sort_by));
   }
 
-  // Ensure page and limit are set for SSR (limit strictly capped to 10 to prevent 422 API errors if user selects 150)
   if (!queryParams.has("page")) queryParams.set("page", "1");
   if (!queryParams.has("limit")) queryParams.set("limit", "20");
 
@@ -88,7 +83,6 @@ async function getProducts(
   }
 }
 
-// ---------- Page Component ----------
 export default async function SearchPage({
   searchParams,
 }: {

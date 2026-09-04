@@ -24,7 +24,6 @@ export interface APIProduct {
   color?: string;
   variant_id?: string;
 
-  // dynamic attributes
   variant_attributes: VariantAttribute[];
   tags?: string[];
   vendor_id?: string;

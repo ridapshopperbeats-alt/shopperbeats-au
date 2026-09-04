@@ -1,4 +1,5 @@
 export interface Brand {
+  image: string | null;
   id: string;
   name: string;
   logo_url: string | null;

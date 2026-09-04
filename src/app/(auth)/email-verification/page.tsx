@@ -29,8 +29,6 @@ function VerifyEmailInner() {
     try {
       await resendVerificationCode({ email: emailInput }).unwrap();
       toast.success("Verification email sent successfully!");
-
-      // Block resend for 60s so the user doesn't spam the email API
       setCooldown(60);
       const timer = setInterval(() => {
         setCooldown((prev) => {

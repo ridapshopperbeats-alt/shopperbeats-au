@@ -143,7 +143,6 @@ export default function IntellectualPropertyComplaintsPage() {
       />
 
       <div className="mx-auto my-0 md:my-10 box-border flex w-full max-w-full flex-col gap-4 p-4 md:max-w-[1118px] md:gap-5 md:p-0">
-        {/* Top alert card */}
         <div
           className={`${CARD_CLASS} flex flex-col items-start gap-3.5 p-5 md:flex-row md:px-6 md:py-5`}
         >
@@ -162,7 +161,6 @@ export default function IntellectualPropertyComplaintsPage() {
           </div>
         </div>
 
-        {/* Complaint Process */}
         <div className={`${CARD_CLASS} overflow-hidden`}>
           <div className={CARD_HEADER_CLASS}>
             <div className="font-montserrat fluid-text-xs font-bold leading-[21px] text-[#211E22]">
@@ -196,7 +194,6 @@ export default function IntellectualPropertyComplaintsPage() {
           </div>
         </div>
 
-        {/* Submit a Complaint */}
         <div className={`${CARD_CLASS} overflow-hidden`}>
           <div className={CARD_HEADER_CLASS}>
             <div className="font-montserrat fluid-text-xs font-bold leading-[19.5px] text-[#211E22]">
@@ -380,7 +377,7 @@ export default function IntellectualPropertyComplaintsPage() {
           </form>
         </div>
 
-        {/* Footer help bar */}
+        {/* Hidefor future Footer help bar */}
         {/* <div
           className={`${CARD_CLASS} flex flex-col items-start justify-between gap-4 p-5 md:flex-row md:items-center md:gap-0 md:px-6`}
         >

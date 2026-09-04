@@ -5,7 +5,6 @@ import Breadcrumb from "@/components/common/Breadcrumb";
 import { Product } from "@/types/product";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
-// ---------- Generate Metadata ----------
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "All Products - Shopperbeats",
@@ -37,9 +36,6 @@ interface ProductsResponse {
   totalItems: number;
 }
 
-
-
-// ---------- Fetch Products ----------
 async function getProducts(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<ProductsResponse> {
@@ -56,7 +52,6 @@ async function getProducts(
     }
   }
 
-  // Ensure page and limit are set if not provided in searchParams
   if (!queryParams.has("page")) queryParams.set("page", "1");
   if (!queryParams.has("limit")) queryParams.set("limit", "20");
 
@@ -77,13 +72,11 @@ async function getProducts(
   }
 }
 
-// ---------- Page Component ----------
 export default async function ProductsPage({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  //  Await both async props
   const resolvedSearchParams = await searchParams;
 
   const { data: products, totalItems } = await getProducts(

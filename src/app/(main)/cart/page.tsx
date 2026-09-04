@@ -228,8 +228,6 @@ const Cart = () => {
     }
   };
 
-  // Resets the promo-code UI state (including the user-editable input) once
-  // the cart empties out — an external-system reset, not derivable state.
   useEffect(() => {
     if (cart && cart.items.length === 0) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
