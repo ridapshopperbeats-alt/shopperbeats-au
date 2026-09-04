@@ -20,6 +20,7 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import { CheckoutFormProps } from "@/types/checkout";
 
+const CHECKOUT_DATA_TTL_MS = 24 * 60 * 60 * 1000;
 
 const CheckoutForm: React.FC<CheckoutFormProps> = ({
   formData,
@@ -40,8 +41,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   isAuthenticated,
 }) => {
   const mounted = useIsClient();
-
-  const CHECKOUT_DATA_TTL_MS = 24 * 60 * 60 * 1000;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -76,7 +75,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
         }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setFormData]);
 
   useEffect(() => {

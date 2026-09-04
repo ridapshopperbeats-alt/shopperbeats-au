@@ -195,8 +195,7 @@ const ProductListingClient = ({
         dispatch(popLoader());
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const apiProducts = rtkData?.data || products;
 

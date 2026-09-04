@@ -34,7 +34,7 @@ export default function PersonalInformationPage() {
   const [updatePersonalData, { isLoading: isUpdating }] =
     useUpdatePersonalDataMutation();
 
-  const { formData, formErrors, handleChange, handleSubmit, setFormData } =
+  const { formData, formErrors, handleChange, handleSubmit, setFormData, setFormErrors } =
     useFormValidation(personalInfoSchema, {
       first_name: "",
       last_name: "",
@@ -56,7 +56,6 @@ export default function PersonalInformationPage() {
 
   useEffect(() => {
     if (personalData && personalData.response) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         first_name: personalData.response.first_name || "",
         last_name: personalData.response.last_name || "",
@@ -131,8 +130,10 @@ export default function PersonalInformationPage() {
       phonenumber: value,
     }));
 
-    // eslint-disable-next-line react-hooks/immutability
-    formErrors.phonenumber = error;
+    setFormErrors((prev) => ({
+      ...prev,
+      phonenumber: error,
+    }));
   };
 
   return (

@@ -173,8 +173,7 @@ const SearchPageClient = ({
         dispatch(popLoader());
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const currentParams = new URLSearchParams(searchParams.toString());
   currentParams.delete("page");

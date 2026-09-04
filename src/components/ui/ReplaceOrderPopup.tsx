@@ -242,7 +242,10 @@ const ReplaceOrderPopup: React.FC<ReplaceOrderPopupProps> = ({
             {attachedFiles.length > 0 && (
               <div className="flex flex-wrap gap-3">
                 {attachedFiles.map((file, idx) => (
-                  <div key={idx} className="relative">
+                  <div
+                    key={`${file.name}-${file.size}-${file.lastModified}`}
+                    className="relative"
+                  >
                     <Image
                       src={URL.createObjectURL(file)}
                       alt="preview"

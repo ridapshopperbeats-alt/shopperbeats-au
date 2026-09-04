@@ -274,7 +274,7 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
             return (
               <div
-                key={idx}
+                key={trueItemId ?? idx}
                 className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 border-b border-gray-100 py-3 last:border-b-0 last:mb-0"
               >
                 <div className="flex items-center gap-4">
@@ -302,9 +302,9 @@ export default function OrderDetail({ params }: OrderDetailProps) {
 
                     <div className="flex flex-wrap items-center gap-2 mt-1.5">
                       {product.variant_attributes?.length > 0 ? (
-                        product.variant_attributes.map((attr, i) => (
+                        product.variant_attributes.map((attr) => (
                           <StatusBadge
-                            key={i}
+                            key={attr.name}
                             label={`${attr.name}: ${attr.value}`}
                             color={BadgeColor.Gray}
                             showDot={false}
