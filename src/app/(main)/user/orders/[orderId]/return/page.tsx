@@ -32,8 +32,8 @@ export default function ReturnForm() {
                                     <h3>{product.title}</h3>
 
                                     {product?.variant_attributes?.length > 0 ? (
-                                        product.variant_attributes.map((attr, i) => (
-                                            <p key={i}>
+                                        product.variant_attributes.map((attr) => (
+                                            <p key={attr.name}>
                                                 <strong>{attr.name}:</strong> {attr.value}
                                             </p>
                                         ))

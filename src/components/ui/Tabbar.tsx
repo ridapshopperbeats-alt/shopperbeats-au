@@ -43,8 +43,8 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultIndex = 0 }) => {
                             {data.rating} ⭐ ({data.totalReviews} reviews)
                         </h4>
 
-                        {data.items.map((item, index) => (
-                            <div key={index} className="mt-[10px]">
+                        {data.items.map((item) => (
+                            <div key={`${item.user}-${item.comment}`} className="mt-[10px]">
                                 <strong>{item.user}</strong>
                                 <p>{item.comment}</p>
                                 <span>{item.rating} ⭐</span>

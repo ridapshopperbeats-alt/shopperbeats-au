@@ -260,7 +260,7 @@ export default function GooglePlacesInput({
         <div className="absolute z-10 bg-white w-full border  border-gray-300 rounded-b-[5px] mt-2 shadow-lg min-w-[280px] lg:min-w-[300px]">
           {suggestions.map((sug, i) => (
             <div
-              key={i}
+              key={sug.placePrediction?.placeId ?? i}
               role="button"
               tabIndex={0}
               onClick={() => handleSelect(sug)}

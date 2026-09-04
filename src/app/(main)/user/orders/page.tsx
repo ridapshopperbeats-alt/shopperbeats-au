@@ -562,9 +562,9 @@ export default function MyOrdersPage() {
                       </Link>
 
                       <div className="flex flex-wrap items-center gap-2 mt-1.5">
-                        {product.variant_attributes?.map((attr, i) => (
+                        {product.variant_attributes?.map((attr) => (
                           <StatusBadge
-                            key={i}
+                            key={attr.name}
                             label={`${attr.name}: ${attr.value}`}
                             color={BadgeColor.Gray}
                             showDot={false}

@@ -51,7 +51,7 @@ export default function ShadowDomContent({ content }: ShadowDomContentProps) {
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdn.tailwindcss.com"${nonceAttr}></script>
+    <script src="/vendor/tailwind-cdn.js"${nonceAttr}></script>
     <style>
       html, body, * {
         font-family: "Montserrat", sans-serif !important;

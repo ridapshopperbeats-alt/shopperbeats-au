@@ -320,9 +320,9 @@ export default function ReviewForm({ params }: ReviewPageProps) {
 
               {variantTags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {variantTags.map((tag, i) => (
+                  {variantTags.map((tag) => (
                     <StatusBadge
-                      key={i}
+                      key={tag}
                       label={tag}
                       color={BadgeColor.Gray}
                       showDot={false}
@@ -432,7 +432,10 @@ export default function ReviewForm({ params }: ReviewPageProps) {
             {review.images.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-3">
                 {review.images.map((img, idx) => (
-                  <div key={idx} className="relative">
+                  <div
+                    key={`${img.name}-${img.size}-${img.lastModified}`}
+                    className="relative"
+                  >
                     <Image
                       src={URL.createObjectURL(img)}
                       alt="preview"
