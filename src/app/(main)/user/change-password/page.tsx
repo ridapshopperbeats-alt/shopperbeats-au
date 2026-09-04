@@ -293,9 +293,6 @@ export default function ChangePasswordPage() {
               </p>
             )}
           </div>
-
-          {/* <div className="h-px w-full bg-[#F3F4F6] " /> */}
-
           <div className="flex items-center gap-4">
             <Button
               type="submit"

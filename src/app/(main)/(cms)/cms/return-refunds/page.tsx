@@ -113,7 +113,6 @@ export default function ReturnRefundsPage() {
           boxSizing: "border-box",
         }}
       >
-        {/* Red gradient header */}
         <div
           className="rw-hero"
           style={{

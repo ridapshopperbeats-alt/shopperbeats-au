@@ -37,7 +37,6 @@ export default function WishlistPage() {
   }));
 
   const handleAddAllToCart = async () => {
-    // Guard against double-clicks/re-entrancy and an empty wishlist.
     if (isTransferring || items.length === 0) return;
 
     setIsTransferring(true);

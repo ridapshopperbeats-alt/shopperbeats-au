@@ -1,7 +1,7 @@
 import { Product, VariantAttribute } from "./product";
 
 export interface CartItem extends Product {
-  id: string; // override optional Product.id — cart items always have an id
+  id: string; 
   quantity: number;
   variant_id: string;
   variant_attributes: VariantAttribute[];

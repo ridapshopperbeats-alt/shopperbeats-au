@@ -21,10 +21,6 @@ export interface WishlistKey {
   product_id: string;
   variant_id: string | null;
 }
-
-// Display data captured at the moment a guest wishlists a product, since a
-// logged-out wishlist lives only in localStorage and has no backend record
-// to fetch full product details from later.
 export interface WishlistProductSnapshot {
   image: string;
   title?: string;

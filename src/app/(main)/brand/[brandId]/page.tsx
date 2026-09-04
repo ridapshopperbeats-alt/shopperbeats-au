@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { ProductsResponse } from "@/types/product";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
-// ---------- Generate Metadata ----------
 export async function generateMetadata(
   { params }: { params: Promise<{ brandId: string }> }
 ): Promise<Metadata> {
@@ -45,7 +44,6 @@ export async function generateMetadata(
   };
 }
 
-// ---------- Fetch Brand Details ----------
 async function getBrandDetails(brandId: string) {
   const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
 
@@ -74,8 +72,6 @@ async function getBrandDetails(brandId: string) {
     return null;
   }
 }
-
-// ---------- Fetch Products ----------
 async function getProducts(
   brandId: string,
   searchParams: { [key: string]: string | string[] | undefined }
@@ -86,7 +82,6 @@ async function getProducts(
   for (const key in searchParams) {
     const value = searchParams[key];
     if (value !== undefined) {
-      // Exclude page, limit, and price filters from SSR — price filters restrict filter options from the API
       if (key === "page" || key === "limit" || ["price_ranges", "min_price", "max_price"].includes(key.toLowerCase())) continue;
       if (Array.isArray(value)) {
         value.forEach((v) => queryParams.append(key, v));
@@ -151,7 +146,6 @@ export default async function BrandPage({
           }),
         }}
       />
-      {/* <Breadcrumb /> */}
       <BrandPageClient
         brandId={brandId}
         brand={brand}

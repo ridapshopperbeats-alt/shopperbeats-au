@@ -6,7 +6,6 @@ import { ProductsResponse } from "@/types/product";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
-// ---------- Generate Metadata ----------
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {

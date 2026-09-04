@@ -28,10 +28,6 @@ const {
 });
 
   useEffect(() => {
-    // If cancelled or failed, don't try to load order details. Part of a
-    // larger Stripe-redirect effect below (timers, async capture) that
-    // can't be split into render-time logic without risk to the checkout
-    // flow, so this early branch is intentionally left as-is.
     if (status === "cancel" || actualRedirectStatus === "failed") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLoading(false);
@@ -41,8 +37,6 @@ const {
     if (isVerifyingPayment) {
       return;
     }
-
-    // Add a small delay to ensure sessionStorage is available
     const timer = setTimeout(() => {
       const storedOrderConfirmation = sessionStorage.getItem('orderConfirmation');
 
@@ -64,7 +58,6 @@ const {
     const payerId = searchParams.get("PayerID");
     const paymentIntent = searchParams.get("payment_intent");
 
-    // Do not process payment capture if status is cancel or failed
     if (status === "cancel" || actualRedirectStatus === "failed") return;
 
     // Handle PayPal payment

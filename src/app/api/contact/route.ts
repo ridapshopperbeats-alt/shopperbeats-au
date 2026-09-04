@@ -9,7 +9,6 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 const contactSchema = yup.object().shape({
   name: nameField("Name"),
   email: email,
-  // phone: phoneNumber,
   message: requiredMessage("Message", 5),
 });
 

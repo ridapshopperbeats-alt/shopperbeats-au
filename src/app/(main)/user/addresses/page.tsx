@@ -44,9 +44,8 @@ export default function AddressesPage() {
     setEditingAddress(address);
     setShowForm(true);
 
-    // Small delay so DOM updates first
     setTimeout(() => {
-      const yOffset = -110; // adjust based on header height
+      const yOffset = -110; 
       const y =
         formRef.current!.getBoundingClientRect().top +
         window.pageYOffset +

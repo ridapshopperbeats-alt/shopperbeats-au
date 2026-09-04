@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, use } from "react";
+import { useState, use } from "react";
 
 import { APIProduct, OrderReturn, OrderLineItem } from "@/types/order";
 

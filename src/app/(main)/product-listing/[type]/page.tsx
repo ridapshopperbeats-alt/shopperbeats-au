@@ -12,7 +12,6 @@ interface ProductListingPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-// Function to map URL 'type' to API 'category_id' or a specific filter
 function getApiCategoryParam(typeSlug: string): string | undefined {
   const typeMap: Record<string, string> = {
     clearance: "clearance",
@@ -119,7 +118,6 @@ async function fetchProductData(
   if (searchParams.sort_by) {
     queryParams.set("sort_by", String(searchParams.sort_by));
   }
-  // Default pagination
   if (!queryParams.has("page")) {
     queryParams.set("page", "1");
   }
@@ -189,7 +187,6 @@ async function fetchProductData(
 
     let filters: Filter[] = resolvedData?.filters || [];
 
-    // Fallback to fetch global filters if the current API doesn't return any (e.g. Highlights API)
     if (filters.length === 0) {
       try {
         const filterRes = await fetch(

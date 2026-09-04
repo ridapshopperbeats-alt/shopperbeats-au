@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import * as yup from "yup";
 import { useSelector } from "react-redux";
 
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 import Image from "next/image";
-import { dateOfBirth, email, nameField, phoneNumber } from "@/lib/validations/form-schemas";
+import { personalInfoSchema } from "@/lib/validations/form-schemas";
 import { useGetPersonalDataQuery, useUpdatePersonalDataMutation } from "@/lib/redux/apis/auth-api";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { PersonalInfoFormData } from "@/types/auth";
@@ -18,13 +17,6 @@ import { Input } from "@/components/common/input";
 import { Card } from "@/components/common/Card";
 import { CameraIcon } from "@/components/common/Svg";
 
-const personalInfoSchema = yup.object().shape({
-  first_name: nameField("First Name"),
-  last_name: nameField("Last Name"),
-  email: email,
-  phonenumber: phoneNumber,
-  date_of_birth: dateOfBirth,
-});
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/svg+xml", "image/gif", "image/webp"];
 const ALLOWED_IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "svg", "gif", "webp"];
 

@@ -143,7 +143,6 @@ export default function LoginPage() {
       await resendVerificationCode({ email: formData.email }).unwrap();
       toast.success("Verification email sent successfully!");
 
-      // Block resend for 60s so the user doesn't spam the email API
       setCooldown(60);
       const timer = setInterval(() => {
         setCooldown((prev) => {
@@ -197,20 +196,6 @@ export default function LoginPage() {
         recaptcha_token: recaptcha_token || "",
         remember_me: rememberMe,
       }).unwrap();
-
-      // NOTE: Zendesk messenger "loginUser" requires JWT authentication to be
-      // configured in Zendesk Admin > Messenger > Authentication (client_id).
-      // Uncomment the block below only after that setup is complete.
-      //
-      // if (typeof window !== "undefined" && window.zE) {
-      //   try {
-      //     window.zE("messenger", "loginUser", (callback) => {
-      //       callback({ email: response.response.user.email || formData.email });
-      //     });
-      //   } catch {
-      //     // Zendesk login failed silently
-      //   }
-      // }
 
       toast.success("Login successful!");
       await flushPendingWishlist();

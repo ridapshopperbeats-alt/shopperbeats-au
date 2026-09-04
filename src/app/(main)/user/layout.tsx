@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
 import { sidebarLinks } from "@/lib/utils/main-utils";
 
-// Guests are allowed on these /user/* routes; every other route requires auth.
 const GUEST_ALLOWED_PATHS = ["/user/wishlist", "/user/logout"];
 
 export default function UserLayout({
@@ -34,14 +33,6 @@ export default function UserLayout({
     ? sidebarLinks
     : sidebarLinks.filter((link) => link.label === "Wishlist");
   const hideSidebar = pathname === "/user/logout" && !isAuthenticated;
-
-  // For hide menu use this condtion in future.
-  // const isPersonalInformation = pathname === "/user/personal-information";
-  // const usesCardLayout =
-  //   isPersonalInformation ||
-  //   pathname === "/user/logout" ||
-  //   pathname === "/user/wishlist" ||
-  //   pathname === "/user/orders";
 
   const getPageTitle = () => {
     switch (pathname) {
