@@ -31,6 +31,15 @@ interface BannerSlide {
 //   { id: 6, image: "/images/HomeBanner5.svg" },
 // ];
 
+const STATIC_BANNERS: BannerSlide[] = [
+  { id: -1, image: "/images/banners/winter-collection-banner.png" },
+  { id: -2, image: "/images/banners/newSession.png" },
+  { id: -3, image: "/images/banners/fashion-suits-banner.png" },
+
+  { id: -4, image: "/images/banners/halloween-banner.png" },
+  { id: -5, image: "/images/banners/sb_ecom_fragrance_bnr.jpg" },
+];
+
 function getSlideOffset(index: number, currentBanner: number, total: number) {
   let diff = index - currentBanner;
   const half = total / 2;
@@ -59,7 +68,10 @@ export default function SingleBanner() {
 
         const res = await fetch(url);
 
-        if (!res.ok) return;
+        if (!res.ok) {
+          if (isMounted) setBanners(STATIC_BANNERS);
+          return;
+        }
 
         const data: { config?: { items?: HeroBannerItem[] } } = await res.json();
 
@@ -72,12 +84,13 @@ export default function SingleBanner() {
           }))
           .filter((banner) => banner.image);
 
-        if (!isMounted || mappedBanners.length === 0) return;
+        if (!isMounted) return;
 
-        setBanners(mappedBanners);
+        setBanners([...STATIC_BANNERS]);
         setCurrentBanner(0);
       } catch (error) {
         console.error("Error fetching hero banner:", error);
+        if (isMounted) setBanners(STATIC_BANNERS);
       } finally {
         if (isMounted) setIsLoading(false);
       }
