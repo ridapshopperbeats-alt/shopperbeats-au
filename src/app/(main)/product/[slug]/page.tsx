@@ -11,20 +11,31 @@ async function getProduct(
   cookieHeader?: string
 ): Promise<{ product: Product | null; setCookie?: string; seo?: ProductSEO }> {
   try {
-    const headers: HeadersInit = {
-      "Content-Type": "application/json",
-    };
-    if (cookieHeader) {
-      headers["Cookie"] = cookieHeader;
-    }
+    const url = `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.GET_PRODUCT}/${slug}`;
 
-  const res = await fetch(
-      `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.GET_PRODUCT}/${slug}`,
-      {
+    const fetchWithCookie = (withCookie: boolean) => {
+      const headers: HeadersInit = {
+        "Content-Type": "application/json",
+      };
+      if (withCookie && cookieHeader) {
+        headers["Cookie"] = cookieHeader;
+      }
+      return fetch(url, {
         headers,
         next: { revalidate: 300 }, // ISR: product data cached 5 min
-      }
-    );
+      });
+    };
+
+    let res = await fetchWithCookie(true);
+
+    // The products API tries to personalize the response (e.g.
+    // is_wishlisted) from the access_token cookie, and 401s the whole
+    // request if that token is stale/expired rather than degrading to an
+    // anonymous response. Retry once without cookies so a logged-in user
+    // with an expired token still sees the product page.
+    if (res.status === 401 && cookieHeader) {
+      res = await fetchWithCookie(false);
+    }
 
     if (!res.ok) {
       throw new Error(`Failed to fetch product (status ${res.status})`);
