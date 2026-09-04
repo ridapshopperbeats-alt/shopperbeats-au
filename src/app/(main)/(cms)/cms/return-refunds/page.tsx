@@ -171,7 +171,6 @@ export default function ReturnRefundsPage() {
           </div>
         </div>
 
-        {/* How to Return */}
         <div
           className="rw-return-card"
           style={{
@@ -310,7 +309,6 @@ export default function ReturnRefundsPage() {
           </div>
         </div>
 
-        {/* Return Conditions / Not Eligible */}
         <div
           className="rw-eligibility"
           style={{ display: "flex", gap: "20px", width: "100%", maxWidth: "1118px", boxSizing: "border-box" }}
@@ -508,7 +506,6 @@ export default function ReturnRefundsPage() {
           </div>
         </div>
 
-        {/* Warranty Coverage */}
         <div
           style={{
             width: "100%",

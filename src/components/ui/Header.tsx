@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import  { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,8 +16,6 @@ import {
   ChevronDown,
   ChevronRight,
   Menu,
-  HandbagIcon,
-  HeartPulse,
   Sparkles,
   Armchair,
   Gem,
@@ -44,6 +42,7 @@ import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
 import { useDebounceValue } from "@/lib/hooks/use-debounce";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import { MegaMenuCategory, MegaMenuSubcategory } from "@/types/megamenu";
+import TopNavbar from "./TopNavbar";
 
 interface HeaderProps {
   megaMenuData: MegaMenuCategory[];
@@ -346,11 +345,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
     }
   }, [activeCategory, megaMenuData]);
 
-  // All hooks must run unconditionally above this point — bailing out
-  // earlier (before the last useEffect) made Header render a different
-  // number of hooks on /check-out vs. every other route, which React
-  // flags as "Rendered fewer hooks than expected" once the same Header
-  // instance re-renders for a different path.
   if (pathname === "/check-out") {
     return null;
   }
@@ -612,7 +606,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                             ? cat.subcategories ?? []
                             : [];
 
-                          // Find Women tab
                           const womenTab = tabs.find((tab) => {
                             const slug = String(tab.slug ?? "").toLowerCase();
                             const name = String(tab.name ?? "").toLowerCase();
@@ -620,7 +613,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                             return slug === "women" || name === "women";
                           });
 
-                          // Find Men tab
                           const menTab = tabs.find((tab) => {
                             const slug = String(tab.slug ?? "").toLowerCase();
                             const name = String(tab.name ?? "").toLowerCase();
@@ -632,11 +624,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                               name === "man"
                             );
                           });
-
-                          /**
-                           * IMPORTANT:
-                           * Women first, Men second
-                           */
                           const orderedTabs = [
                             ...(womenTab ? [womenTab] : []),
                             ...(menTab ? [menTab] : []),
@@ -647,7 +634,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                             ),
                           ];
 
-                          // Find currently active tab
                           const activeTab =
                             orderedTabs.find(
                               (tab) =>
@@ -655,7 +641,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                 String(activeSubTabId)
                             ) ?? womenTab ?? orderedTabs[0];
 
-                          // Only active tab's data will be displayed
                           const columns = isFashionCat
                             ? activeTab?.subcategories ?? []
                             : cat.subcategories ?? [];
@@ -663,9 +648,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                           return (
                             <div className="mega-content-inner">
 
-                              {/* =========================
-                  WOMEN / MEN TABS
-              ========================= */}
                               {orderedTabs.length > 0 && (
                                 <div className="mega-gender-tabs">
                                   {orderedTabs.map((tab) => {
@@ -712,10 +694,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
                                   })}
                                 </div>
                               )}
-
-                              {/* =========================
-                  ACTIVE TAB DATA
-              ========================= */}
                               <div className="mega-content-row">
                                 <div className="mega-cat">
                                   {columns.map((subCat) => (
@@ -788,90 +766,12 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </div>
             </div>
           </div>
-
-          <nav className={`navbar `} id="menu">
-            <ul className="menu">
-              <li>
-                <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${activeTopCategorySlug === "home-garden" ? "active" : ""
-                    }`}
-                  href="/category/home-garden"
-                >
-                  <Leaf size={16} className="inline-block text-center icons-size" />
-                  Home & Garden
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${activeTopCategorySlug === "furniture" ? "active" : ""
-                    }`}
-                  href="/category/furniture"
-                >
-                  <Armchair size={16} className="inline-block icons-size" />
-                  Furniture
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className={`link flex items-center  xl:gap-2 hover:text-red-500 ${isFashionAccessoriesActive ? "active" : ""
-                    }`}
-                  href="/category/fashion-accessories"
-                >
-                  <HandbagIcon size={16} className="inline-block icons-size" />
-                  Fashion & Accessories
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/category/health-beauty" ||
-                    pathname?.startsWith("/category/health-beauty/")
-                    ? "active"
-                    : ""
-                    }`}
-                  href="/category/health-beauty"
-                >
-                  <HeartPulse size={16} className="inline-block icons-size" />
-                  Health & Beauty
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/category/outdoor-patio" ||
-                    pathname?.startsWith("/category/outdoor-patio/")
-                    ? "active"
-                    : ""
-                    }`}
-                  href="/category/outdoor-patio"
-                >
-                  <Armchair size={16} className="inline-block icons-size" />
-                  Outdoor & Patio
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/product-listing/best-sellers" ? "active" : ""
-                    }`}
-                  href="/product-listing/best-sellers"
-                >
-                  <Gem size={16} className="inline-block icons-size" />
-                  Best Sellers
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/product-listing/whats-on-sale" ? "active" : ""
-                    }`}
-                  href="/product-listing/whats-on-sale"
-                >
-                  <Sparkles size={16} className="inline-block icons-size" />
-                  What&apos;s On Sale
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          <TopNavbar
+            activeTopCategorySlug={activeTopCategorySlug ?? ""}
+            isFashionAccessoriesActive={isFashionAccessoriesActive}
+            pathname={pathname}
+          />
         </div>
-
         <div
           className={`fixed inset-0 bg-black/40 z-998 transition-opacity duration-300 ${isMobileNavOpen
             ? "opacity-100 pointer-events-auto"
