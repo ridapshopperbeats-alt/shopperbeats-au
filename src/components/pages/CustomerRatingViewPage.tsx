@@ -74,8 +74,7 @@ export default function CustomerRatingViewPage({
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisibleCount(pageSize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMobile]);
+  }, [pageSize]);
 
   const activeReviews = (reviews ?? []).map(normalizeReview);
 

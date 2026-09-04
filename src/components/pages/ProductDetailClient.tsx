@@ -129,8 +129,7 @@ export default function ProductDetailClient({
       twitter_cards_title: seo?.page_title || product.title,
       twitter_cards_type: "summary_large_image",
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product, seo]);
+  }, [product, seo, updateMetadata]);
   const [addToCart, { isLoading: isAddingToCart }] = useAddToCartMutation();
   const {
     attributeNames,
@@ -1259,8 +1258,8 @@ export default function ProductDetailClient({
                       Features :
                     </span>
                     <ul className="list-disc pl-5 mt-2 flex flex-col gap-2 fluid-text-xs leading-[24px] text-[#333333]">
-                      {productFeatures.slice(0, 6).map((feature, index) => (
-                        <li key={index}>{feature}</li>
+                      {productFeatures.slice(0, 6).map((feature) => (
+                        <li key={feature}>{feature}</li>
                       ))}
                     </ul>
                   </div>

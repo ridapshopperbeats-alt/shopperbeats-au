@@ -4,6 +4,7 @@ import {
   FetchArgs,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
+import type { UnknownAction } from "@reduxjs/toolkit";
 import { API_ENDPOINTS } from "../../constants/api";
 import { logout, setAccessToken } from "../slices/auth-slice";
 import { clearRefreshToken, getRefreshToken, setRefreshToken } from "@/lib/utils/refresh-token-store";
@@ -109,8 +110,7 @@ function refreshAccessToken(
 }
 
 export function triggerSilentRefresh(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dispatch: (action: any) => unknown,
+  dispatch: (action: UnknownAction) => unknown,
 ): Promise<RefreshResult> {
   return refreshAccessTokenDetailed(
     { getState: () => ({}), dispatch } as unknown as Parameters<BaseQueryFn>[1],
