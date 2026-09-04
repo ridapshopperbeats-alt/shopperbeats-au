@@ -7,13 +7,16 @@ import {
 import type { UnknownAction } from "@reduxjs/toolkit";
 import { API_ENDPOINTS } from "../../constants/api";
 import { logout, setAccessToken } from "../slices/auth-slice";
-import { clearRefreshToken, getRefreshToken, setRefreshToken } from "@/lib/utils/refresh-token-store";
+import {
+  clearRefreshToken,
+  getLastAccessToken,
+  getLastRefreshAt,
+  getRefreshToken,
+  setLastRefreshResult,
+  setRefreshToken,
+} from "@/lib/utils/refresh-token-store";
 
 
-// Must be "include": a successful refresh's Set-Cookie (the renewed
-// access_token) is silently dropped by the browser under "omit", so the
-// very next request keeps sending the stale cookie and 401s again even
-// though the refresh call itself reported success.
 const refreshBaseQuery = fetchBaseQuery({
   baseUrl: API_ENDPOINTS.AUTH.BASE_URL_CLIENT,
   credentials: "include",
@@ -27,24 +30,31 @@ let pendingRefresh: Promise<RefreshResult> | null = null;
 
 const REFRESH_COOLDOWN_MS = 5000;
 
-
-let lastRefreshAt = 0;
-let lastAccessToken: string | undefined;
+function withCrossTabLock<T>(fn: () => Promise<T>): Promise<T> {
+  if (typeof navigator !== "undefined" && "locks" in navigator) {
+    return navigator.locks.request("sb-refresh-token", () => fn()) as Promise<T>;
+  }
+  return fn();
+}
 
 function refreshAccessTokenDetailed(
   api: Parameters<BaseQueryFn>[1],
   extraOptions: Parameters<BaseQueryFn>[2],
 ): Promise<RefreshResult> {
 
-  if (Date.now() - lastRefreshAt < REFRESH_COOLDOWN_MS) {
-    return Promise.resolve({ outcome: "refreshed", accessToken: lastAccessToken });
+  if (Date.now() - getLastRefreshAt() < REFRESH_COOLDOWN_MS) {
+    return Promise.resolve({ outcome: "refreshed", accessToken: getLastAccessToken() ?? undefined });
   }
 
   if (!pendingRefresh) {
-    const storedRefreshToken = getRefreshToken();
+    pendingRefresh = withCrossTabLock(async (): Promise<RefreshResult> => {
+      if (Date.now() - getLastRefreshAt() < REFRESH_COOLDOWN_MS) {
+        return { outcome: "refreshed", accessToken: getLastAccessToken() ?? undefined };
+      }
 
-    pendingRefresh = Promise.resolve(
-      refreshBaseQuery(
+      const storedRefreshToken = getRefreshToken();
+
+      const result = await refreshBaseQuery(
         {
           url: API_ENDPOINTS.AUTH.REFRESH_TOKEN,
           method: "POST",
@@ -52,51 +62,48 @@ function refreshAccessTokenDetailed(
         },
         api,
         extraOptions,
-      ),
-    )
-      .then((result): RefreshResult => {
-        if (result.error) {
-          const status = result.error.status;
-          // Anything else (network error, timeout, 5xx) is transient.
-          if (status === 401 || status === 403) {
-            console.warn("Refresh token rejected by server:", result.error);
-            clearRefreshToken();
-            api.dispatch(logout());
-            return { outcome: "invalid" };
+      );
+
+      if (result.error) {
+        const status = result.error.status;
+        // Anything else (network error, timeout, 5xx) is transient.
+        if (status === 401 || status === 403) {
+          console.warn("Refresh token rejected by server:", result.error);
+          clearRefreshToken();
+          api.dispatch(logout());
+          return { outcome: "invalid" };
+        }
+        console.warn("Refresh token request failed (transient, session kept):", result.error);
+        return { outcome: "transient" };
+      }
+
+      const data = result.data as
+        | {
+            access_token?: string;
+            refresh_token?: string;
+            response?: string | { access_token?: string; refresh_token?: string };
           }
-          console.warn("Refresh token request failed (transient, session kept):", result.error);
-          return { outcome: "transient" };
-        }
+        | undefined;
+      const responseField = data?.response;
+      const newAccessToken =
+        data?.access_token ||
+        (typeof responseField === "string" ? responseField : responseField?.access_token);
+      const newRefreshToken =
+        data?.refresh_token ||
+        (typeof responseField === "string" ? undefined : responseField?.refresh_token);
 
-        const data = result.data as
-          | {
-              access_token?: string;
-              refresh_token?: string;
-              response?: string | { access_token?: string; refresh_token?: string };
-            }
-          | undefined;
-        const responseField = data?.response;
-        const newAccessToken =
-          data?.access_token ||
-          (typeof responseField === "string" ? responseField : responseField?.access_token);
-        const newRefreshToken =
-          data?.refresh_token ||
-          (typeof responseField === "string" ? undefined : responseField?.refresh_token);
+      if (newAccessToken) {
+        api.dispatch(setAccessToken(newAccessToken));
+        setLastRefreshResult(newAccessToken);
+      }
+      if (newRefreshToken) {
+        setRefreshToken(newRefreshToken);
+      }
 
-        lastRefreshAt = Date.now();
-        if (newAccessToken) {
-          lastAccessToken = newAccessToken;
-          api.dispatch(setAccessToken(newAccessToken));
-        }
-        if (newRefreshToken) {
-          setRefreshToken(newRefreshToken);
-        }
-
-        return { outcome: "refreshed", accessToken: newAccessToken };
-      })
-      .finally(() => {
-        pendingRefresh = null;
-      });
+      return { outcome: "refreshed", accessToken: newAccessToken };
+    }).finally(() => {
+      pendingRefresh = null;
+    });
   }
 
   return pendingRefresh;
