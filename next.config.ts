@@ -4,53 +4,77 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
   devIndicators: false,
+
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
+
   async headers() {
     return [
       {
         source: "/:path*",
         headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self)" },
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
-          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(self)",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
         ],
       },
     ];
   },
+
   async rewrites() {
     return [
       {
         source: "/api/v1/cart/:path*",
-        destination: "https://api-us.shopperbeats.cloud/cart/api/v1/cart/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/cart/api/v1/cart/:path*`,
       },
       {
         source: "/api/v1/wishlist/:path*",
-        destination: "https://api-us.shopperbeats.cloud/cart/api/v1/wishlist/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/cart/api/v1/wishlist/:path*`,
       },
       {
         source: "/api/v1/coupon/:path*",
-        destination: "https://api-us.shopperbeats.cloud/cart/api/v1/coupon/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/cart/api/v1/coupon/:path*`,
       },
       {
         source: "/api/v1/coupon-tracker/:path*",
-        destination: "https://api-us.shopperbeats.cloud/cart/api/v1/coupon-tracker/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/cart/api/v1/coupon-tracker/:path*`,
       },
       {
         source: "/api/v1/order/:path*",
-        destination: "https://api-us.shopperbeats.cloud/orders/api/v1/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/orders/api/v1/:path*`,
       },
       {
         source: "/api/v1/:path*",
-        destination: "https://api-us.shopperbeats.cloud/api/v1/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/:path*`,
       },
     ];
   },
+
   images: {
     qualities: [75, 100],
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    contentSecurityPolicy:
+      "default-src 'self'; script-src 'none'; sandbox;",
+
     remotePatterns: [
       {
         protocol: "https",
@@ -157,9 +181,6 @@ const nextConfig: NextConfig = {
         hostname: "www.fastfurnishings.com",
       },
     ],
-  },
-   compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
   },
 };
 
