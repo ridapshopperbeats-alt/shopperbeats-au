@@ -42,6 +42,7 @@ import GlobalSearch from "../common/GlobalSearch";
 import { addBreadcrumb } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
 import { useDebounceValue } from "@/lib/hooks/use-debounce";
+import { useIsClient } from "@/lib/hooks/use-is-client";
 import { MegaMenuCategory, MegaMenuSubcategory } from "@/types/megamenu";
 
 interface HeaderProps {
@@ -317,9 +318,6 @@ export default function Header({ megaMenuData }: HeaderProps) {
     pathname === "/user/addresses" ||
     pathname === "/check-out";
 
-  if (pathname === "/check-out") {
-    return null;
-  }
   useEffect(() => {
     const activeCat = megaMenuData.find(
       (cat) => (cat.slug ?? cat.id) === activeCategory
@@ -343,9 +341,20 @@ export default function Header({ megaMenuData }: HeaderProps) {
     });
 
     if (womenTab) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveSubTabId(womenTab.slug ?? womenTab.id);
     }
   }, [activeCategory, megaMenuData]);
+
+  // All hooks must run unconditionally above this point — bailing out
+  // earlier (before the last useEffect) made Header render a different
+  // number of hooks on /check-out vs. every other route, which React
+  // flags as "Rendered fewer hooks than expected" once the same Header
+  // instance re-renders for a different path.
+  if (pathname === "/check-out") {
+    return null;
+  }
+
   return (
     <div className="header-fixed ">
       <div className="px-[10px] xl:px-[40px] flex flex-col">
@@ -1029,7 +1038,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
 
                                     {Array.isArray(link.children) && (
                                       <ul className="mobile-child-links">
-                                        {link.children.map((child: any) => (
+                                        {link.children.map((child: { name: string; href: string }) => (
                                           <li key={child.name}>
                                             <Link
                                               href={child.href}
@@ -1061,14 +1070,5 @@ export default function Header({ megaMenuData }: HeaderProps) {
       </div>
     </div>
   );
-}
-function useIsClient() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  return isClient;
 }
 

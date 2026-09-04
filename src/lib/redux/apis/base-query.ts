@@ -9,9 +9,13 @@ import { logout, setAccessToken } from "../slices/auth-slice";
 import { clearRefreshToken, getRefreshToken, setRefreshToken } from "@/lib/utils/refresh-token-store";
 
 
+// Must be "include": a successful refresh's Set-Cookie (the renewed
+// access_token) is silently dropped by the browser under "omit", so the
+// very next request keeps sending the stale cookie and 401s again even
+// though the refresh call itself reported success.
 const refreshBaseQuery = fetchBaseQuery({
   baseUrl: API_ENDPOINTS.AUTH.BASE_URL_CLIENT,
-  credentials: "omit",
+  credentials: "include",
 });
 
 
