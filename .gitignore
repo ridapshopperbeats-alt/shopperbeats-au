@@ -1,36 +1,34 @@
-# Node modules
+_# Node modules_
 node_modules/
-
-# Next.js build output
+ 
+_# Next.js build output_
 .next/
 out/
 dist/
-
-# Production files
+ 
+_# Production files_
 build/
-
-# Local env files
+ 
+_# Local env files_
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 .env.production
-
-# Logs
+ 
+_# Logs_
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-
-# OS files
+ 
+_# OS files_
 .DS_Store
 Thumbs.db
-
-# VS Code settings
+ 
+_# VS Code settings_
 .vscode/
-
-# TypeScript incremental build cache
+ 
+_# TypeScript incremental build cache_
 *.tsbuildinfo
-
-.claude

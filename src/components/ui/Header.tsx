@@ -149,7 +149,10 @@ export default function Header({ megaMenuData }: HeaderProps) {
         }
       },
       (error) => {
-        console.error("Geolocation error:", error);
+        if (error.code === error.PERMISSION_DENIED) return;
+        console.warn(
+          `Geolocation unavailable (code ${error.code}): ${error.message || "no details"}`,
+        );
       },
       {
         enableHighAccuracy: true,

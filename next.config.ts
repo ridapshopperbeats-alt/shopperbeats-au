@@ -58,6 +58,10 @@ const nextConfig: NextConfig = {
         destination: `${process.env.NEXT_PUBLIC_API_URL}/cart/api/v1/coupon-tracker/:path*`,
       },
       {
+        source: "/api/v1/product/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/products/api/v1/product/:path*`,
+      },
+      {
         source: "/api/v1/order/:path*",
         destination: `${process.env.NEXT_PUBLIC_API_URL}/orders/api/v1/:path*`,
       },

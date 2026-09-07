@@ -243,8 +243,6 @@ export default function PersonalInformationPage() {
               name="date_of_birth"
               value={toYYYYMMDD(formData.date_of_birth)}
               onChange={handleChange}
-              min="1900-01-01"
-              max="2025-12-31"
             />
           </div>
         </div>
