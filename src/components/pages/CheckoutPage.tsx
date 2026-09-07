@@ -34,6 +34,7 @@ import {
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import Image from "next/image";
+import { getApiErrorMessage } from "@/lib/utils/api-error";
 
 export default function SecureCheckout() {
   const { postcode } = useGlobalPostcode();
@@ -667,7 +668,7 @@ export default function SecureCheckout() {
           "Sorry, one or more items in your cart are out of stock. Please update your cart and try again.",
         );
       } else {
-        toast.error("Failed to place order");
+        toast.error(getApiErrorMessage(err, "Failed to place order"));
       }
     } finally {
       setIsProcessingPayment(false);

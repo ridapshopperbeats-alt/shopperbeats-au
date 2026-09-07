@@ -126,6 +126,15 @@ export default function MyOrdersPage() {
   const effectiveTotal = data?.total_items ?? 0;
   const totalPages = Math.ceil(effectiveTotal / uiLimit);
 
+
+  const bufferStartIndex =
+    (calculateStartFetchingPage(currentPage, uiLimit) - 1) * CHUNK_SIZE;
+  const pageOffset = (currentPage - 1) * uiLimit - bufferStartIndex;
+  const requiredBufferLength = pageOffset + uiLimit;
+  const needsMoreBuffer =
+    allOrders.length < requiredBufferLength &&
+    bufferStartIndex + allOrders.length < effectiveTotal;
+
   useEffect(() => {
     if (!querySettled) return;
 
@@ -157,17 +166,19 @@ export default function MyOrdersPage() {
     });
 
     const startFetching = calculateStartFetchingPage(currentPage, uiLimit);
+    const bufferStart = (startFetching - 1) * CHUNK_SIZE;
+    const required = (currentPage - 1) * uiLimit - bufferStart + uiLimit;
 
     if (fetchingPage === startFetching) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setAllOrders(mapped);
+      setAllOrders(mapped.slice(0, required));
     } else if (fetchingPage > startFetching) {
       setAllOrders((prev) => {
-        if (prev.length >= uiLimit) return prev;
+        if (prev.length >= required) return prev;
         const newOrders = mapped.filter(
           (o) => !prev.some((existing) => existing.id === o.id),
         );
-        return [...prev, ...newOrders].slice(0, uiLimit);
+        return [...prev, ...newOrders].slice(0, required);
       });
     }
   }, [data, querySettled, fetchingPage, currentPage, uiLimit]);
@@ -244,12 +255,14 @@ export default function MyOrdersPage() {
   };
 
   const handlePageChange = (page: number) => {
+    setAllOrders([]);
     setCurrentPage(page);
     setFetchingPage(calculateStartFetchingPage(page, uiLimit));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleItemsPerPageChange = (limit: number) => {
+    setAllOrders([]);
     setUiLimit(limit);
     setCurrentPage(1);
     setFetchingPage(calculateStartFetchingPage(1, limit));
@@ -259,11 +272,7 @@ export default function MyOrdersPage() {
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
   const handleLoadMore = () => {
-    if (
-      allOrders.length < uiLimit &&
-      allOrders.length < effectiveTotal &&
-      !isFetching
-    ) {
+    if (needsMoreBuffer && !isFetching) {
       setFetchingPage((prev) => prev + 1);
     }
   };
@@ -273,7 +282,7 @@ export default function MyOrdersPage() {
     onIntersect: () => {
       handleLoadMore();
     },
-    enabled: allOrders.length < uiLimit && allOrders.length < effectiveTotal,
+    enabled: needsMoreBuffer,
     rootMargin: "100px",
   });
 
@@ -284,18 +293,20 @@ export default function MyOrdersPage() {
       </div>
     );
 
-  const transitCount = allOrders.filter(isInTransitOrder).length;
-  const deliveredCount = allOrders.filter(isDeliveredOrder).length;
+  const pageOrders = allOrders.slice(pageOffset, pageOffset + uiLimit);
+
+  const transitCount = pageOrders.filter(isInTransitOrder).length;
+  const deliveredCount = pageOrders.filter(isDeliveredOrder).length;
 
   const displayedOrders =
     activeTab === "transit"
-      ? allOrders.filter(isInTransitOrder)
+      ? pageOrders.filter(isInTransitOrder)
       : activeTab === "delivered"
-        ? allOrders.filter(isDeliveredOrder)
-        : allOrders;
+        ? pageOrders.filter(isDeliveredOrder)
+        : pageOrders;
 
   const TABS: { key: OrderTab; label: string; count: number }[] = [
-    { key: "all", label: "All Orders", count: allOrders.length },
+    { key: "all", label: "All Orders", count: pageOrders.length },
     { key: "transit", label: "In Transit", count: transitCount },
     { key: "delivered", label: "Delivered", count: deliveredCount },
   ];
@@ -634,7 +645,7 @@ export default function MyOrdersPage() {
         </Card>
       ))}
 
-      {allOrders.length < uiLimit && allOrders.length < effectiveTotal && (
+      {needsMoreBuffer && (
         <div ref={loadMoreRef} className="w-full flex justify-center py-4">
           {isFetching && (
             <div className="dflex align-center">

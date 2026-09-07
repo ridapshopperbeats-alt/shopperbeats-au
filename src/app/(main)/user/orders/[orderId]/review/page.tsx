@@ -20,6 +20,7 @@ import {
 } from "@/lib/utils/order-products";
 import { Check, ChevronLeft, Clock3, ImagePlus, Star, X } from "lucide-react";
 import { formatReadableDate } from "@/lib/utils/main-utils";
+import { getApiErrorMessage } from "@/lib/utils/api-error";
 import StatusBanner from "@/components/common/Tooltip";
 import { Card } from "@/components/common/Card";
 import { StatusBadge, BadgeColor } from "@/components/common/StatusBadge";
@@ -190,8 +191,8 @@ export default function ReviewForm({ params }: ReviewPageProps) {
       } else {
         router.push(`/user/orders/${orderId}`);
       }
-    } catch {
-      toast.error("Failed to submit review.");
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Failed to submit review."));
     } finally {
       setIsSubmitting(false);
     }

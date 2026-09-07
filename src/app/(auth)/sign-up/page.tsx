@@ -309,8 +309,8 @@ export default function SignupPage() {
             {isLoading ? "Signing up..." : "Sign Up"}
           </Button>
           {showResendEmail && (
-            <div className="resend-email-section mt-20 p-4 border border-gray-300 rounded-lg bg-gray-50">
-              <p className="text-sm text-gray-600 mb-3">
+            <div className="resend-email-section p-4 border border-gray-300 rounded-lg bg-gray-50">
+              <p className="text-sm text-gray-600 mb-3 text-center">
                 Your email is not verified. Click below to resend verification
                 email.
               </p>
