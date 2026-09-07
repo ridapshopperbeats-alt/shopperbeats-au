@@ -236,7 +236,7 @@ export const personalInfoSchema = yup.object().shape({
   last_name: yup.string().required("Last name is required"),
   email: yup.string().email("Invalid email format").required("Email is required"),
   phonenumber: yup.string().required("Phone number is required"),
-  date_of_birth: yup.date().nullable(),
+  date_of_birth: yup.string(),
 });
 
 

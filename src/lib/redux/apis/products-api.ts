@@ -156,7 +156,7 @@ export const productsApi = createApi({
 
     uploadAnyImage: builder.mutation<ImageUploadResponse, FormData>({
       query: (formData) => ({
-        url: `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}/api/v1/product/upload-any-image`,
+        url: API_ENDPOINTS.PRODUCTS.UPLOAD_ANY_IMAGE,
         method: "POST",
         body: formData,
       }),

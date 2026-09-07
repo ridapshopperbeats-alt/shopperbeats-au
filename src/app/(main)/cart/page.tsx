@@ -30,6 +30,7 @@ import {
 } from "@/lib/redux/apis/cart-api";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
+import { getApiErrorMessage } from "@/lib/utils/api-error";
 
 const pincodeSchema = yup.object().shape({
   pincode: pincode,
@@ -90,6 +91,8 @@ const Cart = () => {
       setAppliedPromoCode(cart.applied_coupon_code);
       setDiscountAmount(cart.coupon_discount || 0);
       setPromoCodeInput(cart.applied_coupon_code);
+   
+      setPromoCodeError(null);
     }
   }, [cart?.has_coupon, cart?.applied_coupon_code, cart?.coupon_discount]);
 
@@ -163,7 +166,7 @@ const Cart = () => {
         setAppliedPromoCode(null);
         setDiscountAmount(0);
         setNewTotalPrice(null);
-        toast.error(message);
+        toast.success(message);
         return;
       }
 
@@ -199,15 +202,18 @@ const Cart = () => {
 
   const handleRemovePromo = async () => {
     try {
-      await removeCoupon().unwrap();
+      const result = await removeCoupon().unwrap();
       setAppliedPromoCode(null);
       setDiscountAmount(0);
       setNewTotalPrice(null);
       setPromoCodeInput("");
       setPromoCodeError(null);
-      toast.info("Promo code removed.");
-    } catch {
-      toast.error("Failed to remove coupon.");
+      toast.info(
+        
+          result.message || "Coupon removed successfully"
+      );
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Failed to remove coupon."));
     }
   };
 
@@ -220,9 +226,13 @@ const Cart = () => {
     }
 
     try {
-      await removeFromCart({ product_id: id, variant_id }).unwrap();
-    } catch {
-      toast.error("Failed to remove item.");
+      const result = await removeFromCart({
+        product_id: id,
+        variant_id,
+      }).unwrap();
+      toast.info(result.message || "Item removed from cart");
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Failed to remove item."));
     } finally {
       clickLockRef.current = false;
     }

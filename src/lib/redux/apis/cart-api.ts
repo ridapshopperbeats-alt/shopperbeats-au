@@ -157,7 +157,7 @@ export const cartApi = createApi({
     }),
 
     removeFromCart: builder.mutation<
-      Cart,
+      Cart & { message?: string; items_remaining?: number },
       { product_id: string; variant_id?: string }
     >({
       query: ({ product_id, variant_id }) => ({

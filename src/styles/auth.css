@@ -95,11 +95,11 @@
 }
 
 .resend-email-section {
-    @apply mt-20 p-4 border border-gray-300 rounded-lg bg-gray-50;
+    @apply mt-10 p-4 border border-gray-300 rounded-lg bg-gray-50 text-center;
 }
 
 .resend-email-text {
-    @apply text-sm text-gray-600 mb-3;
+    @apply text-sm text-gray-600 mb-3 text-center;
 }
 
 .auth-links-row {
