@@ -1,0 +1,38 @@
+"use client";
+
+import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
+import { AddressPopupProps } from "@/types/address";
+import AddressForm from "../common/AddressForm";
+import { RootState } from "@/lib/redux/store";
+import { useSelector } from "react-redux";
+
+export default function AddressPopup({
+  show,
+  onClose,
+  editingAddress,
+}: AddressPopupProps) {
+    const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { data: addresses } = useGetAddressesQuery(undefined, { skip: !isAuthenticated })
+
+  if (!show) return null;
+
+  const handleSave = () => {
+    onClose();
+  };
+
+  return (
+    <div id="popupModal" className="sellwmodal" style={{ display: "flex" }}>
+      <div className="modal-content">
+        <button className="close" onClick={onClose} aria-label="Close modal">
+          ×
+        </button>
+        <h4>{editingAddress ? "Edit Address" : "Add Address"}</h4>
+        <AddressForm
+          editingAddress={editingAddress}
+          addresses={addresses}
+          onSave={handleSave}
+        />
+      </div>
+    </div>
+  );
+}

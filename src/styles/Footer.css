@@ -1,0 +1,310 @@
+@reference "tailwindcss";
+
+footer {
+  @apply bg-black py-[30px] px-0;
+}
+
+.page-footer {
+  @apply mt-auto;
+}
+
+footer h4 {
+  @apply text-[var(--white)] uppercase mb-5;
+}
+
+.footer-block {
+  width: auto;
+  min-width: 0;
+}
+
+.footer-block.footer-newsletter input[type="email"] {
+  @apply h-[41px] flex-1 min-w-0;
+}
+
+.footer-block ul a {
+  @apply text-[var(--white)] text-[clamp(0.875rem,1.5vw,1rem)] block w-full p-0 leading-[29px] font-normal no-underline;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.footer-block ul a:hover {
+  @apply text-[var(--secondary)];
+}
+
+footer p {
+  @apply text-[var(--white)] text-xs;
+}
+
+.footer-block.footer-newsletter form {
+  @apply flex gap-2 mt-[14px] mb-[20px];
+}
+
+.footer-block.footer-newsletter form button {
+  @apply bg-[var(--secondary)] px-5 py-0 h-auto rounded-[8px] flex items-center justify-center shrink-0 cursor-pointer;
+}
+
+.footer-block.footer-newsletter form button:hover {
+  @apply bg-[var(--primary)];
+}
+
+.footer-block.footer-newsletter h4 {
+  @apply mb-[5px];
+}
+
+ul.social {
+  @apply flex my-5 gap-5;
+}
+
+.footer-block ul.social a {
+  @apply flex items-center justify-center text-white w-[40px] h-[40px] rounded-full border border-white bg-[rgba(217,217,217,0.00)];
+}
+
+.footer-block ul.social a:hover {
+  @apply bg-[var(--secondary)] border border-[var(--secondary)] text-white;
+}
+
+.footer-block ul.social a:hover svg {
+  @apply fill-[var(--white)];
+}
+
+.payment {
+  @apply flex justify-center md:justify-start mx-auto md:mx-0 gap-2;
+}
+
+.footer-highlights-wrapper {
+  @apply p-5 md:p-[30px] relative z-10;
+  background: #fff;
+}
+
+.footer-highlights-grid {
+  @apply grid md:grid-cols-2 xl:grid-cols-4 gap-6;
+}
+
+.footer-highlight-item {
+  @apply flex items-center gap-4 cursor-pointer;
+}
+
+.footer-highlight-icon {
+  @apply w-[50px] h-[50px] md:w-[105px] md:h-[105px] rounded-full bg-[#FFB30F] flex items-center justify-center transition-all duration-300 group-hover:bg-[#042A89];
+}
+
+.footer-highlight-img {
+  @apply transition-all duration-300 group-hover:brightness-0 group-hover:invert;
+}
+
+.footer-highlight-text {
+  @apply text-[clamp(0.875rem,2vw,1.125rem)] font-bold leading-[normal] text-black;
+}
+
+.footer-container {
+  @apply px-[20px] lg:px-[100px];
+}
+
+.footer-menu-row {
+  display: grid;
+  grid-template-columns: 18fr 18fr 18fr 18fr 28fr;
+  column-gap: 24px;
+  row-gap: 24px;
+}
+
+.footer-menu-block {
+  @apply flex flex-col gap-[20px];
+}
+
+.footer-section-title {
+  @apply text-white font-bold leading-[28px] text-[clamp(1.2rem,2vw,1.25rem)];
+}
+
+.footer-newsletter-title {
+  @apply text-white;
+}
+
+.footer-newsletter-desc {
+  @apply mt-[10px] text-[0.75rem] font-normal leading-[normal] text-[#FFFFFF];
+}
+
+.footer-bottom-bar {
+  @apply flex flex-wrap md:flex-nowrap justify-between;
+}
+
+.footer-copyright-desktop {
+  @apply py-2 hidden sm:block;
+}
+
+.footer-copyright-mobile {
+  @apply pt-4  block sm:hidden w-full ;
+  color: #FFF;
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-size: clamp(0.65625rem, 1vw, 0.75rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.4;
+  opacity: 0.5;
+}
+
+@media screen and (max-width: 360px) {
+  .footer-copyright-mobile {
+    line-height: 1.5;
+  }
+}
+
+.payment img {
+  @apply bg-[var(--white)] w-[54px] h-[27px] rounded-[2px] p-[2px];
+}
+
+
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+  .footer-copyright {
+    @apply pt-3 flex;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  footer {
+    @apply pt-[24px] px-0;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .footer-block {
+    @apply w-full;
+  }
+
+  .footer-block.footer-newsletter {
+    @apply w-full;
+  }
+
+  .footer-highlight-item {
+    flex: 1 0 0;
+    min-width: 0;
+  }
+
+  .footer-highlight-icon {
+    width: 46.911px;
+    height: 46.911px;
+    border-radius: 46.911px;
+    background: var(--yellow, #FFB30F);
+    flex-shrink: 0;
+  }
+
+  .footer-highlight-img {
+    width: 27.698px;
+    height: 18.885px;
+  }
+
+  .footer-highlight-text {
+    flex: 1 0 0;
+    min-width: 0;
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  .footer-block.footer-newsletter input[type="email"] {
+    display: flex;
+    height: 38px;
+    padding: 0 16px;
+    align-items: center;
+    flex: 1 0 0;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #1A1A1A;
+  }
+
+  .footer-newsletter-title {
+    color: #FFF;
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  .footer-newsletter-desc {
+    align-self: stretch;
+    color: #FFF;
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(0.8125rem, 1.5vw, 0.875rem);
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    opacity: 0.7;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .payment img {
+    @apply bg-[var(--white)] rounded-[2px] w-[41px] h-[27px] p-[2px];
+  }
+}
+
+.footer-accordion-chevron {
+  @apply hidden text-white text-sm transition-transform duration-200;
+}
+
+.footer-social-mobile {
+  @apply hidden;
+}
+
+@media screen and (max-width: 767px) {
+  .footer-menu-row {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+  }
+
+  .footer-newsletter {
+    order: -1;
+  }
+
+  .footer-newsletter .social {
+    @apply hidden;
+  }
+
+  .footer-menu-block {
+    @apply mb-0 gap-0 border-b border-[#333333] pb-0;
+  }
+
+  .footer-menu-block .footer-section-title {
+    @apply mb-0 font-semibold cursor-pointer;
+    display: flex;
+    padding: 10px 0;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    align-self: stretch;
+    margin-top: 0;
+  }
+
+  .footer-accordion-chevron {
+    @apply inline-block;
+  }
+
+  .footer-accordion-chevron.is-open {
+    @apply rotate-180;
+  }
+
+  .footer-accordion-panel {
+    @apply grid grid-rows-[0fr] transition-all duration-300 ease-in-out;
+  }
+
+  .footer-accordion-panel ul {
+    @apply min-h-0 overflow-hidden;
+  }
+
+  .footer-accordion-panel.is-open {
+    @apply grid-rows-[1fr];
+  }
+
+  .footer-accordion-panel.is-open ul {
+    @apply pb-4;
+  }
+
+  .footer-social-mobile {
+    @apply flex justify-center my-2;
+    order: 2;
+  }
+}
