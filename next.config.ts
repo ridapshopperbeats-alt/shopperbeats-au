@@ -61,6 +61,13 @@ const nextConfig: NextConfig = {
         source: "/api/v1/product/:path*",
         destination: `${process.env.NEXT_PUBLIC_API_URL}/products/api/v1/product/:path*`,
       },
+      // Homepage sections are read from the browser, so proxy them through the
+      // Next server — the products API does not send CORS headers for this origin.
+      // Must stay ahead of the /api/v1/:path* catch-all below.
+      {
+        source: "/api/v1/homepage/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}/api/v1/homepage/:path*`,
+      },
       {
         source: "/api/v1/order/:path*",
         destination: `${process.env.NEXT_PUBLIC_API_URL}/orders/api/v1/:path*`,
