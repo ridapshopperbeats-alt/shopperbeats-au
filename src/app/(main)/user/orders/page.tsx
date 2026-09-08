@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -26,7 +26,6 @@ import { useCancelOrderMutation, useListOrdersQuery } from "@/lib/redux/apis/ord
 import { formatPrice, IN_TRANSIT_CODES, ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from "@/lib/utils/main-utils";
 import { getOrderProductImage, getReviewProductId, mapOrderProducts } from "@/lib/utils/order-products";
 import { API_ENDPOINTS } from "@/lib/constants/api";
-import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/common/select";
 import CancelOrderPopup from "@/components/common/CancelOrderPopup";
@@ -64,6 +63,9 @@ const isDeliveredOrder = (order: OrderItem) =>
 
 type OrderTab = "all" | "transit" | "delivered";
 
+// "" is the unsorted default (newest first); "oldest" is the Delivery Date option.
+type OrderSort = "" | "oldest";
+
 export default function MyOrdersPage() {
   const router = useRouter();
   const { isAuthenticated, authChecked } = useSelector((state: RootState) => state.auth);
@@ -75,9 +77,7 @@ export default function MyOrdersPage() {
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
 
-  const CHUNK_SIZE = 20;
-
-  const [sortOrdersBy, setSortOrdersBy] = useState<string>("");
+  const [sortOrdersBy, setSortOrdersBy] = useState<OrderSort>("");
   const [activeTab, setActiveTab] = useState<OrderTab>("all");
   const [collapsedOrders, setCollapsedOrders] = useState<Set<string>>(new Set());
 
@@ -98,21 +98,21 @@ export default function MyOrdersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [uiLimit, setUiLimit] = useState(10);
 
-  const calculateStartFetchingPage = (uiPage: number, limit: number) => {
-    const offset = (uiPage - 1) * limit;
-    return Math.floor(offset / CHUNK_SIZE) + 1;
-  };
-
-  const [fetchingPage, setFetchingPage] = useState(
-    calculateStartFetchingPage(1, 10),
-  );
+  // The API is the source of truth for ordering so that sorting spans every page,
+  // not just the one on screen. If it rejects the delivery-date field we fall back
+  // to the default ordering (see the effect below) and sort the page client-side.
+  const [deliverySortSupported, setDeliverySortSupported] = useState(true);
+  const sortByDeliveryDate = sortOrdersBy === "oldest";
+  const serverSortsByDeliveryDate = sortByDeliveryDate && deliverySortSupported;
 
   const { data, isLoading, isFetching, isError, refetch } = useListOrdersQuery(
     {
-      page: fetchingPage,
-      per_page: CHUNK_SIZE,
-      sort_by: "created_at",
-      sort_dir: "desc",
+      page: currentPage,
+      per_page: uiLimit,
+      sort_by: serverSortsByDeliveryDate
+        ? "estimated_delivery_date"
+        : "created_at",
+      sort_dir: serverSortsByDeliveryDate ? "asc" : "desc",
     },
     {
       refetchOnMountOrArgChange: true,
@@ -120,74 +120,72 @@ export default function MyOrdersPage() {
     },
   );
 
-  const [allOrders, setAllOrders] = useState<OrderItem[]>([]);
   const querySettled = !isLoading && !isFetching;
 
   const effectiveTotal = data?.total_items ?? 0;
   const totalPages = Math.ceil(effectiveTotal / uiLimit);
 
+  const pageOrders: OrderItem[] = useMemo(
+    () =>
+      (data?.data ?? []).map((o: OrderAPIResponse) => {
+        const isCancelled =
+          o.shipstation_order_status?.toLowerCase() === "cancelled";
 
-  const bufferStartIndex =
-    (calculateStartFetchingPage(currentPage, uiLimit) - 1) * CHUNK_SIZE;
-  const pageOffset = (currentPage - 1) * uiLimit - bufferStartIndex;
-  const requiredBufferLength = pageOffset + uiLimit;
-  const needsMoreBuffer =
-    allOrders.length < requiredBufferLength &&
-    bufferStartIndex + allOrders.length < effectiveTotal;
+        return {
+          id: o.id,
+          order_number: o.order_number,
+          created_at: String(o.created_at),
+          totalPayment: `${o.currency} ${formatPrice(o.total_amount)}`,
+          paymentMethod:
+            o.order_details?.customer_snapshot?.payment_method?.type ?? "N/A",
+          status: o.status as Status,
+          statusDate: o.estimated_delivery_date ?? "Not Available",
+          estimated_delivery_date: o.estimated_delivery_date ?? "Not Available",
+          isCancelled,
+          available_actions: o.available_actions || [],
+          tracking_link: o.tracking_link,
+          returns: o.returns,
+          hasRequestedReturn: o.returns?.some(
+            (r: OrderReturn) => r.status?.toLowerCase() === "requested",
+          ),
+          products: mapOrderProducts(o),
+        };
+      }),
+    [data],
+  );
 
+  // Sorting by delivery date must never cost the user their order list: if the API
+  // will not sort on that field, stop asking for it and sort what we get instead.
   useEffect(() => {
-    if (!querySettled) return;
-
-    const sourceOrders = data?.data ?? [];
-
-    const mapped: OrderItem[] = sourceOrders.map((o: OrderAPIResponse) => {
-      const isCancelled =
-        o.shipstation_order_status?.toLowerCase() === "cancelled";
-
-      return {
-        id: o.id,
-        order_number: o.order_number,
-        created_at: String(o.created_at),
-        totalPayment: `${o.currency} ${formatPrice(o.total_amount)}`,
-        paymentMethod:
-          o.order_details?.customer_snapshot?.payment_method?.type ?? "N/A",
-        status: o.status as Status,
-        statusDate: o.estimated_delivery_date ?? "Not Available",
-        estimated_delivery_date: o.estimated_delivery_date ?? "Not Available",
-        isCancelled,
-        available_actions: o.available_actions || [],
-        tracking_link: o.tracking_link,
-        returns: o.returns,
-        hasRequestedReturn: o.returns?.some(
-          (r: OrderReturn) => r.status?.toLowerCase() === "requested",
-        ),
-        products: mapOrderProducts(o),
-      };
-    });
-
-    const startFetching = calculateStartFetchingPage(currentPage, uiLimit);
-    const bufferStart = (startFetching - 1) * CHUNK_SIZE;
-    const required = (currentPage - 1) * uiLimit - bufferStart + uiLimit;
-
-    if (fetchingPage === startFetching) {
+    if (isError && serverSortsByDeliveryDate) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setAllOrders(mapped.slice(0, required));
-    } else if (fetchingPage > startFetching) {
-      setAllOrders((prev) => {
-        if (prev.length >= required) return prev;
-        const newOrders = mapped.filter(
-          (o) => !prev.some((existing) => existing.id === o.id),
-        );
-        return [...prev, ...newOrders].slice(0, required);
-      });
+      setDeliverySortSupported(false);
     }
-  }, [data, querySettled, fetchingPage, currentPage, uiLimit]);
+  }, [isError, serverSortsByDeliveryDate]);
+
+  const sortedPageOrders: OrderItem[] = useMemo(() => {
+    if (!sortByDeliveryDate) return pageOrders;
+
+    // Orders with no delivery date yet sort last instead of poisoning the compare.
+    const deliveryTime = (order: OrderItem) => {
+      const parsed = Date.parse(order.estimated_delivery_date ?? "");
+      return Number.isNaN(parsed) ? Number.POSITIVE_INFINITY : parsed;
+    };
+
+    return [...pageOrders].sort((a, b) => deliveryTime(a) - deliveryTime(b));
+  }, [pageOrders, sortByDeliveryDate]);
+
+  // Never sit on a page that no longer exists (e.g. after the total shrinks).
+  useEffect(() => {
+    if (querySettled && effectiveTotal > 0 && currentPage > totalPages) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCurrentPage(totalPages);
+    }
+  }, [querySettled, effectiveTotal, currentPage, totalPages]);
 
   const handleSortChange = (value: string) => {
-    setSortOrdersBy(value as "price" | "date");
-    setAllOrders([]);
+    setSortOrdersBy(value as OrderSort);
     setCurrentPage(1);
-    setFetchingPage(calculateStartFetchingPage(1, uiLimit));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -255,55 +253,34 @@ export default function MyOrdersPage() {
   };
 
   const handlePageChange = (page: number) => {
-    setAllOrders([]);
+    if (page < 1 || page === currentPage) return;
     setCurrentPage(page);
-    setFetchingPage(calculateStartFetchingPage(page, uiLimit));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleItemsPerPageChange = (limit: number) => {
-    setAllOrders([]);
+    if (limit === uiLimit) return;
     setUiLimit(limit);
     setCurrentPage(1);
-    setFetchingPage(calculateStartFetchingPage(1, limit));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const loadMoreRef = React.useRef<HTMLDivElement>(null);
-
-  const handleLoadMore = () => {
-    if (needsMoreBuffer && !isFetching) {
-      setFetchingPage((prev) => prev + 1);
-    }
-  };
-
-  useIntersectionObserver({
-    target: loadMoreRef as React.RefObject<Element>,
-    onIntersect: () => {
-      handleLoadMore();
-    },
-    enabled: needsMoreBuffer,
-    rootMargin: "100px",
-  });
-
-  if (!mounted || (isLoading && allOrders.length === 0))
+  if (!mounted || (isLoading && pageOrders.length === 0))
     return (
       <div>
         Loading.....
       </div>
     );
 
-  const pageOrders = allOrders.slice(pageOffset, pageOffset + uiLimit);
-
   const transitCount = pageOrders.filter(isInTransitOrder).length;
   const deliveredCount = pageOrders.filter(isDeliveredOrder).length;
 
   const displayedOrders =
     activeTab === "transit"
-      ? pageOrders.filter(isInTransitOrder)
+      ? sortedPageOrders.filter(isInTransitOrder)
       : activeTab === "delivered"
-        ? pageOrders.filter(isDeliveredOrder)
-        : pageOrders;
+        ? sortedPageOrders.filter(isDeliveredOrder)
+        : sortedPageOrders;
 
   const TABS: { key: OrderTab; label: string; count: number }[] = [
     { key: "all", label: "All Orders", count: pageOrders.length },
@@ -313,7 +290,7 @@ export default function MyOrdersPage() {
 
   return (
     <div className="flex w-full flex-col gap-6">
-      {allOrders.length > 0 && (
+      {pageOrders.length > 0 && (
         <>
           <Card className="w-full flex-row flex-wrap items-center justify-between gap-3 p-3 sm:p-4">
             <div className="no-scrollbar flex w-fit max-w-full flex-nowrap items-center gap-1 overflow-x-auto rounded-full bg-[#F5F5F5] p-1">
@@ -322,19 +299,17 @@ export default function MyOrdersPage() {
                   key={tab.key}
                   type="button"
                   onClick={() => setActiveTab(tab.key)}
-                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1 sm:gap-2 whitespace-nowrap rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 transition-colors ${
-                    activeTab === tab.key
+                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1 sm:gap-2 whitespace-nowrap rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 transition-colors ${activeTab === tab.key
                       ? "bg-white text-center font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-semibold leading-[18px] text-[#FD151B] shadow-sm"
                       : "text-center font-montserrat text-[clamp(0.75rem,0.75rem,0.75rem)] font-semibold leading-[18px] text-[#6A7282] hover:text-black"
-                  }`}
+                    }`}
                 >
                   {tab.label}
                   <span
-                    className={`flex shrink-0 flex-col items-center justify-center rounded-full ${
-                      activeTab === tab.key
+                    className={`flex shrink-0 flex-col items-center justify-center rounded-full ${activeTab === tab.key
                         ? "w-[17.917px] h-[19px] px-1.5 py-0.5 bg-[#FEF2F2] text-center  text-[clamp(0.625rem,0.625rem,0.625rem)] font-semibold leading-[18px] text-[#FD151B]"
                         : "w-[17.9px] h-[19px] px-1.5 py-0.5 bg-[#E5E7EB] text-center text-[clamp(0.625rem,0.625rem,0.625rem)] font-bold leading-[15px] text-[#6A7282]"
-                    }`}
+                      }`}
                   >
                     {tab.count}
                   </span>
@@ -348,7 +323,7 @@ export default function MyOrdersPage() {
 
               <Select value={sortOrdersBy} onValueChange={handleSortChange}>
                 <SelectTrigger
-                className="inline-flex w-auto min-w-0 items-center justify-start gap-2 rounded-[23px] border border-[#E5E7EB] bg-[#F9FAFB] py-[7.5px] pr-[38px] pl-[12.066px] shadow-none focus:ring-0 focus:ring-offset-0">
+                  className="inline-flex w-auto min-w-0 items-center justify-start gap-2 rounded-[23px] border border-[#E5E7EB] bg-[#F9FAFB] py-[7.5px] pr-[38px] pl-[12.066px] shadow-none focus:ring-0 focus:ring-offset-0">
                   <SelectValue
                     placeholder="Delivery Date"
                     className="!text-[#99A1AF] font-medium leading-[16px] text-12px!"
@@ -372,9 +347,13 @@ export default function MyOrdersPage() {
           </Card>
 
           <div className="flex items-center gap-2 fluid-text-sm">
-            <span className="font-bold text-sm font-bold text-[#211E22] leading-[19px]">
-              Orders <span className="text-sb-red">({effectiveTotal})</span>
+            <span className="font-bold text-sm text-[#211E22] leading-[19px]">
+              Orders{" "}
+              <span className="text-sb-red">
+                ({TABS.find((tab) => tab.key === activeTab)?.count ?? 0})
+              </span>
             </span>
+
             <ChevronRight size={14} className="text-[#D1D5DC] ml-[-5px]" />
             <span className="text-[#99A1AF] text-[0.75rem] font-normal leading-[18px] capitalize">
               {TABS.find((t) => t.key === activeTab)?.label}
@@ -383,7 +362,7 @@ export default function MyOrdersPage() {
         </>
       )}
 
-      {querySettled && isError && allOrders.length === 0 && (
+      {querySettled && isError && pageOrders.length === 0 && (
         <Card className="w-full p-6 border">
           <div className="w-full flex flex-col items-center justify-center gap-3 py-20">
             <p>Failed to load your orders. Please try again.</p>
@@ -398,7 +377,7 @@ export default function MyOrdersPage() {
         </Card>
       )}
 
-      {querySettled && !isError && allOrders.length === 0 && (
+      {querySettled && !isError && pageOrders.length === 0 && (
         <Card className="w-full p-6 border">
           <div className="w-full flex justify-center py-20">
             <p>No orders yet</p>
@@ -406,7 +385,7 @@ export default function MyOrdersPage() {
         </Card>
       )}
 
-      {displayedOrders.length === 0 && allOrders.length > 0 && (
+      {displayedOrders.length === 0 && pageOrders.length > 0 && (
         <Card className="w-full p-6 border">
           <div className="w-full flex justify-center py-20">
             <p>No orders in this category</p>
@@ -457,19 +436,19 @@ export default function MyOrdersPage() {
 
               <div className="flex flex-col gap-1">
                 <span className="text-[0.625rem] text-[#99A1AF] font-semibold leading-[15px] capitalize">Estimated Delivery Date</span>
-                  {/* {order.status === Status.DELIVERED
+                {/* {order.status === Status.DELIVERED
                     ? "Delivered On"
                     : "Estimated Delivery Date"} */}
                 <span className="text-[0.75rem] font-bold text-[#211E22] leading-[18px]">
                   {order.estimated_delivery_date
                     ? new Date(order.estimated_delivery_date).toLocaleDateString(
-                        "en-AU",
-                        {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        },
-                      )
+                      "en-AU",
+                      {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      },
+                    )
                     : "Not Available"}
                 </span>
               </div>
@@ -578,7 +557,7 @@ export default function MyOrdersPage() {
 
               {order.tracking_link?.trim() && (
                 <Link
-                  href={order.tracking_link}
+                  href={'https://www.aramex.com.au/tools/track'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex w-[138.067px] h-[34.75px] shrink-0 items-center gap-2 rounded-[24px] bg-[#FD151B] px-5 py-2 text-center font-montserrat text-[0.75rem] font-bold leading-[18.75px] text-white"
@@ -609,21 +588,20 @@ export default function MyOrdersPage() {
 
               {(order.available_actions.includes("retry") ||
                 order.available_actions.includes("retry_payment")) && (
-                <button
-                  className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] bg-[#FD151B] px-5 py-2 cursor-pointer text-center font-montserrat text-[0.75rem] font-bold leading-[18.75px] text-white"
-                  onClick={() => handleRetryPaymentClick(order.id)}
-                >
-                  Retry Payment
-                </button>
-              )}
+                  <button
+                    className="flex w-auto min-w-[138.067px] h-[34.75px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[24px] bg-[#FD151B] px-5 py-2 cursor-pointer text-center font-montserrat text-[0.75rem] font-bold leading-[18.75px] text-white"
+                    onClick={() => handleRetryPaymentClick(order.id)}
+                  >
+                    Retry Payment
+                  </button>
+                )}
             </div>
 
             <div className="flex items-center gap-4 flex-wrap">
               {order.available_actions.includes("cancel") && (
                 <button
-                  className={`inline-flex cursor-pointer items-center gap-1.5 transition-colors text-[0.75rem] font-medium text-[#99A1AF] leading-[18px] hover:text-[#FD151B] ${
-                    isCancelling ? "cursor-not-allowed" : ""
-                  }`}
+                  className={`inline-flex cursor-pointer items-center gap-1.5 transition-colors text-[0.75rem] font-medium text-[#99A1AF] leading-[18px] hover:text-[#FD151B] ${isCancelling ? "cursor-not-allowed" : ""
+                    }`}
                   onClick={() => !isCancelling && handleCancelClick(order.id)}
                 >
                   <XCircle size={12} />
@@ -644,28 +622,6 @@ export default function MyOrdersPage() {
           </div>
         </Card>
       ))}
-
-      {needsMoreBuffer && (
-        <div ref={loadMoreRef} className="w-full flex justify-center py-4">
-          {isFetching && (
-            <div className="dflex align-center">
-              <span
-                className="loader-spinner"
-                style={{
-                  marginRight: "10px",
-                  border: "2px solid #f3f3f3",
-                  borderTop: "2px solid #333",
-                  borderRadius: "50%",
-                  width: "16px",
-                  height: "16px",
-                  animation: "spin 1s linear infinite",
-                }}
-              ></span>
-              Loading more orders...
-            </div>
-          )}
-        </div>
-      )}
 
       <CancelOrderPopup
         isOpen={isCancelPopupOpen}
