@@ -17,7 +17,7 @@ export const API_ENDPOINTS = {
   },
   PRODUCTS: {
     BASE_URL: "/api/v1/product",
-    PRODUCTS_API_BASE_URL: process.env.NEXT_PUBLIC_API_URL_PRODUCTS || "https://api.shopperbeats.com.au/products",
+    PRODUCTS_API_BASE_URL: process.env.NEXT_PUBLIC_API_URL_PRODUCTS || "https://api.shopperbeats.com/products",
     PRODUCT_BASE_URL: `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}/api/v1/product`,
     PRODUCT_BASE_URL_CLIENT: `/api/v1/product`,
     ALL: "/api/products",
