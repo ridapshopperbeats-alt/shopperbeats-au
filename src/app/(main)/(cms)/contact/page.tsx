@@ -178,13 +178,14 @@ export default function ContactPage() {
                     id="email"
                     type="email"
                     name="email"
-                    label="Email Address"
+                    label="Email Address*"
                     labelClassName="font-montserrat text-xs font-semibold leading-[17.25px] text-[#4A5565] mb-2"
                     className="mx-auto w-[526px]! h-[40.75px]! flex-col! justify-center! items-start! px-3.5! py-2.5! rounded-[10px]! border-[#E5E7EB]!"
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="your@email.com"
                     error={formErrors.email}
+                    required
                   />
                 </div>
               </div>

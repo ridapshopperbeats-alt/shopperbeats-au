@@ -177,6 +177,21 @@ export default function GlobalSearch() {
         }}
       />
 
+      {!isSearching && searchQuery && (
+        <button
+          type="button"
+          className="search-clear-btn"
+          onClick={() => {
+            setSearchQuery("");
+            setShowSearchResults(false);
+            setSelectedResultIndex(-1);
+          }}
+          aria-label="Clear search"
+        >
+          &times;
+        </button>
+      )}
+
       {isSearching ? (
         <div className="search-loader"></div>
       ) : (
