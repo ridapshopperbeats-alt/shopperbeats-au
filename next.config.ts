@@ -191,14 +191,6 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "www.fastfurnishings.com",
       },
-      {
-        protocol: "https",
-        hostname: "www.wonatrading.com",
-      },
-      {
-        protocol: "https",
-        hostname: "marketplace.sspo.com",
-      },
     ],
   },
 };

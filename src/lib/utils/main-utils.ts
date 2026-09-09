@@ -422,33 +422,6 @@ export const getPriceDetails = (product: Product, variant?: Variant | null) => {
   };
 };
 
-// A product is available only when its own stock is 1 or more and, when it has
-// variants, the variant the card renders also has stock of 1 or more. Cards
-// default to the first variant, so pass variantId where a specific one is shown.
-export function hasAvailableStock(
-  product: Product,
-  variantId?: string | null,
-): boolean {
-  if (Number(product.stock) < 1) return false;
-
-  const variants = product.variants;
-
-  if (!variants?.length) return true;
-
-  const shownVariant = variantId
-    ? variants.find((variant) => variant.id === variantId)
-    : variants[0];
-
-  if (!shownVariant) return true;
-
-  return Number(shownVariant.stock) >= 1;
-}
-
-// Drop products that have no stock so they never reach the UI
-export function filterInStockProducts<T extends Product>(products: T[]): T[] {
-  return products.filter((product) => hasAvailableStock(product));
-}
-
 // transform product data for frontend display, including price details and image URLs
 export function transformProductData(products: Product[]) {
   return products.map((product) => {
