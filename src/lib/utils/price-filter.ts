@@ -32,9 +32,15 @@ export const resolvePriceRange = (
   return Number.isNaN(min) || Number.isNaN(max) ? null : { min, max };
 };
 
+const toAmount = (raw: unknown): number =>
+  parseFloat(String(raw ?? "").replace(/[^0-9.]/g, "")) || 0;
+
 export const getProductPrice = (product: Product): number => {
-  const raw = product.discounted_price ?? product.price ?? 0;
-  return parseFloat(String(raw).replace(/[^0-9.]/g, "")) || 0;
+  // The API sends discounted_price: 0 for products without a discount, so a
+  // nullish check isn't enough — fall back to price whenever it isn't a real amount.
+  const discounted = toAmount(product.discounted_price);
+
+  return discounted > 0 ? discounted : toAmount(product.price);
 };
 
 export const filterProductsByPriceRange = (

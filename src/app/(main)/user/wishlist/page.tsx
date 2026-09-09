@@ -51,6 +51,7 @@ export default function WishlistPage() {
           variant_id: item.variant_id,
         })),
         postcode,
+        remove_from_wishlist: true,
       }).unwrap();
 
       const failedCount = result?.failed_items?.length ?? 0;
@@ -62,8 +63,17 @@ export default function WishlistPage() {
       if (failedCount > 0) {
         toast.error(`Failed to add ${failedCount} item(s) to cart.`);
       }
-    } catch {
-      toast.error("Failed to add items to cart.");
+    } catch (err) {
+      const error = err as {
+        data?: { detail?: string; error?: string };
+        message?: string;
+      };
+      const errorMessage =
+        error?.data?.detail ||
+        error?.data?.error ||
+        error?.message ||
+        "Failed to add items to cart.";
+      toast.error(errorMessage);
     } finally {
       setIsTransferring(false);
     }
