@@ -25,37 +25,11 @@ const TopNavbar = ({
     <nav className="navbar" id="menu">
       <ul className="menu">
         <li>
-          <Link
-            className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-              activeTopCategorySlug === "home-garden" ? "active" : ""
-            }`}
-            href="/category/home-garden"
-          >
-            <Leaf
-              size={16}
-              className="inline-block text-center icons-size"
-            />
-            Home & Garden
-          </Link>
-        </li>
 
-        <li>
-          <Link
-            className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-              activeTopCategorySlug === "furniture" ? "active" : ""
-            }`}
-            href="/category/furniture"
-          >
-            <Armchair size={16} className="inline-block icons-size" />
-            Furniture
-          </Link>
-        </li>
 
-        <li>
           <Link
-            className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-              isFashionAccessoriesActive ? "active" : ""
-            }`}
+            className={`link flex items-center xl:gap-2 hover:text-red-500 ${isFashionAccessoriesActive ? "active" : ""
+              }`}
             href="/category/fashion-accessories"
           >
             <HandbagIcon
@@ -68,12 +42,36 @@ const TopNavbar = ({
 
         <li>
           <Link
-            className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-              pathname === "/category/health-beauty" ||
-              pathname?.startsWith("/category/health-beauty/")
+            className={`link flex items-center xl:gap-2 hover:text-red-500 ${activeTopCategorySlug === "furniture" ? "active" : ""
+              }`}
+            href="/category/furniture"
+          >
+            <Armchair size={16} className="inline-block icons-size" />
+            Furniture
+          </Link>
+        </li>
+
+        <li>
+          <Link
+            className={`link flex items-center xl:gap-2 hover:text-red-500 ${activeTopCategorySlug === "home-garden" ? "active" : ""
+              }`}
+            href="/category/home-garden"
+          >
+            <Leaf
+              size={16}
+              className="inline-block text-center icons-size"
+            />
+            Home & Garden
+          </Link>
+        </li>
+
+        <li>
+          <Link
+            className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/category/health-beauty" ||
+                pathname?.startsWith("/category/health-beauty/")
                 ? "active"
                 : ""
-            }`}
+              }`}
             href="/category/health-beauty"
           >
             <HeartPulse
@@ -86,12 +84,11 @@ const TopNavbar = ({
 
         <li>
           <Link
-            className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-              pathname === "/category/outdoor-patio" ||
-              pathname?.startsWith("/category/outdoor-patio/")
+            className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/category/outdoor-patio" ||
+                pathname?.startsWith("/category/outdoor-patio/")
                 ? "active"
                 : ""
-            }`}
+              }`}
             href="/category/outdoor-patio"
           >
             <Armchair size={16} className="inline-block icons-size" />
@@ -101,11 +98,10 @@ const TopNavbar = ({
 
         <li>
           <Link
-            className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-              pathname === "/product-listing/best-sellers"
+            className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/product-listing/best-sellers"
                 ? "active"
                 : ""
-            }`}
+              }`}
             href="/product-listing/best-sellers"
           >
             <Gem size={16} className="inline-block icons-size" />
@@ -115,11 +111,10 @@ const TopNavbar = ({
 
         <li>
           <Link
-            className={`link flex items-center xl:gap-2 hover:text-red-500 ${
-              pathname === "/product-listing/whats-on-sale"
+            className={`link flex items-center xl:gap-2 hover:text-red-500 ${pathname === "/product-listing/whats-on-sale"
                 ? "active"
                 : ""
-            }`}
+              }`}
             href="/product-listing/whats-on-sale"
           >
             <Sparkles

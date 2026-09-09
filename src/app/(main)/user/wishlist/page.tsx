@@ -13,7 +13,11 @@ import {
 } from "@/lib/redux/apis/cart-api";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useIsClient } from "@/lib/hooks/use-is-client";
-import { getPriceDetails, getImageUrl } from "@/lib/utils/main-utils";
+import {
+  getPriceDetails,
+  getImageUrl,
+  hasAvailableStock,
+} from "@/lib/utils/main-utils";
 export default function WishlistPage() {
   const hasMounted = useIsClient();
 
@@ -28,7 +32,12 @@ export default function WishlistPage() {
   const { postcode } = useGlobalPostcode();
   const [isTransferring, setIsTransferring] = useState(false);
 
-  const items = hasMounted ? (wishlist?.items ?? []) : [];
+  const items = (hasMounted ? (wishlist?.items ?? []) : []).filter((item) =>
+    hasAvailableStock(
+      { ...item, stock: item.available_stock ?? item.stock },
+      item.variant_id,
+    ),
+  );
   const showLoading = !hasMounted || isLoading || isFetching;
 
   const wishlistKeys = items.map((item) => ({
