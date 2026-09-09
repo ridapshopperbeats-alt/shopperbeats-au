@@ -52,11 +52,6 @@
   position: relative;
 }
 
-/* Above 1023px: lay the header out as logo | search | login so the search
-   box is genuinely centered instead of just filling the space left over by
-   two side blocks of different widths (which is what justify-content:
-   space-between was doing). The no-search variant (checkout / account pages)
-   only has two children, so it keeps the original space-between behavior. */
 @media screen and (min-width: 1024px) {
   .top-head:not(.no-search) {
     display: grid;
@@ -75,7 +70,7 @@
   /* box-shadow: 0px 8px 14px rgba(0, 0, 0, 0.06); */
   border-radius: 5px !important;
   height: 42px;
-  padding: 0px 50px 0px 20px;
+  padding: 0px 70px 0px 20px;
 }
 
 .search-block button {
@@ -90,6 +85,30 @@
   background-position: center;
   background-repeat: no-repeat;
   background-color: transparent;
+}
+
+.search-block button.search-clear-btn {
+  position: absolute;
+  right: 42px;
+  top: 50%;
+  margin-top: 0;
+  transform: translateY(-50%);
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border: none;
+  background-image: none;
+  background-color: transparent;
+  color: #9aa0ab;
+  font-size: 28px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-block button.search-clear-btn:hover {
+  color: #01295f;
 }
 
 .search-loader {
