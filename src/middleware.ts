@@ -16,6 +16,43 @@ const SITE_LOCK_BYPASS_PATHS = [SITE_LOCK_PATH, SITE_LOCK_API_PATH];
 const STATIC_ASSET_PATTERN =
   /\.(?:svg|png|jpe?g|gif|webp|avif|ico|css|js|map|woff2?|ttf|otf|eot|txt|xml|json|pdf|mp4|webm)$/i;
 
+/**
+ * Browser-side fetches are blocked unless the host is listed in connect-src,
+ * so derive the allowed API origins from the configured base URLs rather than
+ * hard-coding them — they differ per region and environment.
+ */
+const API_ORIGINS = Array.from(
+  new Set(
+    [
+      process.env.NEXT_PUBLIC_API_URL,
+      process.env.NEXT_PUBLIC_API_URL_PRODUCTS,
+      process.env.NEXT_PUBLIC_API_URL_CART,
+      process.env.NEXT_PUBLIC_API_URL_PAYMENT,
+      process.env.NEXT_PUBLIC_API_URL_USERS,
+      process.env.NEXT_PUBLIC_API_URL_ORDER,
+      process.env.NEXT_PUBLIC_API_URL_HELPDESK,
+      process.env.NEXT_PUBLIC_API_URL_CMS,
+    ]
+      .map((value) => {
+        if (!value) return null;
+        try {
+          return new URL(value.trim()).origin;
+        } catch {
+          return null;
+        }
+      })
+      .filter((origin): origin is string => origin !== null),
+  ),
+);
+
+const THIRD_PARTY_CONNECT_SRC = [
+  "https://www.google-analytics.com",
+  "https://maps.googleapis.com",
+  "https://places.googleapis.com",
+  "https://js.stripe.com",
+  "https://api.stripe.com",
+];
+
 function buildCsp(nonce: string): string {
   return [
     "default-src 'self'",
@@ -23,7 +60,7 @@ function buildCsp(nonce: string): string {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data: https://fonts.gstatic.com",
-    "connect-src 'self' https://api-us.shopperbeats.cloud https://admin.shopperbeats.com.au https://www.google-analytics.com https://maps.googleapis.com https://places.googleapis.com https://js.stripe.com https://api.stripe.com",
+    ["connect-src 'self'", ...API_ORIGINS, ...THIRD_PARTY_CONNECT_SRC].join(" "),
     "frame-src https://js.stripe.com https://hooks.stripe.com https://www.google.com",
     "object-src 'none'",
     "base-uri 'self'",
