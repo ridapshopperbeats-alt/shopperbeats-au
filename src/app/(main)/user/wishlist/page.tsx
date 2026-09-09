@@ -13,11 +13,7 @@ import {
 } from "@/lib/redux/apis/cart-api";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useIsClient } from "@/lib/hooks/use-is-client";
-import {
-  getPriceDetails,
-  getImageUrl,
-  hasAvailableStock,
-} from "@/lib/utils/main-utils";
+import { getPriceDetails, getImageUrl } from "@/lib/utils/main-utils";
 export default function WishlistPage() {
   const hasMounted = useIsClient();
 
@@ -32,12 +28,7 @@ export default function WishlistPage() {
   const { postcode } = useGlobalPostcode();
   const [isTransferring, setIsTransferring] = useState(false);
 
-  const items = (hasMounted ? (wishlist?.items ?? []) : []).filter((item) =>
-    hasAvailableStock(
-      { ...item, stock: item.available_stock ?? item.stock },
-      item.variant_id,
-    ),
-  );
+  const items = hasMounted ? (wishlist?.items ?? []) : [];
   const showLoading = !hasMounted || isLoading || isFetching;
 
   const wishlistKeys = items.map((item) => ({
@@ -60,6 +51,7 @@ export default function WishlistPage() {
           variant_id: item.variant_id,
         })),
         postcode,
+        remove_from_wishlist: true,
       }).unwrap();
 
       const failedCount = result?.failed_items?.length ?? 0;
@@ -71,8 +63,17 @@ export default function WishlistPage() {
       if (failedCount > 0) {
         toast.error(`Failed to add ${failedCount} item(s) to cart.`);
       }
-    } catch {
-      toast.error("Failed to add items to cart.");
+    } catch (err) {
+      const error = err as {
+        data?: { detail?: string; error?: string };
+        message?: string;
+      };
+      const errorMessage =
+        error?.data?.detail ||
+        error?.data?.error ||
+        error?.message ||
+        "Failed to add items to cart.";
+      toast.error(errorMessage);
     } finally {
       setIsTransferring(false);
     }

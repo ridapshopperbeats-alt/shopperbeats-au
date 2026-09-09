@@ -16,7 +16,6 @@ import { WishlistKey } from "@/types/wishlist";
 import {
   getPriceDetails,
   getImageUrl,
-  filterInStockProducts,
 } from "@/lib/utils/main-utils";
 import { useIntersectionObserver } from "@/lib/hooks/use-intersection-observer";
 import {
@@ -77,7 +76,7 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
   onToggleSidebar,
   hideFilterButton = false,
 }) => {
-  const products = filterInStockProducts(initialProducts);
+  const products = initialProducts;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const [showMobileSort, setShowMobileSort] = useState(false);

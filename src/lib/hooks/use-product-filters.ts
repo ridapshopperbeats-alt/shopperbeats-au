@@ -47,7 +47,9 @@ const deriveFiltersFromUrl = (searchParams: URLSearchParams) => {
         "shipping",
       ].includes(lowerKey)
     ) {
-      filtersFromUrl[lowerKey] = value.split(",");
+      // Mirror of the snake_case conversion done when the params are written,
+      // so checkbox state still resolves after a reload or a shared link.
+      filtersFromUrl[lowerKey.replace(/_/g, " ")] = value.split(",");
     }
   });
 
@@ -161,7 +163,9 @@ export const useProductFilters = (
           params.set("free_shipping", "true");
         }
       } else if (selectedFilters[attribute].length > 0) {
-        params.set(attrKey, selectedFilters[attribute].join(","));
+        // Multi-word attributes ("Color Family") are snake_case query params
+        // ("color_family") — a spaced param name matches nothing server-side.
+        params.set(attrKey.replace(/\s+/g, "_"), selectedFilters[attribute].join(","));
       }
     }
 
@@ -308,17 +312,25 @@ export const useProductFilters = (
   const priceFilter = filters.find(
     (f) => f.attribute.toLowerCase() === "price",
   );
+  // Backend sends the category's actual bounds as PriceRange: ["35", "787"]
+  const priceRangeFilter = filters.find(
+    (f) => f.attribute.toLowerCase() === "pricerange",
+  );
   const categoryFilter = filters.find(
     (f) => f.attribute.toLowerCase() === "category",
   );
   const specialOffersFilter = filters.find(
     (f) => f.attribute.toLowerCase() === "special offers",
   );
-  const colorFilter = filters.find(
-    (f) =>
-      f.attribute.toLowerCase() === "colour" ||
-      f.attribute.toLowerCase() === "color",
-  );
+  // Prefer the curated "Color Family" list (15 values) over the raw "Color"
+  // attribute, which the backend returns with well over a thousand values.
+  const colorFilter =
+    filters.find((f) => f.attribute.toLowerCase() === "color family") ??
+    filters.find(
+      (f) =>
+        f.attribute.toLowerCase() === "colour" ||
+        f.attribute.toLowerCase() === "color",
+    );
   const sizeFilter = filters.find((f) => f.attribute.toLowerCase() === "size");
 
   const flattenCategories = (categories: Category[]): Category[] => {
@@ -364,6 +376,7 @@ export const useProductFilters = (
     isPendingApply,
     brandFilter,
     priceFilter,
+    priceRangeFilter,
     categoryFilter,
     specialOffersFilter,
     colorFilter,

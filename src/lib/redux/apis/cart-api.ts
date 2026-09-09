@@ -381,11 +381,78 @@ export const cartApi = createApi({
       } | void
     >({
       queryFn: async (arg, api, extraOptions) => {
+        const payload = (arg ?? {}) as {
+          items?: { product_id: string; variant_id?: string | null }[];
+          postcode?: string | null;
+          remove_from_wishlist?: boolean;
+        };
+
+        // Guests have no server-side wishlist, so the move-to-cart endpoint
+        // has nothing to read. Add their local entries to the cart directly,
+        // exactly the way a single "Add To Cart" does.
+        if (!isUserAuthenticated(api)) {
+          const guestEntries = readGuestWishlist();
+
+          const requested = payload.items?.length
+            ? payload.items
+            : guestEntries.map((entry) => ({
+                product_id: entry.product_id,
+                variant_id: entry.variant_id,
+              }));
+
+          if (requested.length === 0) {
+            return { data: { moved_items: [], failed_items: [] } };
+          }
+
+          const result = await baseCartQuery(
+            {
+              url: API_ENDPOINTS.CART.ADD,
+              method: "POST",
+              body: {
+                items: requested.map((item) => {
+                  const vendorId = guestEntries.find(
+                    (entry) =>
+                      entry.product_id === item.product_id &&
+                      entry.variant_id === (item.variant_id ?? null),
+                  )?.snapshot?.vendor_id;
+
+                  return {
+                    product_id: item.product_id,
+                    quantity: 1,
+                    ...(item.variant_id ? { variant_id: item.variant_id } : {}),
+                    ...(vendorId ? { vendor_id: vendorId } : {}),
+                  };
+                }),
+                ...(payload.postcode ? { postcode: payload.postcode } : {}),
+              },
+            },
+            api,
+            extraOptions
+          );
+
+          if (result.error) return { error: result.error };
+
+          if (payload.remove_from_wishlist) {
+            writeGuestWishlist(
+              guestEntries.filter(
+                (entry) =>
+                  !requested.some(
+                    (item) =>
+                      item.product_id === entry.product_id &&
+                      (item.variant_id ?? null) === entry.variant_id,
+                  ),
+              ),
+            );
+          }
+
+          return { data: { moved_items: requested, failed_items: [] } };
+        }
+
         const result = await baseWishlistQuery(
           {
             url: API_ENDPOINTS.WISHLIST.MOVE_TO_CART,
             method: "POST",
-            body: arg || {},
+            body: payload,
           },
           api,
           extraOptions

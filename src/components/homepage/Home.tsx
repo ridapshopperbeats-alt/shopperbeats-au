@@ -9,7 +9,6 @@ import {
   getPopularProducts,
   getNewReleases,
   transformProductData,
-  filterInStockProducts,
 } from "@/lib/utils/main-utils";
 import PopularCategories from "./AllBanner";
 import TopBrands from "./TopRated";
@@ -51,7 +50,7 @@ function CarouselSkeleton({ title, link }: { title: string; link: string }) {
 
 async function BestSellersCarousel() {
   const bestSellers = await getBestSellers().catch(() => []);
-  const products = transformProductData(filterInStockProducts(bestSellers));
+  const products = transformProductData(bestSellers);
 
   if (products.length === 0) return null;
 
@@ -66,7 +65,7 @@ async function BestSellersCarousel() {
 
 async function PopularProductsCarousel() {
   const popular = await getPopularProducts().catch(() => []);
-  const popularProducts = transformProductData(filterInStockProducts(popular));
+  const popularProducts = transformProductData(popular);
 
   if (popularProducts.length === 0) return null;
 
@@ -81,7 +80,7 @@ async function PopularProductsCarousel() {
 
 async function NewArrivalsCarousel() {
   const newReleases = await getNewReleases().catch(() => []);
-  const newArrivals = transformProductData(filterInStockProducts(newReleases));
+  const newArrivals = transformProductData(newReleases);
 
   if (newArrivals.length === 0) return null;
 

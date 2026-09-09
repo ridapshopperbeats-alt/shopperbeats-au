@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { CircleCheck, CircleX, Headphones, RotateCw } from "lucide-react";
+import Banner from "@/components/common/Banner";
 
 interface ReturnStep {
   number: string;
@@ -101,6 +103,23 @@ export default function ReturnRefundsPage() {
           Our hassle-free return and warranty guidelines.
         </p>
       </div>
+
+      <Banner
+        title="Returns &amp; Warranty"
+        subtitle="Our hassle-free return and warranty guidelines."
+        titleClassName="font-montserrat text-[32px]! font-semibold! leading-[24px]! text-[#01295F]!"
+        subtitleClassName="font-montserrat text-[16px]! font-semibold! leading-[19.5px]! text-[#6A7282]!"
+        image={
+          <Image
+            src="/images/Group 1261155781.png"
+            alt="Returns and Warranty Banner"
+            width={1920}
+            height={218}
+            priority
+            fetchPriority="high"
+          />
+        }
+      />
 
       <div
         className="rw-wrapper"

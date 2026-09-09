@@ -175,11 +175,6 @@ const CategoryClient = ({
       params.set("page", String(page));
       params.set("limit", String(limit));
 
-      // price filtering happens on the client
-      ["price_ranges", "min_price", "max_price"].forEach((param) =>
-        params.delete(param),
-      );
-
       inFlightKeyRef.current = key;
       setIsLoadingPage(true);
 

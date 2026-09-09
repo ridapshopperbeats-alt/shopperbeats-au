@@ -293,7 +293,7 @@ export default function Footer({
 
           {/* Bottom bar */}
           <div className="footer-bottom-bar">
-            <p className="footer-copyright-desktop">
+            <p className="footer-copyright-desktop uppercase">
               © 2026 ShopperBeats Technologies LLC. All Rights
               Reserved
             </p>

@@ -76,6 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     handleApplyFilters,
     brandFilter,
     priceFilter,
+    priceRangeFilter,
     categoryFilter,
     specialOffersFilter,
     colorFilter,
@@ -121,8 +122,17 @@ const Sidebar: React.FC<SidebarProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasAnyExpanded]);
 
-  const MIN_PRICE = 0;
-  const MAX_PRICE = 5000;
+  // Bounds come from the backend's PriceRange attribute (["35", "787"]);
+  // fall back to a wide range when the endpoint doesn't send it.
+  const [rangeFrom, rangeTo] = priceRangeFilter?.values ?? [];
+  const parsedMin = Number(rangeFrom);
+  const parsedMax = Number(rangeTo);
+
+  const MIN_PRICE = Number.isFinite(parsedMin) && rangeFrom ? Math.floor(parsedMin) : 0;
+  const MAX_PRICE =
+    Number.isFinite(parsedMax) && rangeTo && parsedMax > MIN_PRICE
+      ? Math.ceil(parsedMax)
+      : 5000;
 
   const [priceRange, setPriceRange] = useState([
     Number(minPrice) || MIN_PRICE,
@@ -328,7 +338,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <Input
                       type="number"
                       placeholder="Min"
-                      value={minPrice}
+                      value={minPrice === "" ? String(MIN_PRICE) : minPrice}
                       onChange={(e) => {
                         const newMin = e.target.value;
 
@@ -347,7 +357,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <Input
                       type="number"
                       placeholder="Max"
-                      value={maxPrice}
+                      value={maxPrice === "" ? String(MAX_PRICE) : maxPrice}
                       onChange={(e) => {
                         const newMax = e.target.value;
 
