@@ -78,7 +78,7 @@ const shopWithPeace = () => {
 
                             <div className={styles.mbgImageWrapper}>
                                 <Image
-                                    src="/images/moneybackImg.svg"
+                                    src="/images/moneyback.png"
                                     alt="Money Back Guarantee"
                                     height={345}
                                     width={470}
@@ -90,7 +90,7 @@ const shopWithPeace = () => {
                         <div className={styles.returnsRow}>
                             <div className={styles.returnsImageWrapper}>
                                 <Image
-                                    src="/images/refImg.svg"
+                                    src="/images/ref_img1.png"
                                     alt="Easy Returns"
                                     height={496}
                                     width={449}
@@ -203,7 +203,7 @@ const shopWithPeace = () => {
 
                         <div className={styles.deliveryImageWrapper}>
                             <Image
-                                src="/images/tempo.svg"
+                                src="/images/tempo_work.png"
                                 alt="Tracked Delivery Truck"
                                 width={522}
                                 height={373}
