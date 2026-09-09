@@ -203,7 +203,7 @@ const shopWithPeace = () => {
 
                         <div className={styles.deliveryImageWrapper}>
                             <Image
-                                src="/images/tempo.png"
+                                src="/images/tempo_work.png"
                                 alt="Tracked Delivery Truck"
                                 width={522}
                                 height={373}
