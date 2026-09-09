@@ -161,7 +161,7 @@ const DUMMY_TOP_CATEGORIES: NewTopCategoryItem[] = [
   {
     title: "Blouse",
     image: "/images/home/tops.svg",
-    href: "/category/tops",
+    href: "/category/blouse",
   },
   {
     title: "Bras",
