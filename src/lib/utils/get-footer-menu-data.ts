@@ -35,7 +35,7 @@ export const FOOTER_LINKS_STATIC = [
       { label: "Sign up", href: "/sign-up" },
       { label: "User Profile", href: "/user/personal-information" },
       { label: "My Cart", href: "/cart" },
-      { label: "Track My Order", href: "https://www.aramex.com.au/tools/track/" },
+      // { label: "Track My Order", href: "https://www.aramex.com.au/tools/track/" },
     ],
   },
   {

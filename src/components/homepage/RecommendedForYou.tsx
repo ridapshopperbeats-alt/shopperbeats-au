@@ -1,11 +1,7 @@
 import React from "react";
 import ProductCarousel from "../common/ProductCarousel";
 import { Product } from "@/types/product";
-import {
-  getPriceDetails,
-  getImageUrl,
-  filterInStockProducts,
-} from "@/lib/utils/main-utils";
+import { getPriceDetails, getImageUrl } from "@/lib/utils/main-utils";
 
 export default function RecommendedForYou({
   personalized,
@@ -16,9 +12,7 @@ export default function RecommendedForYou({
   recentlyViewed?: Product[] | null;
   isLoading?: boolean;
 }) {
-  const productsToUse = filterInStockProducts(
-    personalized?.length ? personalized : (recentlyViewed ?? []),
-  );
+  const productsToUse = personalized?.length ? personalized : recentlyViewed;
 
   if (!isLoading && (!productsToUse || productsToUse.length === 0)) {
     return null;
