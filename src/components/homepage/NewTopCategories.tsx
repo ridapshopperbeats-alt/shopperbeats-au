@@ -279,17 +279,16 @@ export default function NewTopCategories() {
               className="shrink-0 flex flex-col gap-[8px] items-center justify-start cursor-pointer w-[72px] min-h-[98px] md:w-[138px] md:min-h-[172px] md:gap-[16px]"
             >
               <div className="relative w-[64px] h-[64px] md:w-[138px] md:h-[138px] shrink-0 rounded-full border border-[#D8D8D8] shadow-[0px_2px_6px_0px_#00000014] md:shadow-none bg-white overflow-hidden flex items-center justify-center">
-                <div className="relative w-[70%] h-[70%]">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    quality={75}
-                    loading="lazy"
-                    sizes="(min-width: 768px) 100px, 50px"
-                    className="object-contain transition-transform duration-500 ease-in-out hover:scale-110"
-                  />
-                </div>
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  width={200}
+                  height={200}
+                  quality={100}
+                  loading="lazy"
+                  sizes="(min-width: 768px) 200px, 70px"
+                  className="object-contain w-[70px] h-[70px] md:w-[200px] md:h-[200px] transition-transform duration-500 ease-in-out hover:scale-110"
+                />
               </div>
 
               <p className="text-[12px] font-bold leading-tight tracking-[0%] text-center capitalize text-[#2B2B2B] line-clamp-2">
