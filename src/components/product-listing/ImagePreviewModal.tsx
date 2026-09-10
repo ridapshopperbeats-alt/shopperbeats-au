@@ -198,7 +198,7 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
                           src={applyImageVariant(mediaUrl, "pdptmb")}
                           alt={`preview-thumb-${index}`}
                           fill
-                          // sizes="100px"
+                          sizes="100px"
                           className="object-cover"
                         />
                       )}

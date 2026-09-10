@@ -307,7 +307,9 @@ export default function PopularCategories() {
               src={item.image}
               alt={item.title}
               fill
-              loading="lazy"
+              sizes="(max-width: 1024px) 50vw, 25vw"
+              priority={index === 0}
+              loading={index === 0 ? undefined : "lazy"}
               className="object-cover group-hover:scale-[1.3] transition-transform duration-600 ease-in-out"
             />
 
@@ -366,6 +368,7 @@ export default function PopularCategories() {
               src={item.image}
               alt={item.title}
               fill
+              sizes="(max-width: 1024px) 50vw, 33vw"
               loading="lazy"
               className="object-cover group-hover:scale-[1.3] transition-transform duration-600 ease-in-out"
             />

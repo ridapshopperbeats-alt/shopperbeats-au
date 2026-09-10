@@ -490,6 +490,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                         alt="account"
                         className="rounded-full object-cover"
                         fill
+                        sizes="24px"
                       />
                     ) : (
                       <Image
