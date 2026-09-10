@@ -175,11 +175,6 @@ const CategoryClient = ({
       params.set("page", String(page));
       params.set("limit", String(limit));
 
-      // price filtering happens on the client
-      ["price_ranges", "min_price", "max_price"].forEach((param) =>
-        params.delete(param),
-      );
-
       inFlightKeyRef.current = key;
       setIsLoadingPage(true);
 
@@ -289,9 +284,20 @@ const CategoryClient = ({
   // SLIDER
   // -----------------------------
 
-  const sliderCategories = useMemo(
-    () =>
-      category?.subcategories?.map((sub: Category) => {
+  // Women leads the slider; anything not listed keeps the order the API sent.
+  const SLIDER_SLUG_ORDER = ["women", "men"];
+
+  const sliderCategories = useMemo(() => {
+    const subcategories = category?.subcategories ?? [];
+
+    const rank = (sub: Category) => {
+      const index = SLIDER_SLUG_ORDER.indexOf((sub.slug ?? "").toLowerCase());
+      return index === -1 ? SLIDER_SLUG_ORDER.length : index;
+    };
+
+    return [...subcategories]
+      .sort((a, b) => rank(a) - rank(b))
+      .map((sub: Category) => {
         const rawImage = sub.image_url || sub.icon_url;
         return {
           title: sub.name,
@@ -301,9 +307,9 @@ const CategoryClient = ({
           slug: sub.slug ?? sub.id,
           product_count: sub.product_count,
         };
-      }) || [],
-    [category?.subcategories],
-  );
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category?.subcategories]);
 
   // console.log("category.subcategories (raw):", category?.subcategories);
   // console.log("sliderCategories (mapped for CategorySlider):", sliderCategories);
@@ -324,9 +330,19 @@ const CategoryClient = ({
                 }),
               )
             }
-            getHref={(item) =>
-              `/category/${item.slug}?${searchParams.toString()}`
-            }
+            getHref={(item) => {
+              const params = new URLSearchParams(searchParams.toString());
+
+              // "categories" holds the current category's own subcategory
+              // picks, and the page number belongs to the list being left —
+              // carrying either into a sibling category returns no products.
+              params.delete("categories");
+              params.set("page", "1");
+
+              const query = params.toString();
+
+              return `/category/${item.slug}${query ? `?${query}` : ""}`;
+            }}
           />
         )}
 

@@ -82,7 +82,7 @@ async function getProducts(
   for (const key in searchParams) {
     const value = searchParams[key];
     if (value !== undefined) {
-      if (key === "page" || key === "limit" || ["price_ranges", "min_price", "max_price"].includes(key.toLowerCase())) continue;
+      if (key === "page" || key === "limit") continue;
       if (Array.isArray(value)) {
         value.forEach((v) => queryParams.append(key, v));
       } else {
