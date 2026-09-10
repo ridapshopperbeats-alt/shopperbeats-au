@@ -112,7 +112,7 @@ export default function SingleBanner() {
                 alt={`Banner ${index + 1}`}
                 fill
                 priority={index === 0}
-                quality={75}
+                quality={80}
                 className={`absolute inset-0 object-cover ease-in-out ${
                   isTransitioning
                     ? "transition-transform duration-1500"
