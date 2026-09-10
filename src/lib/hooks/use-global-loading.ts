@@ -7,7 +7,13 @@ import { selectHasPrimaryQueryLoading } from "@/lib/redux/selectors/api-loading-
 
 const SHOW_DELAY_MS = 150;
 const MIN_VISIBLE_MS = 500;
-const MAX_VISIBLE_MS = 3000;
+
+// Last-resort escape hatch for a request that never settles — not a cap on how
+// long a slow response may take. It has to sit well above any realistic server
+// render (and above RouteChangeLoader's own 25s safety), otherwise the overlay
+// disappears while filtered results are still on the wire and the grid swaps in
+// silently a moment later.
+const SAFETY_TIMEOUT_MS = 30000;
 
 export function useGlobalLoading(): boolean {
   const routeLoaderCount = useSelector(
@@ -57,7 +63,7 @@ export function useGlobalLoading(): boolean {
     const maxTimer = setTimeout(() => {
       visibleRef.current = false;
       setVisible(false);
-    }, MAX_VISIBLE_MS);
+    }, SAFETY_TIMEOUT_MS);
 
     return () => clearTimeout(maxTimer);
   }, [visible]);
