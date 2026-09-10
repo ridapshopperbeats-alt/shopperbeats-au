@@ -58,6 +58,7 @@ export default async function AllCategories({ searchParams }: PageProps) {
                     src={item.icon_url || "/images/image-coming-soon.jpg"}
                     alt={item.name}
                     fill
+                    sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 20vw"
                     loading="lazy"
                     className="object-contain"
                   />

@@ -4,21 +4,6 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { API_ENDPOINTS } from "@/lib/constants/api";
-import { applyImageVariant } from "@/lib/utils/imageUtils";
-
-interface HeroBannerContent {
-  image: string;
-  title?: string;
-  subtitle?: string;
-  cta_text?: string;
-  cta_link?: string;
-}
-
-interface HeroBannerItem {
-  content: HeroBannerContent[];
-}
-
 interface BannerSlide {
   id: number;
   image: string;
@@ -69,74 +54,8 @@ function getSlideOffset(
 
 export default function SingleBanner() {
   const [currentBanner, setCurrentBanner] = useState(0);
-  const [banners, setBanners] = useState<BannerSlide[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const banners = STATIC_BANNERS;
   const [prevBanner, setPrevBanner] = useState(0);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadHeroBanner() {
-      try {
-        const url = `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.HOMEPAGE_SECTION_BY_ID(
-          API_ENDPOINTS.PRODUCTS.HERO_BANNER
-        )}`;
-
-        const res = await fetch(url);
-
-        if (!res.ok) {
-          if (isMounted) setBanners(STATIC_BANNERS);
-          return;
-        }
-
-        const data: {
-          config?: {
-            items?: HeroBannerItem[];
-          };
-        } = await res.json();
-
-        const items = Array.isArray(data?.config?.items)
-          ? data.config.items
-          : [];
-
-        const mappedBanners: BannerSlide[] = items
-          .map((item, index) => ({
-            id: index + 1,
-            image: applyImageVariant(
-              item.content?.[0]?.image ?? "",
-              "public"
-            ),
-            link: item.content?.[0]?.cta_link ?? "#",
-          }))
-          .filter((banner) => banner.image);
-
-        if (!isMounted) return;
-
-        // API banners use karne hain to yaha mappedBanners karo
-        // setBanners(mappedBanners);
-
-        // Static banners
-        setBanners(STATIC_BANNERS);
-        setCurrentBanner(0);
-      } catch (error) {
-        console.error("Error fetching hero banner:", error);
-
-        if (isMounted) {
-          setBanners(STATIC_BANNERS);
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    loadHeroBanner();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     setPrevBanner(currentBanner);
@@ -163,51 +82,46 @@ export default function SingleBanner() {
     <div className="container lg:pt-3">
       {/* Banner */}
       <div className="relative hidden lg:flex w-full aspect-1694/540 overflow-hidden rounded-lg">
-        {isLoading && (
-          <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-        )}
+        {banners.map((banner, index) => {
+          const isTransitioning =
+            index === currentBanner || index === prevBanner;
 
-        {!isLoading &&
-          banners.map((banner, index) => {
-            const isTransitioning =
-              index === currentBanner || index === prevBanner;
-
-            return (
-              <Link
-                key={banner.id || index}
-                href={banner.link}
-                className="absolute inset-0"
-                style={{
-                  transform: `translateX(calc(${
-                    getSlideOffset(
-                      index,
-                      currentBanner,
-                      banners.length
-                    ) * 100
-                  }% + ${
-                    getSlideOffset(
-                      index,
-                      currentBanner,
-                      banners.length
-                    ) * 24
-                  }px))`,
-                }}
-              >
-                <Image
-                  src={banner.image}
-                  alt={`Banner ${index + 1}`}
-                  fill
-                  loading={index === 0 ? undefined : "eager"}
-                  quality={100}
-                  className={`absolute inset-0 object-cover ease-in-out ${
-                    isTransitioning
-                      ? "transition-transform duration-1500"
-                      : ""
-                  }`}
-                />
-              </Link>
-            );
-          })}
+          return (
+            <Link
+              key={banner.id || index}
+              href={banner.link}
+              className="absolute inset-0"
+              style={{
+                transform: `translateX(calc(${
+                  getSlideOffset(
+                    index,
+                    currentBanner,
+                    banners.length
+                  ) * 100
+                }% + ${
+                  getSlideOffset(
+                    index,
+                    currentBanner,
+                    banners.length
+                  ) * 24
+                }px))`,
+              }}
+            >
+              <Image
+                src={banner.image}
+                alt={`Banner ${index + 1}`}
+                fill
+                priority={index === 0}
+                quality={80}
+                className={`absolute inset-0 object-cover ease-in-out ${
+                  isTransitioning
+                    ? "transition-transform duration-1500"
+                    : ""
+                }`}
+              />
+            </Link>
+          );
+        })}
       </div>
 
       {/* Dots */}
