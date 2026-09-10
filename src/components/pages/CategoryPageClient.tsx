@@ -156,6 +156,7 @@ const CategoryClient = ({
   // Page the products in state belong to
   const [loadedKey, setLoadedKey] = useState(`${currentPage}-${uiLimit}`);
   const inFlightKeyRef = useRef<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   // A fresh server render (filter change / reload) replaces the list
   const [prevProducts, setPrevProducts] = useState(products);
@@ -165,7 +166,15 @@ const CategoryClient = ({
     setAllProducts(products);
     setEffectiveTotal(totalItems);
     setLoadedKey(`${currentPage}-${uiLimit}`);
+    setIsLoadingPage(false);
   }
+
+
+  useEffect(() => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    inFlightKeyRef.current = null;
+  }, [products]);
 
   const fetchProducts = useCallback(
     async (page: number, limit: number, key: string) => {
@@ -175,26 +184,38 @@ const CategoryClient = ({
       params.set("page", String(page));
       params.set("limit", String(limit));
 
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+
       inFlightKeyRef.current = key;
       setIsLoadingPage(true);
 
       try {
         const res = await fetch(
           `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?${params.toString()}`,
+          { signal: controller.signal },
         );
 
         if (!res.ok) throw new Error(`Failed to fetch products (${res.status})`);
 
         const data = await res.json();
 
+        if (controller.signal.aborted) return;
+
         setAllProducts(data?.data ?? []);
         setEffectiveTotal(Number(data?.total ?? 0));
         setLoadedKey(key);
       } catch (error) {
+        if ((error as Error)?.name === "AbortError") return;
         console.warn("Failed to load products:", error);
       } finally {
-        inFlightKeyRef.current = null;
-        setIsLoadingPage(false);
+
+        if (abortRef.current === controller) {
+          abortRef.current = null;
+          inFlightKeyRef.current = null;
+          setIsLoadingPage(false);
+        }
       }
     },
     [searchParams, slug],
@@ -298,7 +319,7 @@ const CategoryClient = ({
     return [...subcategories]
       .sort((a, b) => rank(a) - rank(b))
       .map((sub: Category) => {
-        const rawImage = sub.image_url || sub.icon_url;
+        const rawImage = sub.icon_url || sub.image_url;
         return {
           title: sub.name,
           image: rawImage

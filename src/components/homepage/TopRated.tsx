@@ -203,6 +203,7 @@ export default function TopBrands() {
               src={brand.image}
               alt={brand.title}
               fill
+              sizes="100vw"
               className="object-cover transition duration-500 group-hover:scale-105"
             />
 
@@ -259,6 +260,7 @@ export default function TopBrands() {
                 src={brand.image}
                 alt={brand.title}
                 fill
+                sizes="275px"
                 className="object-cover group-hover:scale-[1.5] transition-transform duration-600 ease-in-out"
               />
 

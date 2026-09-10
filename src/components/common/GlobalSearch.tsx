@@ -247,6 +247,7 @@ export default function GlobalSearch() {
                                     src={item.thumbnailUrl}
                                     alt={item.displayLabel}
                                     fill
+                                    sizes="32px"
                                     className="object-cover"
                                   />
                                 )}

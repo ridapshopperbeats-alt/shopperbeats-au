@@ -98,6 +98,7 @@ const Brand = () => {
                     src={imageUrl}
                     alt={brand.name || "brand"}
                     fill
+                    sizes="150px"
                     className="object-contain"
                     unoptimized={!imageUrl.startsWith("/")}
                   />

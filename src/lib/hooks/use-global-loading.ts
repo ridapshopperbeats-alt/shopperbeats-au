@@ -7,7 +7,8 @@ import { selectHasPrimaryQueryLoading } from "@/lib/redux/selectors/api-loading-
 
 const SHOW_DELAY_MS = 150;
 const MIN_VISIBLE_MS = 500;
-const MAX_VISIBLE_MS = 3000;
+
+const SAFETY_TIMEOUT_MS = 30000;
 
 export function useGlobalLoading(): boolean {
   const routeLoaderCount = useSelector(
@@ -57,7 +58,7 @@ export function useGlobalLoading(): boolean {
     const maxTimer = setTimeout(() => {
       visibleRef.current = false;
       setVisible(false);
-    }, MAX_VISIBLE_MS);
+    }, SAFETY_TIMEOUT_MS);
 
     return () => clearTimeout(maxTimer);
   }, [visible]);

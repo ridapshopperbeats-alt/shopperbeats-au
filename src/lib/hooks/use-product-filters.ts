@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 import { Category, Filter } from "@/types/product";
 
 const derivePriceRangeFromUrl = (searchParams: URLSearchParams) => {
@@ -47,8 +49,6 @@ const deriveFiltersFromUrl = (searchParams: URLSearchParams) => {
         "shipping",
       ].includes(lowerKey)
     ) {
-      // Mirror of the snake_case conversion done when the params are written,
-      // so checkbox state still resolves after a reload or a shared link.
       filtersFromUrl[lowerKey.replace(/_/g, " ")] = value.split(",");
     }
   });
@@ -73,6 +73,7 @@ export const useProductFilters = (
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const dispatch = useDispatch();
 
   const [brandSearch, setBrandSearch] = useState("");
   const [minPrice, setMinPrice] = useState(
@@ -97,12 +98,28 @@ export const useProductFilters = (
   const userInitiatedRef = useRef(false);
   const [isPendingApply, setIsPendingApply] = useState(false);
 
+  const [isNavigationPending, setIsNavigationPending] = useState(false);
+
+  useEffect(() => {
+    if (!isNavigationPending) return;
+    dispatch(pushLoader());
+
+    // A navigation that never commits must not pin the overlay open forever.
+    const safety = setTimeout(() => setIsNavigationPending(false), 15000);
+
+    return () => {
+      clearTimeout(safety);
+      dispatch(popLoader());
+    };
+  }, [isNavigationPending, dispatch]);
+
   const [prevSearchParams, setPrevSearchParams] = useState(searchParams);
   const [isSyncingFromUrl, setIsSyncingFromUrl] = useState(false);
 
   if (prevSearchParams !== searchParams) {
     setPrevSearchParams(searchParams);
     setIsSyncingFromUrl(true);
+    setIsNavigationPending(false);
 
     const { min, max } = derivePriceRangeFromUrl(searchParams);
     setMinPrice(min);
@@ -163,8 +180,6 @@ export const useProductFilters = (
           params.set("free_shipping", "true");
         }
       } else if (selectedFilters[attribute].length > 0) {
-        // Multi-word attributes ("Color Family") are snake_case query params
-        // ("color_family") — a spaced param name matches nothing server-side.
         params.set(attrKey.replace(/\s+/g, "_"), selectedFilters[attribute].join(","));
       }
     }
@@ -176,7 +191,11 @@ export const useProductFilters = (
     params.set("page", "1");
 
     const nextQueryString = params.toString();
-    if (nextQueryString === searchParams.toString()) return;
+    if (nextQueryString === searchParams.toString()) {
+      // Nothing to navigate to — release the loader raised on click.
+      setIsNavigationPending(false);
+      return;
+    }
 
     wrapNavigation(() => {
       router.push(`${pathname}?${nextQueryString}`, { scroll: false });
@@ -229,6 +248,7 @@ export const useProductFilters = (
   const handlePriceChange = (price: string) => {
     userInitiatedRef.current = true;
     setIsPendingApply(true);
+    setIsNavigationPending(true);
     let formattedPrice = price;
 
     if (price.toLowerCase().includes("under")) {
@@ -250,6 +270,7 @@ export const useProductFilters = (
   const handleFilterChange = (attribute: string, value: string) => {
     userInitiatedRef.current = true;
     setIsPendingApply(true);
+    setIsNavigationPending(true);
     const attrKey = attribute.toLowerCase();
     setSelectedFilters((prev) => {
       const currentValues = prev[attrKey] || [];
@@ -264,12 +285,14 @@ export const useProductFilters = (
   const handleSortChange = (value: string) => {
     userInitiatedRef.current = true;
     setIsPendingApply(true);
+    setIsNavigationPending(true);
     setSortBy(value);
   };
 
   const handleCategoryChange = (categoryName: string) => {
     userInitiatedRef.current = true;
     setIsPendingApply(true);
+    setIsNavigationPending(true);
     setSelectedCategories((prev) =>
       prev.includes(categoryName)
         ? prev.filter((c) => c !== categoryName)
