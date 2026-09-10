@@ -49,8 +49,6 @@ const deriveFiltersFromUrl = (searchParams: URLSearchParams) => {
         "shipping",
       ].includes(lowerKey)
     ) {
-      // Mirror of the snake_case conversion done when the params are written,
-      // so checkbox state still resolves after a reload or a shared link.
       filtersFromUrl[lowerKey.replace(/_/g, " ")] = value.split(",");
     }
   });
@@ -100,13 +98,6 @@ export const useProductFilters = (
   const userInitiatedRef = useRef(false);
   const [isPendingApply, setIsPendingApply] = useState(false);
 
-  // Toggling a checkbox does not navigate straight away — handleApplyFilters is
-  // debounced by 300ms so rapid clicks coalesce into one request. Nothing drove
-  // the loader during that window (useTransition’s isPending only turns true
-  // once router.push actually runs), so the overlay appeared well after the
-  // click and the page looked unresponsive. This stays raised from the click
-  // until the new searchParams commit, which inside a transition is the moment
-  // the new products are ready to paint.
   const [isNavigationPending, setIsNavigationPending] = useState(false);
 
   useEffect(() => {
@@ -189,8 +180,6 @@ export const useProductFilters = (
           params.set("free_shipping", "true");
         }
       } else if (selectedFilters[attribute].length > 0) {
-        // Multi-word attributes ("Color Family") are snake_case query params
-        // ("color_family") — a spaced param name matches nothing server-side.
         params.set(attrKey.replace(/\s+/g, "_"), selectedFilters[attribute].join(","));
       }
     }
