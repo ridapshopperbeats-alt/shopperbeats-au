@@ -107,9 +107,9 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
   return (
     <div className="w-full  flex-1">
       {!hideSortAndPagination && (
-        <div className="hidden lg:block mb-[20px] sticky top-0 z-[2]">
+        <div className="hidden lg:block mb-[20px] sticky top-0 z-[2] bg-white">
           <div className="flex justify-end">
-            <div className="flex items-end  whitespace-nowrap justify-between w-full h-[31px] gap-2">
+            <div className="flex items-start justify-between w-full min-h-[32px] gap-3">
               {!hideFilterButton && (
                 <button
                   type="button"
@@ -122,11 +122,11 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
               )}
 
               {tags.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2 ">
+                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-2">
                   {tags.map((tag) => (
                     <span
                       key={tag.key}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-[#FD151B] text-[#FD151B] text-[13px] font-medium px-2 py-1"
+                      className="inline-flex h-[32px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#FD151B] text-[#FD151B] text-[13px] font-medium px-2"
                     >
                       {tag.label}
                       <button
@@ -143,14 +143,14 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
                   <Button
                     type="button"
                     onClick={onClearFilters}
-                    className="!px-0 mt-auto !py-0 !m-0 text-[14px] font-medium text-[#FD151B] leading-none decoration-red-500 cursor-pointer underline"
+                    className="!px-0 !py-0 !m-0 whitespace-nowrap text-[14px] font-medium text-[#FD151B] leading-none decoration-red-500 cursor-pointer underline"
                   >
                     Clear All
                   </Button>
                 </div>
               )}
 
-              <div className="w-[241px] md:ml-auto">
+              <div className="w-[241px] shrink-0 ml-auto">
                 <Select value={sortBy} onValueChange={onSortChange}>
                   <SelectTrigger className="h-[32px] w-full rounded-[20px] border border-[#001325]/64 bg-white px-4 shadow-none focus:ring-0">
                     <div className="flex items-center gap-2 flex-1">

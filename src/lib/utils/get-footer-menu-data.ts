@@ -63,7 +63,7 @@ export const FOOTER_LINKS_STATIC = [
   },
 ];
 
-export const paymentArr = ["visa", "payment", "american", "paypal", "afterpay", "zip"];
+export const paymentArr = ["visa", "payment", "american", "afterpay", "zip"];
 
 export const footerHighlights = [
   { img: "free-shipping", text: "Fast & Limited Free Shipping", width: 62, height: 44 },

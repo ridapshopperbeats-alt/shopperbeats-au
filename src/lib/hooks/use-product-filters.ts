@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 import { Category, Filter } from "@/types/product";
 
 const derivePriceRangeFromUrl = (searchParams: URLSearchParams) => {
@@ -73,6 +75,7 @@ export const useProductFilters = (
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const dispatch = useDispatch();
 
   const [brandSearch, setBrandSearch] = useState("");
   const [minPrice, setMinPrice] = useState(
@@ -97,12 +100,35 @@ export const useProductFilters = (
   const userInitiatedRef = useRef(false);
   const [isPendingApply, setIsPendingApply] = useState(false);
 
+  // Toggling a checkbox does not navigate straight away — handleApplyFilters is
+  // debounced by 300ms so rapid clicks coalesce into one request. Nothing drove
+  // the loader during that window (useTransition’s isPending only turns true
+  // once router.push actually runs), so the overlay appeared well after the
+  // click and the page looked unresponsive. This stays raised from the click
+  // until the new searchParams commit, which inside a transition is the moment
+  // the new products are ready to paint.
+  const [isNavigationPending, setIsNavigationPending] = useState(false);
+
+  useEffect(() => {
+    if (!isNavigationPending) return;
+    dispatch(pushLoader());
+
+    // A navigation that never commits must not pin the overlay open forever.
+    const safety = setTimeout(() => setIsNavigationPending(false), 15000);
+
+    return () => {
+      clearTimeout(safety);
+      dispatch(popLoader());
+    };
+  }, [isNavigationPending, dispatch]);
+
   const [prevSearchParams, setPrevSearchParams] = useState(searchParams);
   const [isSyncingFromUrl, setIsSyncingFromUrl] = useState(false);
 
   if (prevSearchParams !== searchParams) {
     setPrevSearchParams(searchParams);
     setIsSyncingFromUrl(true);
+    setIsNavigationPending(false);
 
     const { min, max } = derivePriceRangeFromUrl(searchParams);
     setMinPrice(min);
@@ -176,7 +202,11 @@ export const useProductFilters = (
     params.set("page", "1");
 
     const nextQueryString = params.toString();
-    if (nextQueryString === searchParams.toString()) return;
+    if (nextQueryString === searchParams.toString()) {
+      // Nothing to navigate to — release the loader raised on click.
+      setIsNavigationPending(false);
+      return;
+    }
 
     wrapNavigation(() => {
       router.push(`${pathname}?${nextQueryString}`, { scroll: false });
@@ -229,6 +259,7 @@ export const useProductFilters = (
   const handlePriceChange = (price: string) => {
     userInitiatedRef.current = true;
     setIsPendingApply(true);
+    setIsNavigationPending(true);
     let formattedPrice = price;
 
     if (price.toLowerCase().includes("under")) {
@@ -250,6 +281,7 @@ export const useProductFilters = (
   const handleFilterChange = (attribute: string, value: string) => {
     userInitiatedRef.current = true;
     setIsPendingApply(true);
+    setIsNavigationPending(true);
     const attrKey = attribute.toLowerCase();
     setSelectedFilters((prev) => {
       const currentValues = prev[attrKey] || [];
@@ -264,12 +296,14 @@ export const useProductFilters = (
   const handleSortChange = (value: string) => {
     userInitiatedRef.current = true;
     setIsPendingApply(true);
+    setIsNavigationPending(true);
     setSortBy(value);
   };
 
   const handleCategoryChange = (categoryName: string) => {
     userInitiatedRef.current = true;
     setIsPendingApply(true);
+    setIsNavigationPending(true);
     setSelectedCategories((prev) =>
       prev.includes(categoryName)
         ? prev.filter((c) => c !== categoryName)
