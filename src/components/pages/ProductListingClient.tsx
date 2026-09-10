@@ -344,16 +344,16 @@ const extractedBrands = useMemo(() => {
       });
     }
 
-    return filterProductsByPriceRange(result, activePriceRange);
-  }, [apiProducts, selectedCategorySlug, selectedPriceRange, activePriceRange]);
+    return isHighlight ? filterProductsByPriceRange(result, activePriceRange) : result;
+  }, [apiProducts, selectedCategorySlug, selectedPriceRange, activePriceRange, isHighlight]);
 
   const effectiveTotal = isHighlight
     ? filteredProducts.length
     : (rtkData?.total ?? totalItems);
 
   const priceFilteredApiProducts = useMemo(
-    () => filterProductsByPriceRange(apiProducts, activePriceRange),
-    [apiProducts, activePriceRange],
+    () => (isHighlight ? filterProductsByPriceRange(apiProducts, activePriceRange) : apiProducts),
+    [apiProducts, activePriceRange, isHighlight],
   );
 
   const productsForPriceCount = useMemo(() => {

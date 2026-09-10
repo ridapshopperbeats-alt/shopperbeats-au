@@ -325,7 +325,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                   step={5}
                   onValueChange={(value) => {
                     setPriceRange(value);
-
+                  }}
+                  onValueCommit={(value) => {
                     setMinPrice(String(value[0]));
                     setMaxPrice(String(value[1]));
                   }}
