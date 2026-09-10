@@ -169,10 +169,7 @@ const CategoryClient = ({
     setIsLoadingPage(false);
   }
 
-  // A fresh server render (filter change, sort, reload) is the newest truth.
-  // Anything the client started for an older page must be dropped, or it can
-  // resolve afterwards and repaint the grid with the previous page.
-  // Declared above the fetch effect so it runs first within a commit.
+
   useEffect(() => {
     abortRef.current?.abort();
     abortRef.current = null;
@@ -187,9 +184,6 @@ const CategoryClient = ({
       params.set("page", String(page));
       params.set("limit", String(limit));
 
-      // A newer page/limit supersedes whatever is still in flight — without
-      // this an earlier, slower response could land last and repaint the grid
-      // with the wrong page after the loader had already gone.
       abortRef.current?.abort();
       const controller = new AbortController();
       abortRef.current = controller;
@@ -216,9 +210,7 @@ const CategoryClient = ({
         if ((error as Error)?.name === "AbortError") return;
         console.warn("Failed to load products:", error);
       } finally {
-        // The superseding request owns the loader from here on; releasing it
-        // from an aborted one would drop the overlay while data is still
-        // loading.
+
         if (abortRef.current === controller) {
           abortRef.current = null;
           inFlightKeyRef.current = null;
@@ -327,7 +319,7 @@ const CategoryClient = ({
     return [...subcategories]
       .sort((a, b) => rank(a) - rank(b))
       .map((sub: Category) => {
-        const rawImage = sub.image_url || sub.icon_url;
+        const rawImage = sub.icon_url || sub.image_url;
         return {
           title: sub.name,
           image: rawImage
