@@ -309,8 +309,8 @@ export default function Footer({
                 />
               ))}
             </div>
-            <p className="footer-copyright-mobile">
-              © 2026 Shopperbeats Pty Ltd (ABN 32 637 549 770). All Rights
+            <p className="footer-copyright-mobile uppercase">
+               © 2026 ShopperBeats Technologies LLC. All Rights
               Reserved
             </p>
           </div>

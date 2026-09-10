@@ -462,7 +462,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
            {/* OTHER PAYMENT OPTIONS */}
             <div className="payment-option-group xl:-mx-4 py-1">
-              <div
+              {/* Paypal will use in future */}
+              {/* <div
                 className={`payment-option ${formData.paymentMethod === "paypal" ? "active" : ""}`}
               >
                 <div className="payment-item flex items-center gap-2">
@@ -490,7 +491,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     />
                   </span>
                 </div>
-              </div>
+              </div> */}
               <div
                 className={`payment-option ${formData.paymentMethod === "afterpay" ? "active" : ""}`}
               >
