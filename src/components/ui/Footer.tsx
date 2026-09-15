@@ -120,7 +120,7 @@ export default function Footer({
 
   return (
     <div className="page-footer">
-      <div className="pt-5 lg:pt-10">
+      <div>
         <div className="footer-highlights-wrapper shadow-[0px_0px_16.1px_0px_#8E8E8E40] lg:shadow-none">
           <div className="footer-highlights-grid">
             {footerHighlights.map((item) => (
