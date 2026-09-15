@@ -52,7 +52,6 @@ import {
   warrantyAndReturnContent,
 } from "@/components/ui/product-tab-content";
 import Link from "next/link";
-import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 import { ChevronDownIcon, MapPin, ShieldCheck } from "lucide-react";
 import ColorPopup from "./ColorPopup";
 import LocationPopup from "./LocationPopup";
@@ -60,6 +59,7 @@ import CustomerRatingViewPage from "./CustomerRatingViewPage";
 import {
   findCategoryPath,
   formatPrice,
+  getEstimatedDeliveryRange,
   getImageUrl,
   getPriceDetails,
   getVariantImage,

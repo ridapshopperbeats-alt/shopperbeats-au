@@ -21,7 +21,7 @@ import {
 } from "@/lib/redux/slices/breadcrumb-slice";
 import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 
-import { findCategoryPath } from "@/lib/utils/main-utils";
+import { filterProductsByPriceRange, findCategoryPath, resolvePriceRange } from "@/lib/utils/main-utils";
 
 import { Category, Filter, Product } from "@/types/product";
 
@@ -32,10 +32,7 @@ import "../../styles/Product.css";
 import CategorySlider from "./CategorySlider";
 import Breadcrumb from "../common/Breadcrumb";
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
-import {
-  resolvePriceRange,
-  filterProductsByPriceRange,
-} from "@/lib/utils/price-filter";
+
 import { buildFilterTags } from "@/lib/utils/filter-tags";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 

@@ -13,7 +13,6 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import CheckoutForm from "@/components/check-out/CheckoutForm";
 import CheckoutHeader from "@/components/check-out/CheckoutHeader";
-import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 import Button from "@/components/common/Button";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { CartItem, PromoData } from "@/types/cart";
@@ -22,6 +21,7 @@ import {
   getPriceDetails,
   formatPrice,
   getImageUrl,
+  getEstimatedDeliveryRange,
 } from "@/lib/utils/main-utils";
 import { RootState } from "@/lib/redux/store";
 import { useSelector } from "react-redux";

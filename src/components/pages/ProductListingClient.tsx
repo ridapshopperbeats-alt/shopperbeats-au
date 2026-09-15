@@ -9,7 +9,7 @@ import {
 import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
-import { findCategoryPath } from "@/lib/utils/main-utils";
+import { filterProductsByPriceRange, findCategoryPath, getProductPrice, resolvePriceRange } from "@/lib/utils/main-utils";
 import { Category, Filter, Product } from "@/types/product";
 import dynamic from "next/dynamic";
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
@@ -29,7 +29,6 @@ const ProductDisplay = dynamic(
   { loading: DynamicImportLoader }
 );
 import NoProductsFound from "../NoProductFound";
-import { resolvePriceRange, filterProductsByPriceRange, getProductPrice } from "@/lib/utils/price-filter";
 import { buildFilterTags, formatPriceRangeLabel } from "@/lib/utils/filter-tags";
 import "../../styles/Product.css";
 interface ProductListingClientProps {
