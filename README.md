@@ -1,6 +1,6 @@
 # ShopperBeats AU Frontend
 
-ShopperBeats AU is a modern e-commerce frontend application built with Next.js and React. The application provides product browsing, category navigation, shopping cart, wishlist, checkout, payment, user account, order management, and other e-commerce functionality for the US storefront.
+ShopperBeats AU is a modern e-commerce frontend application built with Next.js and React. The application provides product browsing, category navigation, shopping cart, wishlist, checkout, payment, user account, order management, and other e-commerce functionality for the AU storefront.
 
 ---
 
@@ -28,7 +28,7 @@ ShopperBeats AU is a modern e-commerce frontend application built with Next.js a
 
 ## Project Overview
 
-ShopperBeats US is the frontend application for the AU e-commerce platform.
+ShopperBeats AU is the frontend application for the AU e-commerce platform.
 
 The application communicates with backend services for:
 

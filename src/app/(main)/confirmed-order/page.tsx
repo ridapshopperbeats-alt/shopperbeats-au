@@ -24,6 +24,8 @@ export default function ConfirmedOrderPage() {
     }
 
     try {
+      // sessionStorage only exists in the browser, so this cannot move into render.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOrderDetails(JSON.parse(stored) as OrderDetailsType);
     } catch {
       router.replace("/user/orders");

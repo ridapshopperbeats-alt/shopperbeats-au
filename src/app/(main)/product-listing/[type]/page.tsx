@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { API_ENDPOINTS } from "@/lib/constants/api";
-import { Filter, Category } from "@/types/product";
+import { Filter, Category, JsonLdProduct } from "@/types/product";
 import ProductListingClient from "@/components/pages/ProductListingClient";
 import { cookies } from "next/headers";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
@@ -307,7 +307,7 @@ export default async function ProductListingPage({
             name: category?.name || type,
             url: `/product-listing/${type}`,
             numberOfItems: products.length,
-            itemListElement: products.map((product: any, index: number) => ({
+            itemListElement: products.map((product: JsonLdProduct, index: number) => ({
               "@type": "ListItem",
               position: index + 1,
               name: product.title,

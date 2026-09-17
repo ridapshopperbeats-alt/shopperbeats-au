@@ -125,10 +125,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   // Bounds come from the backend's PriceRange attribute (["35", "787"]);
   // fall back to a wide range when the endpoint doesn't send it.
-  const [rangeFrom, rangeTo] = priceRangeFilter?.values ?? [];
-  const parsedMin = Number(rangeFrom);
-  const parsedMax = Number(rangeTo);
-
   const DEFAULT_MIN_PRICE = 0;
   const DEFAULT_MAX_PRICE = 5000;
   const [rangeMin, rangeMax] = priceRangeFilter?.values ?? [];
@@ -141,6 +137,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   ]);
 
   useEffect(() => {
+    // Re-syncs the slider when the applied price filter changes elsewhere.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPriceRange([
       Number(minPrice) || MIN_PRICE,
       Number(maxPrice) || MAX_PRICE,

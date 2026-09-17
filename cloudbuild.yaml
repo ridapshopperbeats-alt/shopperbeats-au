@@ -36,6 +36,13 @@ steps:
   entrypoint: npm
   args: ["run", "typecheck"]
 
+# Quality gate: unit tests. Fails the build on any failing test.
+- name: gcr.io/cloud-builders/npm
+  id: test
+  waitFor: ["install"]
+  entrypoint: npm
+  args: ["run", "test"]
+
 # Quality gate: dependency audit. Fails the build on any high/critical
 # severity vulnerability.
 - name: gcr.io/cloud-builders/npm
@@ -47,7 +54,7 @@ steps:
 # Build
 - name: gcr.io/cloud-builders/docker
   id: build
-  waitFor: ["lint", "typecheck", "audit"]
+  waitFor: ["lint", "typecheck", "test", "audit"]
   args:
     - build
     - -t

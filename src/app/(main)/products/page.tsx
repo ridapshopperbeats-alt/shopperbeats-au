@@ -2,7 +2,7 @@ import ProductsPageClient from "@/components/pages/ProductsPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import { Product } from "@/types/product";
+import { JsonLdProduct, Product } from "@/types/product";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -94,7 +94,7 @@ export default async function ProductsPage({
             name: "All Products",
             url: "/products",
             numberOfItems: products.length,
-            itemListElement: products.map((product: any, index: number) => ({
+            itemListElement: products.map((product: JsonLdProduct, index: number) => ({
               "@type": "ListItem",
               position: index + 1,
               name: product.title,

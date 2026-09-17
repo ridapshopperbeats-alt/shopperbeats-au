@@ -143,6 +143,13 @@ export interface Category {
   icon_url?: string;
 }
 
+/** The only fields the schema.org ItemList entries read off a product. */
+export interface JsonLdProduct {
+  title?: string;
+  unique_code?: string;
+  slug?: string;
+}
+
 export interface Filter {
   attribute: string;
   values: string[];

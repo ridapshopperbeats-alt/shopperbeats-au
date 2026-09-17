@@ -34,7 +34,6 @@ import {
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
-import { setAccessTokenCookie } from "@/lib/utils/access-token";
 import { useLazyReverseGeocodeQuery } from "@/lib/redux/apis/geocode-api";
 import { useDebounceValue } from "@/lib/hooks/use-debounce";
 import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
@@ -57,7 +56,7 @@ interface HeaderProps {
   initialCartCount?: number;
 }
 
-export default function TopNavbar({ megaMenuData, initialWishlistCount = 0, initialCartCount = 0 }: HeaderProps) {
+export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: HeaderProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [selectedResultIndex, setSelectedResultIndex] = useState(-1);
@@ -98,8 +97,10 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0, init
 
   useEffect(() => {
     if (authChecked && wishlistCount !== undefined) {
+      // Keeps the badge on the previous count while a refetch is in flight,
+      // instead of flashing back to the server-rendered seed.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLastKnownWishlistCount(wishlistCount);
-      setAccessTokenCookie(String(wishlistCount));
     }
   }, [wishlistCount, authChecked]);
 
@@ -187,10 +188,14 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0, init
   }, [requestLocation]);
 
   useEffect(() => {
+    // Hydration guard: the first client render must match the server's.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
   useEffect(() => {
+    // Closes the search overlay on navigation.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsSearching(false);
   }, [pathname, searchParams]);
 

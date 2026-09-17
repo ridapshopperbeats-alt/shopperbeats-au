@@ -32,7 +32,7 @@ import NoProductsFound from "../NoProductFound";
 import Button from "../common/Button";
 import MobileSortSheet from "./MobileSortSheet";
 
-interface ProductDisplayProps {
+export interface ProductDisplayProps {
   products: Product[];
   totalItems: number;
   itemsPerPage: number;

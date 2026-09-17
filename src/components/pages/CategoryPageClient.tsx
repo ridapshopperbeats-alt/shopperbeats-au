@@ -25,6 +25,7 @@ import "../../styles/Product.css";
 import CategorySlider from "./CategorySlider";
 
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
+import type { ProductDisplayProps } from "@/components/product-listing/ProductDisplay";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import { filterProductsByPriceRange, findCategoryPath, resolvePriceRange, SITE_URL, toSafeJsonLd } from "@/lib/utils/main-utils";
@@ -60,7 +61,7 @@ const MobileFilterSheet = dynamic(
   { loading: DynamicImportLoader },
 );
 
-const ProductDisplay = dynamic<any>(
+const ProductDisplay = dynamic<ProductDisplayProps>(
   () => import("@/components/product-listing/ProductDisplay"),
   { loading: DynamicImportLoader },
 );
@@ -106,6 +107,9 @@ const CategoryClient = ({
     }
 
     if (filters?.length > persistedFilters.length) {
+      // Holds the widest filter set seen so the sidebar does not collapse
+      // while the next page is loading.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPersistedFilters(filters);
     }
   }, [filters, slug, persistedFilters.length]);
@@ -237,6 +241,8 @@ const CategoryClient = ({
 
   useEffect(() => {
     if (products?.length > 0 && allProducts.length === 0) {
+      // Seeds the accumulator from the server-rendered first page.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAllProducts(products);
     }
   }, [products, allProducts.length]);
@@ -320,6 +326,8 @@ const CategoryClient = ({
     }
 
     if (page !== currentPage) {
+      // The URL is the source of truth for paging; mirror it into state.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentPage(page);
     }
 
@@ -334,6 +342,8 @@ const CategoryClient = ({
 
     const incomingProducts = data?.data || [];
 
+    // Replaces the accumulated list whenever a new query resolves.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAllProducts(incomingProducts);
 
     setIsLoadingNewFilter(false);

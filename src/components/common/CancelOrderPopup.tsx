@@ -29,6 +29,7 @@ const CancelOrderPopup: React.FC<CancelOrderPopupProps> = ({
     useFormValidation(cancelMessageSchema, { reason: "", comment: "" });
 
   const { data: order, isLoading: isOrderLoading } = useGetOrderByIdQuery(orderId, { skip: !orderId });
+  console.log("CancelOrderPopup order data:", order);
 
   const handleConfirm = handleSubmit(() => {
     const finalReason = formData.reason === "Other" ? formData.comment : formData.reason;

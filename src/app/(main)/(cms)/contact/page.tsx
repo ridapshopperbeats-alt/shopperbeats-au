@@ -16,7 +16,7 @@ import {
 import { toast } from "react-toastify";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { contactInfoSchema } from "@/lib/validations/form-schemas";
-import { Phone, Mail, MessageCircle, Send } from "lucide-react";
+import { Send } from "lucide-react";
 
 // interface ContactCardProps {
 //   icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;

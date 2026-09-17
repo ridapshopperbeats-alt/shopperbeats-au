@@ -2,7 +2,7 @@ import { cache } from "react";
 import CategoryPageClient from "@/components/pages/CategoryPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
-import { ProductsResponse } from "@/types/product";
+import { Category, JsonLdProduct, ProductsResponse } from "@/types/product";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
@@ -56,7 +56,10 @@ const getCategoryDetails = cache(async (slug: string) => {
     return null;
   }
 
-  const findCategory = (cats: any[], targetSlug: string): any => {
+  const findCategory = (
+    cats: Category[],
+    targetSlug: string,
+  ): Category | null => {
     for (const cat of cats) {
       if (cat.slug === targetSlug) return cat;
       if (cat.subcategories?.length) {
@@ -190,7 +193,7 @@ export default async function CategoryPage({
             name: category?.name || slug,
             url: `/category/${slug}`,
             numberOfItems: products.length,
-            itemListElement: products.map((product: any, index: number) => ({
+            itemListElement: products.map((product: JsonLdProduct, index: number) => ({
               "@type": "ListItem",
               position: index + 1,
               name: product.title,

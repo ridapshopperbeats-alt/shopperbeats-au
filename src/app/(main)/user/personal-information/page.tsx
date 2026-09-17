@@ -23,7 +23,14 @@ export default function PersonalInformationPage() {
   const [updatePersonalData, { isLoading: isUpdating }] =
     useUpdatePersonalDataMutation();
 
-  const { formData, formErrors, handleChange, handleSubmit, setFormData } =
+  const {
+    formData,
+    formErrors,
+    handleChange,
+    handleSubmit,
+    setFormData,
+    setFormErrors,
+  } =
     useFormValidation(personalInfoSchema, {
       first_name: "",
       last_name: "",
@@ -52,6 +59,8 @@ export default function PersonalInformationPage() {
         phonenumber: personalData.response.phonenumber || "",
         date_of_birth: personalData.response.date_of_birth || "",
       });
+      // Seeds the form once the profile request resolves.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOriginalData({
         first_name: personalData.response.first_name || "",
         last_name: personalData.response.last_name || "",
@@ -111,7 +120,7 @@ export default function PersonalInformationPage() {
       phonenumber: value,
     }));
 
-    formErrors.phonenumber = error;
+    setFormErrors((prev) => ({ ...prev, phonenumber: error }));
   };
 
   return (

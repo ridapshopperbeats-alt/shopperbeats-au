@@ -1,7 +1,7 @@
 import BrandPageClient from "@/components/pages/BrandPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
-import { ProductsResponse } from "@/types/product";
+import { JsonLdProduct, ProductsResponse } from "@/types/product";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 
 export async function generateMetadata(
@@ -137,7 +137,7 @@ export default async function BrandPage({
             name: brand?.name || brandId,
             url: `/brand/${brandId}`,
             numberOfItems: products.length,
-            itemListElement: products.map((product: any, index: number) => ({
+            itemListElement: products.map((product: JsonLdProduct, index: number) => ({
               "@type": "ListItem",
               position: index + 1,
               name: product.title,

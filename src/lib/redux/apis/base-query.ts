@@ -7,6 +7,7 @@ import {
 import type { UnknownAction } from "@reduxjs/toolkit";
 import { API_ENDPOINTS } from "../../constants/api";
 import { prepareAuthHeaders } from "./prepare-auth-headers";
+import { clearAccessTokenCookie, setAccessTokenCookie } from "@/lib/utils/access-token";
 import { logout, setAccessToken } from "../slices/auth-slice";
 import {
   clearRefreshToken,
@@ -72,6 +73,7 @@ function refreshAccessTokenDetailed(
         if (status === 401 || status === 403) {
           console.warn("Refresh token rejected by server:", result.error);
           clearRefreshToken();
+          clearAccessTokenCookie();
           api.dispatch(logout());
           return { outcome: "invalid" };
         }
@@ -96,6 +98,7 @@ function refreshAccessTokenDetailed(
 
       if (newAccessToken) {
         api.dispatch(setAccessToken(newAccessToken));
+        setAccessTokenCookie(newAccessToken);
         setLastRefreshResult(newAccessToken);
       }
       if (newRefreshToken) {

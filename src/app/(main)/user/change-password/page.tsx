@@ -77,7 +77,9 @@ export default function ChangePasswordPage() {
       toast.success("Password changed successfully!");
       try {
         await logout().unwrap();
-      } catch {}
+      } catch (error) {
+        console.warn("Sign-out after password change failed:", error);
+      }
       setPasswordUpdate(true);
     } catch (error) {
       const apiError = error as {

@@ -33,7 +33,7 @@ export default function AddressForm({
 
   const [resetKey, setResetKey] = useState(0);
 
-  const [addressValid, setAddressValid] = useState(false);
+  const [, setAddressValid] = useState(false);
 
   const isTitleTaken = (title: string, excludeId?: number) =>
     addresses?.some((addr) => addr.title === title && addr.id !== excludeId) ??

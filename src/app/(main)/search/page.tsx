@@ -2,7 +2,7 @@
 import SearchPageClient from "@/components/pages/SearchPageClient";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import { API_ENDPOINTS } from "@/lib/constants/api";
-import { Product, ProductsResponse } from "@/types/product";
+import { JsonLdProduct, Product, ProductsResponse } from "@/types/product";
 import type { Metadata } from "next";
 import "../../../styles/Product.css";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
@@ -106,7 +106,7 @@ export default async function SearchPage({
             name: `Search results for "${query}"`,
             url: `/search?q=${query}`,
             numberOfItems: products.length,
-            itemListElement: products.map((product: any, index: number) => ({
+            itemListElement: products.map((product: JsonLdProduct, index: number) => ({
               "@type": "ListItem",
               position: index + 1,
               name: product.title,
