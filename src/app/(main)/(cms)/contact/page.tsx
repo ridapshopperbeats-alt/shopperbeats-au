@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import "../../../../styles/contact.css";
 import Banner from "@/components/common/Banner";
 import Button from "@/components/common/Button";
 import { Card } from "@/components/common/Card";

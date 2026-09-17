@@ -13,7 +13,6 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import CheckoutForm from "@/components/check-out/CheckoutForm";
 import CheckoutHeader from "@/components/check-out/CheckoutHeader";
-import getEstimatedDeliveryRange from "@/lib/utils/get-estimated-delivery-range";
 import Button from "@/components/common/Button";
 import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { CartItem, PromoData } from "@/types/cart";
@@ -22,6 +21,7 @@ import {
   getPriceDetails,
   formatPrice,
   getImageUrl,
+  getEstimatedDeliveryRange,
 } from "@/lib/utils/main-utils";
 import { RootState } from "@/lib/redux/store";
 import { useSelector } from "react-redux";
@@ -373,7 +373,7 @@ export default function SecureCheckout() {
         items_count: checkoutProducts.length,
         total_saving: totalSaveAmount,
         source: "web",
-        currency: "USD",
+        currency: "AUD",
         customer_name: `${data.firstName} ${data.lastName}`,
         customer_email: data.email,
         customer_phone: String(data.phone),
@@ -385,7 +385,7 @@ export default function SecureCheckout() {
           discount_value: promoData.discount_value,
         }),
 
-        shipping_same_as_billing: !data.useShippingAddressAsBilling,
+        shipping_same_as_billing: data.useShippingAddressAsBilling,
 
         shipping: {
           first_name: data.firstName,
@@ -395,12 +395,12 @@ export default function SecureCheckout() {
           apartment: data.apartment,
           city: data.city,
           state: data.state,
-          country: data.country || "US",
+          country: data.country || "AUS",
           postal_code: String(data.postcode),
           phone: String(data.phone),
         },
 
-        billing: !data.useShippingAddressAsBilling
+        billing: data.useShippingAddressAsBilling
           ? {
               first_name: data.firstName,
               last_name: data.lastName,
@@ -409,7 +409,7 @@ export default function SecureCheckout() {
               apartment: data.apartment,
               city: data.city,
               state: data.state,
-              country: data.country || "US",
+              country: data.country || "AUS",
               postal_code: String(data.postcode),
               phone: String(data.phone),
             }
@@ -421,7 +421,7 @@ export default function SecureCheckout() {
               apartment: data.billingApartment,
               city: data.billingCity,
               state: data.billingState,
-              country: data.billingCountry || "US",
+              country: data.billingCountry || "AUS",
               postal_code: data.billingPostcode,
               phone: data.billingPhone,
             },
@@ -429,12 +429,12 @@ export default function SecureCheckout() {
         payment_method: {
           type:
             formData.paymentMethod === "CreditCard"
-              ? "card"
+              ? "CARD"
               : formData.paymentMethod === "afterpay"
                 ? "afterpay_clearpay"
                 : formData.paymentMethod === "zip"
                   ? "zip"
-                  : "paypal",
+                  : "PAYPAL",
           provider:
             formData.paymentMethod === "CreditCard"
               ? "stripe"
@@ -457,18 +457,18 @@ export default function SecureCheckout() {
           unit_price: Number(item.unit_price ?? item.rrp_price_snapshot ?? 0),
           total_price:
             Number(item.unit_price ?? item.rrp_price_snapshot ?? 0) *
-            Number(item.quantity ?? 0),
+            item.quantity,
           image: getImageUrl(item),
           vendor_id: item.vendor_id,
           ships_from_location: item.ships_from_location || null,
           ean_code: item.ean_code || null,
           handling_time_days: item.handling_time_days || 0,
-          handling_time_max_days: item.handling_time_max_days ?? null,
           supplier: item.supplier || null,
           brand: item.brand || null,
         })),
       };
 
+      
       const orderResult = await createOrder(orderData).unwrap();
 
       const paymentMethodLabel =

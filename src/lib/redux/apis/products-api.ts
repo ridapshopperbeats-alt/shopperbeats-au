@@ -172,7 +172,7 @@ export const productsApi = createApi({
 export const highlightsApi = createApi({
   reducerPath: "highlightsApi",
 
-  baseQuery: createBaseQuery(""),
+  baseQuery: createBaseQuery(process.env.NEXT_PUBLIC_API_URL || ""),
 
   endpoints: (builder) => ({
     getProductHighlights: builder.query<

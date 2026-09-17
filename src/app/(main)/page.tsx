@@ -1,4 +1,5 @@
 import Home from "@/components/homepage/Home";
+import { getHomepageData } from "@/lib/utils/get-homepage-data";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,10 +8,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
+  const homepageData = await getHomepageData();
 
   return (
     <div>
-      <Home/>
+      <Home {...homepageData} />
     </div>
   );
 }

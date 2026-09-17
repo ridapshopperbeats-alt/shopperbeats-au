@@ -5,8 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { CartCheckoutDrawerProps } from "@/types/cart";
-import { getImageUrl, formatPrice, getPriceDetails } from "@/lib/utils/main-utils";
-import { getHandlingDeliveryRange } from "@/lib/utils/get-handling-delivery-range";
+import { getImageUrl, formatPrice, getPriceDetails, getEstimatedDeliveryRange } from "@/lib/utils/main-utils";
 import "@/styles/Cart.css";
 
 export default function CartCheckoutDrawer({
@@ -122,7 +121,7 @@ export default function CartCheckoutDrawer({
                     {item.product_name}
                   </p>
                   <p className="cart-drawer-item-handling">
-                    {`Estimated Delivery in ${getHandlingDeliveryRange(
+                    {`Estimated Delivery in ${getEstimatedDeliveryRange(
                       item.handling_time_days ?? 2,
                       item.handling_time_max_days,
                     )}`}

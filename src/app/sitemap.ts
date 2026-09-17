@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "@/lib/utils/site-url";
 import { API_ENDPOINTS } from "@/lib/constants/api";
-import { getRawCategories } from "@/lib/utils/get-raw-categories";
 import { Brand, Category, Product } from "@/types/product";
+import { getRawCategories, SITE_URL } from "@/lib/utils/main-utils";
 
 export const revalidate = 3600;
 

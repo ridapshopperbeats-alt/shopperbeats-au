@@ -16,10 +16,10 @@ import {
   getPriceDetails,
   getImageUrl,
   formatPrice,
+  getHandlingDeliveryRange,
 } from "@/lib/utils/main-utils";
 import NoProductsFound from "@/components/NoProductFound";
 import { ShieldCheck } from "lucide-react";
-import { getHandlingDeliveryRange } from "@/lib/utils/get-handling-delivery-range";
 import {
   useGetCartQuery,
   useUpdateCartItemQuantityMutation,

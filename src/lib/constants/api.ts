@@ -1,7 +1,7 @@
 export const API_ENDPOINTS = {
   AUTH: {
     BASE_URL: `${process.env.NEXT_PUBLIC_API_URL_USERS}/api/v1/users`,
-    BASE_URL_CLIENT: "/api/v1/users",
+    BASE_URL_CLIENT: `${process.env.NEXT_PUBLIC_API_URL_USERS}/api/v1/users`,
     LOGIN: "login",
     SIGNUP: "signup",
     LOGOUT: "logout",
@@ -19,7 +19,7 @@ export const API_ENDPOINTS = {
     BASE_URL: "/api/v1/product",
     PRODUCTS_API_BASE_URL: process.env.NEXT_PUBLIC_API_URL_PRODUCTS || "https://api.shopperbeats.com/products",
     PRODUCT_BASE_URL: `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}/api/v1/product`,
-    PRODUCT_BASE_URL_CLIENT: `/api/v1/product`,
+    PRODUCT_BASE_URL_CLIENT: `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}/api/v1/product`,
     ALL: "/api/products",
     LIST_PRODUCTS: "list-products",
     BY_ID: (id: string) => `/api/products/${id}`,
@@ -50,7 +50,7 @@ export const API_ENDPOINTS = {
   },
   CART: {
     BASE_URL: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/cart`,
-    BASE_URL_CLIENT: "/api/v1/cart",
+    BASE_URL_CLIENT: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/cart`,
     GET: "/get-cart",
     ADD: "/add-to-cart",
     UPDATE: "/update-cart",
@@ -63,7 +63,7 @@ export const API_ENDPOINTS = {
   },
   WISHLIST: {
     BASE_URL: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/wishlist`,
-    BASE_URL_CLIENT: "/api/v1/wishlist",
+    BASE_URL_CLIENT: `${process.env.NEXT_PUBLIC_API_URL_CART}/api/v1/wishlist`,
     CREATE: "/create-wishlist",
     GET: "/get-wishlist",
     REMOVE: "/delete-wishlist",
@@ -74,7 +74,7 @@ export const API_ENDPOINTS = {
     BY_SLUG: (slug: string) => `/api/v1/category/get-category-by-slug/${slug}`,
   },
   ORDER: {
-    BASE_URL: `/api/v1/order`,
+    BASE_URL: `${process.env.NEXT_PUBLIC_API_URL_ORDER}/api/v1`,
     CREATE: "/orders/create-orders",
     LIST: "/orders/list-orders",
     DETAIL: "/orders/get-order",
@@ -92,7 +92,7 @@ export const API_ENDPOINTS = {
     GET_INVOICE: (order_id: string) => `/orders/get-invoice/${order_id}`,
   },
   HELPDESK: {
-    BASE_URL: `/api/v1/helpdesk`,
+    BASE_URL: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/helpdesk`,
     CONTACT_US: "/contact-us",
   },
   CMS: {
@@ -104,7 +104,7 @@ export const API_ENDPOINTS = {
     MAILING_LIST: "/mailing-list",
   },
   PAYMENT: {
-    BASE_URL: "/api/v1/payment",
+    BASE_URL: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/payment`,
     INITIATE: "/initiate",
     CAPTURE: "/paypal/capture",
   },
@@ -113,13 +113,13 @@ export const API_ENDPOINTS = {
     BY_SLUG: (slug: string) => `/api/v1/menu/${slug}`,
   },
   SOCIAL_MEDIA: {
-    GET_LINKS: `/api/v1/social-media/links`,
+    GET_LINKS: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/social-media/links`,
   },
   PROMOTIONS: {
     BASE_URL: "/api/v1/promotions",
     LIST: "list-promotions",
   },
   FAQ: {
-    BASE_URL: `/api/v1/faqs`,
+    BASE_URL: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/faqs`,
   },
 };

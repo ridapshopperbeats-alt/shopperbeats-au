@@ -7,7 +7,7 @@ import StoreProvider from "../lib/redux/store-provider";
 import { SEOProvider } from "@/contexts/SEOContext";
 import GlobalLoader from "@/components/ui/loaders/GlobalLoader";
 import RouteChangeLoader from "@/components/ui/loaders/RouteChangeLoader";
-import { SITE_URL } from "@/lib/utils/site-url";
+import { SITE_URL } from "@/lib/utils/main-utils";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

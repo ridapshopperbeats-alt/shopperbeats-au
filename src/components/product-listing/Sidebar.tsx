@@ -27,7 +27,8 @@ export interface SidebarProps {
     slug: string;
     count: number;
   }[];
-  selectedCategorySlug?: string | null;
+  selectedCategorySlugs?: string[];
+  // A slug toggles that category; null clears them all ("All Categories").
   onCategorySelect?: (categorySlug: string | null) => void;
   selectedPriceRange?: string | null;
   onPriceSelect?: (priceRange: string | null) => void;
@@ -52,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onClose,
   extractedCategories,
   extractedBrands,
-  selectedCategorySlug,
+  selectedCategorySlugs = [],
   onCategorySelect,
   selectedPriceRange,
   isHighlightPage,
@@ -128,31 +129,23 @@ const Sidebar: React.FC<SidebarProps> = ({
   const parsedMin = Number(rangeFrom);
   const parsedMax = Number(rangeTo);
 
-  const MIN_PRICE = Number.isFinite(parsedMin) && rangeFrom ? Math.floor(parsedMin) : 0;
-  const MAX_PRICE =
-    Number.isFinite(parsedMax) && rangeTo && parsedMax > MIN_PRICE
-      ? Math.ceil(parsedMax)
-      : 5000;
+  const DEFAULT_MIN_PRICE = 0;
+  const DEFAULT_MAX_PRICE = 5000;
+  const [rangeMin, rangeMax] = priceRangeFilter?.values ?? [];
+  const MIN_PRICE = Number(rangeMin ?? DEFAULT_MIN_PRICE) || DEFAULT_MIN_PRICE;
+  const MAX_PRICE = Number(rangeMax ?? DEFAULT_MAX_PRICE) || DEFAULT_MAX_PRICE;
 
   const [priceRange, setPriceRange] = useState([
     Number(minPrice) || MIN_PRICE,
     Number(maxPrice) || MAX_PRICE,
   ]);
 
-  const [prevMinPrice, setPrevMinPrice] = useState(minPrice);
-  const [prevMaxPrice, setPrevMaxPrice] = useState(maxPrice);
-
-  if (minPrice !== prevMinPrice || maxPrice !== prevMaxPrice) {
-    setPrevMinPrice(minPrice);
-    setPrevMaxPrice(maxPrice);
-
-    const nextMin = Number(minPrice) || MIN_PRICE;
-    const nextMax = Number(maxPrice) || MAX_PRICE;
-
-    if (nextMin !== priceRange[0] || nextMax !== priceRange[1]) {
-      setPriceRange([nextMin, nextMax]);
-    }
-  }
+  useEffect(() => {
+    setPriceRange([
+      Number(minPrice) || MIN_PRICE,
+      Number(maxPrice) || MAX_PRICE,
+    ]);
+  }, [minPrice, maxPrice, MIN_PRICE, MAX_PRICE]);
 
 
   const renderNestedCategories = (
@@ -265,7 +258,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               <div className="w-full flex flex-col gap-1">
                 <button
                   onClick={() => onCategorySelect?.(null)}
-                  className={`block w-full px-2 py-1 text-left text-[16px] font-semibold transition-colors duration-200 cursor-pointer ${!selectedCategorySlug ? "text-[#333333]" : ""}`}
+                  className={`block w-full px-2 py-1 text-left text-[16px] font-semibold transition-colors duration-200 cursor-pointer ${selectedCategorySlugs.length === 0 ? "text-[#333333]" : ""}`}
                 >
                   All Categories
                 </button>
@@ -278,12 +271,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <input
                       type="checkbox"
                       id={`highlight-category-${cat.slug}`}
-                      checked={selectedCategorySlug === cat.slug}
-                      onChange={() =>
-                        onCategorySelect?.(
-                          selectedCategorySlug === cat.slug ? null : cat.slug,
-                        )
-                      }
+                      checked={selectedCategorySlugs.includes(cat.slug)}
+                      onChange={() => onCategorySelect?.(cat.slug)}
                       className={`h-[14px] w-[14px] shrink-0 ${checkboxAccentClass}`}
                     />
                     <span className="!text-[14px] font-medium text-[#575757] transition-colors duration-200">
@@ -311,7 +300,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           },
         ]
       : []),
-    ...(priceFilter?.values?.length
+     ...(priceFilter?.values?.length
       ? [
           {
             id: "price",
@@ -327,19 +316,23 @@ const Sidebar: React.FC<SidebarProps> = ({
                     setPriceRange(value);
                   }}
                   onValueCommit={(value) => {
-                    setMinPrice(String(value[0]));
-                    setMaxPrice(String(value[1]));
+                    const newMin = String(value[0]);
+                    const newMax = String(value[1]);
+
+                    setMinPrice(newMin);
+                    setMaxPrice(newMax);
+                    handleApplyFilters({ minPrice: newMin, maxPrice: newMax });
                   }}
                   className="w-full [&_[data-slot=slider-range]]:bg-red-500 [&_[data-slot=slider-thumb]]:border-red-500 [&_[data-slot=slider-thumb]]:bg-red-500"
                 />
                 {(!isHighlightPage ||
-                  ["clearance", "whats-on-sale", "best-sellers"].includes(String(slug))) && (
+                  ["clearance", "whats-on-sale"].includes(String(slug))) && (
                   <div className="flex items-center align-center !gap-2 pt-5">
                     <span className="text-[16px] text-[#000000]">$</span>
                     <Input
                       type="number"
-                      placeholder="Min"
-                      value={minPrice === "" ? String(MIN_PRICE) : minPrice}
+                      placeholder="0"
+                      value={priceRange[0]}
                       onChange={(e) => {
                         const newMin = e.target.value;
 
@@ -358,7 +351,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <Input
                       type="number"
                       placeholder="Max"
-                      value={maxPrice === "" ? String(MAX_PRICE) : maxPrice}
+                      value={priceRange[1]}
                       onChange={(e) => {
                         const newMax = e.target.value;
 
@@ -373,7 +366,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     />
 
                     <Button
-                      onClick={handleApplyFilters}
+                      onClick={() => handleApplyFilters()}
                       className="text-[14px] border border-[#fd151b] text-[#fd151b] cursor-pointer h-full  w-full max-w-[63px] shrink-0 rounded-[53px]"
                     >
                       Apply

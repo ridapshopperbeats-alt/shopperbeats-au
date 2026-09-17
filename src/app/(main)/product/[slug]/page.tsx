@@ -6,6 +6,33 @@ import { ProductSEO } from "@/types/seo";
 import NoProductsFound from "@/components/NoProductFound";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 
+/**
+ * get-product returns price, rrp_price and stock as null for every product,
+ * while list-products carries them — so when the detail payload has no price,
+ * look the same product up in the listing and borrow its pricing. Matched on
+ * unique_code so a loose name search cannot attach the wrong product's price.
+ * Drop this once get-product populates the fields itself.
+ */
+async function getPricingFallback(title?: string, uniqueCode?: string) {
+  if (!title || !uniqueCode) return null;
+
+  try {
+    const url = `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?name=${encodeURIComponent(title)}&limit=10`;
+
+    const res = await fetch(url, { next: { revalidate: 300 } });
+    if (!res.ok) return null;
+
+    const body = await res.json();
+    const list = body?.data ?? body?.products ?? [];
+    if (!Array.isArray(list)) return null;
+
+    return list.find((item) => item?.unique_code === uniqueCode) ?? null;
+  } catch (error) {
+    console.warn(`Pricing fallback failed for "${uniqueCode}":`, error);
+    return null;
+  }
+}
+
 async function getProduct(
   slug: string,
   cookieHeader?: string
@@ -40,15 +67,20 @@ async function getProduct(
 
     const data: ProductApiResponse = await res.json();
 
+    const pricing =
+      data.price === null || data.price === undefined
+        ? await getPricingFallback(data.title, data.unique_code)
+        : null;
+
     const product = {
       id: data.id,
       unique_code: data.unique_code,
       title: data.title,
       description: data.description,
       slug: data.slug,
-      stock: data.stock,
-      price: data.price,
-      rrp_price: data.rrp_price,
+      stock: pricing?.stock ?? data.stock,
+      price: pricing?.price ?? data.price,
+      rrp_price: pricing?.rrp_price ?? data.rrp_price,
       key_features: data.key_features,
       brand_name: data.brand_name,
       handling_time_days: data.handling_time_days,
@@ -74,8 +106,8 @@ async function getProduct(
           { image_url: "/images/image-coming-soon.jpg", is_main: false },
           { image_url: "/images/image-coming-soon.jpg", is_main: false },
         ],
-      discount_percentage: data.discount_percentage,
-      discounted_price: data.discounted_price,
+      discount_percentage: pricing?.discount_percentage ?? data.discount_percentage,
+      discounted_price: pricing?.discounted_price ?? data.discounted_price,
       free_shipping: data.free_shipping,
       review_stats: data.review_stats,
       variants: data.variants,

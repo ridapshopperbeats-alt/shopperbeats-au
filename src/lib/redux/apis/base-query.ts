@@ -6,6 +6,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import type { UnknownAction } from "@reduxjs/toolkit";
 import { API_ENDPOINTS } from "../../constants/api";
+import { prepareAuthHeaders } from "./prepare-auth-headers";
 import { logout, setAccessToken } from "../slices/auth-slice";
 import {
   clearRefreshToken,
@@ -20,6 +21,7 @@ import {
 const refreshBaseQuery = fetchBaseQuery({
   baseUrl: API_ENDPOINTS.AUTH.BASE_URL_CLIENT,
   credentials: "include",
+  prepareHeaders: prepareAuthHeaders,
 });
 
 
@@ -138,6 +140,7 @@ export const createBaseQuery = (
   const rawBaseQuery = fetchBaseQuery({
     baseUrl,
     credentials: "include",
+    prepareHeaders: prepareAuthHeaders,
   });
 
   return async (args, api, extraOptions) => {

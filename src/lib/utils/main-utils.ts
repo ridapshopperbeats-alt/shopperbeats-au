@@ -8,6 +8,7 @@ import { AboutLink, AboutSection, ContactContent } from "@/types/cms";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 import { OrderStatusCode } from "@/types/order";
 import { BadgeColor } from "@/components/common/StatusBadge";
+import { CategoryItem } from "@/types/megamenu";
 
 export function toSafeJsonLd(data: unknown): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");
@@ -151,7 +152,7 @@ export const handleUSPhoneNumberChange = (
 // Validate Australian phone numbers with specific rules for local and international formats
 export const handleAustralianPhoneNumberChange = (
   event: React.ChangeEvent<HTMLInputElement>,
-  previousValue: string,
+  previousValue: string
 ): { value: string; error: string | null } => {
   const value = event.target.value;
 
@@ -174,10 +175,7 @@ export const handleAustralianPhoneNumberChange = (
   if (value.startsWith("0")) {
     // Allow typing 0 → 04 progressively
     if (value.length >= 2 && value[1] !== "4") {
-      return {
-        value: previousValue,
-        error: "Australian mobile must start with 04",
-      };
+      return { value: previousValue, error: "Australian mobile must start with 04" };
     }
 
     if (value.length > 10) {
@@ -591,3 +589,169 @@ export const ORDER_STATUS_COLORS: Record<OrderStatusCode, BadgeColor> = {
 };
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://shopperbeats.com";
+
+
+  
+  
+  function sortCategories(categories: CategoryItem[]): CategoryItem[] {
+    return categories
+      .slice()
+      .sort((a, b) =>
+        a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+      )
+      .map((cat) => ({
+        ...cat,
+        subcategories: cat.subcategories
+          ? sortCategories(cat.subcategories)
+          : [],
+      }));
+  }
+  
+  export async function getCategoryData(
+    parentSlug?: string
+  ): Promise<CategoryItem[]> {
+    const data = (await getRawCategories()) as unknown as CategoryItem[];
+  
+    // Sort full tree first
+    const sortedData = sortCategories(data);
+  
+    if (!parentSlug) {
+      return sortedData;
+    }
+  
+    const findCategory = (
+      categories: CategoryItem[],
+      slug: string
+    ): CategoryItem | null => {
+      for (const cat of categories) {
+        if (cat.slug === slug) return cat;
+        if (cat.subcategories?.length) {
+          const found = findCategory(cat.subcategories, slug);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+  
+    const category = findCategory(sortedData, parentSlug);
+  
+    // Return already sorted subcategories
+    return category?.subcategories || [];
+  }
+
+
+
+export interface PriceRange {
+  min: number;
+  max: number;
+}
+
+export const resolvePriceRange = (
+  minPrice: string,
+  maxPrice: string,
+  selectedPrices: string[],
+): PriceRange | null => {
+  if (minPrice || maxPrice) {
+    return {
+      min: minPrice ? Number(minPrice) : 0,
+      max: maxPrice ? Number(maxPrice) : Infinity,
+    };
+  }
+
+  const preset = selectedPrices[0];
+  if (!preset) return null;
+
+  if (preset === "200+") return { min: 200, max: Infinity };
+  if (preset === "0-50") return { min: 0, max: 50 };
+
+  if (preset.endsWith("+")) {
+    const min = Number(preset.slice(0, -1));
+    return Number.isNaN(min) ? null : { min, max: Infinity };
+  }
+
+  const [min, max] = preset.split("-").map(Number);
+  return Number.isNaN(min) || Number.isNaN(max) ? null : { min, max };
+};
+
+const toAmount = (raw: unknown): number =>
+  parseFloat(String(raw ?? "").replace(/[^0-9.]/g, "")) || 0;
+
+export const getProductPrice = (product: Product): number => {
+  // The API sends discounted_price: 0 for products without a discount, so a
+  // nullish check isn't enough — fall back to price whenever it isn't a real amount.
+  const discounted = toAmount(product.discounted_price);
+
+  return discounted > 0 ? discounted : toAmount(product.price);
+};
+
+export const filterProductsByPriceRange = (
+  products: Product[],
+  range: PriceRange | null,
+): Product[] => {
+  if (!range) return products;
+
+  return products.filter((product) => {
+    const price = getProductPrice(product);
+    return price >= range.min && price <= range.max;
+  });
+};
+const formatDeliveryDate = (date: Date) =>
+  date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+export const getHandlingDeliveryRange = (
+  handlingTimeDays: number,
+  handlingTimeMaxDays?: number | null,
+): string => {
+  const minDays = handlingTimeDays;
+  const maxDays = handlingTimeMaxDays ?? handlingTimeDays;
+
+  const today = new Date();
+
+  const minDate = new Date(today);
+  minDate.setDate(minDate.getDate() + minDays);
+
+  if (maxDays === minDays) {
+    return formatDeliveryDate(minDate);
+  }
+
+  const maxDate = new Date(today);
+  maxDate.setDate(maxDate.getDate() + maxDays);
+
+  return `Estimated Delivery in  ${formatDeliveryDate(minDate)} - ${formatDeliveryDate(maxDate)}`;
+};
+
+export const getEstimatedDeliveryRange = (
+  handlingTimeDays: number,
+  handlingTimeMaxDays?: number | null,
+) => getHandlingDeliveryRange(handlingTimeDays, handlingTimeMaxDays);
+
+
+async function fetchTrending(limit: number): Promise<Product[]> {
+  const res = await fetch(
+    `${baseUrl}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.TRENDING_PRODUCTS}?limit=${limit}`,
+    { next: { revalidate: 60 } }
+  );
+
+  if (!res.ok) return [];
+
+  const data = await res.json();
+
+  // trending-products wraps results in `items`
+  return data?.items ?? data?.data ?? [];
+}
+
+export async function getTrendingProducts(limit = 10): Promise<Product[]> {
+  const trending = await fetchTrending(limit);
+  if (trending.length > 0) return trending;
+
+  const res = await fetch(
+    `${baseUrl}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?limit=${limit}&page=2`,
+    { next: { revalidate: 60 } }
+  );
+
+  if (!res.ok) return [];
+
+  const data = await res.json();
+
+  return data?.data ?? [];
+}

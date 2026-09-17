@@ -147,13 +147,22 @@ export const useProductFilters = (
   const categoryId = searchParams.get("category_id");
   const currentLimit = searchParams.get("limit");
 
-  const handleApplyFilters = useCallback(() => {
-    const params = new URLSearchParams();
+  const handleApplyFilters = useCallback((overrides?: { minPrice?: string; maxPrice?: string }) => {
+    // Overrides let a caller (e.g. the price slider's onValueCommit) pass the
+    // value it just set directly, instead of reading minPrice/maxPrice off
+    // this closure — setMinPrice/setMaxPrice are async, so calling this
+    // function in the same handler right after them would otherwise still
+    // see the *previous* render's values.
+    const effectiveMinPrice = overrides?.minPrice ?? minPrice;
+    const effectiveMaxPrice = overrides?.maxPrice ?? maxPrice;
 
-    // Only add the specific params we need
-    if (q) params.set("q", q);
-    if (categorySlug) params.set("category_slug", categorySlug);
-    if (categoryId) params.set("category_id", categoryId);
+    const params = new URLSearchParams();
+    searchParams.forEach((value, key) => {
+      const lowerKey = key.toLowerCase();
+      if (['q', 'category_slug', 'category_id'].includes(lowerKey)) {
+        params.set(key, value);
+      }
+    });
 
     if (sortBy) params.set("sort_by", sortBy);
 
@@ -161,11 +170,23 @@ export const useProductFilters = (
       params.set("categories", selectedCategories.join(","));
     }
 
-    if (minPrice || maxPrice) {
-      if (minPrice) params.set("min_price", minPrice);
-      if (maxPrice) params.set("max_price", maxPrice);
-    } else if (selectedPrices.length > 0) {
-      params.set("price_ranges", selectedPrices.join(","));
+    // Set price range filters. A custom slider/input range is sent as
+    // "min-max" — the same format the predefined price_ranges checkboxes
+    // use — instead of separate min_price/max_price params, so it takes
+    // over the price_ranges slot rather than adding a second, differently
+    // shaped price param.
+    const customPriceRange = effectiveMinPrice && effectiveMaxPrice
+      ? `${effectiveMinPrice}-${effectiveMaxPrice}`
+      : effectiveMinPrice
+        ? `${effectiveMinPrice}+`
+        : effectiveMaxPrice
+          ? `0-${effectiveMaxPrice}`
+          : null;
+
+    const priceRanges = customPriceRange ? [customPriceRange] : selectedPrices;
+
+    if (priceRanges.length > 0) {
+      params.set("price_ranges", priceRanges.join(","));
     }
 
     // Set all other filters
@@ -180,35 +201,25 @@ export const useProductFilters = (
           params.set("free_shipping", "true");
         }
       } else if (selectedFilters[attribute].length > 0) {
-        params.set(attrKey.replace(/\s+/g, "_"), selectedFilters[attribute].join(","));
+        params.set(attrKey, selectedFilters[attribute].join(","));
       }
     }
 
+    const currentLimit = searchParams.get('limit');
     if (currentLimit) {
-      params.set("limit", currentLimit);
+      params.set('limit', currentLimit);
     }
 
     params.set("page", "1");
 
-    const nextQueryString = params.toString();
-    if (nextQueryString === searchParams.toString()) {
-      // Nothing to navigate to — release the loader raised on click.
-      setIsNavigationPending(false);
-      return;
-    }
-
     wrapNavigation(() => {
-      router.push(`${pathname}?${nextQueryString}`, { scroll: false });
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     });
   }, [
     wrapNavigation,
     router,
     pathname,
     searchParams,
-    q,
-    categorySlug,
-    categoryId,
-    currentLimit,
     sortBy,
     minPrice,
     maxPrice,

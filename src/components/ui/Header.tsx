@@ -770,11 +770,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
               </div>
             </div>
           </div>
-          <TopNavbar
-            activeTopCategorySlug={activeTopCategorySlug ?? ""}
-            isFashionAccessoriesActive={isFashionAccessoriesActive}
-            pathname={pathname}
-          />
+          <TopNavbar megaMenuData={megaMenuData} />
         </div>
         <div
           className={`fixed inset-0 bg-black/40 z-998 transition-opacity duration-300 ${isMobileNavOpen
