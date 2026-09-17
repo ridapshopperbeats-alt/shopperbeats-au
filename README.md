@@ -28,21 +28,21 @@ ShopperBeats AU is a modern e-commerce frontend application built with Next.js a
 
 ## Project Overview
 
-ShopperBeats US is the frontend application for the AU e-commerce platform.
+ShopperBeats AU is the frontend application for the AU e-commerce platform.
 
 The application communicates with backend services for:
 
 * Product catalog
 * Categories and CMS content
 * Shopping cart
-* User accounts
+* AUer accounts
 * Orders
 * Payments
 * Wishlist
 * Helpdesk/contact functionality
 * Location and address-related services
 
-The frontend is built using the Next.js App Router and follows a component-based architecture.
+The frontend is built AUing the Next.js App Router and follows a component-based architecture.
 
 ---
 
@@ -82,7 +82,7 @@ git --version
 docker --version
 ```
 
-Use the Node.js version specified by the project/tooling configuration where applicable.
+AUe the Node.js version specified by the project/tooling configuration where applicable.
 
 ---
 
@@ -104,15 +104,15 @@ cd shopper-beats-frontend
 
 ### 2. Install dependencies
 
-Install dependencies using the lockfile:
+Install dependencies AUing the lockfile:
 
 ```bash
 npm ci
 ```
 
-`npm ci` is preferred for reproducible installations because it installs the dependency versions defined in `package-lock.json`.
+`npm ci` is preferred for reproducible installations becaAUe it installs the dependency versions defined in `package-lock.json`.
 
-For normal local development where dependency changes are required, `npm install` may be used to update dependencies and the lockfile.
+For normal local development where dependency changes are required, `npm install` may be AUed to update dependencies and the lockfile.
 
 ---
 
@@ -124,7 +124,7 @@ Create a local environment file:
 .env.local
 ```
 
-Use `.env.example` as the reference for all required environment variables.
+AUe `.env.example` as the reference for all required environment variables.
 
 Example:
 
@@ -176,7 +176,7 @@ API URLs
 ├── Products API
 ├── Cart API
 ├── Payment API
-├── Users API
+├── AUers API
 ├── CMS API
 ├── Orders API
 └── Helpdesk API
@@ -192,7 +192,7 @@ Third-party Services
 
 ### Important
 
-The `.env.example` file must contain variable names only and must not contain real credentials.
+The `.env.example` file mAUt contain variable names only and mAUt not contain real credentials.
 
 Example:
 
@@ -238,7 +238,7 @@ Creates an optimized production build.
 npm start
 ```
 
-Starts the application using the production build.
+Starts the application AUing the production build.
 
 ### Linting
 
@@ -330,7 +330,7 @@ Routes should contain page-level composition and route-specific functionality.
 
 ### Components
 
-Reusable UI components should be placed under:
+ReAUable UI components should be placed under:
 
 ```text
 components/
@@ -348,17 +348,17 @@ Examples include:
 * Checkout components
 * Common UI elements
 
-Reusable components should avoid containing unnecessary business logic.
+ReAUable components should avoid containing unnecessary bAUiness logic.
 
 ---
 
 ### State Management
 
-Redux Toolkit and RTK Query are used where application-wide state and API state are required.
+Redux Toolkit and RTK Query are AUed where application-wide state and API state are required.
 
 Typical responsibilities include:
 
-* User state
+* AUer state
 * Cart state
 * Wishlist state
 * API caching
@@ -369,7 +369,7 @@ Typical responsibilities include:
 
 ### Hooks
 
-Reusable React hooks should be placed under:
+ReAUable React hooks should be placed under:
 
 ```text
 hooks/
@@ -379,7 +379,7 @@ Examples include:
 
 * Debouncing
 * Form-related logic
-* Reusable UI behavior
+* ReAUable UI behavior
 * API-related helper hooks
 
 ---
@@ -403,7 +403,7 @@ NEXT_PUBLIC_API_URL=
 NEXT_PUBLIC_API_URL_PRODUCTS=
 NEXT_PUBLIC_API_URL_CART=
 NEXT_PUBLIC_API_URL_PAYMENT=
-NEXT_PUBLIC_API_URL_USERS=
+NEXT_PUBLIC_API_URL_AUERS=
 NEXT_PUBLIC_API_URL_CMS=
 NEXT_PUBLIC_API_URL_ORDER=
 NEXT_PUBLIC_API_URL_HELPDESK=
@@ -417,7 +417,7 @@ Do not hardcode environment-specific backend URLs inside application components.
 
 ## Authentication
 
-Authentication-related functionality should use the application's established authentication flow.
+Authentication-related functionality should AUe the application's established authentication flow.
 
 When handling authentication data:
 
@@ -425,17 +425,17 @@ When handling authentication data:
 * Do not hardcode tokens or secrets.
 * Avoid storing sensitive credentials in source code.
 * Keep server-only secrets in server-side environment variables.
-* Use secure cookie-based mechanisms where applicable for sensitive authentication credentials.
+* AUe secure cookie-based mechanisms where applicable for sensitive authentication credentials.
 
-Client-side environment variables prefixed with `NEXT_PUBLIC_` can be exposed to the browser and therefore must **never contain private secrets**.
+Client-side environment variables prefixed with `NEXT_PUBLIC_` can be exposed to the browser and therefore mAUt **never contain private secrets**.
 
 ---
 
 ## Payment Integration
 
-Stripe is used for payment processing.
+Stripe is AUed for payment processing.
 
-The project uses separate configuration values for client-side and server-side Stripe functionality.
+The project AUes separate configuration values for client-side and server-side Stripe functionality.
 
 ### Client-side
 
@@ -450,13 +450,13 @@ STRIPE_SECRET_KEY=
 STRIPE_WEBHOOK_SECRET=
 ```
 
-The Stripe secret key and webhook secret must remain server-side and must never be exposed through `NEXT_PUBLIC_` variables.
+The Stripe secret key and webhook secret mAUt remain server-side and mAUt never be exposed through `NEXT_PUBLIC_` variables.
 
 ---
 
 ## Docker
 
-The application can be built and run using Docker.
+The application can be built and run AUing Docker.
 
 ### Build the Docker image
 
@@ -470,7 +470,7 @@ docker build -t shopper-beats-frontend .
 docker run -d -p 3000:3000 --name shopper-beats-frontend shopper-beats-frontend
 ```
 
-If port `3000` is already in use, map another host port:
+If port `3000` is already in AUe, map another host port:
 
 ```bash
 docker run -d -p 3001:3000 --name shopper-beats-frontend shopper-beats-frontend
@@ -496,7 +496,7 @@ docker rm shopper-beats-frontend
 
 ### Dependency installation in Docker
 
-Docker/CI builds should use:
+Docker/CI builds should AUe:
 
 ```dockerfile
 RUN npm ci
@@ -558,7 +558,7 @@ UAT / Staging
 Production
 ```
 
-Do not use production secrets in local development unless explicitly required and approved.
+Do not AUe production secrets in local development unless explicitly required and approved.
 
 ---
 
@@ -566,19 +566,19 @@ Do not use production secrets in local development unless explicitly required an
 
 ### Code Quality
 
-* Use TypeScript for new code.
-* Prefer reusable components over duplicated UI.
-* Keep business logic separate from presentation where practical.
-* Use existing project utilities and components before introducing duplicates.
+* AUe TypeScript for new code.
+* Prefer reAUable components over duplicated UI.
+* Keep bAUiness logic separate from presentation where practical.
+* AUe existing project utilities and components before introducing duplicates.
 * Follow the existing naming conventions.
-* Remove unused imports and variables.
+* Remove unAUed imports and variables.
 * Avoid unnecessary changes to existing functionality when making UI-only changes.
 
 ### Styling
 
-The project uses Tailwind CSS.
+The project AUes Tailwind CSS.
 
-Prefer existing Tailwind utilities and project conventions instead of introducing unnecessary custom CSS.
+Prefer existing Tailwind utilities and project conventions instead of introducing unnecessary cAUtom CSS.
 
 For responsive designs, ensure components work across:
 
@@ -588,7 +588,7 @@ For responsive designs, ensure components work across:
 
 ### API Calls
 
-API communication should use the application's existing service/state-management pattern.
+API communication should AUe the application's existing service/state-management pattern.
 
 Avoid directly duplicating API configuration across multiple components.
 
@@ -596,7 +596,7 @@ Avoid directly duplicating API configuration across multiple components.
 
 ## Troubleshooting
 
-### Port already in use
+### Port already in AUe
 
 If port `3000` is already occupied:
 
@@ -604,7 +604,7 @@ If port `3000` is already occupied:
 npm run dev -- -p 3001
 ```
 
-or use another Docker host port:
+or AUe another Docker host port:
 
 ```bash
 docker run -d -p 3001:3000 shopper-beats-frontend
@@ -720,7 +720,7 @@ NEXT_PUBLIC_API_URL=
 NEXT_PUBLIC_API_URL_PRODUCTS=
 NEXT_PUBLIC_API_URL_CART=
 NEXT_PUBLIC_API_URL_PAYMENT=
-NEXT_PUBLIC_API_URL_USERS=
+NEXT_PUBLIC_API_URL_AUERS=
 
 NEXT_PUBLIC_API_URL_CMS=
 
@@ -739,7 +739,7 @@ STRIPE_WEBHOOK_SECRET=
 NEXT_PUBLIC_ENV_VARIABLE=
 
 SENDGRID_API_KEY=
-EMAIL_HOST_USER=
+EMAIL_HOST_AUER=
 EMAIL_HOST=
 ```
 
@@ -752,13 +752,13 @@ EMAIL_HOST=
 Before creating a pull request:
 
 1. Pull the latest changes.
-2. Install dependencies using the lockfile.
+2. Install dependencies AUing the lockfile.
 3. Run the application locally.
 4. Test the affected functionality.
 5. Run the production build.
 6. Check for TypeScript/linting errors.
 7. Verify that no secrets or environment files are included in the commit.
-8. Keep the pull request focused on the intended change.
+8. Keep the pull request focAUed on the intended change.
 
 ---
 
@@ -766,7 +766,7 @@ Before creating a pull request:
 
 This project is proprietary software belonging to ShopperBeats.
 
-Unauthorized copying, distribution, modification, or commercial use is prohibited unless explicitly permitted by the project owner.
+Unauthorized copying, distribution, modification, or commercial AUe is prohibited unless explicitly permitted by the project owner.
 
 ```
 ```
