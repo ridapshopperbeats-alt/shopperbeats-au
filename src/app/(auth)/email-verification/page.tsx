@@ -1,0 +1,119 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import { useResendVerificationCodeMutation } from "@/lib/redux/apis/auth-api";
+import { toast } from "react-toastify";
+import Button from "@/components/common/Button";
+
+function VerifyEmailInner() {
+  const [resendVerificationCode, { isLoading: isResending }] = useResendVerificationCodeMutation();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") || "";
+  const [emailInput, setEmailInput] = useState(email);
+  const [cooldown, setCooldown] = useState(0);
+
+  const handleResendEmail = async () => {
+    if (!emailInput.trim()) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    if (cooldown > 0) {
+      toast.error(`Please wait ${cooldown} seconds before resending`);
+      return;
+    }
+
+    try {
+      await resendVerificationCode({ email: emailInput }).unwrap();
+      toast.success("Verification email sent successfully!");
+      setCooldown(60);
+      const timer = setInterval(() => {
+        setCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (err) {
+      const error = err as { data?: { message?: string } };
+      const errorMessage = error?.data?.message || "Failed to send verification email";
+      toast.error(errorMessage);
+    }
+  };
+
+  return (
+    <main className="min-h-screen flex items-center justify-center px-4">
+      <div className="bg-white p-4 text-center max-w-md w-full rounded-xl shadow-xl">
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/images/auth/verifyemail.jpg"
+            alt="Verify email"
+            width={400}
+            height={400}
+            priority
+          />
+        </div>
+
+        <h5 className="my-6">
+          Verify your email
+        </h5>
+
+        <p className="text-gray-600 mb-6">
+          We&apos;ve sent a verification link to your email address.
+          Please check your inbox and click the link to activate your account.
+        </p>
+
+        <p className="text-sm text-gray-500 mb-4">
+          Didn&apos;t receive the email? Enter your email below to resend.
+        </p>
+
+        <div className="form-item mb-4">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={emailInput}
+            onChange={(e) => setEmailInput(e.target.value)}
+            disabled={isResending}
+            className="w-full p-3 border border-gray-300"
+          />
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <Button
+            className="btn btn-red btn-filled btn-sharp w-full"
+            onClick={handleResendEmail}
+            disabled={isResending || cooldown > 0}
+            isLoading={isResending}
+          >
+            {cooldown > 0 
+              ? `Resend in ${cooldown}s` 
+              : isResending 
+                ? "Sending..." 
+                : "Resend verification email"
+            }
+          </Button>
+         <div className=" link my-2">
+          <Link
+            href="/login"
+          >
+            Back to login
+          </Link>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default function EmailVerificationPage() {
+  return (
+    <Suspense fallback={null}>
+      <VerifyEmailInner />
+    </Suspense>
+  );
+}

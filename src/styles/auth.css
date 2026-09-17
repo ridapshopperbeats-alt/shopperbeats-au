@@ -1,0 +1,401 @@
+@reference "tailwindcss";
+
+
+.auth-title {
+    @apply text-[clamp(1.5rem,3vw,1.875rem)] font-bold leading-[normal] text-center text-[var(--black)];
+}
+
+.input-rounded {
+    @apply rounded-[5px];
+}
+
+.input-rounded-lg {
+    @apply rounded-[30px];
+}
+
+.auth-form-title {
+    @apply text-[clamp(1.5rem,3vw,1.875rem)] font-bold;
+}
+.remember-me {
+  @apply text-black font-medium text-[clamp(0.875rem,1.5vw,1rem)] leading-[normal];
+}
+.checkbox-input {
+  @apply appearance-none w-[18px] h-[18px] shrink-0 rounded-[4px] border-2 border-[#B7BAB4] bg-[rgba(183,186,180,0.00)] cursor-pointer;
+}
+
+.checkbox-input:checked {
+  @apply bg-[var(--primary)] border-[var(--primary)];
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 8.5L6.5 12L13 4.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 11px 11px;
+}
+.user-form-wrapper {
+    @apply bg-[var(--white)] border-2 border-[rgba(255,255,255,0.9)] max-w-[714px] mx-auto  px-[34px] py-6 w-full rounded-lg;
+}
+
+.link {
+    @apply items-center;
+}
+
+.link a {
+    @apply text-[var(--secondary)] underline font-semibold;
+}
+.link a:hover {
+    @apply text-[var(--primary)];
+}
+.link p {
+    @apply font-semibold leading-[normal];
+}
+
+.user-form-wrapper .btn-action button {
+    @apply border border-[var(--black)] rounded-lg flex items-center p-[10px] gap-[10px] text-sm text-[var(--black)];
+}
+
+.password-content p {
+    @apply font-medium mb-[5px] text-[14px]! leading-[normal];
+}
+
+.user-form-wrapper .flex label {
+    @apply mb-0;
+}
+
+.password-content ul {
+    @apply pl-5 mb-5 text-[14px]!;
+}
+
+.password-content ul li {
+    @apply list-disc text-[rgba(0,0,0,0.60)] text-[14px]! font-['Montserrat']  font-medium not-italic leading-[normal];
+}
+
+.link span {
+    @apply text-[clamp(0.875rem,1.5vw,1rem)] font-medium leading-[normal];
+}
+
+.link span a {
+    @apply text-sm;
+}
+
+
+.error {
+    @apply mb-4;
+}
+
+
+.eyeIcon {
+    @apply absolute top-1/2 right-[10px] -translate-y-1/2 cursor-pointer;
+}
+
+.password-wrapper {
+    @apply relative;
+}
+
+.verification {
+    @apply justify-center items-center h-screen flex px-5;
+}
+
+.resend-email-section {
+    @apply mt-10 p-4 border border-gray-300 rounded-lg bg-gray-50 text-center;
+}
+
+.resend-email-text {
+    @apply text-sm text-gray-600 mb-3 text-center;
+}
+
+.auth-links-row {
+    @apply flex my-6 justify-between font-semibold;
+}
+
+/* profile information order page css */
+.return-cell {
+    @apply !border-b-0 !py-5 !px-0;
+}
+
+.refund-card {
+    @apply grid gap-2 w-[30%] rounded-lg border border-gray-200 bg-white p-4 shadow-sm;
+}
+
+.refund-top {
+    @apply flex justify-between w-full;
+}
+
+.refund-label {
+    @apply text-[var(--gray)];
+}
+
+.refund-value {
+    @apply text-[var(--secondary)];
+}
+
+.refund-row {
+    @apply flex justify-between;
+}
+
+.refund-total {
+    @apply font-semibold;
+}
+
+.refund-total-val {
+    @apply text-[var(--secondary)] font-bold;
+}
+
+.refund-action {
+    @apply flex justify-end mt-[18px];
+}
+
+.refund-date {
+    @apply flex justify-end font-[500] text-[16px] text-[var(--gray)];
+}
+
+.refund-date-val {
+    @apply font-[700] text-[var(--gray)] ml-2;
+}
+
+/* wishlist page css */
+.wishlist-title {
+    @apply font-bold leading-[normal] mb-5 capitalize;
+}
+
+.wishlist-table-header {
+    @apply hidden lg:grid lg:grid-cols-12 items-center gap-4 bg-gray-100 p-4 font-semibold text-sm rounded-md mb-3;
+}
+
+.wishlist-col-product {
+    @apply lg:col-span-4 text-black leading-[normal] font-[700] text-lg capitalize;
+}
+
+.wishlist-col-span-2 {
+    @apply lg:col-span-2 text-black leading-[normal] font-[700]  capitalize;
+}
+
+.wishlist-card {
+    @apply grid grid-cols-1 lg:grid-cols-12 gap-4 border-b border-gray-300 p-4 mb-4 rounded-lg bg-white;
+}
+
+.wishlist-item-media {
+    @apply flex items-center gap-3 lg:col-span-4;
+}
+
+.wishlist-item-image {
+    @apply w-[80px] h-[80px] bg-cover bg-center rounded shrink-0;
+}
+
+.wishlist-item-name {
+    @apply font-black  leading-[normal] font-semibold capitalize not-italic mb-5 text-left;
+}
+
+.wishlist-cell {
+    @apply grid grid-cols-2 lg:block lg:col-span-2 items-center;
+}
+
+.wishlist-date-cell {
+    @apply grid grid-cols-2 lg:block lg:col-span-2 items-center font-bold text-sm text-black;
+}
+
+.wishlist-action-cell {
+    @apply grid grid-cols-2 lg:flex lg:flex-col gap-2 lg:col-span-2 items-start;
+}
+
+.wishlist-mobile-label {
+    @apply font-semibold lg:hidden;
+}
+
+.wishlist-action-mobile-label {
+    @apply font-semibold lg:hidden pt-3;
+}
+
+.wishlist-price {
+    @apply font-[600] text-right lg:text-left text-[#FD151B] leading-[normal] capitalize;
+}
+
+.wishlist-align-cell {
+    @apply text-right md:text-left text-black font-semibold leading-[normal];
+}
+
+.wishlist-out-of-stock {
+    @apply text-[#FD151B] font-semibold leading-[normal] capitalize;
+}
+
+.wishlist-in-stock {
+    @apply text-[#16A249] font-semibold leading-[normal] capitalize;
+}
+
+.wishlist-action-buttons {
+    @apply flex flex-col gap-2 w-full;
+}
+
+.wishlist-add-to-cart-btn {
+    @apply bg-red-500 text-white rounded-2xl font-bold p-4 cursor-pointer w-full !p-[10px] !rounded-[20px];
+}
+
+.wishlist-remove-btn {
+    @apply border border-red-500 p-4 rounded-2xl font-bold cursor-pointer w-full !border-solid !rounded-[50px] !p-[10px] text-[#FD151B];
+}
+
+/* order detail page css */
+.order-detail-header {
+    @apply justify-between;
+}
+
+.order-track-link {
+    @apply inline-flex items-center justify-center;
+}
+
+.order-detail-info {
+    @apply mt-30;
+}
+
+.order-status-value {
+    @apply capitalize;
+}
+
+.order-item-image {
+    @apply cursor-pointer object-contain;
+}
+
+.order-item-title {
+    @apply cursor-pointer hover:text-red-600 transition-colors;
+}
+
+.order-item-actions {
+    @apply flex flex-wrap gap-2;
+}
+
+.order-item-action-wrapper {
+    @apply mt-2 w-full;
+}
+
+.order-item-action-btn {
+    @apply text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 px-3 py-1 rounded cursor-pointer;
+}
+
+.order-item-cancelled-label {
+    @apply mt-2 text-red-600 text-sm font-medium;
+}
+
+.order-summary-row {
+    @apply border-b border-gray-200 pb-2;
+}
+
+.order-delivery-row {
+    @apply flex flex-wrap justify-between border-b border-gray-200 pb-2;
+}
+
+.order-summary-label {
+    @apply text-base font-semibold;
+}
+
+.order-delivery-address {
+    @apply flex text-sm font-medium text-[#726969];
+}
+
+.order-total-row {
+    @apply flex justify-between py-[16px] bg-[#f5f5f5] pl-4;
+}
+
+.order-total-label {
+    @apply text-lg font-semibold;
+}
+
+/* orders list page css */
+.orders-sort-trigger {
+    @apply !border !border-gray-500 focus:ring-0 focus:ring-offset-0 shadow-none w-[140px] rounded-[14px];
+}
+
+.orders-sort-value {
+    @apply text-black;
+}
+
+.orders-sort-content {
+    @apply bg-white rounded-[10px] !ring-gray-200 w-[100px] p-0 overflow-hidden;
+}
+
+.orders-sort-item {
+    @apply px-3 py-2 not-visited:cursor-pointer rounded-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-black;
+}
+
+.orders-empty-state {
+    @apply w-full flex justify-center py-20;
+}
+
+.orders-block-spacing {
+    @apply mt-30;
+}
+
+.orders-item-label {
+    @apply text-[clamp(16px,1.5vw,18px)] font-extrabold;
+}
+
+.orders-item-value {
+    @apply text-[clamp(12px,1.5vw,16px)];
+}
+
+.orders-product-row {
+    @apply grid sm:grid-cols-3 grid-cols-1 gap-4 items-center mb-4 border-b border-gray-200 py-2;
+}
+
+.orders-product-title {
+    @apply cursor-pointer hover:text-red-600 transition-colors font-bold;
+}
+
+.orders-product-meta {
+    @apply text-sm font-medium text-black;
+}
+
+.orders-product-meta-label {
+    @apply font-semibold;
+}
+
+.orders-product-actions {
+    @apply flex justify-end;
+}
+
+.orders-action-right {
+    @apply flex items-center gap-4;
+}
+
+.orders-cancel-btn {
+    @apply cursor-pointer;
+}
+
+.orders-return-btn {
+    @apply cursor-pointer;
+}
+
+.orders-load-more {
+    @apply w-full flex justify-center py-4;
+}
+
+.orders-loader-spinner {
+    @apply mr-[10px] w-4 h-4 rounded-full border-2 border-[#f3f3f3] border-t-[#333] animate-spin;
+}
+
+.orders-pagination-wrapper {
+    @apply bg-white mt-40;
+}
+
+@media screen and (max-width: 767px) {
+    .user-form-wrapper {
+        @apply px-[10px] py-6;
+    }
+    .user-form-wrapper .link:not(.form-item-radio) {
+        @apply flex-col gap-[5px] mt-3;
+    }
+
+    .user-form-wrapper .form-item-radio.link {
+        @apply flex-row items-start gap-[10px];
+    }
+    .signup-account .btn-action {
+        @apply gap-4;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .recaptcha-wrapper {
+        @apply overflow-hidden w-[261px] h-[67px];
+    }
+    .recaptcha-wrapper > div {
+        transform: scale(0.86);
+        transform-origin: 0 0;
+    }
+}
