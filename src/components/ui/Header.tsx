@@ -67,6 +67,7 @@ const findTopCategorySlug = (
   return match?.slug;
 };
 
+
 const getCategoryIcon = (name: string) => {
   const n = name.toLowerCase();
   if (n.includes("fashion") || n.includes("apparel") || n.includes("clothing"))
