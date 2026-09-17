@@ -5,48 +5,63 @@ import dynamic from "next/dynamic";
 import React, {
   useState,
   useEffect,
+  useRef,
   useMemo,
   useCallback,
-  useRef,
-  useTransition,
 } from "react";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { useDispatch } from "react-redux";
 
-import {
-  setBreadcrumbs,
-  addBreadcrumb,
-} from "@/lib/redux/slices/breadcrumb-slice";
-import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 
-import { filterProductsByPriceRange, findCategoryPath, resolvePriceRange } from "@/lib/utils/main-utils";
+
+import { applyImageVariant } from "@/lib/utils/imageUtils";
 
 import { Category, Filter, Product } from "@/types/product";
 
-import { useProductFilters } from "@/lib/hooks/use-product-filters";
-import { API_ENDPOINTS } from "@/lib/constants/api";
 
 import "../../styles/Product.css";
 import CategorySlider from "./CategorySlider";
-import Breadcrumb from "../common/Breadcrumb";
+
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
+import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
+import { useProductFilters } from "@/lib/hooks/use-product-filters";
+import { filterProductsByPriceRange, findCategoryPath, resolvePriceRange, SITE_URL, toSafeJsonLd } from "@/lib/utils/main-utils";
+import { addBreadcrumb, setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
+import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
+import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
+import Breadcrumb from "../common/Breadcrumb";
 
-import { buildFilterTags } from "@/lib/utils/filter-tags";
-import { applyImageVariant } from "@/lib/utils/imageUtils";
 
-const Sidebar = dynamic(() => import("../product-listing/Sidebar"), {
+
+
+interface FilterComponentProps {
+  filters: Filter[];
+  category: Category;
+  onClose: () => void;
+}
+
+interface MobileFilterSheetProps extends FilterComponentProps {
+  open: boolean;
+  onClearAll: () => void;
+}
+
+const Sidebar = dynamic<FilterComponentProps>(() => import("../product-listing/Sidebar") as Promise<{
+  default: React.ComponentType<FilterComponentProps>;
+}> , {
   loading: DynamicImportLoader,
 });
 
 const MobileFilterSheet = dynamic(
-  () => import("../product-listing/MobileFilterSheet"),
+  () => import("../product-listing/MobileFilterSheet") as Promise<{
+    default: React.ComponentType<MobileFilterSheetProps>;
+  }>,
   { loading: DynamicImportLoader },
 );
 
-const ProductDisplay = dynamic(
-  () => import("../product-listing/ProductDisplay"),
+const ProductDisplay = dynamic<any>(
+  () => import("@/components/product-listing/ProductDisplay"),
   { loading: DynamicImportLoader },
 );
 
@@ -67,9 +82,12 @@ const CategoryClient = ({
   totalItems,
   megaMenuData,
 }: CategoryPageClientProps) => {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
+
+  const { data: wishlistData } = useGetWishlistQuery(undefined);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = useCallback(() => {
@@ -78,16 +96,19 @@ const CategoryClient = ({
 
   const [persistedFilters, setPersistedFilters] = useState<Filter[]>(filters);
 
-  const [prevSlug, setPrevSlug] = useState(slug);
+  const prevSlugRef = useRef(slug);
 
-  if (slug !== prevSlug) {
-    setPrevSlug(slug);
-    setPersistedFilters(filters);
-  } else if (filters?.length > persistedFilters.length) {
-    setPersistedFilters(filters);
-  }
+  useEffect(() => {
+    if (slug !== prevSlugRef.current) {
+      setPersistedFilters(filters);
+      prevSlugRef.current = slug;
+      return;
+    }
 
-  const [isPending, startTransition] = useTransition();
+    if (filters?.length > persistedFilters.length) {
+      setPersistedFilters(filters);
+    }
+  }, [filters, slug, persistedFilters.length]);
 
   const {
     sortBy,
@@ -103,37 +124,81 @@ const CategoryClient = ({
     maxPrice,
     setMaxPrice,
     clearFilters,
-  } = useProductFilters(persistedFilters, category, {
-    wrapNavigation: startTransition,
-  });
+  } = useProductFilters(persistedFilters, category);
 
-  const filterTags = useMemo(
-    () =>
-      buildFilterTags({
-        selectedCategories,
-        toggleSelectedCategory,
-        selectedPrices,
-        handlePriceChange,
-        minPrice,
-        maxPrice,
-        setMinPrice,
-        setMaxPrice,
-        selectedFilters,
-        handleFilterChange,
-      }),
-    [
-      selectedCategories,
-      selectedPrices,
-      minPrice,
-      maxPrice,
-      selectedFilters,
-      toggleSelectedCategory,
-      handlePriceChange,
-      handleFilterChange,
-      setMinPrice,
-      setMaxPrice,
-    ],
-  );
+  const formatPriceRangeLabel = useCallback((value: string) => {
+    if (value === "200+") return "$200 and Above";
+    if (value === "0-50") return "Under $50";
+    const [min, max] = value.split("-");
+    return min && max ? `$${min} to $${max}` : value;
+  }, []);
+
+  const filterTags = useMemo(() => {
+    const tags: { key: string; label: string; onRemove: () => void }[] = [];
+
+    selectedCategories.forEach((cat) => {
+      tags.push({
+        key: `category-${cat}`,
+        label: cat,
+        onRemove: () => toggleSelectedCategory(cat),
+      });
+    });
+
+    const customRangeKey = minPrice && maxPrice
+      ? `${minPrice}-${maxPrice}`
+      : minPrice
+        ? `${minPrice}+`
+        : maxPrice
+          ? `0-${maxPrice}`
+          : null;
+
+    selectedPrices.forEach((price) => {
+      tags.push({
+        key: `price-${price}`,
+        label: formatPriceRangeLabel(price),
+        onRemove: () => {
+          handlePriceChange(price);
+          setMinPrice("");
+          setMaxPrice("");
+        },
+      });
+    });
+
+    if ((minPrice || maxPrice) && !selectedPrices.includes(customRangeKey || "")) {
+      tags.push({
+        key: "price-range",
+        label: `$${minPrice || 0} to $${maxPrice || "Any"}`,
+        onRemove: () => {
+          setMinPrice("");
+          setMaxPrice("");
+        },
+      });
+    }
+
+    Object.entries(selectedFilters).forEach(([attribute, values]) => {
+      values.forEach((value) => {
+        tags.push({
+          key: `${attribute}-${value}`,
+          label: value,
+          onRemove: () => handleFilterChange(attribute, value),
+        });
+      });
+    });
+
+    return tags;
+  }, [
+    selectedCategories,
+    selectedPrices,
+    minPrice,
+    maxPrice,
+    selectedFilters,
+    toggleSelectedCategory,
+    handlePriceChange,
+    handleFilterChange,
+    setMinPrice,
+    setMaxPrice,
+    formatPriceRangeLabel,
+  ]);
 
   const handleSortChangeWithSkeleton = useCallback(
     (value: string) => {
@@ -142,130 +207,19 @@ const CategoryClient = ({
     [handleSortChange],
   );
 
-  const currentPage = Number(searchParams.get("page")) || 1;
 
-  const uiLimit = Number(searchParams.get("limit")) || 20;
+  const pageFromUrl = Number(searchParams.get("page")) || 1;
 
-  const [allProducts, setAllProducts] = useState<Product[]>(products);
-  const [effectiveTotal, setEffectiveTotal] = useState(totalItems);
-  const [isLoadingPage, setIsLoadingPage] = useState(false);
+  const limitFromUrl = Number(searchParams.get("limit")) || 20;
 
-  // Page the products in state belong to
-  const [loadedKey, setLoadedKey] = useState(`${currentPage}-${uiLimit}`);
-  const inFlightKeyRef = useRef<string | null>(null);
-  const abortRef = useRef<AbortController | null>(null);
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
 
-  // A fresh server render (filter change / reload) replaces the list
-  const [prevProducts, setPrevProducts] = useState(products);
-
-  if (prevProducts !== products) {
-    setPrevProducts(products);
-    setAllProducts(products);
-    setEffectiveTotal(totalItems);
-    setLoadedKey(`${currentPage}-${uiLimit}`);
-    setIsLoadingPage(false);
-  }
+  const [uiLimit, setUiLimit] = useState(limitFromUrl);
 
 
-  useEffect(() => {
-    abortRef.current?.abort();
-    abortRef.current = null;
-    inFlightKeyRef.current = null;
-  }, [products]);
 
-  const fetchProducts = useCallback(
-    async (page: number, limit: number, key: string) => {
-      const params = new URLSearchParams(searchParams.toString());
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
 
-      params.set("category_slug", slug);
-      params.set("page", String(page));
-      params.set("limit", String(limit));
-
-      abortRef.current?.abort();
-      const controller = new AbortController();
-      abortRef.current = controller;
-
-      inFlightKeyRef.current = key;
-      setIsLoadingPage(true);
-
-      try {
-        const res = await fetch(
-          `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?${params.toString()}`,
-          { signal: controller.signal },
-        );
-
-        if (!res.ok) throw new Error(`Failed to fetch products (${res.status})`);
-
-        const data = await res.json();
-
-        if (controller.signal.aborted) return;
-
-        setAllProducts(data?.data ?? []);
-        setEffectiveTotal(Number(data?.total ?? 0));
-        setLoadedKey(key);
-      } catch (error) {
-        if ((error as Error)?.name === "AbortError") return;
-        console.warn("Failed to load products:", error);
-      } finally {
-
-        if (abortRef.current === controller) {
-          abortRef.current = null;
-          inFlightKeyRef.current = null;
-          setIsLoadingPage(false);
-        }
-      }
-    },
-    [searchParams, slug],
-  );
-
-  // Fetch whenever the page / limit in the URL is not what we already have
-  useEffect(() => {
-    const key = `${currentPage}-${uiLimit}`;
-
-    if (key === loadedKey || key === inFlightKeyRef.current) return;
-
-    fetchProducts(currentPage, uiLimit, key);
-  }, [currentPage, uiLimit, loadedKey, fetchProducts]);
-
-  useEffect(() => {
-    if (!isPending && !isLoadingPage) return;
-    dispatch(pushLoader());
-    return () => {
-      dispatch(popLoader());
-    };
-  }, [isPending, isLoadingPage, dispatch]);
-
-  const handlePageChange = useCallback(
-    (page: number) => {
-      if (page === currentPage) return;
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
-
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("page", String(page));
-
-      window.history.pushState(null, "", `${pathname}?${params.toString()}`);
-    },
-    [currentPage, pathname, searchParams],
-  );
-
-  const handleItemsPerPageChange = useCallback(
-    (newUiLimit: number) => {
-      if (newUiLimit === uiLimit) return;
-
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("limit", String(newUiLimit));
-      params.set(
-        "page",
-        String(
-          Math.max(1, Math.ceil(((currentPage - 1) * uiLimit + 1) / newUiLimit)),
-        ),
-      );
-
-      window.history.pushState(null, "", `${pathname}?${params.toString()}`);
-    },
-    [currentPage, uiLimit, pathname, searchParams],
-  );
 
   const activePriceRange = useMemo(
     () => resolvePriceRange(minPrice, maxPrice, selectedPrices),
@@ -276,6 +230,18 @@ const CategoryClient = ({
     () => filterProductsByPriceRange(allProducts, activePriceRange),
     [allProducts, activePriceRange],
   );
+
+  const [isLoadingNewFilter, setIsLoadingNewFilter] = useState(false);
+
+
+
+  useEffect(() => {
+    if (products?.length > 0 && allProducts.length === 0) {
+      setAllProducts(products);
+    }
+  }, [products, allProducts.length]);
+
+
 
   useEffect(() => {
     if (!megaMenuData?.length || !slug) return;
@@ -296,72 +262,182 @@ const CategoryClient = ({
     }
   }, [slug, megaMenuData, category?.name, dispatch]);
 
-  const handleLoadMore = useCallback(() => { }, []);
+
+  const { postcode } = useGlobalPostcode();
+
+  const queryParams = useMemo(
+    () => ({
+      ...Object.fromEntries(searchParams.entries()),
+      category_slug: slug,
+      page: currentPage,
+      limit: uiLimit,
+      postcode,
+    }),
+    [searchParams, slug, currentPage, uiLimit, postcode],
+  );
+
+  const { data, isLoading, isFetching } = useGetProductsQuery(queryParams, {
+    skip: !slug,
+    refetchOnMountOrArgChange: false,
+    refetchOnFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const effectiveTotal = data?.total ?? totalItems;
+
+
+  const currentFilterString = useMemo(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.delete("page");
+    params.delete("limit");
+
+    return params.toString();
+  }, [searchParams]);
+
+  const prevFilterStringRef = useRef(currentFilterString);
+
+
+  useEffect(() => {
+    const page = Number(searchParams.get("page")) || 1;
+
+    const limit = Number(searchParams.get("limit")) || 20;
+
+    const filtersChanged = currentFilterString !== prevFilterStringRef.current;
+
+    if (filtersChanged) {
+      prevFilterStringRef.current = currentFilterString;
+
+      setCurrentPage(1);
+
+      setUiLimit(limit);
+
+      setAllProducts([]);
+
+      setIsLoadingNewFilter(true);
+
+      return;
+    }
+
+    if (page !== currentPage) {
+      setCurrentPage(page);
+    }
+
+    if (limit !== uiLimit) {
+      setUiLimit(limit);
+    }
+  }, [searchParams, currentPage, uiLimit, currentFilterString]);
+
+
+  useEffect(() => {
+    if (!data) return;
+
+    const incomingProducts = data?.data || [];
+
+    setAllProducts(incomingProducts);
+
+    setIsLoadingNewFilter(false);
+  }, [data]);
+
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+
+      const params = new URLSearchParams(searchParams.toString());
+
+      params.set("page", page.toString());
+
+      router.push(`${pathname}?${params.toString()}`, {
+        scroll: false,
+      });
+    },
+    [pathname, router, searchParams],
+  );
+
+  const handleItemsPerPageChange = useCallback(
+    (newUiLimit: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      params.set("limit", newUiLimit.toString());
+
+      const newPage = Math.max(
+        1,
+        Math.ceil(((currentPage - 1) * uiLimit + 1) / newUiLimit),
+      );
+
+      params.set("page", newPage.toString());
+
+      router.push(`${pathname}?${params.toString()}`, {
+        scroll: false,
+      });
+    },
+    [pathname, router, searchParams, currentPage, uiLimit],
+  );
+
+  const handleLoadMore = useCallback(() => {
+  }, []);
 
   // -----------------------------
   // SLIDER
   // -----------------------------
 
-  // Women leads the slider; anything not listed keeps the order the API sent.
-  const SLIDER_SLUG_ORDER = ["women", "men"];
-
-  const sliderCategories = useMemo(() => {
-    const subcategories = category?.subcategories ?? [];
-
-    const rank = (sub: Category) => {
-      const index = SLIDER_SLUG_ORDER.indexOf((sub.slug ?? "").toLowerCase());
-      return index === -1 ? SLIDER_SLUG_ORDER.length : index;
-    };
-
-    return [...subcategories]
-      .sort((a, b) => rank(a) - rank(b))
-      .map((sub: Category) => {
-        const rawImage = sub.icon_url || sub.image_url;
-        return {
-          title: sub.name,
-          image: rawImage
-            ? applyImageVariant(rawImage, "public")
-            : "/images/image-coming-soon.jpg",
-          slug: sub.slug ?? sub.id,
-          product_count: sub.product_count,
-        };
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category?.subcategories]);
-
-  // console.log("category.subcategories (raw):", category?.subcategories);
-  // console.log("sliderCategories (mapped for CategorySlider):", sliderCategories);
-
+  const sliderCategories = useMemo(
+    () =>
+      category?.subcategories?.map((sub: Category) => ({
+        title: sub.name,
+        image: sub.icon_url
+          ? applyImageVariant(sub.icon_url, "public")
+          : "/images/image-coming-soon.jpg",
+        slug: sub.slug ?? sub.id,
+        product_count: sub.product_count,
+      })) || [],
+    [category?.subcategories],
+  );
+console.log("sliderCategories", sliderCategories);
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: toSafeJsonLd({
+            "@context": "https://schema.org",
+
+            "@type": "ItemList",
+
+            name: category?.name || slug,
+
+            url: `${SITE_URL}/category/${slug}`,
+
+            numberOfItems: products.length,
+
+            itemListElement: products.map((product, index) => ({
+              "@type": "ListItem",
+
+              position: index + 1,
+
+              name: product.title,
+
+              url: `${SITE_URL}/product/${product.unique_code || product.slug}`,
+            })),
+          }),
+        }}
+      />
+
       <div className="container">
         {sliderCategories.length > 0 && (
           <CategorySlider
-            title="Top  Categories"
-            titleClassName=""
             items={sliderCategories}
-            onCategoryClick={(item) =>
-              dispatch(
-                addBreadcrumb({
-                  name: item.title,
-                  path: `/category/${item.slug}`,
-                }),
-              )
-            }
-            getHref={(item) => {
-              const params = new URLSearchParams(searchParams.toString());
-
-              // "categories" holds the current category's own subcategory
-              // picks, and the page number belongs to the list being left —
-              // carrying either into a sibling category returns no products.
-              params.delete("categories");
-              params.set("page", "1");
-
-              const query = params.toString();
-
-              return `/category/${item.slug}${query ? `?${query}` : ""}`;
-            }}
-          />
+            onCategoryClick={(item) => dispatch(
+              addBreadcrumb({
+                name: item.title,
+                path: `/category/${item.slug}`,
+              })
+            )}
+            getHref={(item) => `/category/${item.slug}?${searchParams.toString()}`} title="Shop by Category"          />
         )}
 
         <Breadcrumb />
@@ -375,7 +451,6 @@ const CategoryClient = ({
               filters={persistedFilters}
               category={category}
               onClose={() => setIsSidebarOpen(false)}
-              wrapNavigation={startTransition}
             />
           </div>
 
@@ -385,7 +460,6 @@ const CategoryClient = ({
             onClearAll={clearFilters}
             filters={persistedFilters}
             category={category}
-            wrapNavigation={startTransition}
           />
 
           <div className="flex w-full">
@@ -402,11 +476,18 @@ const CategoryClient = ({
               categoryName={category?.name}
               tags={filterTags}
               onClearFilters={clearFilters}
-              isLoading={isLoadingPage || (isPending && allProducts.length === 0)}
+              isLoading={
+                isLoading ||
+                (isFetching && allProducts.length === 0) ||
+                isLoadingNewFilter
+              }
               onLoadMore={handleLoadMore}
               infiniteScroll={false}
               hasMore={false}
-              isFetchingMore={isPending && allProducts.length > 0}
+              isFetchingMore={
+                (isFetching && allProducts.length > 0) || isLoadingNewFilter
+              }
+              wishlistItems={wishlistData?.items ?? []}
             />
           </div>
         </div>

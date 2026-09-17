@@ -1,304 +1,114 @@
 "use client";
+import React, { useRef } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { API_ENDPOINTS } from "@/lib/constants/api";
-import { applyImageVariant } from "@/lib/utils/imageUtils";
-
-interface TopCategoryApiItem {
-  id: string;
-  category_name: string;
+interface Category {
+  id: number;
   title: string;
-  image: string;
-  slug: string;
-  cta_text?: string;
-  cta_link?: string;
-}
-
-interface NewTopCategoryItem {
-  title: string;
-  image: string;
+  imageUrl: string;
   href: string;
 }
 
-export default function NewTopCategories() {
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const [categories, setCategories] = useState<NewTopCategoryItem[]>([]);
+const CATEGORIES: Category[] = [
+  { id: 1, title: 'Home & Garden', imageUrl: '/images/tc_homegarden.jpg', href: "/category/home-garden" },
+  { id: 2, title: 'Furniture', imageUrl: '/images/tc_furniture.jpg', href: "/category/furniture" },
+  { id: 3, title: 'Health & Beauty', imageUrl: '/images/tc_health_beauty.jpg', href: "/category/health-beauty" },
+  { id: 4, title: 'Toys & Games', imageUrl: '/images/tc_toygames.jpg', href: "/category/toys-games" },   
+  { id: 5, title: 'Baby & Kids', imageUrl: '/images/tc_babykids.jpg', href: "/category/baby-kids" },  
+  { id: 6, title: 'Sports & Outdoor', imageUrl: '/images/tc_sports_outdoor.jpg', href: "/category/sports-outdoor" },   
+  { id: 7, title: 'Appliances', imageUrl: '/images/tc_appliances.jpg', href: "/category/appliances" },
+  { id: 8, title: 'Electronics', imageUrl: '/images/tc_electronics.jpg', href: "/category/electronics" },
+];
 
-  useEffect(() => {
-    let isMounted = true;
+export const NewTopCategories = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-    async function loadCategories() {
-      try {
-        const url = `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.HOMEPAGE_SECTION_BY_ID(
-          API_ENDPOINTS.PRODUCTS.TOP_CATEGORIES,
-        )}`;
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      // Dynamic scrolling based on container viewport width
+      const scrollAmount = scrollRef.current.clientWidth * 0.75;
+      const currentScroll = scrollRef.current.scrollLeft;
 
-        const res = await fetch(url);
-
-        if (!res.ok) return;
-
-        const data: { config?: { items?: TopCategoryApiItem[] } } = await res.json();
-
-        const items = Array.isArray(data?.config?.items) ? data.config.items : [];
-
-        if (!isMounted || items.length === 0) return;
-
-        const mappedCategories = items.map((category) => ({
-          title: category.title || category.category_name,
-          image: category.image
-            ? applyImageVariant(category.image, "public")
-            : "/images/image-coming-soon.jpg",
-          href: category.cta_link || `/category/${category.slug}`,
-        }));
-
-        setCategories(mappedCategories);
-      } catch (error) {
-        console.error("Error fetching top categories:", error);
-      }
+      scrollRef.current.scrollTo({
+        left: direction === 'left' ? currentScroll - scrollAmount : currentScroll + scrollAmount,
+        behavior: 'smooth',
+      });
     }
-
-    loadCategories();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const handleScroll = (direction: "left" | "right") => {
-    if (!sliderRef.current) return;
-
-    sliderRef.current.scrollBy({
-      left: direction === "left" ? -300 : 300,
-      behavior: "smooth",
-    });
   };
 
   return (
-    <div className="w-full container">
-      <h2 className="text-center fluid-text-20-24 font-bold leading-7.5 mx-auto mt-6">
-        Top Categories
-      </h2>
+    <section className="w-full bg-transparent mb-8">
+      <div className="container mx-auto px-4 md:px-8 max-w-[1750px]">
 
-      <div className="relative max-w-[1700px] mx-auto">
-        <button
-          type="button"
-          onClick={() => handleScroll("left")}
-          className="hidden lg:flex absolute left-[-12px] top-22 -translate-y-3 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 transition-all"
-        >
-          <ChevronLeft size={18} className="text-black" />
-        </button>
+        <h3 className="font-bold text-gray-900 tracking-tight text-[35px]" style={{ marginTop: "10px", marginBottom: "20px" }} >
+          Top Categoriesaa
+        </h3>
 
-        <button
-          type="button"
-          onClick={() => handleScroll("right")}
-          className="hidden lg:flex absolute right-[-16px] top-22 -translate-y-3 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 transition-all"
-        >
-          <ChevronRight size={18} className="text-black" />
-        </button>
+        <div className="relative">
 
-        <div
-          ref={sliderRef}
-          className="flex items-start gap-[16px] lg:gap-[35px] overflow-x-auto scroll-smooth no-scrollbar py-6"
-        >
-          {categories.map((item, index) => (
-            <Link
-              key={`${item.title}-${index}`}
-              href={item.href}
-              className="shrink-0 flex flex-col gap-[8px] items-center justify-start cursor-pointer w-[72px] min-h-[98px] md:w-[138px] md:min-h-[172px] md:gap-[16px]"
-            >
-              <div className="relative w-[64px] h-[64px] md:w-[138px] md:h-[138px] shrink-0 rounded-full border border-[#D8D8D8] shadow-[0px_2px_6px_0px_#00000014] md:shadow-none bg-white overflow-hidden flex items-center justify-center">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  width={100}
-                  height={100}
-                  quality={100}
-                  loading="lazy"
-                  className="object-contain w-[70px] h-[70px] md:w-[200px] md:h-[200px] transition-transform duration-500 ease-in-out hover:scale-110"
-                />
+          <button
+            onClick={() => scroll('left')}
+            className="handlePrev-inset"
+            aria-label="Previous categories"
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <div
+            ref={scrollRef}
+            className="container flex gap-4 sm:gap-5 md:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 mask-edge-fade"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >
+            <style jsx global>{`
+              .mask-edge-fade::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
+
+            {CATEGORIES.map((category) => (
+              <div
+                key={category.id}
+                className="w-[130px] sm:w-[160px] md:w-[220px] lg:w-[240px] flex-shrink-0 snap-start bg-white border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 rounded-[12px]"
+              >
+                <Link href={category.href || "/"} className="flex flex-col h-full group">
+
+                  <div className="relative w-full aspect-[4/3] sm:aspect-video md:aspect-[5/4] bg-gray-50 overflow-hidden">
+                    <Image
+                      src={category.imageUrl}
+                      alt={category.title}
+                      fill
+                      sizes="(max-width: 640px) 130px, (max-width: 768px) 160px, 240px"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
+                      priority={category.id <= 4}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-center p-3 flex-grow bg-white">
+                    <h5 className="font-semibold text-center text-gray-800 line-clamp-2 leading-tight group-hover:text-primary-600 transition-colors">
+                      {category.title}
+                    </h5>
+                  </div>
+
+                </Link>
               </div>
+            ))}
+          </div>
 
-              <p className="text-[12px] font-bold leading-tight tracking-[0%] text-center capitalize text-[#2B2B2B] line-clamp-2">
-                {item.title}
-              </p>
-            </Link>
-          ))}
+          <button
+            onClick={() => scroll('right')}
+            className="handleNext-inset"
+          >
+            <ChevronRight size={20} />
+          </button>
+
         </div>
       </div>
-    </div>
+    </section>
   );
-}
-
-
-
-// "use client";
-
-// import { useRef, useState } from "react";
-// import Image from "next/image";
-// import Link from "next/link";
-// import { ChevronLeft, ChevronRight } from "lucide-react";
-
-// interface NewTopCategoryItem {
-//   title: string;
-//   image: string;
-//   href: string;
-// }
-
-// const DUMMY_TOP_CATEGORIES: NewTopCategoryItem[] = [
-//   {
-//     title: "Dresses",
-//     image: "/images/home/DressesTop.png",
-//     href: "/category/dresses",
-//   },
-//   {
-//     title: "Outfit Sets",
-//     image: "/images/home/Outfit Sets.png",
-//     href: "/category/outfit-sets",
-//   },
-//   {
-//     title: "Blouse",
-//     image: "/images/home/tops.svg",
-//     href: "/category/blouse",
-//   },
-//   {
-//     title: "Bras",
-//     image: "/images/home/Bras.png",
-//     href: "/category/bras",
-//   },
-//   {
-//     title: "Earrings",
-//     image: "/images/home/Earrings1.png",
-//     href: "/category/earrings",
-//   },
-//   {
-//     title: "Jewelry",
-//     image: "/images/home/Jewelry Sets.png",
-//     href: "/category/jewelry-sets",
-//   },
-//   {
-//     title: "Bracelets",
-//     image: "/images/home/Bracelets.png",
-//     href: "/category/bracelets",
-//   },
-//   {
-//     title: "Rings",
-//     image: "/images/home/Rings.png",
-//     href: "/category/rings",
-//   },
-
-//   {
-//     title: "Furniture",
-//     image: "/images/home/furnitureTop.webp",
-//     href: "/category/furniture",
-//   },
-
-//   {
-//     title: "Health & Beauty",
-//     image: "/images/home/healthTop.webp",
-//     href: "/category/health-beauty",
-//   },
-
-
-//   {
-//     title: "Fashion & Accessories",
-//     image: "/images/home/fashionTop.webp",
-//     href: "/category/fashion-accessories",
-//   },
-
-// ];
-
-// export default function NewTopCategories() {
-//   const sliderRef = useRef<HTMLDivElement>(null);
-
-//   const [categories] = useState<NewTopCategoryItem[]>(
-//     DUMMY_TOP_CATEGORIES
-//   );
-
-//   const [isAtStart, setIsAtStart] = useState(true);
-//   const [isAtEnd, setIsAtEnd] = useState(false);
-
-//   const updateScrollButtons = () => {
-//     const slider = sliderRef.current;
-//     if (!slider) return;
-
-//     setIsAtStart(slider.scrollLeft <= 0);
-//     setIsAtEnd(
-//       slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 1
-//     );
-//   };
-
-//   const handleScroll = (direction: "left" | "right") => {
-//     if (!sliderRef.current) return;
-
-//     sliderRef.current.scrollBy({
-//       left: direction === "left" ? -300 : 300,
-//       behavior: "smooth",
-//     });
-//   };
-
-//   return (
-//     <div className="w-full container">
-//       <h2 className="text-center fluid-text-20-24 font-bold leading-7.5 mx-auto mt-6">
-//         Top Categories
-//       </h2>
-
-//       <div className="relative max-w-[1700px] mx-auto">
-//         <button
-//           type="button"
-//           onClick={() => handleScroll("left")}
-//           disabled={isAtStart}
-//           className="hidden lg:flex absolute left-[-12px] top-22 -translate-y-3 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white"
-//         >
-//           <ChevronLeft size={18} className="text-black" />
-//         </button>
-
-//         <button
-//           type="button"
-//           onClick={() => handleScroll("right")}
-//           disabled={isAtEnd}
-//           className="hidden lg:flex absolute right-[-16px] top-22 -translate-y-3 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white"
-//         >
-//           <ChevronRight size={18} className="text-black" />
-//         </button>
-
-//         <div
-//           ref={(node) => {
-//             sliderRef.current = node;
-//             if (node) updateScrollButtons();
-//           }}
-//           onScroll={updateScrollButtons}
-//           className="flex items-start gap-[16px] lg:gap-[35px] overflow-x-auto scroll-smooth no-scrollbar py-6"
-//         >
-//           {categories.map((item, index) => (
-//             <Link
-//               key={`${item.title}-${index}`}
-//               href={item.href}
-//               className="shrink-0 flex flex-col gap-[8px] items-center justify-start cursor-pointer w-[72px] min-h-[98px] md:w-[138px] md:min-h-[172px] md:gap-[16px]"
-//             >
-//               <div className="relative w-[64px] h-[64px] md:w-[138px] md:h-[138px] shrink-0 rounded-full border border-[#D8D8D8] shadow-[0px_2px_6px_0px_#00000014] md:shadow-none bg-white overflow-hidden flex items-center justify-center">
-//                 <Image
-//                   src={item.image}
-//                   alt={item.title}
-//                   width={200}
-//                   height={200}
-//                   quality={100}
-//                   loading="lazy"
-//                   sizes="(min-width: 768px) 200px, 70px"
-//                   className="object-contain w-[70px] h-[70px] md:w-[200px] md:h-[200px] transition-transform duration-500 ease-in-out hover:scale-110"
-//                   // by doing this it keep the image in circle
-//                 />
-//               </div>
-
-//               <p className="text-[12px] font-bold leading-tight tracking-[0%] text-center capitalize text-[#2B2B2B] line-clamp-2">
-//                 {item.title}
-//               </p>
-//             </Link>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+};

@@ -100,7 +100,7 @@ const ProductListingClient = ({
   });
 
   const handleClearAllFilters = () => {
-    setSelectedCategorySlug(null);
+    setSelectedCategorySlugs([]);
     setSelectedPriceRange(null);
     clearFilters();
   };
@@ -253,7 +253,21 @@ const extractedBrands = useMemo(() => {
   return Array.from(brandMap.values());
 }, [products]);
 
-  const [selectedCategorySlug, setSelectedCategorySlug] = useState<string | null>(null);
+  // Highlight pages (What's On Sale / Clearance) filter client-side, so the
+  // category picks are held as a list — selecting several narrows to the union
+  // of those categories, the same way the sidebar's other filters behave.
+  const [selectedCategorySlugs, setSelectedCategorySlugs] = useState<string[]>([]);
+
+  const productMatchesCategorySlug = (product: Product, slug: string) => {
+    const productCategorySlug = product.category_slug?.toLowerCase();
+    const productCategoryName =
+      product.category_name?.toLowerCase() || product.category?.toLowerCase();
+
+    return (
+      productCategorySlug === slug.toLowerCase() ||
+      productCategoryName === slug.toLowerCase().replace(/-/g, " ")
+    );
+  };
   const [selectedPriceRange, setSelectedPriceRange] = useState<string | null>(null);
 
   const filterTags = useMemo(() => {
@@ -270,17 +284,17 @@ const extractedBrands = useMemo(() => {
       handleFilterChange,
     });
 
-    if (selectedCategorySlug) {
+    selectedCategorySlugs.forEach((slug) => {
       const categoryName =
-        extractedCategories.find((cat) => cat.slug === selectedCategorySlug)
-          ?.name || selectedCategorySlug;
+        extractedCategories.find((cat) => cat.slug === slug)?.name || slug;
 
       tags.push({
-        key: `highlight-category-${selectedCategorySlug}`,
+        key: `highlight-category-${slug}`,
         label: categoryName,
-        onRemove: () => setSelectedCategorySlug(null),
+        onRemove: () =>
+          setSelectedCategorySlugs((prev) => prev.filter((s) => s !== slug)),
       });
-    }
+    });
 
     if (selectedPriceRange) {
       tags.push({
@@ -293,7 +307,7 @@ const extractedBrands = useMemo(() => {
     return tags;
   }, [
     selectedCategories,
-    selectedCategorySlug,
+    selectedCategorySlugs,
     extractedCategories,
     selectedPrices,
     selectedPriceRange,
@@ -315,16 +329,12 @@ const extractedBrands = useMemo(() => {
   const filteredProducts = useMemo(() => {
     let result = apiProducts;
 
-    if (selectedCategorySlug) {
-      result = result.filter((product) => {
-        const productCategorySlug = product.category_slug?.toLowerCase();
-        const productCategoryName = product.category_name?.toLowerCase() || product.category?.toLowerCase();
-
-        return (
-          productCategorySlug === selectedCategorySlug.toLowerCase() ||
-          productCategoryName === selectedCategorySlug.toLowerCase().replace(/-/g, " ")
-        );
-      });
+    if (selectedCategorySlugs.length > 0) {
+      result = result.filter((product) =>
+        selectedCategorySlugs.some((slug) =>
+          productMatchesCategorySlug(product, slug),
+        ),
+      );
     }
 
     if (selectedPriceRange) {
@@ -344,7 +354,7 @@ const extractedBrands = useMemo(() => {
     }
 
     return isHighlight ? filterProductsByPriceRange(result, activePriceRange) : result;
-  }, [apiProducts, selectedCategorySlug, selectedPriceRange, activePriceRange, isHighlight]);
+  }, [apiProducts, selectedCategorySlugs, selectedPriceRange, activePriceRange, isHighlight]);
 
   const effectiveTotal = isHighlight
     ? filteredProducts.length
@@ -358,28 +368,16 @@ const extractedBrands = useMemo(() => {
   const productsForPriceCount = useMemo(() => {
     let result = apiProducts;
 
-    if (selectedCategorySlug) {
-      result = result.filter((product) => {
-        const productCategorySlug =
-          product.category_slug?.toLowerCase();
-
-        const productCategoryName =
-          product.category_name?.toLowerCase() ||
-          product.category?.toLowerCase();
-
-        return (
-          productCategorySlug ===
-          selectedCategorySlug.toLowerCase() ||
-          productCategoryName ===
-          selectedCategorySlug
-            .toLowerCase()
-            .replace(/-/g, " ")
-        );
-      });
+    if (selectedCategorySlugs.length > 0) {
+      result = result.filter((product) =>
+        selectedCategorySlugs.some((slug) =>
+          productMatchesCategorySlug(product, slug),
+        ),
+      );
     }
 
     return result;
-  }, [apiProducts, selectedCategorySlug]);
+  }, [apiProducts, selectedCategorySlugs]);
 
   const priceCounts = useMemo(() => {
     const counts = {
@@ -466,8 +464,18 @@ const extractedBrands = useMemo(() => {
     }
   };
 
+  // null clears every pick ("All Categories"); a slug toggles just that one.
   const handleCategorySelect = (categorySlug: string | null) => {
-    setSelectedCategorySlug(categorySlug);
+    if (categorySlug === null) {
+      setSelectedCategorySlugs([]);
+      return;
+    }
+
+    setSelectedCategorySlugs((prev) =>
+      prev.includes(categorySlug)
+        ? prev.filter((slug) => slug !== categorySlug)
+        : [...prev, categorySlug],
+    );
   };
 
   const handlePriceSelect = (priceRange: string | null) => {
@@ -490,7 +498,7 @@ const extractedBrands = useMemo(() => {
                 extractedCategories={
                   isHighlight ? extractedCategories : undefined
                 }
-                selectedCategorySlug={selectedCategorySlug}
+                selectedCategorySlugs={selectedCategorySlugs}
                 onCategorySelect={handleCategorySelect}
                 selectedPriceRange={
                   isHighlight ? selectedPriceRange : undefined
@@ -518,7 +526,7 @@ const extractedBrands = useMemo(() => {
               filters={persistedFilters}
               category={category}
               extractedCategories={isHighlight ? extractedCategories : undefined}
-              selectedCategorySlug={selectedCategorySlug}
+              selectedCategorySlugs={selectedCategorySlugs}
               onCategorySelect={handleCategorySelect}
               selectedPriceRange={isHighlight ? selectedPriceRange : undefined}
               onPriceSelect={isHighlight ? handlePriceSelect : undefined}
@@ -532,7 +540,7 @@ const extractedBrands = useMemo(() => {
 
           {!rtkIsLoading &&
           displayProducts.length === 0 &&
-          (selectedCategorySlug || selectedPriceRange) ? (
+          (selectedCategorySlugs.length > 0 || selectedPriceRange) ? (
             <NoProductsFound
               title="No Products"
               titleSpan="Found"

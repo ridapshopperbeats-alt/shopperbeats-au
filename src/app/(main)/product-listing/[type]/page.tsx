@@ -128,11 +128,19 @@ async function fetchProductData(
 
   let productApiUrl = "";
 
-  const fetchOptions: RequestInit = {
-    cache: "no-store",
-    headers: {
-      Cookie: allCookies || "",
-    },
+  // These listings are public, but the API rejects the whole request when it
+  // carries an access_token cookie it cannot parse — so a stale or malformed
+  // cookie turns a 200 into a 401. Retry anonymously in that case, the same way
+  // getProduct does in product/[slug]/page.tsx.
+  const fetchWithOptionalCookie = async (url: string) => {
+    const anonymous: RequestInit = { cache: "no-store" };
+    if (!allCookies) return fetch(url, anonymous);
+
+    const res = await fetch(url, {
+      ...anonymous,
+      headers: { Cookie: allCookies },
+    });
+    return res.status === 401 ? fetch(url, anonymous) : res;
   };
 
   if (isPersonalized) {
@@ -163,7 +171,7 @@ async function fetchProductData(
     productApiUrl = `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?${queryParams.toString()}`;
   }
   try {
-    const productsRes = await fetch(productApiUrl, fetchOptions);
+    const productsRes = await fetchWithOptionalCookie(productApiUrl);
     if (!productsRes.ok) {
       console.error(
         `Failed to fetch products for type: ${typeSlug}`,
@@ -189,9 +197,8 @@ async function fetchProductData(
 
     if (filters.length === 0) {
       try {
-        const filterRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?limit=1`,
-          fetchOptions
+        const filterRes = await fetchWithOptionalCookie(
+          `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?limit=1`
         );
         if (filterRes.ok) {
           const filterData = await filterRes.json();

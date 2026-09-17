@@ -1,40 +1,29 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 
+import { toast } from "react-toastify";
+
+import { PersonalInfoFormData } from "@/types/auth";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 import Image from "next/image";
 import { personalInfoSchema } from "@/lib/validations/form-schemas";
+import { handleAustralianPhoneNumberChange, toYYYYMMDD } from "@/lib/utils/main-utils";
 import { useGetPersonalDataQuery, useUpdatePersonalDataMutation } from "@/lib/redux/apis/auth-api";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
-import { PersonalInfoFormData } from "@/types/auth";
-import { RootState } from "@/lib/redux/store";
-import { handleUSPhoneNumberChange, toYYYYMMDD } from "@/lib/utils/main-utils";
-import { toast } from "react-toastify";
 import Button from "@/components/common/Button";
-import { Input } from "@/components/common/input";
 import { Card } from "@/components/common/Card";
+import { Input } from "@/components/common/input";
 import { CameraIcon } from "@/components/common/Svg";
 
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/svg+xml", "image/gif", "image/webp"];
-const ALLOWED_IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "svg", "gif", "webp"];
 
-function isAllowedImageFile(file: File): boolean {
-  if (ALLOWED_IMAGE_TYPES.includes(file.type)) return true;
-  const extension = file.name.split(".").pop()?.toLowerCase();
-  return !!extension && ALLOWED_IMAGE_EXTENSIONS.includes(extension);
-}
 
 export default function PersonalInformationPage() {
-  const { isAuthenticated, authChecked } = useSelector((state: RootState) => state.auth);
-  const { data: personalData } = useGetPersonalDataQuery(undefined, {
-    skip: !authChecked || !isAuthenticated,
-  });
+  const { data: personalData } = useGetPersonalDataQuery();
   const [updatePersonalData, { isLoading: isUpdating }] =
     useUpdatePersonalDataMutation();
 
-  const { formData, formErrors, handleChange, handleSubmit, setFormData, setFormErrors } =
+  const { formData, formErrors, handleChange, handleSubmit, setFormData } =
     useFormValidation(personalInfoSchema, {
       first_name: "",
       last_name: "",
@@ -63,7 +52,6 @@ export default function PersonalInformationPage() {
         phonenumber: personalData.response.phonenumber || "",
         date_of_birth: personalData.response.date_of_birth || "",
       });
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOriginalData({
         first_name: personalData.response.first_name || "",
         last_name: personalData.response.last_name || "",
@@ -97,30 +85,23 @@ export default function PersonalInformationPage() {
       setOriginalData(data);
 
       toast.success("Profile updated successfully!");
-    } catch (error) {
-      console.error("Profile update failed, status:", (error as { status?: number | string })?.status);
+    } catch {
       toast.error("Failed to update profile.");
     }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!isAllowedImageFile(file)) {
-      toast.error("Only JPG, JPEG, PNG, SVG, GIF, and WEBP images are allowed.");
-      e.target.value = "";
-      return;
+    if (file) {
+      setProfileImage(file);
+      setImagePreview(URL.createObjectURL(file));
     }
-
-    setProfileImage(file);
-    setImagePreview(URL.createObjectURL(file));
   };
 
   const handlePhoneChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const { value, error } = handleUSPhoneNumberChange(
+    const { value, error } = handleAustralianPhoneNumberChange(
       e,
       formData.phonenumber
     );
@@ -130,10 +111,7 @@ export default function PersonalInformationPage() {
       phonenumber: value,
     }));
 
-    setFormErrors((prev) => ({
-      ...prev,
-      phonenumber: error,
-    }));
+    formErrors.phonenumber = error;
   };
 
   return (
@@ -158,16 +136,17 @@ export default function PersonalInformationPage() {
             type="file"
             id="profile_image"
             name="profile_image"
-            accept="image/jpeg,image/png,image/svg+xml,image/gif,image/webp"
+            accept="image/*"
             onChange={handleImageChange}
             className="hidden"
           />
         </div>
+
         <div>
-          <h2 className="font-[Montserrat] fluid-text-xs font-semibold leading-[19.5px] text-[#101828]">
+          <h2 className="font-montserrat fluid-text-xs font-semibold leading-[19.5px] text-[#101828]">
             Personal Information
           </h2>
-          <p className="font-[Montserrat] text-12px font-normal leading-[16.5px] text-[#99A1AF]">
+          <p className="font-montserrat text-12px font-normal leading-[16.5px] text-[#99A1AF]">
             Manage your account details below
           </p>
         </div>
@@ -209,8 +188,8 @@ export default function PersonalInformationPage() {
             <Input
               id="email"
               label="Email Address*"
-              type="email"
               error={formErrors.email}
+              type="email"
               name="email"
               placeholder="Enter Email"
               value={formData.email}
@@ -221,15 +200,15 @@ export default function PersonalInformationPage() {
           <div className="flex flex-col gap-1">
             <Input
               id="phonenumber"
-              type="tel"
               label="Phone Number*"
+              error={formErrors.phonenumber}
+              type="tel"
               name="phonenumber"
-              placeholder="e.g. 1234567890 or +11234567890"
+              placeholder="e.g. 0412345678 or +61412345678"
               value={formData.phonenumber}
               onChange={handlePhoneChange}
               inputMode="numeric"
               pattern="[0-9+]*"
-              error={formErrors.phonenumber}
             />
           </div>
         </div>
@@ -238,16 +217,20 @@ export default function PersonalInformationPage() {
           <div className="flex flex-col gap-1">
             <Input
               id="date_of_birth"
-              type="date"
               label="Date of Birth (Optional)"
+              error={formErrors.date_of_birth}
+              type="date"
               name="date_of_birth"
               value={toYYYYMMDD(formData.date_of_birth)}
               onChange={handleChange}
+              min="1900-01-01"
+              max="2025-12-31"
             />
           </div>
         </div>
 
         <hr className="w-full border-t-[1px] border-[#E0E0E0]" />
+
         <div className="flex w-full justify-end">
           <Button
             type="submit"

@@ -152,7 +152,7 @@ export const handleUSPhoneNumberChange = (
 // Validate Australian phone numbers with specific rules for local and international formats
 export const handleAustralianPhoneNumberChange = (
   event: React.ChangeEvent<HTMLInputElement>,
-  previousValue: string,
+  previousValue: string
 ): { value: string; error: string | null } => {
   const value = event.target.value;
 
@@ -175,10 +175,7 @@ export const handleAustralianPhoneNumberChange = (
   if (value.startsWith("0")) {
     // Allow typing 0 → 04 progressively
     if (value.length >= 2 && value[1] !== "4") {
-      return {
-        value: previousValue,
-        error: "Australian mobile must start with 04",
-      };
+      return { value: previousValue, error: "Australian mobile must start with 04" };
     }
 
     if (value.length > 10) {

@@ -13,7 +13,7 @@ import Button from "@/components/common/Button";
 import { Input } from "@/components/common/input";
 import { Address, AddressFormProps, AddressFormValues } from "@/types/address";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { toYYYYMMDD, handleUSPhoneNumberChange } from "@/lib/utils/main-utils";
+import { toYYYYMMDD, handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
 import { addressSchema } from "@/lib/validations/form-schemas";
 
 export default function AddressForm({
@@ -109,7 +109,7 @@ export default function AddressForm({
     }
   }
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, error } = handleUSPhoneNumberChange(
+    const { value, error } = handleAustralianPhoneNumberChange(
       e,
       formData.phone_number,
     );
@@ -232,7 +232,7 @@ export default function AddressForm({
           error={formErrors.phone_number}
           type="tel"
           name="phone_number"
-          placeholder="e.g. 1234567890 or +11234567890"
+          placeholder="e.g. 0412345678 or +61412345678"
           value={formData.phone_number}
           onChange={handlePhoneChange}
           inputMode="numeric"

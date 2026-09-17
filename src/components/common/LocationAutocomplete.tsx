@@ -23,12 +23,12 @@ const PRIMARY_TYPES: Record<LocationType, string[]> = {
   country: ["country"],
 };
 
-// City/State searches are scoped to the US since the rest of the address
-// form (see AddressAutocomplete) only supports US addresses. Country search
-// is left unrestricted so any country can be selected.
+// City/State searches are scoped to Australia since the rest of the address
+// form (see AddressAutocomplete) only supports Australian addresses. Country
+// search is left unrestricted so any country can be selected.
 const REGION_CODES: Record<LocationType, string[] | undefined> = {
-  city: ["US"],
-  state: ["US"],
+  city: ["AU"],
+  state: ["AU"],
   country: undefined,
 };
 

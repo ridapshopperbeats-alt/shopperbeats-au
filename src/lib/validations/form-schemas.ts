@@ -28,6 +28,14 @@ export const phoneNumber = yup
     "Enter a valid USA phone number (e.g. 1234567890 or +11234567890)"
   );
 
+export const australianPhoneNumber = yup
+  .string()
+  .required("Phone number is required")
+  .matches(
+    /^(?:\+614\d{8}|04\d{8})$/,
+    "Enter a valid Australian mobile number (e.g. 0412345678 or +61412345678)"
+  );
+
 /* ------------------ EMAIL ------------------ */
 
 export const email = yup .string()
@@ -64,7 +72,8 @@ export const dateOfBirth = yup
 export const pincode = yup
   .string()
   .required("Postcode is required")
-  .matches(/^\d{5}(-\d{4})?$/, "Enter a valid US ZIP code");
+  .matches(/^\d{4}$/, "Enter a valid Australian postcode");
+
 
 
 /* ------------------ Name  ------------------ */
@@ -161,7 +170,7 @@ export const addressSchema = yup.object().shape({
   }),
   first_name: nameField("First Name"),
   last_name: nameField("Last Name"),
-  phone_number: phoneNumber,
+  phone_number: australianPhoneNumber,
   address: requiredString("Address"),
   city: requiredString("City"),
   state: requiredString("State"),

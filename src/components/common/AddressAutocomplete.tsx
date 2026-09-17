@@ -103,11 +103,11 @@ export default function GooglePlacesInput({
             ? {
               input: query,
               includedPrimaryTypes: ["postal_code"],
-              includedRegionCodes: ["US"],
+              includedRegionCodes: ["AU"],
             }
             : {
               input: query,
-              includedRegionCodes: ["US"],
+              includedRegionCodes: ["AU"],
             }
         )
         .then((res) => {

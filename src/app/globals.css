@@ -1321,6 +1321,14 @@ input[type="radio"] {
   @apply !absolute !right-0 top-1/2 -translate-y-1/2 translate-x-1/2  flex items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed;
 }
 
+.handlePrev-inset {
+  @apply !absolute !left-[-10px] md:!left-[-16px] top-1/2 -translate-y-1/2 !z-[999] flex items-center justify-center !w-9 !h-9 sm:!w-10 sm:!h-10 bg-white text-black rounded-full border border-gray-200 shadow-sm disabled:opacity-30 disabled:cursor-not-allowed;
+}
+
+.handleNext-inset {
+  @apply !absolute !right-[-10px] md:!right-[-16px] top-1/2 -translate-y-1/2 !z-[999] flex items-center justify-center !w-9 !h-9 sm:!w-10 sm:!h-10 bg-white text-black rounded-full border border-gray-200 shadow-sm disabled:opacity-30 disabled:cursor-not-allowed;
+}
+
 /* ============================================================
     Added common css that using in multiple modules
    ============================================================ */

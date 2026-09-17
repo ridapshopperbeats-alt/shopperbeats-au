@@ -115,10 +115,6 @@ ul.social {
   @apply text-white font-bold leading-[28px] text-[clamp(1.2rem,2vw,1.25rem)];
 }
 
-.footer-newsletter-title {
-  @apply text-white;
-}
-
 .footer-newsletter-desc {
   @apply mt-[10px] text-[0.75rem] font-normal leading-[normal] text-[#FFFFFF];
 }
@@ -212,15 +208,6 @@ ul.social {
     border-radius: 8px;
     border: 1px solid #333;
     background: #1A1A1A;
-  }
-
-  .footer-newsletter-title {
-    color: #FFF;
-    font-family: Montserrat, sans-serif;
-    font-size: clamp(1rem, 1.5vw, 1.125rem);
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
   }
 
   .footer-newsletter-desc {

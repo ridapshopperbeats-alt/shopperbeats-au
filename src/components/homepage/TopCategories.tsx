@@ -1,7 +1,7 @@
 import Layout from "@/components/common/Layout";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { getFooterMenuData } from "@/lib/utils/get-footer-menu-data";
-import NewTopCategories from "./NewTopCategories";
+import { NewTopCategories } from "./NewTopCategories";
 
 export default async function TopCategories({
   children,
