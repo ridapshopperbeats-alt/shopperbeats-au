@@ -1,0 +1,604 @@
+@reference "tailwindcss";
+
+.checkout-form input::placeholder {
+  @apply font-medium leading-none tracking-normal;
+  font-family: var(--font-montserrat);
+  font-size: 16px !important;
+}
+
+.checkout-wrapper {
+  @apply w-[66%] pr-5;
+}
+
+.checkout-wrapper .express-checkout {
+  @apply bg-[var(--white)] rounded-[8px] p-5;
+}
+
+.express-buttons {
+  @apply flex gap-6 mx-auto mb-[10px] justify-center max-w-[800px];
+}
+
+.express-buttons button {
+  @apply flex-1 p-3 border-none rounded-[8px] font-bold text-[var(--white)] cursor-pointer;
+}
+
+.express-buttons button img {
+  @apply m-auto;
+}
+
+button.paypal {
+  @apply bg-[#ffc84f];
+}
+
+button.afterpar {
+  @apply bg-[var(--black)];
+}
+
+button.zip {
+  @apply bg-[#1a0826];
+}
+
+.checkout-wrapper .express-checkout h6 {
+  @apply mb-6;
+}
+
+.divider {
+  @apply text-center my-[9px] border-b border-[var(--lightgray)] relative;
+}
+
+.divider span {
+  @apply bg-[var(--WhiteSmoke)] px-[10px] relative top-3 font-medium;
+}
+
+.checkout-form {
+  @apply bg-transparent rounded-none p-0;
+}
+
+.checkout-form .select-field input {
+  @apply pr-8 bg-no-repeat bg-[right_14px_center] bg-[length:12px] bg-[url('/images/down-arrow.svg')];
+}
+
+.delivery-details input[type="text"],
+.delivery-details input[type="number"] {
+  @apply h-[46px] rounded-[5px] border border-[#d9d2d2] bg-[#ffffff] px-[14px] font-medium text-sm leading-5 tracking-normal text-[#4f4f4f];
+  font-family: var(--font-montserrat);
+}
+
+.delivery-details input::placeholder {
+  @apply font-medium leading-5 tracking-normal text-[#4f4f4f];
+  font-family: var(--font-montserrat);
+  font-size: 16px !important;
+}
+
+.checkout-form .payment-card.active {
+  @apply bg-[var(--WhiteSmoke)];
+}
+
+.checkout-form input[type="checkbox"]:checked {
+  @apply bg-[#01295f] border border-white;
+}
+
+.checkout-form .payment-option.active {
+  @apply bg-[var(--WhiteSmoke)];
+}
+
+.checkout-form .payment-option-group {
+  @apply bg-[var(--white)] rounded-[8px] overflow-hidden py-1;
+}
+
+@media screen and (min-width: 1280px) {
+  .checkout-form .payment-option-group {
+    @apply -mx-4;
+  }
+}
+
+.checkout-form .payment-option-group .payment-option {
+  @apply bg-transparent border-t-0 border-x-0 rounded-none mb-0 border-b border-[#d9d2d2];
+}
+
+.checkout-form .payment-option-group .payment-option:last-child {
+  @apply border-b-0;
+}
+
+.shipping-details-block {
+  @apply bg-[var(--WhiteSmoke)] p-5 rounded-[8px] w-full;
+}
+
+.shipping-details-block .dflex {
+  @apply justify-between;
+}
+
+.shipping-details-block .dflex p {
+  @apply font-medium mb-1.5;
+}
+
+.shipping-details-block span {
+  @apply block text-[var(--gray)] font-medium;
+}
+
+.payment-card {
+  @apply bg-[var(--WhiteSmoke)] px-4 py-5 mt-5 mb-5 w-full;
+}
+
+.payment-card label {
+  @apply flex flex-wrap mb-3 items-center;
+}
+
+.payment-card .payment-logos {
+  @apply ml-auto;
+}
+
+.payment-card label label {
+  @apply block mb-0 ml-[10px];
+}
+
+.payment-option {
+  @apply bg-[var(--white)] border border-[var(--lightgray)] rounded-[8px] px-5 py-3 mb-5;
+}
+
+.payment-option .payment-item {
+  @apply flex items-center gap-2 font-semibold cursor-pointer mb-0;
+}
+
+.payment-option .method-label {
+  @apply flex-1 font-medium;
+}
+
+.payment-option input[type="radio"] {
+  @apply mr-[10px];
+}
+
+.payment-option img.method-icon {
+  @apply w-[75px];
+}
+
+.payment-option .payment-item img {
+  @apply ml-auto;
+}
+
+.order-wrapper p {
+  @apply text-center py-5 font-semibold;
+}
+
+.payment-option label {
+  @apply mb-0;
+}
+
+.order-wrapper p a {
+  @apply text-[var(--secondary)] underline;
+}
+
+.order-title {
+  @apply justify-between items-center p-[15px] border-b border-[var(--lightgray)];
+}
+
+.order-title h6 {
+  @apply text-base font-bold text-[var(--black)];
+}
+
+.order-title a {
+  @apply underline font-semibold text-[var(--black)] text-sm;
+}
+
+.order-summary.order-wrapper {
+  @apply p-0 w-[582px] h-auto bg-[var(--white)] shadow-[0px_0px_14px_rgba(0,0,0,0.08)] rounded-[8px];
+}
+
+@media screen and (min-width: 320px) and (max-width: 767px) {
+  .order-summary.order-wrapper {
+    @apply w-full h-auto;
+  }
+
+  .summary-row {
+    @apply p-4;
+  }
+
+  .cart-img {
+    @apply flex items-start gap-3 w-full;
+  }
+
+  .cart-img img {
+    @apply w-[70px] h-[70px] object-cover shrink-0;
+  }
+
+  .cart-img p {
+    @apply text-base leading-[22px];
+  }
+
+  .summary-row.delivery-cost {
+    @apply items-start gap-[10px];
+  }
+}
+
+.cart-img {
+  @apply flex items-center max-w-[375px];
+}
+
+.cart-img img {
+  @apply object-contain w-[70px] min-w-[70px] h-[70px];
+}
+
+.order-summary .summary-row p {
+  @apply text-left ml-[14px] p-0 text-sm;
+}
+
+.cart-img p {
+  @apply font-semibold text-[var(--black)];
+}
+
+.order-wrapper .summary-row {
+  @apply items-center px-5 py-[14px] mb-0;
+}
+
+.summary-row.delivery-cost {
+  @apply border-t border-b border-[var(--lightgray)] mb-0;
+}
+
+.order-wrapper .total-cart {
+  @apply bg-[var(--WhiteSmoke)] px-5 items-center;
+}
+
+.order-wrapper .total-cart .price {
+  @apply pb-0;
+}
+
+.summary-row.delivery-cost span {
+  @apply text-sm;
+}
+
+.summary-row.delivery-cost p {
+  @apply ml-0;
+}
+
+#popupModal .modal-content,
+#popupModall .modal-content {
+  @apply max-w-[662px] mx-auto my-5;
+}
+
+#popupModal .modal-content .order-summary.order-wrapper,
+#popupModall .modal-content .order-summary.order-wrapper {
+  @apply w-full shadow-none border border-[var(--lightgray)];
+}
+
+.ordermodal h6 {
+  @apply border-b border-[var(--lightgray)] py-4;
+}
+
+.ordermodal p {
+  @apply font-medium mb-5;
+}
+
+.checkout-form .contact-details .form-item .mt-18 {
+  @apply text-sm font-medium;
+}
+
+.ordermodal h2 {
+  @apply text-xl;
+}
+
+.ordermodal .fixed {
+  @apply bg-[#000000a6];
+}
+
+.ordermodal button {
+  @apply bg-[var(--secondary)] text-[var(--white)] !shadow-none px-5 py-[6px] text-base font-semibold rounded-full cursor-pointer;
+}
+
+.ordermodal button:hover {
+  @apply bg-[var(--primary)];
+}
+
+.ordermodal .flex {
+  @apply justify-center gap-[5px];
+}
+
+.saved-Address {
+  @apply mt-[5px];
+}
+
+.checkout-form .card-field-box {
+  @apply border border-[#e5e5e5] rounded-[8px] px-3 py-[14px] bg-white;
+}
+
+/* Contact section (moved from Tailwind utility classes) */
+
+.contact-section {
+  @apply flex flex-col gap-5 w-full;
+}
+
+@media screen and (min-width: 1280px) {
+  .contact-section {
+    @apply sticky self-start;
+  }
+}
+
+.contact-card-box {
+  @apply w-full border border-[#F8F8F8] rounded-[7px] p-5 flex flex-col gap-4 bg-white shadow-[0_0_4px_0_rgba(0,0,0,0.10)];
+}
+
+@media screen and (min-width: 1024px) {
+  .contact-card-box {
+    @apply min-h-[160px];
+  }
+}
+
+.contact-heading {
+  @apply font-bold text-base leading-5 mb-4;
+}
+
+.contact-email-input {
+  @apply h-[46px] rounded-[5px] text-sm font-normal leading-5 tracking-normal;
+  font-family: var(--font-montserrat);
+}
+
+.contact-checkbox-label {
+  @apply flex items-center gap-2 mt-5 font-[open-sans] text-sm font-normal leading-5 tracking-normal text-[#4f4f4f];
+}
+
+/* Delivery section (moved from Tailwind utility classes) */
+
+.delivery-section {
+  @apply flex flex-col gap-5 w-full mt-5;
+}
+
+@media screen and (min-width: 1280px) {
+  .delivery-section {
+    @apply sticky self-start;
+  }
+}
+
+.delivery-card-box {
+  @apply w-full border border-[#F8F8F8] rounded-[7px] p-5 flex flex-col gap-4 bg-white shadow-[0_0_4px_0_rgba(0,0,0,0.10)];
+}
+
+@media screen and (min-width: 1024px) {
+  .delivery-card-box {
+    @apply min-h-[648px];
+  }
+}
+
+.delivery-option-row {
+  @apply flex items-center gap-6;
+}
+
+.delivery-option-label {
+  @apply flex items-center gap-2 font-bold text-base leading-5 tracking-normal text-black;
+  font-family: var(--font-montserrat);
+}
+
+.delivery-option-label input[type="radio"] {
+  @apply mr-[6px];
+}
+
+.delivery-option-label-alt {
+  @apply flex items-center gap-2 font-bold text-xs leading-5 text-black;
+}
+
+.delivery-option-label-alt input[type="radio"] {
+  @apply mr-[6px];
+}
+
+.saved-address-list {
+  @apply mb-2;
+}
+
+@media screen and (min-width: 1024px) {
+  .saved-address-list {
+    @apply mb-6;
+  }
+}
+
+.saved-address-item {
+  @apply flex flex-col pb-2 mb-2 border-b border-[#333333];
+}
+
+.saved-address-item:last-child {
+  @apply border-b-0;
+}
+
+.saved-address-header {
+  @apply flex items-center gap-2;
+}
+
+.saved-address-radio {
+  @apply w-[8px] h-[8px] accent-[#01295f];
+}
+
+.saved-address-title {
+  @apply text-xs;
+}
+
+.saved-address-detail {
+  @apply py-1 text-xs;
+}
+
+.delivery-checkbox-label,
+.form-item .delivery-checkbox-label {
+  @apply flex items-center gap-2 mt-5 leading-5 tracking-normal text-[#4F4F4F];
+  font-family: var(--font-montserrat);
+  font-size: clamp(0.875rem, 0.875rem, 0.875rem);
+  font-weight: 500;
+}
+
+@media screen and (min-width: 768px) {
+  .delivery-checkbox-label,
+  .form-item .delivery-checkbox-label {
+    font-weight: 400;
+  }
+}
+.delivery-checkbox-label2 {
+  @apply flex items-center gap-2 mt-5 text-sm font-normal leading-5 tracking-normal text-[#4f4f4f];
+  font-family: var(--font-montserrat);
+}
+
+@media screen and (max-width: 767px) {
+  .delivery-checkbox-label {
+    @apply items-start;
+  }
+
+  .delivery-checkbox-label input[type="checkbox"] {
+    @apply mt-0.5 shrink-0;
+  }
+}
+
+/* Payment section (moved from Tailwind utility classes) */
+
+.payment-section {
+  @apply flex flex-col gap-5 w-full mt-5 h-auto;
+}
+
+@media screen and (min-width: 1280px) {
+  .payment-section {
+    @apply sticky self-start;
+  }
+}
+
+.payment-card-box {
+  @apply w-full h-auto border border-[#F8F8F8] shadow-[0_0_4px_0_rgba(0,0,0,0.10)] rounded-[7px] p-4 flex flex-col gap-4 bg-white;
+}
+
+.payment-heading {
+  @apply text-base font-bold text-black mb-4 leading-5;
+}
+
+@media screen and (min-width: 1024px) {
+  .payment-heading {
+    @apply mb-0;
+  }
+}
+
+.payment-subtext {
+  @apply text-[#4f4f4f]  text-[0.875rem] font-normal leading-5;
+  font-family: var(--font-montserrat);
+}
+
+.payment-method-box {
+  @apply bg-[#f5f5f5] p-4 mt-4;
+}
+
+@media screen and (min-width: 1280px) {
+  .payment-method-box {
+    @apply -mx-4;
+  }
+}
+
+.payment-method-toggle {
+  @apply flex items-center justify-between gap-2;
+}
+
+.payment-method-name {
+  @apply flex items-center gap-2 text-[0.875rem] font-bold leading-[normal] capitalize;
+}
+
+.checkout-form .payment-logos {
+  @apply ml-auto gap-2;
+}
+
+.card-fields {
+  @apply w-full flex flex-col gap-4 mt-4;
+}
+
+.card-fields .form-item {
+  @apply mb-2;
+}
+
+.billing-toggle-row {
+  @apply py-2 flex items-center gap-2 text-[#4f4f4f];
+  font-size: clamp(0.875rem, 0.875rem, 0.875rem);
+  font-weight: 500;
+}
+
+@media screen and (max-width: 767px) {
+  .billing-toggle-row {
+    font-weight: 500;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .billing-toggle-row {
+    font-weight: 400;
+  }
+}
+
+.billing-address-block {
+  @apply py-2;
+}
+
+.payment-option-radio {
+  @apply w-3 h-3 accent-[#01295f] text-[#b7bab4];
+}
+
+.payment-option-label {
+  @apply font-semibold text-sm leading-none text-black;
+}
+
+.payment-option-logo {
+  @apply ml-auto;
+}
+
+.order-note textarea {
+  @apply border border-[var(--lightgray)] rounded-[8px] text-sm w-full resize-y outline-none transition-colors duration-200 bg-[var(--white)] p-[10px];
+}
+
+.order-note textarea:focus {
+  @apply border-[var(--primary)];
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1800px) {
+  .checkout-wrapper {
+    @apply w-[60%];
+  }
+
+  .order-summary.order-wrapper {
+    @apply w-[40%];
+  }
+}
+@media screen and (max-width: 1199px) {
+  .checkout-wrapper {
+    @apply w-full pr-0;
+  }
+
+  .order-summary.order-wrapper {
+    @apply w-full mt-5;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .payment-card .payment-logos {
+    @apply ml-[initial] w-full mt-[14px];
+  }
+
+  .checkout-form {
+    @apply p-0;
+  }
+
+  .delivery-details .form-fields {
+    @apply !flex;
+  }
+
+  #popupModal .modal-content,
+  #popupModall .modal-content {
+    @apply max-w-[initial];
+  }
+
+  #popupModal,
+  #popupModall {
+    @apply px-[18px] py-0;
+  }
+
+  #popupModall .modal-content h3,
+  #popupModal .modal-content h3 {
+    @apply text-xl;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .order-wrapper .summary-row {
+    @apply flex-col justify-start;
+    align-items: self-start;
+  }
+
+  .cart-img ~ p {
+    @apply !ml-auto !text-right float-right;
+  }
+}

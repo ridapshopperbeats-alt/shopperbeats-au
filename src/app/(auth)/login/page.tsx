@@ -1,0 +1,371 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import ReCaptcha from "@/components/common/ReCaptcha";
+import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Button from "@/components/common/Button";
+
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/redux/store";
+
+import Link from "next/link";
+import {
+  useLoginMutation,
+  useResendVerificationCodeMutation,
+} from "@/lib/redux/apis/auth-api";
+import {
+  useCreateWishlistMutation,
+  readGuestWishlist,
+  clearGuestWishlist,
+} from "@/lib/redux/apis/cart-api";
+import { loginSchema } from "@/lib/validations/form-schemas";
+import { useFormValidation } from "@/lib/hooks/use-form-validation";
+import { Card } from "@/components/common/Card";
+
+export default function LoginPage() {
+  const [login, { isLoading }] = useLoginMutation();
+  const [resendVerificationCode, { isLoading: isResending }] =
+    useResendVerificationCodeMutation();
+  const [createWishlist] = useCreateWishlistMutation();
+  const router = useRouter();
+  const [recaptcha_token, setRecaptcha_token] = useState<string | null>(null);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [blockUntil, setBlockUntil] = useState<Date | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showResendEmail, setShowResendEmail] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get("redirect");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setRedirectUrl(redirect);
+
+    if (isAuthenticated) {
+      router.replace(redirect || "/");
+    } else {
+      setChecking(false);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const { formData, formErrors, handleChange, handleSubmit } =
+    useFormValidation(loginSchema, { email: "", password: "" });
+
+  const flushPendingWishlist = async () => {
+    const raw = sessionStorage.getItem("pendingWishlist");
+    if (!raw) return;
+
+    let parsed: { product_id?: string; variant_id?: string | null };
+    try {
+      parsed = JSON.parse(raw) as {
+        product_id?: string;
+        variant_id?: string | null;
+      };
+    } catch {
+      sessionStorage.removeItem("pendingWishlist");
+      return;
+    }
+
+    if (!parsed.product_id) {
+      sessionStorage.removeItem("pendingWishlist");
+      return;
+    }
+
+    try {
+      await createWishlist({
+        product_id: parsed.product_id,
+        variant_id: parsed.variant_id ?? undefined,
+      }).unwrap();
+      sessionStorage.removeItem("pendingWishlist");
+      toast.success("Added to wishlist!");
+    } catch {
+      toast.error(
+        "Could not add your saved item to wishlist. Try again from the product page.",
+      );
+    }
+  };
+
+
+  const syncGuestWishlist = async () => {
+    const guestItems = readGuestWishlist();
+    if (guestItems.length === 0) return;
+
+    const results = await Promise.allSettled(
+      guestItems.map((item) =>
+        createWishlist({
+          product_id: item.product_id,
+          variant_id: item.variant_id ?? undefined,
+        }).unwrap(),
+      ),
+    );
+
+    clearGuestWishlist();
+
+    const syncedCount = results.filter((r) => r.status === "fulfilled").length;
+    if (syncedCount > 0) {
+      toast.success(
+        syncedCount === 1
+          ? "1 saved item was added to your wishlist!"
+          : `${syncedCount} saved items were added to your wishlist!`,
+      );
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleResendEmail = async () => {
+    if (!formData.email.trim()) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    if (cooldown > 0) {
+      toast.error(`Please wait ${cooldown} seconds before resending`);
+      return;
+    }
+
+    try {
+      await resendVerificationCode({ email: formData.email }).unwrap();
+      toast.success("Verification email sent successfully!");
+
+      setCooldown(60);
+      const timer = setInterval(() => {
+        setCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (err) {
+      const errorMessage =
+        (err as { data?: { message?: string } })?.data?.message ||
+        "Failed to send verification email";
+      toast.error(errorMessage);
+    }
+  };
+
+  useEffect(() => {
+    if (isBlocked && blockUntil) {
+      const interval = setInterval(() => {
+        const now = new Date();
+        const remaining = blockUntil.getTime() - now.getTime();
+        if (remaining <= 0) {
+          setIsBlocked(false);
+          setBlockUntil(null);
+          clearInterval(interval);
+        }
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isBlocked, blockUntil]);
+
+  const handleLoginSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    const isProd = process.env.NEXT_PUBLIC_ENV_VARIABLE === "prod";
+
+    if (isProd && !recaptcha_token) {
+      toast.error("Please complete the reCAPTCHA.", {
+        toastId: "captcha-error",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      await login({
+        ...formData,
+        recaptcha_token: recaptcha_token || "",
+        remember_me: rememberMe,
+      }).unwrap();
+
+      toast.success("Login successful!");
+      await flushPendingWishlist();
+      await syncGuestWishlist();
+      router.push(redirectUrl || "/");
+    } catch (err) {
+      const error = err as { data?: { detail?: string; message?: string } };
+      const errorMessage =
+        error.data?.detail || error.data?.message || "An error occurred";
+
+      if (errorMessage.includes("Account blocked")) {
+        const timeMatch = errorMessage.match(/at\s+(.+)/);
+        const blockUntilDate = timeMatch ? new Date(timeMatch[1]) : null;
+
+        if (blockUntilDate && !Number.isNaN(blockUntilDate.getTime())) {
+          const formattedTime = blockUntilDate.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          const msg = `Account blocked. Try again at ${formattedTime}`;
+          setIsBlocked(true);
+          setBlockUntil(blockUntilDate);
+          toast.error(msg);
+        } else {
+          toast.error("Account temporarily blocked. Try again later.");
+        }
+      } else if (errorMessage === "User Email Not Verified") {
+        setShowResendEmail(true);
+        toast.error(errorMessage);
+      } else {
+        toast.error(errorMessage);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setShowResendEmail(false);
+    setCooldown(0);
+  }, [formData.email]);
+
+  if (checking) {
+    return null;
+  }
+
+  return (
+    <div className="container">
+      <Card className="mx-auto my-6 flex flex-col items-start gap-6 border-0 w-full max-w-[371px] px-[16px] py-[24px] rounded-[8px] bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.10),0_1px_11.8px_-1px_rgba(0,0,0,0.10)] sm:max-w-[714px] sm:items-stretch sm:px-[34px] sm:py-6 sm:rounded-lg sm:bg-white">
+        <h3 className="auth-title w-full">Sign In</h3>
+
+        <form
+          className="w-full"
+          onSubmit={handleSubmit(handleLoginSubmit)}
+          noValidate
+        >
+          <div className="form-item">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter Your Email"
+              value={formData.email}
+              onChange={handleChange}
+              disabled={isLoading || isBlocked}
+              className="!rounded-[10px] border border-[#E5E7EB] flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
+            />
+            {formErrors.email && <p className="error">{formErrors.email}</p>}
+          </div>
+
+          <div className="form-item">
+            <div className="password-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                placeholder="Enter Your Password"
+                value={formData.password}
+                onChange={handleChange}
+                disabled={isLoading || isBlocked}
+                className="!rounded-[10px] border border-[#E5E7EB] w-full flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
+              />
+
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="eyeIcon"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+
+            {formErrors.password && (
+              <p className="error">{formErrors.password}</p>
+            )}
+          </div>
+
+          <div className="password-content">
+            <p>Your password must have:</p>
+            <ul>
+              <li>Must be 8-24 characters long</li>
+              <li>
+                Must include uppercase and lowercase letters, numbers plus at
+                least one special character
+              </li>
+            </ul>
+          </div>
+          {process.env.NEXT_PUBLIC_ENV_VARIABLE === "prod" && (
+            <div className="form-item">
+              <ReCaptcha onCaptchaChange={setRecaptcha_token} />
+            </div>
+          )}
+
+          <div className="form-item form-item-radio">
+            <input
+              type="checkbox"
+              id="remember_me"
+              name="remember_me"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              disabled={isLoading || isBlocked}
+            />
+            <label
+              htmlFor="remember_me"
+              className="fluid-text-sm!  font-medium!"
+            >
+              Remember me
+            </label>
+          </div>
+
+          <Button
+            type="submit"
+            className="btn btn-red btn-filled btn-sharp w-full"
+            disabled={isLoading || isBlocked || isSubmitting}
+            isLoading={isLoading || isSubmitting}
+          >
+            {isLoading ? "Logging in..." : "Sign In"}
+          </Button>
+
+          {showResendEmail && (
+            <div className="resend-email-section">
+              <p className="resend-email-text">
+                Your email is not verified. Click below to resend verification
+                email.
+              </p>
+              <Button
+                type="button"
+                className="btn btn-outline btn-sharp w-100"
+                onClick={handleResendEmail}
+                disabled={isResending || cooldown > 0}
+                isLoading={isResending}
+              >
+                {cooldown > 0
+                  ? `Resend in ${cooldown}s`
+                  : isResending
+                    ? "Sending..."
+                    : "Resend Verification Email"}
+              </Button>
+            </div>
+          )}
+
+          <div className="dflex link auth-links-row flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <Link href="/forgot-password">Forgot Password</Link>
+            <p>
+              New to ShopperBeats? <Link href="/sign-up">Sign Up</Link>
+            </p>
+          </div>
+        </form>
+      </Card>
+    </div>
+  );
+}

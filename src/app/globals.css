@@ -1,0 +1,1763 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  --sb-red: #FD151B;
+  --sb-gray: #F5F5F5;
+  --sb-white: #FFFFFF;
+  --sb-black: #000000;
+  --sb-yellow: #FFB30F;
+  --sb-navy: #01295F;
+  --sb-olive: #849324;
+  --sb-orange: #FF4400;
+  --sb-gray-dark: #878787;
+  --sb-navy-2: #052B56;
+  --sb-green: #008F11;
+  --sb-charcoal: #333333;
+  --sb-gray-mid: #575757;
+  --sb-charcoal-2: #211E22;
+  --sb-gray-light: #99A1AF;}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-montserrat: var(--font-montserrat);
+
+  --color-sb-red: var(--sb-red);
+  --color-sb-gray: var(--sb-gray);
+  --color-sb-white: var(--sb-white);
+  --color-sb-black: var(--sb-black);
+  --color-sb-yellow: var(--sb-yellow);
+  --color-sb-navy: var(--sb-navy);
+  --color-sb-olive: var(--sb-olive);
+  --color-sb-orange: var(--sb-orange);
+  --color-sb-gray-dark: var(--sb-gray-dark);
+  --color-sb-navy-2: var(--sb-navy-2);
+  --color-sb-green: var(--sb-green);
+  --color-sb-charcoal: var(--sb-charcoal);
+  --color-sb-gray-mid: var(--sb-gray-mid);
+  --color-sb-charcoal-2: var(--sb-charcoal-2);
+}
+
+/* Fluid typography: override Tailwind's default font-size scale so every
+   text-xs/sm/base/lg/xl/2xl/3xl usage project-wide scales smoothly with
+   viewport width instead of being a fixed size. The floor (first clamp
+   value) matches Tailwind's original fixed size exactly, so nothing shifts
+   at the sizes already in use today — it only grows gently on wider
+   screens. Line-heights are intentionally left untouched. */
+@theme {
+  --text-xs: clamp(0.75rem, 1.5vw, 0.875rem); /* 12px -> 14px */
+  --text-sm: clamp(0.875rem, 1.5vw, 1rem); /* 14px -> 16px */
+  --text-base: clamp(1rem, 1.5vw, 1.125rem); /* 16px -> 18px */
+  --text-lg: clamp(1.125rem, 2vw, 1.25rem); /* 18px -> 20px */
+  --text-xl: clamp(1.25rem, 2.5vw, 1.5rem); /* 20px -> 24px */
+  --text-2xl: clamp(1.5rem, 3vw, 1.75rem); /* 24px -> 28px */
+  --text-3xl: clamp(1.875rem, 3.5vw, 2.25rem); /* 30px -> 36px */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+} */
+
+body {
+  @apply p-0 m-0 bg-white flex flex-col min-h-screen overflow-x-hidden;
+  font-family: Montserrat !important;
+}
+
+/* Radix popups (Select, etc.) lock body scroll while open via
+   react-remove-scroll, which compensates for the removed scrollbar by
+   injecting margin/padding on body. Mobile has no reserved scrollbar
+   width, so that compensation should always be zero — forcing it here
+   stops the rest of the page visibly shifting when the popup closes. */
+body[data-scroll-locked] {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+  padding-left: 0 !important;
+}
+
+:root {
+  --black: #000000;
+  --white: #fff;
+  --gray: #726969;
+  --lightgray: #d9d2d2;
+  --primary: #01295f;
+  --secondary: #fd151b;
+  --orange: #ffb30f;
+}
+
+.redddd {
+  @apply text-[#01295f];
+}
+
+.error {
+  @apply text-[var(--secondary)] text-sm mt-2;
+}
+
+/* Fluid typography utilities — replace fixed px font sizes so text scales
+   smoothly with viewport width instead of jumping at breakpoints. */
+.text-12px {
+  @apply text-[0.75rem]; /* 12px */
+}
+.fluid-text-xs {
+  @apply text-[clamp(0.75rem,1.5vw,0.875rem)]; /* 12px -> 14px */
+}
+
+.fluid-text-sm {
+  @apply text-[clamp(0.875rem,1.5vw,1rem)]; /* 14px -> 16px */
+}
+.fluid-text-12-16 {
+  @apply text-[clamp(0.75rem,0.625rem+0.56vw,1rem)]; /* 12px → 16px */
+}
+.fluid-text-base {
+  @apply text-[clamp(1rem,1.5vw,1.125rem)]; /* 16px -> 18px */
+}
+
+.fluid-text-lg {
+  @apply text-[clamp(1.125rem,2vw,1.25rem)]; /* 18px -> 20px */
+}
+
+.fluid-text-xl {
+  @apply text-[clamp(1.375rem,1.2rem+0.8vw,1.5rem)]; /* 22px -> 24px */
+}
+
+.fluid-text-heading {
+  @apply text-[clamp(1rem,3vw,1.5rem)]; /* 16px -> 24px */
+}
+
+.fluid-text-2xs {
+  @apply text-[clamp(0.625rem,1.5vw,0.75rem)]; /* 10px -> 12px */
+}
+
+.fluid-text-11-12 {
+  @apply text-[clamp(0.6875rem,1vw,0.75rem)]; /* 11px -> 12px */
+}
+
+.fluid-text-12-16 {
+  @apply text-[clamp(0.75rem,2.5vw,1rem)]; /* 12px -> 16px */
+}
+
+.fluid-text-13-14 {
+  @apply text-[clamp(0.8125rem,1.5vw,0.875rem)]; /* 13px -> 14px */
+}
+
+.fluid-text-15 {
+  @apply text-[clamp(0.9375rem,1.5vw,1.0625rem)]; /* 15px -> 17px */
+}
+
+.fluid-text-15-16 {
+  @apply text-[clamp(0.9375rem,1vw,1rem)]; /* 15px -> 16px */
+}
+.fluid-text-13-16 {
+  @apply text-[clamp(0.8125rem,0.75rem+0.28vw,1rem)]; /* 13px → 16px */
+}
+.fluid-text-section-title {
+  @apply text-[clamp(2rem,4vw,3rem)]; /* 32px -> 48px */
+}
+
+.fluid-text-16-20 {
+  @apply text-[clamp(1rem,2vw,1.25rem)]; /* 16px -> 20px */
+}
+
+.fluid-text-14-26 {
+  @apply text-[clamp(0.875rem,3vw,1.625rem)]; /* 14px -> 26px */
+}
+
+.fluid-text-18-32 {
+  @apply text-[clamp(1.125rem,4vw,2rem)]; /* 18px -> 32px */
+}
+
+.fluid-text-13-18 {
+  @apply text-[clamp(0.8125rem,2.5vw,1.125rem)]; /* 13px -> 18px */
+}
+
+.fluid-text-20-24 {
+  @apply text-[clamp(1.25rem,2.5vw,1.5rem)]; /* 20px -> 24px */
+}
+
+.fluid-text-14-20 {
+  @apply text-[clamp(0.875rem,2vw,1.25rem)]; /* 14px -> 20px */
+}
+
+.fluid-text-12-14 {
+  @apply text-[clamp(0.75rem,1.5vw,0.875rem)]; /* 12px -> 14px */
+}
+
+.fluid-text-20-36 {
+  @apply text-[clamp(1.25rem,4vw,2.25rem)]; /* 20px -> 36px */
+}
+
+.fluid-text-14-24 {
+  @apply text-[clamp(0.875rem,3vw,1.5rem)]; /* 14px -> 24px */
+}
+
+.fluid-text-9-10 {
+  @apply text-[clamp(0.5625rem,1vw,0.625rem)]; /* 9px -> 10px */
+}
+
+.fluid-text-12-13 {
+  @apply text-[clamp(0.75rem,1vw,0.8125rem)]; /* 12px -> 13px */
+}
+
+.visually-hidden {
+  @apply sr-only;
+}
+
+/* autocomple wrapper */
+
+.autocomplete-wrapper {
+  @apply border border-[var(--lightgray)] rounded-[5px];
+}
+
+.autocomplete-wrapper .input-container div.autocomplete-icon {
+  @apply !h-0 !w-0 !hidden;
+}
+
+.swiper-navigation-icon {
+  @apply !hidden;
+}
+
+/* 12-11-25 */
+.products {
+  @apply relative;
+}
+
+.swiper {
+  @apply !static;
+}
+
+.reviews {
+  @apply relative;
+}
+
+button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.no-products {
+  @apply flex justify-center items-center h-full min-h-[250px] text-2xl font-bold;
+}
+
+input[type=number] {
+  -moz-appearance: textfield !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.title-wrapper {
+  @apply items-center;
+}
+
+.title-wrapper h2 {
+  @apply font-extrabold;
+}
+
+input:disabled {
+  @apply bg-[#f0f0f0] text-[#888] cursor-not-allowed opacity-100;
+}
+
+.container {
+  @apply w-full px-[93px] mx-auto max-w-none;
+}
+
+@media screen and (min-width: 1440px) {
+  .container {
+    @apply !px-[40px];
+  }
+}
+
+.breadcrumb-list {
+  @apply flex items-center flex-wrap;
+}
+
+.breadcrumb {
+  @apply py-[14px];
+}
+
+.breadcrumb-list a {
+  @apply text-sm font-medium text-[var(--black)] px-[7px] max-w-[550px] inline-block align-bottom whitespace-nowrap overflow-hidden text-ellipsis;
+}
+
+.breadcrumb-list a:hover {
+  @apply underline;
+}
+
+.breadcrumb-list i {
+  @apply text-xs;
+}
+
+.breadcrumb-list li {
+  @apply text-sm font-medium;
+}
+
+.breadcrumb-list span {
+  @apply text-sm;
+}
+
+/* form   */
+
+input[type="text"]:not([data-slot="input"]),
+input[type="email"]:not([data-slot="input"]),
+input[type="number"]:not([data-slot="input"]),
+input[type="search"]:not([data-slot="input"]),
+select,
+input[type="password"]:not([data-slot="input"]),
+input[type="date"]:not([data-slot="input"]),
+input[type="tel"]:not([data-slot="input"]),
+textarea:not([data-slot="input"]) {
+  @apply  px-[10px] border border-[var(--lightgray)] bg-[var(--white)] h-[41px] w-full shadow-none !rounded-[5px] !font-medium leading-normal;
+  font-style: medium;
+}
+
+input::placeholder {
+  @apply text-[var(--gray)];
+  font-style: medium;
+  font-size: clamp(0.875rem, 0.875rem, 0.875rem);
+  font-weight: 500;
+}
+
+@media screen and (max-width: 767px) {
+  input::placeholder {
+    font-weight: 400;
+  }
+}
+
+input:focus-visible {
+  @apply outline-none;
+}
+
+textarea {
+  @apply h-[150px] p-[10px];
+}
+
+input[type="checkbox"] {
+  @apply w-[17px] h-[17px] mr-1 align-middle bg-transparent border-2 border-[#B7BAB4] p-0 -mt-0.5 accent-[var(--primary)] scale-100;
+}
+
+select {
+  @apply w-full h-[41px] pr-[35px] pl-[10px] text-base leading-normal text-[#333] bg-[var(--white)] border border-[var(--lightgray)] rounded-[5px] shadow-none appearance-none bg-[url(../../public/images/arrow-down.svg)] bg-no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 8px;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  @apply hidden;
+}
+
+.left-sidebar-style {
+  @apply !font-medium mb-[5px] block text-sm cursor-pointer;
+  color: rgba(0, 0, 0, 0.56) !important;
+}
+
+.form-fields {
+  @apply flex gap-x-5;
+}
+
+.form-fields .form-item {
+  @apply flex-1;
+}
+
+.form-item {
+  @apply mb-5;
+}
+
+.form-item label {
+  @apply block my-4 font-medium  leading-[normal];
+}
+
+.password-input {
+  @apply relative;
+}
+
+.eyeIcon {
+  @apply absolute right-[14px] top-[12px];
+}
+
+.form-item.form-item-radio {
+  @apply flex items-center gap-[10px];
+}
+
+.form-item.form-item-radio label {
+  @apply my-0;
+}
+
+.form-fields .form-item.form-item-radio input[type="checkbox"] {
+  @apply mr-0;
+}
+
+/* form   */
+
+.bg-white {
+  background-color: var(--white);
+}
+
+.btn {
+  @apply inline-block font-semibold text-center cursor-pointer rounded-[100px]  text-[var(--primary)] px-5 py-[12.5px] !leading-[21px] capitalize;
+}
+
+.btn-white {
+  @apply bg-[var(--white)] border border-[var(--primary)];
+}
+
+.btn-white:hover {
+  @apply bg-[var(--primary)] text-[var(--white)];
+}
+
+.title-wrapper .btn {
+  @apply h-[37px] px-5 py-2;
+}
+
+.global-btn {
+  @apply bg-gradient-to-r from-[#FF676B] to-[#FD151B] h-[46px] rounded-[74px] text-[#F6F6F6] text-[clamp(1rem,1.5vw,1.125rem)] font-semibold leading-5 w-full shadow-md shadow-[#0E35BF]/25 cursor-pointer;
+}
+
+/* Filled Red */
+.btn-filled.btn-red {
+  @apply bg-[var(--secondary)] text-[var(--white)];
+}
+
+.btn-filled.btn-red:hover {
+  @apply bg-[var(--primary)];
+}
+
+/* Outline Red */
+.btn-outline.btn-red {
+  @apply bg-transparent text-[var(--secondary)] border border-[var(--secondary)];
+}
+
+.btn-outline.btn-red:hover {
+  @apply bg-[var(--secondary)] text-[var(--white)];
+}
+
+.btn-action {
+  @apply flex flex-wrap mt-[30px] gap-6;
+}
+
+.btn-action .btn {
+  @apply flex-auto whitespace-nowrap;
+}
+
+/* Filled Blue */
+.btn-filled.btn-blue {
+  @apply bg-[var(--primary)] text-[var(--white)] border-[var(--primary)];
+}
+
+.btn-filled.btn-blue:hover {
+  @apply bg-[var(--secondary)];
+}
+
+/* Outline Blue */
+.btn-outline.btn-blue {
+  @apply bg-transparent border-[var(--primary)] text-[var(--primary)];
+}
+
+.btn-outline.btn-blue:hover {
+  @apply bg-[var(--primary)] text-[var(--white)];
+}
+
+.remove {
+  @apply text-[var(--gray)] text-sm font-medium block underline;
+}
+
+.promotion-tag,
+.sale-tag {
+  @apply px-[5px] py-1 text-base;
+}
+
+.promotion-badge {
+  @apply flex items-center gap-[5px] text-[#d10000] bg-[#fff5f5] border border-[#ff4d4f] rounded-[20px] mb-[10px] px-[10px] py-0.5 text-sm font-semibold;
+}
+
+.sale-tag {
+  @apply rounded-none;
+}
+
+/* product card */
+.product-card-link {
+  @apply h-full flex;
+}
+
+.product-card {
+  @apply w-[349px] h-[25rem] rounded-lg bg-[var(--white)] transition-transform duration-200 ease-in-out cursor-pointer border border-[var(--lightgray)] relative overflow-hidden flex flex-col;
+}
+
+.products-slider {
+  @apply overflow-visible pt-[13px];
+}
+
+.products-slider .swiper {
+  overflow: initial !important;
+}
+
+.card-wrapper {
+  @apply relative overflow-visible w-full;
+}
+
+.badge {
+  @apply flex items-center gap-[5px] absolute -top-[13px] right-[15px] z-10 text-[13px] font-semibold text-white bg-[#fd3d42] border border-[#ff4d4f] px-[10px] py-1 rounded-[20px];
+}
+
+.badge.low-stock-badge {
+  @apply bg-[var(--orange)] border-[var(--orange)] text-[var(--white)];
+}
+
+.promotion-badge.low-stock-badge {
+  @apply text-[#b57d00] bg-[#fffdf5] border-[var(--orange)];
+}
+
+.product-card:hover {
+  @apply shadow-[0_0_10px_rgba(0,0,0,0.2)] transition-shadow duration-200 ease-in-out;
+}
+
+.product-card .product-image {
+  @apply bg-[var(--white)] w-full h-[220px] block relative overflow-hidden;
+}
+
+.product-list .product-card .product-image {
+  @apply h-auto w-auto;
+}
+
+.product-image img {
+  @apply object-contain object-center w-full h-full block absolute top-0 left-0;
+}
+
+.product-details .price {
+  @apply text-xl;
+}
+
+.product-details .old-price {
+  @apply text-lg;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.bookingmodal .modal-content .action-btn {
+  @apply justify-center;
+}
+
+.products .swiper-slide {
+  @apply h-auto;
+}
+
+.product-details {
+  @apply p-[14px];
+}
+
+.btn.filled-wishlist {
+  @apply w-[35px] flex justify-center items-center h-[35px] p-0;
+}
+
+.filled-wishlist img {
+  @apply !brightness-0 !invert;
+}
+
+.product-card .product-hover {
+  @apply absolute -right-[60px] bottom-[10px] transition-all duration-500 ease-in-out;
+}
+
+.product-card:hover .product-hover {
+  @apply right-[5px] transition-all duration-500 ease-in-out;
+}
+
+.product-tags {
+  @apply flex flex-wrap gap-[5px] mb-[6px] justify-between;
+}
+
+.tag {
+  @apply text-xs px-2 py-[3px] rounded-xl font-semibold;
+}
+
+.product-title {
+  @apply text-[var(--black)] my-[10px] text-base font-semibold leading-[1.3] line-clamp-2;
+}
+
+.price {
+  @apply !text-[var(--secondary)] !font-semibold mr-[5px];
+}
+
+.old-price {
+  @apply !text-[var(--gray)] text-[13px] line-through !font-semibold;
+}
+
+.rating {
+  @apply flex items-center gap-[3px];
+}
+
+.star {
+  @apply text-[#fbc72e] text-sm;
+}
+
+.review-count {
+  @apply text-[13px] text-[var(--gray)];
+}
+
+.in-stock {
+  @apply !text-xs !text-[#16A249] font-medium;
+}
+
+.out-of-stock {
+  @apply text-[var(--secondary)] font-medium;
+}
+
+.product-card .wishlist-btn {
+  @apply bg-[var(--primary)] rounded-full justify-center items-center w-[35px] min-w-[35px] h-[35px] p-2 flex cursor-pointer border-none;
+}
+
+.product-card .wishlist-btn svg {
+  @apply stroke-[var(--white)];
+}
+
+.product-card .wishlist-btn.active {
+  @apply bg-transparent border border-[var(--secondary)];
+}
+
+.product-card .wishlist-btn.active svg {
+  @apply stroke-[var(--secondary)];
+}
+
+.product-card .wishlist-btn:hover {
+  @apply bg-[var(--secondary)];
+}
+
+.product-card .wishlist-btn.active:hover svg {
+  @apply stroke-[var(--white)];
+}
+
+.new-pass-section {
+  @apply font-medium text-sm text-black mt-5;
+}
+
+.new-pass-section p {
+  @apply !text-sm;
+}
+
+.new-pass-section ul {
+  @apply mt-[10px];
+}
+
+.new-pass-section li {
+  @apply text-[#00000099] !list-inside text-sm;
+}
+
+/* product card */
+
+/* search results */
+.search-results {
+  @apply absolute top-full left-0 w-full max-h-[400px] overflow-y-auto bg-[var(--white)] border border-[var(--WhiteSmoke)] border-t-0 rounded-b-[5px] shadow-[0_2px_4px_rgba(0,0,0,0.1)] z-[1000];
+}
+
+.search-result-item {
+  @apply flex items-center px-4 py-3 cursor-pointer transition-colors duration-300 ease-in-out border-b border-[#d9d2d280];
+}
+
+.search-result-item img {
+  @apply mr-4;
+}
+
+.search-result-item:hover {
+  @apply bg-[var(--WhiteSmoke)];
+}
+
+.search-result-item p {
+  @apply m-0;
+}
+
+/* search results */
+
+/* review card */
+.reviews .swiper-slide {
+  @apply !h-auto;
+}
+
+.review-card {
+  @apply rounded-[10px] bg-[var(--white)] p-5 w-full transition-transform duration-200 ease-in-out h-full flex flex-col border border-[#0000001C];
+}
+
+.review-header {
+  @apply flex justify-between items-center;
+}
+
+.order-manage-ment-section {
+  @apply font-semibold text-[#726969] text-base;
+}
+
+.stars {
+  @apply flex gap-[3px];
+}
+
+.review-date {
+  @apply text-sm font-medium;
+}
+
+.review-title {
+  @apply text-sm font-semibold mt-2 mb-[7px];
+}
+
+.review-text {
+  @apply text-sm mb-2 leading-[1.4] font-normal;
+}
+
+.review-customer {
+  @apply font-semibold;
+}
+
+input[type="radio"] {
+  @apply accent-[var(--primary)] scale-150;
+}
+
+/* review card */
+
+/* banner  */
+.banner-inner {
+  @apply bg-[url('/images/help.png')] !bg-center !bg-cover py-8 relative min-h-[218px] flex flex-col;
+}
+
+.content-inner {
+  @apply relative z-[2] max-w-[725px] m-auto;
+}
+
+/* banner  */
+
+/*  card */
+
+.bg-card {
+  @apply bg-[var(--white)] border border-[var(--lightgray)] rounded-lg flex flex-col justify-center text-center items-center p-[14px];
+}
+
+.bg-card.active {
+  @apply border border-[var(--secondary)];
+}
+
+.bg-card h6 {
+  @apply py-[10px];
+}
+
+.bg-card p {
+  @apply font-medium text-center leading-[24px];
+}
+
+@media screen and (min-width: 1440px) {
+  .sidebar {
+    @apply !w-full;
+  }
+}
+
+.height-wfa {
+  height: -webkit-fill-available !important;
+}
+
+.sidebar li {
+  @apply text-sm text-[#707070] mb-[13px] font-medium flex items-center cursor-pointer;
+}
+
+#loader {
+  @apply text-center z-[101] mx-auto my-0 absolute top-[80px] left-0 right-0;
+}
+
+#loader .spinner {
+  @apply w-[50px] h-[50px] rounded-full border-[9px] border-solid border-[#d8d8d8] border-r-[var(--secondary)] animate-[spinner-d3wgkg_1s_infinite_linear] text-center m-auto;
+}
+
+.loader-parent {
+  @apply relative;
+}
+
+.loader-parent:before {
+  @apply absolute content-[''] w-full bg-[rgb(255_255_255_/_95%)] left-0 right-0 h-full z-[100];
+}
+
+@keyframes spinner-d3wgkg {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.summary-row {
+  @apply flex justify-between mb-4 flex-nowrap;
+}
+
+.summary-row span {
+  @apply text-[var(--gray)] font-medium;
+}
+
+.summary-row p {
+  @apply font-semibold;
+}
+
+.total-row {
+  @apply flex justify-between mt-4 mb-5;
+}
+
+.total-row strong {
+  @apply font-semibold text-lg;
+}
+
+.total-row .price {
+  @apply text-lg;
+}
+
+.savings {
+  @apply text-[#16a249] font-medium;
+}
+
+.payment-logos {
+  @apply flex flex-wrap gap-4;
+}
+
+.payment-img {
+  @apply bg-[var(--white)] border-2 border-[#ededed] rounded-[5px] p-[5px] flex items-center justify-center flex-1 h-[30px] w-[40px];
+}
+
+/* popup */
+#popupModal {
+  @apply fixed flex left-0 z-[99] w-full h-full bg-[rgba(0,0,0,0.5)] justify-center items-center px-[70px];
+  top: 65;
+}
+
+#popupModal .modal-content {
+  @apply bg-[var(--white)] rounded-lg w-full relative overflow-y-auto max-h-[755px] p-10;
+}
+
+.close {
+  @apply cursor-pointer float-right text-[40px] absolute right-5 top-5 shadow-[0px_1px_8px_rgba(0,0,0,0.12)] w-10 h-10 rounded-full flex items-center justify-center;
+}
+
+.w-15-imp {
+  @apply !w-[15%];
+}
+
+.w-85-imp {
+  @apply !w-[85%];
+}
+
+/* popup */
+
+@media screen and (max-width: 1400px) {
+  .container {
+    @apply px-[30px];
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .container {
+    @apply px-5;
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .sidebar {
+    @apply !w-full;
+  }
+}
+
+.product-tabs ul {
+  @apply overflow-x-auto flex-nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.product-tabs ul::-webkit-scrollbar {
+  @apply hidden;
+}
+
+.product-tabs li {
+  @apply shrink-0;
+}
+
+@media screen and (max-width: 767px) {
+  .swipper-btn-left {
+    @apply -left-3;
+  }
+
+  .swipper-btn-right {
+    @apply -right-3;
+  }
+
+  .dflex.no-wrap {
+    @apply flex-col;
+  }
+
+  input[type="text"] {
+    @apply text-[0.875rem];
+  }
+
+  .product-image img {
+    @apply object-center;
+  }
+
+  /* Tab design */
+
+  .tab-container {
+    @apply border-b border-[#d9d2d2];
+  }
+
+  .sidebar {
+    @apply w-full static;
+  }
+
+  .breadcrumb-list a {
+    @apply max-w-[150px];
+  }
+}
+
+@media screen and (max-width: 639px) {
+  .product-card .product-image img {
+    @apply static;
+  }
+}
+
+@media screen and (max-width: 480px) {
+
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="search"],
+  select,
+  input[type="password"],
+  input[type="date"],
+  input[type="tel"],
+  textarea {
+    @apply !text-[13px];
+  }
+
+  .btn-white {
+    @apply text-center cursor-pointer text-[var(--primary)] rounded-[100px] text-sm font-semibold leading-normal inline-block;
+  }
+
+  .product-card {
+    @apply w-[330px] h-[420px] rounded-lg bg-[var(--white)] transition-transform duration-200 ease-in-out cursor-pointer border border-[var(--lightgray)] relative overflow-hidden flex flex-col;
+  }
+
+  .title-wrapper {
+    @apply flex-col gap-3;
+  }
+
+  .title-wrapper h2 {
+    @apply text-center text-xl;
+  }
+}
+
+.brand-link-hover {
+  @apply !transition-all !duration-200 !ease-in-out;
+}
+
+.brand-link-hover:hover {
+  @apply !bg-[blue] !text-white;
+}
+
+.rounded-15px-imp {
+  @apply !rounded-[15px];
+}
+
+.gray-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #D3D3D3 transparent;
+}
+
+.gray-scrollbar::-webkit-scrollbar {
+  @apply w-[6px];
+}
+
+.gray-scrollbar::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.gray-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-[#D3D3D3] rounded-full;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  @apply hidden;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.list-wrapper {
+  @apply pl-8;
+}
+
+@media (min-width: 768px) {
+  .list-wrapper {
+    @apply pl-4;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1500px) {
+  .products-slider.custom-handmade .swiper-backface-hidden .swiper-slide {
+    @apply !mt-0 !mr-5 !mb-0 !ml-0 !w-[349px];
+  }
+
+  .custom-shopCategory .swiper-backface-hidden .swiper-slide {
+    @apply !w-[252px] mx-[15px];
+  }
+}
+
+.product-carousel-slide {
+  @apply w-full;
+}
+
+@media (min-width: 640px) {
+  .product-carousel-slide {
+    @apply w-1/2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-carousel-slide {
+    @apply w-[40%];
+  }
+}
+
+@media (min-width: 1200px) {
+  .product-carousel-slide {
+    @apply w-1/3;
+  }
+}
+
+@media (min-width: 1300px) {
+  .product-carousel-slide {
+    @apply w-[28.5714%];
+  }
+}
+
+@media (min-width: 1500px) {
+  .product-carousel-slide {
+    @apply w-1/4;
+  }
+}
+
+@media (min-width: 1700px) {
+  .product-carousel-slide {
+    @apply w-1/5;
+  }
+}
+
+@media (min-width: 2000px) {
+  .product-carousel-slide {
+    @apply w-[16.6666%];
+  }
+}
+
+.pc-product-slide {
+  @apply w-1/2;
+}
+
+@media (min-width: 1024px) {
+  .pc-product-slide {
+    @apply w-[40%];
+  }
+}
+
+@media (min-width: 1200px) {
+  .pc-product-slide {
+    @apply w-1/3;
+  }
+}
+
+@media (min-width: 1300px) {
+  .pc-product-slide {
+    @apply w-[28.5714%];
+  }
+}
+
+@media (min-width: 1500px) {
+  .pc-product-slide {
+    @apply w-1/4;
+  }
+}
+
+@media (min-width: 1700px) {
+  .pc-product-slide {
+    @apply w-1/5;
+  }
+}
+
+@media (min-width: 2000px) {
+  .pc-product-slide {
+    @apply w-[16.6666%];
+  }
+}
+
+@media (min-width: 768px) {
+  .pc-carousel .slider-track {
+    @apply !gap-5;
+  }
+}
+
+.handlePrev {
+  @apply !absolute !left-0 top-1/2 -translate-y-1/2 !z-[999] flex items-center justify-center !w-10 !h-10 bg-white text-black rounded-[28px] border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed;
+}
+
+.handleNext {
+  @apply !absolute !right-0 top-1/2 -translate-y-1/2 translate-x-1/2 !z-[999] flex items-center justify-center !w-10 !h-10 bg-white text-black rounded-[28px] border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed;
+}
+
+@layer utilities {
+
+  .text-btn {
+    font-family: var(--font-montserrat);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: var(--sb-white);
+  }
+
+  /* regular 16, black, capitalize */
+  .text-body {
+    font-family: var(--font-montserrat);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+    color: var(--sb-black);
+  }
+
+  /* regular 14, gray, capitalize */
+  .text-caption {
+    font-family: var(--font-montserrat);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+    color: var(--sb-gray-dark);
+  }
+
+  /* semibold 20, navy, capitalize */
+  .text-heading {
+    font-family: var(--font-montserrat);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 18px;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+    color: var(--sb-navy-2);
+  }
+
+  /* regular 13, orange, capitalize */
+  .text-highlight {
+    font-family: var(--font-montserrat);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+    color: var(--sb-orange);
+  }
+
+  /* regular 12, green, capitalize */
+  .text-success {
+    font-family: var(--font-montserrat);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+    color: var(--sb-green);
+  }
+
+  /* bold 14, olive, underline, capitalize */
+  .text-link {
+    font-family: var(--font-montserrat);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+    text-decoration: underline;
+    text-decoration-style: solid;
+    color: var(--sb-olive);
+  }
+
+  /* semibold 16, charcoal, justify, capitalize */
+  .text-paragraph {
+    font-family: var(--font-montserrat);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 18px;
+    letter-spacing: 0%;
+    text-align: justify;
+    text-transform: capitalize;
+    color: var(--sb-charcoal);
+  }
+
+  /* regular 14, on gray-mid background, capitalize */
+  .text-note {
+    font-family: var(--font-montserrat);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 25px;
+    letter-spacing: 0%;
+    text-transform: capitalize;
+    background: var(--sb-gray-mid);
+  }
+
+  /* regular 15, charcoal-2 */
+  .text-default {
+    font-family: var(--font-montserrat);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: var(--sb-charcoal-2);
+  }
+
+  /* bold 20, white, small-caps — e.g. section title on dark bg */
+  .text-title {
+    font-family: var(--font-montserrat);
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: 0%;
+    font-variant: small-caps;
+    color: var(--sb-white);
+  }
+
+  /* regular 16, white */
+  .text-body-inverted {
+    font-family: var(--font-montserrat);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 29px;
+    letter-spacing: 0%;
+    color: var(--sb-white);
+  }
+
+  /* bold 18, black */
+  .text-subheading {
+    font-family: var(--font-montserrat);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: var(--sb-black);
+  }
+
+  /* bold 24, black, capitalize */
+  .text-heading-lg {
+    font-family: var(--font-montserrat);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: normal;
+    text-transform: capitalize;
+    color: var(--sb-black);
+  }
+
+  /* medium 14, white, centered, capitalize — e.g. button label */
+  .text-btn-alt {
+    font-family: var(--font-montserrat);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: capitalize;
+    color: var(--sb-white);
+  }
+
+  /* regular 14, black */
+  .text-body-sm {
+    font-family: var(--font-montserrat);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 30px;
+    letter-spacing: 0%;
+    color: var(--sb-black);
+  }
+
+  /* bold 30, black, centered — shared heading for login/signup/forgot-password/reset-password */
+  /* .auth-title {
+    @apply text-center text-3xl font-bold leading-tight text-black;
+  } */
+  @layer utilities {
+    .text-semibold-16 {
+      @apply text-base font-semibold tracking-normal;
+      line-height: 100%;
+    }
+  }
+}
+
+.handlePrev {
+  @apply !absolute !left-0 top-1/2 -translate-y-1/2  flex items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed translate-x-[-12px];
+}
+
+.handleNext {
+  @apply !absolute !right-0 top-1/2 -translate-y-1/2 translate-x-1/2  flex items-center justify-center !w-10 !h-10 bg-white text-black rounded-full border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed;
+}
+
+.handlePrev-inset {
+  @apply !absolute !left-[-10px] md:!left-[-16px] top-1/2 -translate-y-1/2 !z-[999] flex items-center justify-center !w-9 !h-9 sm:!w-10 sm:!h-10 bg-white text-black rounded-full border border-gray-200 shadow-sm disabled:opacity-30 disabled:cursor-not-allowed;
+}
+
+.handleNext-inset {
+  @apply !absolute !right-[-10px] md:!right-[-16px] top-1/2 -translate-y-1/2 !z-[999] flex items-center justify-center !w-9 !h-9 sm:!w-10 sm:!h-10 bg-white text-black rounded-full border border-gray-200 shadow-sm disabled:opacity-30 disabled:cursor-not-allowed;
+}
+
+/* ============================================================
+    Added common css that using in multiple modules
+   ============================================================ */
+
+.img-cover {
+  @apply w-full h-full object-cover;
+}
+
+.order-detail-label {
+  @apply text-black text-center font-[Montserrat] text-[18px] not-italic font-bold leading-[normal] capitalize;
+}
+
+.order-detail-value {
+  @apply text-black text-center font-[Montserrat] text-[16px] not-italic font-normal leading-[normal] capitalize;
+}
+
+.order-detail-action-btn {
+  @apply text-red-600 hover:text-red-800 text-sm font-medium border border-red-200 w-[120px] h-[40px] rounded cursor-pointer;
+}
+
+.pdp-qty-box {
+  @apply flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-9 flex-1;
+}
+
+.pdp-qty-box-lg {
+  @apply flex items-center justify-center bg-white border-2 border-[#ededed] rounded-[5px] p-1 h-[36px] flex-1;
+}
+
+.pdp-field-label {
+  @apply text-[14px] font-bold text-[#1D265F];
+}
+
+.pdp-stepper-btn {
+  @apply text-[18px] leading-none font-bold text-black cursor-pointer select-none;
+}
+
+.pdp-section-divider {
+  @apply -mx-5 border-t border-[#ECECEC];
+}
+
+/* Desktop PDP sticky sidebar card — scale down text & spacing at
+   1600px and below so price/labels don't overwhelm the narrow card.
+   This tier is the baseline for the whole 1300-1600px range; a
+   further reduction kicks in below 1300px (see next block) since
+   the card gets noticeably tighter there. */
+@media screen and (max-width: 1600px) {
+  .pdp-sidebar-col {
+    width: 280px !important;
+    gap: 10px !important;
+  }
+
+  .pdp-sidebar-card {
+    min-height: 0 !important;
+    padding: 12px !important;
+    gap: 8px !important;
+  }
+
+  .pdp-sidebar-card .pdp-section-divider {
+    margin-inline: -12px !important;
+  }
+
+  .pdp-sidebar-card .pdp-price {
+    font-size: 20px !important;
+  }
+
+  .pdp-sidebar-card .pdp-delivery-fee {
+    font-size: 11px !important;
+  }
+
+  .pdp-sidebar-card .pdp-field-label {
+    font-size: 11px !important;
+  }
+
+  .pdp-deliver-row {
+    gap: 5px !important;
+  }
+
+  .pdp-qty-row {
+    gap: 3px !important;
+  }
+
+  .pdp-qty-stepper {
+    width: 92px !important;
+    height: 32px !important;
+    padding-inline: 10px !important;
+  }
+
+  .pdp-sidebar-card .pdp-stepper-btn {
+    font-size: 13px !important;
+  }
+
+  .pdp-qty-value {
+    font-size: 12px !important;
+  }
+
+  .pdp-cta-group {
+    gap: 6px !important;
+  }
+
+  .pdp-cta-btn {
+    height: 36px !important;
+    font-size: 13px !important;
+  }
+
+  .pdp-safe-checkout {
+    gap: 4px !important;
+    font-size: 10px !important;
+  }
+
+  .pdp-safe-checkout svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .pdp-payment-icons {
+    gap: 4px !important;
+  }
+
+  .pdp-shipping-warning {
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    line-height: 1.4 !important;
+    margin-top: -2px !important;
+  }
+}
+
+/* Narrower lg-range sidebar (roughly 1200-1300px and below) — the card
+   is tighter here than the 1600px tier above accounts for, so shrink
+   text and gaps one more notch and give the warning text real weight
+   so it stays legible at the smaller size. */
+@media screen and (max-width: 1300px) {
+  .pdp-sidebar-col {
+    width: 260px !important;
+    gap: 8px !important;
+  }
+
+  .pdp-sidebar-card {
+    padding: 10px !important;
+    gap: 6px !important;
+  }
+
+  .pdp-sidebar-card .pdp-section-divider {
+    margin-inline: -10px !important;
+  }
+
+  .pdp-sidebar-card .pdp-price {
+    font-size: 18px !important;
+  }
+
+  .pdp-sidebar-card .pdp-delivery-fee {
+    font-size: 10px !important;
+  }
+
+  .pdp-sidebar-card .pdp-field-label {
+    font-size: 10px !important;
+  }
+
+  .pdp-deliver-row {
+    gap: 4px !important;
+  }
+
+  .pdp-qty-row {
+    gap: 2px !important;
+  }
+
+  .pdp-qty-stepper {
+    width: 80px !important;
+    height: 28px !important;
+    padding-inline: 8px !important;
+  }
+
+  .pdp-sidebar-card .pdp-stepper-btn {
+    font-size: 12px !important;
+  }
+
+  .pdp-qty-value {
+    font-size: 11px !important;
+  }
+
+  .pdp-cta-group {
+    gap: 4px !important;
+  }
+
+  .pdp-cta-btn {
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+
+  .pdp-safe-checkout {
+    gap: 3px !important;
+    font-size: 9px !important;
+  }
+
+  .pdp-safe-checkout svg {
+    width: 11px !important;
+    height: 11px !important;
+  }
+
+  .pdp-payment-icons {
+    gap: 3px !important;
+  }
+
+  .pdp-shipping-warning {
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+    margin-top: -1px !important;
+  }
+}
+
+/* Short laptop screens (~1280-1400 wide x ~800 tall, e.g. 1366x768) — the
+   width-only tiers above still leave the card taller than it needs to be
+   on a short viewport, so shrink it further whenever height is tight too.
+   max-width raised from 1300 to 1400 so it actually covers 1366px-wide
+   screens instead of missing them. */
+@media screen and (max-width: 1400px) and (max-height: 800px) {
+  .pdp-sidebar-col {
+    width: 260px !important;
+    gap: 6px !important;
+  }
+
+  .pdp-sidebar-card {
+    min-height: 0 !important;
+    padding: 8px !important;
+    gap: 5px !important;
+  }
+
+  .pdp-sidebar-card .pdp-section-divider {
+    margin-inline: -8px !important;
+  }
+
+  .pdp-sidebar-card .pdp-price {
+    font-size: 16px !important;
+  }
+
+  .pdp-sidebar-card .pdp-delivery-fee {
+    font-size: 11px !important;
+  }
+
+  .pdp-sidebar-card .pdp-field-label {
+    font-size: 11px !important;
+  }
+
+  .pdp-delivery-date {
+    font-size: 10px !important;
+  }
+
+  .pdp-change-btn {
+    font-size: 11px !important;
+  }
+
+  .pdp-deliver-row {
+    gap: 3px !important;
+  }
+
+  .pdp-qty-row {
+    gap: 2px !important;
+  }
+
+  .pdp-qty-stepper {
+    width: 80px !important;
+    height: 28px !important;
+    padding-inline: 8px !important;
+  }
+
+  .pdp-sidebar-card .pdp-stepper-btn {
+    font-size: 12px !important;
+  }
+
+  .pdp-qty-value {
+    font-size: 11px !important;
+  }
+
+  .pdp-cta-group {
+    gap: 4px !important;
+  }
+
+  .pdp-cta-btn {
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+
+  .pdp-safe-checkout {
+    gap: 2px !important;
+    font-size: 9px !important;
+  }
+
+  .pdp-safe-checkout svg {
+    width: 11px !important;
+    height: 11px !important;
+  }
+
+  .pdp-payment-icons {
+    gap: 2px !important;
+  }
+
+  .pdp-shipping-warning {
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    line-height: 1.4 !important;
+    margin-top: -4px !important;
+    white-space: normal !important;
+    letter-spacing: normal !important;
+  }
+}
+
+.popup-field-label {
+  @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.popup-summary-row {
+  @apply flex justify-between text-sm mb-2 text-gray-600;
+}
+
+.popup-section-title {
+  @apply font-semibold text-gray-800 mb-4 text-lg;
+}
+
+.popup-backdrop {
+  @apply fixed inset-0 bg-black/40 z-50;
+}
+
+.popup-container {
+  @apply fixed inset-0 z-50 flex items-end lg:items-center justify-center px-4;
+}
+
+.popup-drag-handle {
+  @apply w-9 h-1 rounded-full bg-[#D9D2D2];
+}
+
+.retry-popup-toggle {
+  @apply flex justify-between items-center w-full cursor-pointer font-bold;
+}
+
+.legal-page-banner {
+  @apply bg-[#FD151B] px-10 py-[16px] rounded-tr-[8px] rounded-tl-[8px];
+}
+
+.legal-page-container {
+  @apply text-black mx-auto py-10 px-4 sm:px-6 lg:px-8;
+}
+
+.legal-text {
+  @apply text-[16px] text-[#00000080];
+}
+
+.legal-strong {
+  @apply text-[#000000]/70;
+}
+
+.legal-heading {
+  @apply text-[18px] font-bold text-black mb-3;
+}
+
+.legal-title {
+  @apply text-white text-[24px] font-semibold m-0;
+}
+
+.legal-intro {
+  @apply text-[#00000060] text-[16px] leading-[1.6] mb-6;
+}
+
+.order-status-box {
+  @apply text-center min-h-[400px] flex flex-col items-center justify-center;
+}
+
+.order-status-title {
+  @apply text-[#e53e3e] mb-5;
+}
+
+.order-status-message {
+  @apply mb-[30px] text-[#666] text-[18px];
+}
+
+.order-status-btn {
+  @apply py-[12px] px-[30px] text-[16px];
+}
+
+.banner-card {
+  @apply relative w-full h-30 md:h-80 rounded-lg overflow-hidden cursor-pointer;
+}
+
+.banner-card-content {
+  @apply w-full max-w-[145px] md:max-w-[368px] flex flex-col gap-[6px];
+}
+
+
+
+.banner-gradient-overlay {
+  @apply absolute inset-0 bg-linear-to-b from-[#050B1E]/0 to-[#050B1E]/70;
+}
+
+.checkout-total-label {
+  @apply text-[1rem] font-semibold text-black leading-[normal] capitalize;
+}
+
+.checkout-total-value {
+  @apply font-semibold text-black leading-[normal] capitalize;
+}
+
+.checkout-field-heading {
+  @apply font-semibold text-[0.875rem] leading-[normal] text-black capitalize;
+}
+
+.payment-radio {
+  @apply w-[12px] h-[12px] accent-[#01295F] text-[#B7BAB4];
+}
+
+.size-guide-cell {
+  @apply py-2 px-2 text-[#696e79] border border-[#F0F0F0];
+}
+
+.filter-sidebar-link {
+  @apply cursor-pointer text-[#575757] font-normal tracking-[-0.5%] text-[14px];
+}
+
+.cart-summary-label {
+  @apply text-[clamp(0.875rem,1.5vw,1rem)] leading-[100%] text-[#726969] font-medium leading-[normal] capitalize;
+}
+
+.field-value-sm {
+  @apply text-[14px] font-medium text-black;
+}
+
+.tab-content-image {
+  @apply w-full max-w-[1300px] h-[260px] object-cover;
+}
+
+.review-input::placeholder {
+  font-size: 12px;
+  color: #BBBBBB;
+}
