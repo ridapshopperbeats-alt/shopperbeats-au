@@ -2,10 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import DOMPurify from "isomorphic-dompurify";
+import type { ShadowDomContentProps } from "@/types/cms";
 
-interface ShadowDomContentProps {
-  content: string;
-}
 
 const RESIZE_MESSAGE_TYPE = "cms-iframe-resize";
 

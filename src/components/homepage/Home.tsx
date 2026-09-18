@@ -1,24 +1,11 @@
 
-import { HomepageSection } from "@/types/homepage";
-import { Product } from "@/types/product";
 import SingleBanner from "./Banner";
 import ImageGrid from "./AllBanner";
 import { NewTopCategories } from "./NewTopCategories";
 import TrendingDeals from "./TrandingDetails";
+import type { HomeProps } from "@/types/homepage";
 
 
-interface HomeProps {
-  heroBanner: HomepageSection | null;
-  topCategories: HomepageSection | null;
-  bannerOne: HomepageSection | null;
-  bannerTwo: HomepageSection | null;
-  trendingDeals: Product[];
-  topRated: Product[];
-  bestSellers: Product[];
-  personalized: Product[];
-  customerReviews: unknown[];
-  recentlyViewed: Product[];
-}
 
 export default function Home({
   trendingDeals,

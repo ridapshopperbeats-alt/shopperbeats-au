@@ -9,11 +9,8 @@ import React, {
   useMemo,
 } from "react";
 import { MetaInfo } from "@/types/seo";
+import type { SEOContextType } from "@/types/seo";
 
-interface SEOContextType {
-  metadata: MetaInfo;
-  updateMetadata: (newMetadata: Partial<MetaInfo>) => void;
-}
 
 const SEOContext = createContext<SEOContextType | undefined>(undefined);
 

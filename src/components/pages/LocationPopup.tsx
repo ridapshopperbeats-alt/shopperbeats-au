@@ -9,18 +9,8 @@ import { useGetAddressesQuery } from "@/lib/redux/apis/address-api";
 import { Address } from "@/types/address";
 import { RootState } from "@/lib/redux/store";
 import GooglePlacesInput from "@/components/common/AddressAutocomplete";
+import type { LocationPopupProps } from "@/types/ui";
 
-interface LocationPopupProps {
-  open: boolean;
-  onClose: () => void;
-  selectedAddressId: number | null;
-  onApply: (data: {
-    pincode: string;
-    suburb: string;
-    state?: string;
-    addressId: number | null;
-  }) => void;
-}
 
 export default function LocationPopup({
   open,

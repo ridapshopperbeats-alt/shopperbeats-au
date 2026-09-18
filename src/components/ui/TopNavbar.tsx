@@ -47,16 +47,18 @@ import { addBreadcrumb } from "@/lib/redux/slices/breadcrumb-slice";
 // The shared shape that getMegaMenuData() produces — same type Header uses, so
 // the menu data flows into this component without a structural mismatch.
 import type { MegaMenuCategory } from "@/types/megamenu";
+import type { TopNavbarProps } from "@/types/ui";
+
+/**
+ * Routes that render their own slimmed-down header. Checkout shows
+ * CheckoutHeader, so the full site nav would stack a second header above it.
+ */
+const SITE_HEADER_HIDDEN_PATHS = ["/check-out"];
 
 export type { MegaMenuCategory };
 
-interface HeaderProps {
-  megaMenuData: MegaMenuCategory[];
-  initialWishlistCount?: number;
-  initialCartCount?: number;
-}
 
-export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: HeaderProps) {
+export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: TopNavbarProps) {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [selectedResultIndex, setSelectedResultIndex] = useState(-1);
@@ -407,6 +409,11 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: He
   const profileImage = profileImageRaw
     ? applyImageVariant(profileImageRaw, "public")
     : null;
+
+  // Placed after every hook so the hook order never changes; only the markup
+  // is skipped.
+  if (SITE_HEADER_HIDDEN_PATHS.includes(pathname)) return null;
+
   return (
     <div className="header-fixed ">
       <div className="container flex flex-col">

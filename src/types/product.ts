@@ -1,4 +1,8 @@
+import type * as React from "react";
+import type { Dispatch, ReactNode, RefObject, SetStateAction } from "react";
 import { WishlistKey } from "./wishlist";
+import type { AccordionItem } from "./ui";
+import type { Brand as MainBrand } from "./main";
 
 export interface Variant {
   id: string;
@@ -273,16 +277,370 @@ export interface ProductCarouselProps {
   withoutContainer?: boolean;
 }
 
-export interface ProductLikeCardProps {
-  image: string;
-  title: string;
-  price: string;
-  oldPrice?: string;
-  rating: number;
-  reviewCount: number;
-  linkHref: string;
-  discountPercentage?: number;
-  saveAmount?: number;
-  productId: string;
-  variantId?: string;
+
+type AttributeOption = { value: string; stock: number | undefined };
+
+export type ProductDetailContentProps = {
+  product: Product;
+  productTitle: string;
+
+  selectedVariant: Variant | null;
+  selectedAttributes: Record<string, string>;
+  handleAttributeChange: (attrName: string, value: string) => void;
+  findVariantForAttrValue: (
+    attrName: string,
+    value: string,
+  ) => Variant | undefined;
+
+  isProductInWishlist: boolean;
+  isWishlistLoading: boolean | undefined;
+  handleWishlistButtonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+
+  isOutOfStock: boolean;
+  mainPrice: number;
+  wasPrice: number;
+  saveAmount: number;
+  discountPercentage: number;
+
+  hasRealColors: boolean;
+  hasRealStyles: boolean;
+  colorAttrName: string | undefined;
+  styleAttrName: string | undefined;
+  colorSwatchOptions: (AttributeOption & { image: string })[];
+  realStyleOptions: AttributeOption[];
+  showPopup: boolean;
+  setShowPopup: Dispatch<SetStateAction<boolean>>;
+  /** Attribute selectors other than colour/style, rendered by the page. */
+  remainingAttributeFields: ReactNode;
+
+  shippingCharge: number | null;
+  shippingStatus: "idle" | "checking" | "available" | "unavailable";
+
+  mounted: boolean;
+  selectedLocation: {
+    pincode: string;
+    suburb: string;
+    state?: string;
+  } | null;
+  postcode: string | undefined;
+  suburb: string | undefined;
+  setShowLocationPopup: Dispatch<SetStateAction<boolean>>;
+
+  quantity: number;
+  setQuantity: Dispatch<SetStateAction<number>>;
+
+  isAddingToCart: boolean;
+  isProductInCart: boolean | undefined;
+  handleCartButtonClick: () => void;
+  handleDisabledAddToCart: () => void;
+  handleBuyNow: () => void;
+
+  productFeatures: string[];
+  finalRecommendations: Product[] | null | undefined;
+  recentlyViewed: Product[] | null | undefined;
+  isRecommendedForYouLoading: boolean;
+
+  productTabItems: { key: string; label: string }[];
+  activeTab: string;
+  handleTabClick: (tab: string, index: number) => void;
+  handleTabKeyDown: (e: React.KeyboardEvent, index: number) => void;
+  tabRefs: RefObject<(HTMLLIElement | null)[]>;
+  firstHalf: AccordionItem[];
+  secondHalf: AccordionItem[];
+};export type ProductDetailSidebarProps = {
+  product: Product;
+  selectedVariant: Variant | null;
+
+  isOutOfStock: boolean;
+  mainPrice: number;
+  shippingCharge: number | null;
+  shippingStatus: "idle" | "checking" | "available" | "unavailable";
+
+  mounted: boolean;
+  selectedLocation: {
+    pincode: string;
+    suburb: string;
+    state?: string;
+  } | null;
+  postcode: string | undefined;
+  suburb: string | undefined;
+  setShowLocationPopup: Dispatch<SetStateAction<boolean>>;
+
+  quantity: number;
+  setQuantity: Dispatch<SetStateAction<number>>;
+
+  isAddingToCart: boolean;
+  isProductInCart: boolean | undefined;
+  handleCartButtonClick: () => void;
+  handleDisabledAddToCart: () => void;
+  handleBuyNow: () => void;
+};
+
+/* ------------------------------------------------------------------ *
+ * PDP sub-components
+ * ------------------------------------------------------------------ */
+
+export interface ProductDetailsMobileTabsProps {
+  featuresContent: React.ReactNode;
+  descriptionContent: React.ReactNode;
+  deliveryContent: React.ReactNode;
+  reviews: Review[];
 }
+
+export interface ColorAttributeOption {
+  value: string;
+  stock?: number;
+  image: string;
+}
+
+export interface ColorPopupProps {
+  open: boolean;
+  onClose: () => void;
+  colors: ColorAttributeOption[];
+  selectedColor: string;
+  onSelectColor: (value: string) => void;
+}
+
+export interface DisplayReview {
+  id: string;
+  name: string;
+  rating: number;
+  date: string;
+  comment: string;
+  verified?: boolean;
+  reviewer_profile_image?: string | null;
+  images?: (string | { image_url?: string; url?: string })[] | null;
+}
+
+export interface CustomerRatingViewPageProps {
+  reviews?: Review[];
+}
+
+/* ------------------------------------------------------------------ *
+ * Category / brand / listing pages
+ * ------------------------------------------------------------------ */
+
+export interface CategorySliderItem {
+  id?: string;
+  slug?: string;
+  title: string;
+  image: string;
+  href?: string;
+}
+
+export interface CategorySliderProps {
+  title: string;
+  items: CategorySliderItem[];
+  className?: string;
+  arrows?: boolean;
+  titleClassName?: string;
+  onCategoryClick?: (item: CategorySliderItem) => void;
+  getHref?: (item: CategorySliderItem) => string;
+}
+
+export interface BrandPageClientProps {
+  brandId: string;
+  brand: MainBrand;
+  products: Product[];
+  filters: Filter[];
+  totalItems: number;
+}
+
+export interface ProductListingClientProps {
+  slug: string;
+  category: Category | null;
+  products: Product[];
+  filters: Filter[];
+  totalItems: number;
+  megaMenuData: Category[];
+  bannerImage?: string | null;
+}
+
+export interface ProductsPageClientProps {
+  products: Product[];
+  totalItems: number;
+}
+
+export interface SearchPageClientProps {
+  query: string;
+  products: Product[];
+  filters: Filter[];
+  totalItems: number;
+}
+
+/* ------------------------------------------------------------------ *
+ * Product listing (gallery, filter rail, grid)
+ * ------------------------------------------------------------------ */
+
+export interface ProductGalleryProps {
+  product: Product;
+  selectedVariant: Variant | null;
+  isWishlisted?: boolean;
+  onWishlistToggle?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  isWishlistLoading?: boolean;
+}
+
+export interface ImagePreviewModalProps {
+  open: boolean;
+  onClose: () => void;
+  images: ProductImage[];
+  initialUrl: string;
+  title: string;
+}
+
+/** The filter rail on category/search/brand pages. */
+export interface SidebarProps {
+  filters: Filter[];
+  category?: Category | null;
+  onClose?: () => void;
+  onExpandedChange?: (expanded: boolean) => void;
+  onClearAllFilters?: () => void;
+  extractedBrands?: {
+    name: string;
+    slug: string;
+    count: number;
+  }[];
+  extractedCategories?: {
+    name: string;
+    slug: string;
+    count: number;
+  }[];
+  selectedCategorySlugs?: string[];
+  // A slug toggles that category; null clears them all ("All Categories").
+  onCategorySelect?: (categorySlug: string | null) => void;
+  selectedPriceRange?: string | null;
+  onPriceSelect?: (priceRange: string | null) => void;
+  isHighlightPage?: boolean;
+
+  slug?: string;
+
+  priceCounts?: {
+    under50: number;
+    between50and100: number;
+    between100and200: number;
+    above200: number;
+  };
+
+  hideHeader?: boolean;
+  wrapNavigation?: (fn: () => void) => void;
+}
+
+export type MobileFilterSheetProps = Omit<
+  SidebarProps,
+  "onClose" | "onClearAllFilters" | "hideHeader"
+> & {
+  open: boolean;
+  onClose: () => void;
+  onClearAll?: () => void;
+};
+
+export interface MobileSortSheetProps {
+  open: boolean;
+  onClose: () => void;
+  sortBy: string;
+  onSortChange: (value: string) => void;
+}
+
+export interface ProductDisplayProps {
+  products: Product[];
+  totalItems: number;
+  itemsPerPage: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  onItemsPerPageChange: (limit: number) => void;
+  sortBy: string;
+  onSortChange: (value: string) => void;
+  categoryName?: string;
+  isLoading?: boolean;
+  infiniteScroll?: boolean;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
+  isFetchingMore?: boolean;
+  hideSortAndPagination?: boolean;
+  wishlistItems?: WishlistKey[];
+  onToggleSidebar: () => void;
+  tags?: { key: string; label: string; onRemove: () => void }[];
+  onClearFilters?: () => void;
+  hideFilterButton?: boolean;
+}
+
+export interface BundleSectionProps {
+  bundleProducts: BundleProduct[];
+}
+
+export interface DeliveryDetailsPopupProps {
+  onClose: () => void;
+  freeShipping: boolean;
+  handlingTimeDays: number;
+  fastDelivery: boolean;
+  shippingCharge?: number;
+}
+
+/* ------------------------------------------------------------------ *
+ * Category page
+ * ------------------------------------------------------------------ */
+
+export interface FilterComponentProps {
+  filters: Filter[];
+  category: Category;
+  onClose: () => void;
+}
+
+/** Distinct from the product-listing MobileFilterSheetProps above: this is the
+ *  shape the category page's dynamically imported sheet is typed against. */
+export interface CategoryMobileFilterSheetProps extends FilterComponentProps {
+  open: boolean;
+  onClearAll: () => void;
+}
+
+export interface CategoryPageClientProps {
+  slug: string;
+  category: Category;
+  products: Product[];
+  filters: Filter[];
+  totalItems: number;
+  megaMenuData: Category[];
+}
+
+/* ------------------------------------------------------------------ *
+ * Route-level props
+ * ------------------------------------------------------------------ */
+
+export interface ProductListingPageProps {
+  params: Promise<{ type: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export interface AllCategoriesPageProps {
+  searchParams: { parent?: string };
+}
+
+/** Distinct from ProductsResponse above: the /products route asks for the
+ *  flattened attribute list alongside each product. */
+export interface ProductsWithAttributesResponse {
+  data: (Product & { attributes: { name: string; value: string }[] })[];
+  totalItems: number;
+}
+
+/* ------------------------------------------------------------------ *
+ * Rendered product HTML
+ * ------------------------------------------------------------------ */
+
+export type ParseProps = {
+  htmlString: string;
+};
+
+export type ProductData = {
+  description: string;
+  features: string[];
+  specifications: Record<string, string>;
+  packageContents: string[];
+};
+
+/**
+ * The PDP content column already needs every value the sidebar does, so this
+ * intersection is just the content column's props — written as an intersection
+ * anyway so each child component stays the source of truth for what it takes.
+ */
+export type ProductDetailMainProps = ProductDetailContentProps &
+  ProductDetailSidebarProps;

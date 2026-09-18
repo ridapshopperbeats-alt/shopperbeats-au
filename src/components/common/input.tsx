@@ -1,12 +1,8 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import type { InputProps } from "@/types/ui";
 
-interface InputProps extends React.ComponentProps<"input"> {
-  label?: string
-  error?: string | null
-  labelClassName?: string
-}
 
 function Input({ className, type, label, error, id, labelClassName, ...props }: Readonly<InputProps>) {
   const isRequired = !!label?.endsWith("*")

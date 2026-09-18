@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
-import { ProductImage } from "@/types/product";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
+import type { ImagePreviewModalProps } from "@/types/product";
 
-interface ImagePreviewModalProps {
-  open: boolean;
-  onClose: () => void;
-  images: ProductImage[];
-  initialUrl: string;
-  title: string;
-}
 
 const defaultImageUrl = "/images/image-coming-soon.jpg";
 

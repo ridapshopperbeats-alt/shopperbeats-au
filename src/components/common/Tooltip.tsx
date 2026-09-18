@@ -1,30 +1,9 @@
 "use client";
 
-import { LucideIcon, SendIcon } from "lucide-react";
+import { SendIcon } from "lucide-react";
 import Button from "./Button";
+import type { StatusBannerProps } from "@/types/ui";
 
-interface StatusBannerProps {
-  icon?: LucideIcon;
-  text: string;
-  highlightText?: string;
-  suffixText?: string;
-  cancelText?: string;
-  onCancel?: () => void;
-  submitText?: string;
-  SubmitIcon?: LucideIcon;
-  onSubmitText?: string;
-  onSubmit?: () => void;
-  isLoading?: boolean;
-  disabled?: boolean;
-
-  backgroundClass?: string;
-  borderClass?: string;
-  textClass?: string;
-  highlightClass?: string;
-  iconClass?: string;
-
-  className?: string;
-}
 
 export default function StatusBanner({
   icon: Icon,

@@ -1,11 +1,8 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import type { CardProps } from "@/types/ui";
 
-interface CardProps extends React.ComponentProps<"div"> {
-  width?: string | number;
-  height?: string | number;
-}
 
 function Card({ width, height, className, style, children, ...props }: Readonly<CardProps>) {
   return (

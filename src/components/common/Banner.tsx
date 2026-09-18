@@ -1,12 +1,6 @@
 import { cn } from "@/lib/utils";
+import type { BannerProps } from "@/types/ui";
 
-interface BannerProps {
-  title: string;
-  subtitle?: string;
-  titleClassName?: string;
-  subtitleClassName?: string;
-  image: React.ReactNode;
-}
 
 export default function Banner({ title, subtitle, titleClassName, subtitleClassName, image }: Readonly<BannerProps>) {
   return (

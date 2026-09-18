@@ -25,7 +25,7 @@ import "../../styles/Product.css";
 import CategorySlider from "./CategorySlider";
 
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
-import type { ProductDisplayProps } from "@/components/product-listing/ProductDisplay";
+import type { ProductDisplayProps } from "@/types/product";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
 import { filterProductsByPriceRange, findCategoryPath, resolvePriceRange, SITE_URL, toSafeJsonLd } from "@/lib/utils/main-utils";
@@ -33,20 +33,16 @@ import { addBreadcrumb, setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-sli
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 import Breadcrumb from "../common/Breadcrumb";
+import type {
+  CategoryPageClientProps,
+  CategoryMobileFilterSheetProps,
+  FilterComponentProps,
+} from "@/types/product";
 
 
 
 
-interface FilterComponentProps {
-  filters: Filter[];
-  category: Category;
-  onClose: () => void;
-}
 
-interface MobileFilterSheetProps extends FilterComponentProps {
-  open: boolean;
-  onClearAll: () => void;
-}
 
 const Sidebar = dynamic<FilterComponentProps>(() => import("../product-listing/Sidebar") as Promise<{
   default: React.ComponentType<FilterComponentProps>;
@@ -56,7 +52,7 @@ const Sidebar = dynamic<FilterComponentProps>(() => import("../product-listing/S
 
 const MobileFilterSheet = dynamic(
   () => import("../product-listing/MobileFilterSheet") as Promise<{
-    default: React.ComponentType<MobileFilterSheetProps>;
+    default: React.ComponentType<CategoryMobileFilterSheetProps>;
   }>,
   { loading: DynamicImportLoader },
 );
@@ -66,14 +62,6 @@ const ProductDisplay = dynamic<ProductDisplayProps>(
   { loading: DynamicImportLoader },
 );
 
-interface CategoryPageClientProps {
-  slug: string;
-  category: Category;
-  products: Product[];
-  filters: Filter[];
-  totalItems: number;
-  megaMenuData: Category[];
-}
 
 const CategoryClient = ({
   slug,

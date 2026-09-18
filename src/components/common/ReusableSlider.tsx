@@ -12,64 +12,10 @@ import React, {
 } from "react";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { ReusableSliderProps, ReusableSliderRef, BreakpointConfig } from "@/types/ui";
 
-interface ReusableSliderProps<T> {
-  items: T[];
 
-  renderItem: (item: T, index: number) => React.ReactNode;
 
-  effect?: "slide" | "fade";
-
-  slidesToShow?: number;
-
-  speed?: number;
-
-  autoplaySpeed?: number;
-
-  infinite?: boolean;
-
-  slidesToScroll?: number;
-
-  arrows?: boolean;
-
-  pauseOnHover?: boolean;
-
-  centered?: boolean;
-
-  gap?: number;
-
-  orientation?: "horizontal" | "vertical";
-
-  onSlideChange?: (currentIndex: number, currentItem: T) => void;
-
-  keyExtractor?: (item: T, index: number) => string | number;
-
-  className?: string;
-
-  breakpoints?: {
-    [width: number]: {
-      slidesPerView?: number;
-      spaceBetween?: number;
-    };
-  };
-
-  autoResponsive?: boolean;
-
-  slideClassName?: string;
-}
-
-export interface ReusableSliderRef {
-  goToSlide: (index: number) => void;
-
-  next: () => void;
-
-  prev: () => void;
-}
-
-interface BreakpointConfig {
-  slidesPerView: number;
-  spaceBetween: number;
-}
 
 function SliderComponent<T>(
   {

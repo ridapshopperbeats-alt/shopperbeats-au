@@ -4,7 +4,6 @@ import { API_ENDPOINTS } from "@/lib/constants/api";
 const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
 
 import { cache } from "react";
-import { AboutLink, AboutSection, ContactContent } from "@/types/cms";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 import { OrderStatusCode } from "@/types/order";
 import { BadgeColor } from "@/components/common/StatusBadge";
@@ -23,10 +22,6 @@ function isSafeToDisplay(message: string): boolean {
     message.length <= MAX_API_ERROR_MESSAGE_LENGTH &&
     !LOOKS_INTERNAL_PATTERN.test(message)
   );
-}
-
-export function sanitizeErrorMessage(message: string, fallback: string): string {
-  return isSafeToDisplay(message) ? message : fallback;
 }
 
 export function getApiErrorMessage(error: unknown, fallback: string): string {
@@ -57,13 +52,6 @@ export const formatPrice = (
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   });
-};
-
-// Format price with fixed 2 decimal places
-export const formatPriceFixed2 = (
-  price: number | string | undefined | null,
-): string => {
-  return Number(price).toFixed(2);
 };
 
 // Convert a Date object or string to YYYY-MM-DD format
@@ -319,20 +307,6 @@ export function findCategoryPath(
   return null;
 }
 
-// Fetch best-selling products from the API, with a default limit of 10
-export async function getBestSellers(limit = 10): Promise<Product[]> {
-  const res = await fetch(
-    `${baseUrl}${API_ENDPOINTS.PRODUCTS.HIGHLIGHTS}${API_ENDPOINTS.PRODUCTS.BESTSELLERS}?limit=${limit}`,
-    { cache: "no-store" },
-  );
-
-  if (!res.ok) return [];
-
-  const data = await res.json();
-
-  return data?.products?.data ?? [];
-}
-
 // Fetch raw categories from the API, with caching for 1 hour
 export const getRawCategories = cache(async (): Promise<Category[]> => {
   const res = await fetch(`${baseUrl}${API_ENDPOINTS.CATEGORIES.LIST}`, {
@@ -343,34 +317,6 @@ export const getRawCategories = cache(async (): Promise<Category[]> => {
 
   return res.json();
 });
-
-// Fetch popular products from the API, with a default limit of 10
-export async function getPopularProducts(limit = 10): Promise<Product[]> {
-  const res = await fetch(
-    `${baseUrl}${API_ENDPOINTS.PRODUCTS.HIGHLIGHTS}/${API_ENDPOINTS.PRODUCTS.POPULAR_PRODUCTS}?limit=${limit}`,
-    { cache: "no-store" },
-  );
-
-  if (!res.ok) return [];
-
-  const data = await res.json();
-
-  return data?.products?.data ?? [];
-}
-
-// Fetch new-release products from the API, with a default limit of 10
-export async function getNewReleases(limit = 10): Promise<Product[]> {
-  const res = await fetch(
-    `${baseUrl}${API_ENDPOINTS.PRODUCTS.HIGHLIGHTS}/${API_ENDPOINTS.PRODUCTS.NEW_RELEASES}?limit=${limit}`,
-    { cache: "no-store" },
-  );
-
-  if (!res.ok) return [];
-
-  const data = await res.json();
-
-  return data?.products?.data ?? [];
-}
 
 // Get product details utilities
 export const getPriceDetails = (product: Product, variant?: Variant | null) => {
@@ -490,73 +436,6 @@ export const fieldLabels: Record<string, string> = {
   paymentMethod: "Payment method",
 };
 
-
-// JSON-like data
-export const contactData: ContactContent = {
-  title: "Have a question, or want an update on your order?",
-  description: [
-    "Our team of happily helpful Experts is readily available to assist you, no matter how you choose to get in touch with us.",
-    "We strive to respond promptly within 24-48 hours. During peak times, there may be a slight delay. Rest assured, we are committed to addressing your inquiries quickly.",
-  ],
-  contactBlocks: [
-    {
-      icon: "/images/cms/location.svg",
-      label: "Address",
-      value: "Truganina 3029, Victoria, Australia",
-    },
-    {
-      icon: "/images/cms/clock.svg",
-      label: "Working Hours",
-      value: {
-        weekdays: "9:00am - 5:00pm",
-        weekends: "Closed",
-      },
-    },
-  ],
-};
-
-
-export const aboutLinks: AboutLink[] = [
-    { href: "#1", label: "Who we are" },
-    { href: "#2", label: "Why buy from us" },
-    { href: "#3", label: "Our Policies" },
-];
-
-export const aboutSections: AboutSection[] = [
-    {
-        label: "Who we are",
-        imageSrc: "/images/cms/about.svg",
-        content: [
-            { type: "heading", text: "Our Vision" },
-            { type: "paragraph", text: `ShopperBeats continues to stand as the planet's premier shopping destination, renowned for its unparalleled collection of incredible finds. Our platform facilitates seamless sharing and shopping experiences while merging offline shopping with the digital realm, fostering meaningful connections.` },
-            { type: "heading", text: "Our Mission" },
-            { type: "paragraph", text: `At ShopperBeats, our mission remains steadfast: to establish ourselves as the most trusted, customer-centric company. We empower individuals to explore and procure anything from any corner of the globe, ensuring competitive prices and a wide array of choices.` },
-        ],
-    },
-    {
-        label: "Why buy from us",
-        imageSrc: "/images/cms/about-2.png",
-        content: [
-            { type: "heading", text: "100% Satisfaction Guarantee:" },
-            { type: "paragraph", text: ` If for any reason you are not satisfied with any item, return your unused item for a full refund of the purchase price.` },
-            { type: "paragraph", text: `We delight customers with high-quality products at affordable prices. Our support team always prioritizes the customer's point of view when solving problems.` },
-            { type: "paragraph", text: `Affordable shipping options exist for every customer, with free shipping provided to certain countries.` },
-        ],
-    },
-    {
-        label: "Our Policies",
-        imageSrc: "/images/cms/about-3.png",
-        content: [
-            { type: "heading", text: "Refund Policy:" },
-            { type: "paragraph", text: ` You can return your order within 30 days of receipt if not entirely satisfied.` },
-            { type: "heading", text: "Refund PoExceptional Customer Service:" },
-            { type: "paragraph", text: ` Friendly, personalized service with 24/7 support. We aim to respond within 24–48 hours.` },
-            { type: "heading", text: "Payment Security and Privacy:" },
-            { type: "paragraph", text: ` ShopperBeats uses SSL encryption and secure gateways like Stripe and PayPal. Card details are never stored or shared with third parties.` },
-        ],
-    },
-];
-
 export const ORDER_STATUS_LABELS: Record<OrderStatusCode, string> = {
   [OrderStatusCode.Confirmed]: "Confirmed",
   [OrderStatusCode.Shipped]: "Shipped",
@@ -638,8 +517,6 @@ export const SITE_URL =
     // Return already sorted subcategories
     return category?.subcategories || [];
   }
-
-
 
 export interface PriceRange {
   min: number;
@@ -724,34 +601,3 @@ export const getEstimatedDeliveryRange = (
   handlingTimeDays: number,
   handlingTimeMaxDays?: number | null,
 ) => getHandlingDeliveryRange(handlingTimeDays, handlingTimeMaxDays);
-
-
-async function fetchTrending(limit: number): Promise<Product[]> {
-  const res = await fetch(
-    `${baseUrl}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.TRENDING_PRODUCTS}?limit=${limit}`,
-    { next: { revalidate: 60 } }
-  );
-
-  if (!res.ok) return [];
-
-  const data = await res.json();
-
-  // trending-products wraps results in `items`
-  return data?.items ?? data?.data ?? [];
-}
-
-export async function getTrendingProducts(limit = 10): Promise<Product[]> {
-  const trending = await fetchTrending(limit);
-  if (trending.length > 0) return trending;
-
-  const res = await fetch(
-    `${baseUrl}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?limit=${limit}&page=2`,
-    { next: { revalidate: 60 } }
-  );
-
-  if (!res.ok) return [];
-
-  const data = await res.json();
-
-  return data?.data ?? [];
-}

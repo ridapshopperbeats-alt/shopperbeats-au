@@ -1,4 +1,5 @@
 import { Address } from "./address";
+import type { CartItem, PromoData } from "./cart";
 import { CheckoutFormData } from "./order";
 
 export interface CheckoutFormProps {
@@ -57,3 +58,13 @@ export interface DeliveryDetailsFormProps {
   >;
   isAuthenticated: boolean;
 }
+export type CheckoutOrderSummaryProps = {
+  isLoading: boolean;
+  orderSummary: CartItem[];
+  effectiveShipping: number;
+  totalSaveAmount: number;
+  promoData: PromoData | null;
+  finalTotal: number;
+  isCreatingOrder: boolean;
+  isProcessingPayment: boolean;
+};

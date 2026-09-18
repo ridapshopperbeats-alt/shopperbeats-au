@@ -1,14 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import type { HeaderIconProps } from "@/types/ui";
 
-interface HeaderIconProps {
-  href: string;
-  iconSrc: string;
-  alt: string;
-  className?: string;
-  count?: number;
-}
 
 const HeaderIcon: React.FC<HeaderIconProps> = ({
   href,

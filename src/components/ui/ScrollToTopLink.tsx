@@ -2,12 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type { ScrollToTopLinkProps } from "@/types/ui";
 
-interface ScrollToTopLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  href: string;
-  children: React.ReactNode;
-  className?: string;
-}
 
 export default function ScrollToTopLink({ href, children, className, ...props }: ScrollToTopLinkProps) {
   const router = useRouter();

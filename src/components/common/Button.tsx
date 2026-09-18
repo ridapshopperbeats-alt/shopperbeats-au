@@ -1,14 +1,8 @@
 
 import { useDebouncedFunction } from '@/lib/hooks/use-debounce';
-import React, { ButtonHTMLAttributes } from 'react';
+import React from 'react';
+import type { ButtonProps } from "@/types/ui";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  debounceDelay?: number; 
-  isLoading?: boolean; 
-  lockOnClick?: boolean;
-}
 
 const Button: React.FC<ButtonProps> = ({
   children,

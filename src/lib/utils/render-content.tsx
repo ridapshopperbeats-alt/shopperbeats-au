@@ -1,16 +1,8 @@
 import React from "react";
 import DOMPurify from "isomorphic-dompurify";
+import type { ParseProps, ProductData } from "@/types/product";
 
-export type ParseProps = {
-  htmlString: string;
-};
 
-export type ProductData = {
-  description: string;
-  features: string[];
-  specifications: Record<string, string>;
-  packageContents: string[];
-};
 
 export function renderContent(content?: string): React.ReactNode {
   if (!content) return null;

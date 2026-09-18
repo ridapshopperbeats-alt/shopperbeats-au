@@ -15,17 +15,8 @@ import { Review } from "@/types/product";
 import { getReviewImage } from "@/lib/utils/main-utils";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
+import type { CustomerRatingViewPageProps, DisplayReview } from "@/types/product";
 
-interface DisplayReview {
-  id: string;
-  name: string;
-  rating: number;
-  date: string;
-  comment: string;
-  verified?: boolean;
-  reviewer_profile_image?: string | null;
-  images?: (string | { image_url?: string; url?: string })[] | null;
-}
 
 function formatReviewDate(value: string): string {
   const parsed = new Date(value);
@@ -59,9 +50,6 @@ const REVIEW_SORT_OPTIONS = [
 
 const REVIEWS_PAGE_SIZE = 2;
 
-interface CustomerRatingViewPageProps {
-  reviews?: Review[];
-}
 
 export default function CustomerRatingViewPage({
   reviews,

@@ -24,3 +24,7 @@ export interface ProductSEO {
   canonical_url?: string;
   url_handle?: string;
 }
+export interface SEOContextType {
+  metadata: MetaInfo;
+  updateMetadata: (newMetadata: Partial<MetaInfo>) => void;
+}

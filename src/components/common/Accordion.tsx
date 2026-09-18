@@ -1,21 +1,9 @@
 "use client";
 import { ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import type { AccordionProps } from "@/types/ui";
 
-interface AccordionItem {
-  title: string | React.ReactNode;
-  content: React.ReactNode;
-  defaultOpen?: boolean;
-  id: string;
-}
 
-interface AccordionProps {
-  items: AccordionItem[];
-  variation?: 1 | 2;
-  onOpenChange?: (openItems: boolean[]) => void;
-  forceOpenCount?: number;
-  independent?: boolean;
-}
 
 const Accordion = ({
   items,

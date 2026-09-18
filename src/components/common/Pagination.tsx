@@ -2,16 +2,8 @@
 
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { PaginationProps } from "@/types/ui";
 
-interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-  itemsPerPage: number;
-  onItemsPerPageChange: (itemsPerPage: number) => void;
-  totalItems: number;
-  limitOptions?: number[];
-}
 
 const Pagination = ({
   currentPage,

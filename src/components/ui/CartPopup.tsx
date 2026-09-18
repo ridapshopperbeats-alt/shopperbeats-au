@@ -5,10 +5,8 @@ import Link from "next/link";
 import { useGetCartQuery } from "@/lib/redux/apis/cart-api";
 import { CartItem } from "@/types/cart";
 import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
+import type { CartPopupProps } from "@/types/ui";
 
-interface CartPopupProps {
-  isVisible: boolean;
-}
 
 const CartPopup = ({ isVisible }: CartPopupProps) => {
   const { postcode } = useGlobalPostcode();

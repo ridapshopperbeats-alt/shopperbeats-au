@@ -35,7 +35,3 @@ export interface MegaMenuCategory {
     viewAll?: string;
   }[];
 }
-
-export interface HeaderProps {
-  megaMenuData: MegaMenuCategory[];
-}

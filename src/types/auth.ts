@@ -78,3 +78,6 @@ export interface ChangePasswordFormData {
   new_password: string;
   confirm_password: string;
 }
+export interface ResetPasswordKeyPageProps {
+  params: Promise<{ key: string }>;
+}

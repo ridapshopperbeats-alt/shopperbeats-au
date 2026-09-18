@@ -3,15 +3,10 @@ import React, { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import type { TopCategoryTile } from "@/types/homepage";
 
-interface Category {
-  id: number;
-  title: string;
-  imageUrl: string;
-  href: string;
-}
 
-const CATEGORIES: Category[] = [
+const CATEGORIES: TopCategoryTile[] = [
   { id: 1, title: 'Home & Garden', imageUrl: '/images/tc_homegarden.jpg', href: "/category/home-garden" },
   { id: 2, title: 'Furniture', imageUrl: '/images/tc_furniture.jpg', href: "/category/furniture" },
   { id: 3, title: 'Health & Beauty', imageUrl: '/images/tc_health_beauty.jpg', href: "/category/health-beauty" },
@@ -43,7 +38,7 @@ export const NewTopCategories = () => {
       <div className="container mx-auto px-4 md:px-8 max-w-[1750px]">
 
         <h3 className="font-bold text-gray-900 tracking-tight text-[35px]" style={{ marginTop: "10px", marginBottom: "20px" }} >
-          Top Categoriesaa
+          Top Categories
         </h3>
 
         <div className="relative">
