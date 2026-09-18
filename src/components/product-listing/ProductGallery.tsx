@@ -6,23 +6,16 @@ import React, {
   useMemo,
 } from "react";
 import Image from "next/image";
-import ReusableSlider, {
-  ReusableSliderRef,
-} from "@/components/common/ReusableSlider";
-import { Product, ProductImage, Variant } from "@/types/product";
+import ReusableSlider from "@/components/common/ReusableSlider";
+import type { ReusableSliderRef } from "@/types/ui";
+import { ProductImage } from "@/types/product";
 import { Heart } from "lucide-react";
 import ImagePreviewModal from "./ImagePreviewModal";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
+import type { ProductGalleryProps } from "@/types/product";
 
 const THUMBS_VISIBLE = 11;
 
-interface ProductGalleryProps {
-  product: Product;
-  selectedVariant: Variant | null;
-  isWishlisted?: boolean;
-  onWishlistToggle?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  isWishlistLoading?: boolean;
-}
 
 const defaultImageUrl = "/images/image-coming-soon.jpg";
 

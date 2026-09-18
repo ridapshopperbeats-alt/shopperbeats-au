@@ -1,12 +1,10 @@
 import { getCategoryData } from "@/lib/utils/main-utils";
 import Image from "next/image";
 import Link from "next/link";
+import type { AllCategoriesPageProps } from "@/types/product";
 
-interface PageProps {
-  searchParams: { parent?: string };
-}
 
-export default async function AllCategories({ searchParams }: PageProps) {
+export default async function AllCategories({ searchParams }: AllCategoriesPageProps) {
   const parentId = searchParams.parent;
   const categories = await getCategoryData(parentId);
 

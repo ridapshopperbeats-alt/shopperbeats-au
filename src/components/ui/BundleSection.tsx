@@ -8,10 +8,8 @@ import ProductCard from "../common/ProductCard";
 import Button from "../common/Button";
 import "../../styles/BundleSection.css";
 import { formatPrice } from "@/lib/utils/main-utils";
+import type { BundleSectionProps } from "@/types/product";
 
-interface BundleSectionProps {
-  bundleProducts: BundleProduct[];
-}
 
 export default function BundleSection({ bundleProducts }: BundleSectionProps) {
   const [addToCart, { isLoading }] = useAddToCartMutation();

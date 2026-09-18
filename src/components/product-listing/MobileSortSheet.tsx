@@ -2,13 +2,8 @@
 
 import { useEffect } from "react";
 import { X, Check } from "lucide-react";
+import type { MobileSortSheetProps } from "@/types/product";
 
-interface MobileSortSheetProps {
-  open: boolean;
-  onClose: () => void;
-  sortBy: string;
-  onSortChange: (value: string) => void;
-}
 
 
 const SORT_OPTIONS = [

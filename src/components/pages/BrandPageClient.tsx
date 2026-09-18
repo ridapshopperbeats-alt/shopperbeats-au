@@ -5,7 +5,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
-import { Filter, Product } from "@/types/product";
+import { Filter } from "@/types/product";
 import dynamic from "next/dynamic";
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
@@ -26,25 +26,9 @@ const ProductDisplay = dynamic(
 import { buildFilterTags } from "@/lib/utils/filter-tags";
 import "../../styles/Product.css";
 import Breadcrumb from "../common/Breadcrumb";
+import type { BrandPageClientProps } from "@/types/product";
 
-interface Brand {
-  id: string;
-  name: string;
-  logo_url: string | null;
-  image_url: string | null;
-  is_active: boolean;
-  total_products: number;
-  active_products: number;
-  inactive_products: number;
-}
 
-interface BrandPageClientProps {
-  brandId: string;
-  brand: Brand;
-  products: Product[];
-  filters: Filter[];
-  totalItems: number;
-}
 
 const BrandPageClient = ({
   brandId,

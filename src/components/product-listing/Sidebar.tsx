@@ -4,48 +4,14 @@ import React, { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Accordion from "@/components/common/Accordion";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
-import { Category, Filter } from "@/types/product";
+import { Category } from "@/types/product";
 import Button from "@/components/common/Button";
 import { useParams } from "next/navigation";
 import { Search, ChevronDown } from "lucide-react";
 import { Input } from "../common/input";
 import { Slider } from "../common/slider";
+import type { SidebarProps } from "@/types/product";
 
-export interface SidebarProps {
-  filters: Filter[];
-  category?: Category | null;
-  onClose?: () => void;
-  onExpandedChange?: (expanded: boolean) => void;
-  onClearAllFilters?: () => void;
-  extractedBrands?: {
-    name: string;
-    slug: string;
-    count: number;
-  }[];
-  extractedCategories?: {
-    name: string;
-    slug: string;
-    count: number;
-  }[];
-  selectedCategorySlugs?: string[];
-  // A slug toggles that category; null clears them all ("All Categories").
-  onCategorySelect?: (categorySlug: string | null) => void;
-  selectedPriceRange?: string | null;
-  onPriceSelect?: (priceRange: string | null) => void;
-  isHighlightPage?: boolean;
-
-  slug?: string;
-
-  priceCounts?: {
-    under50: number;
-    between50and100: number;
-    between100and200: number;
-    above200: number;
-  };
-
-  hideHeader?: boolean;
-  wrapNavigation?: (fn: () => void) => void;
-}
 
 const Sidebar: React.FC<SidebarProps> = ({
   filters,

@@ -1,21 +1,5 @@
 import { APIProduct, OrderAPIResponse } from "@/types/order";
 
-export function mergeOrderAvailableActions(order: OrderAPIResponse): string[] {
-  const actions = new Set<string>();
-  for (const action of order.available_actions ?? []) {
-    if (action) actions.add(action);
-  }
-  for (const item of order.items ?? []) {
-    for (const action of [
-      ...(item.available_actions ?? []),
-      ...(item.available_options ?? []),
-    ]) {
-      if (action) actions.add(action);
-    }
-  }
-  return Array.from(actions);
-}
-
 export function orderHasAction(
   actions: string[] | undefined,
   ...keys: string[]
@@ -23,23 +7,6 @@ export function orderHasAction(
   if (!actions?.length) return false;
   const normalized = new Set(actions.map((a) => a.toLowerCase()));
   return keys.some((key) => normalized.has(key.toLowerCase()));
-}
-
-export function canCancelOrder(order: {
-  isCancelled: boolean;
-  status?: string;
-  available_actions?: string[];
-}): boolean {
-  if (order.isCancelled) return false;
-
-  const status = (order.status || "").toLowerCase().trim();
-  if (status === "delivered" || status === "cancelled") return false;
-
-  if (orderHasAction(order.available_actions, "cancel", "cancel_order")) {
-    return true;
-  }
-
-  return Boolean(status) && status !== "delivered" && status !== "cancelled";
 }
 
 const ORDER_PRODUCT_IMAGE_FALLBACK = "/images/image-coming-soon.jpg";
@@ -119,20 +86,4 @@ export function mapOrderProducts(order: OrderAPIResponse): APIProduct[] {
   }
 
   return [];
-}
-
-export function findOrderProduct(
-  order: OrderAPIResponse,
-  productIdParam: string | null
-): APIProduct | undefined {
-  if (!productIdParam) return undefined;
-
-  return mapOrderProducts(order).find((p) => {
-    const reviewId = getReviewProductId(p);
-    return (
-      reviewId === productIdParam ||
-      String(p.id) === productIdParam ||
-      String(p.item_id) === productIdParam
-    );
-  });
 }

@@ -35,6 +35,7 @@ import Pagination from "@/components/common/Pagination";
 import { Card } from "@/components/common/Card";
 import { StatusBadge, BadgeColor } from "@/components/common/StatusBadge";
 import { Truck, Eye, ChevronUp, ChevronDown, ArrowUpDown, XCircle, ChevronRight, Star, RefreshCw } from "lucide-react";
+import type { OrderSort, OrderTab } from "@/types/order";
 
 const getOrderStatusCode = (order: OrderItem): OrderStatusCode => {
   const hasReturnRequested = order?.returns?.some(
@@ -61,10 +62,7 @@ const isInTransitOrder = (order: OrderItem) =>
 const isDeliveredOrder = (order: OrderItem) =>
   getOrderStatusCode(order) === OrderStatusCode.Delivered;
 
-type OrderTab = "all" | "transit" | "delivered";
 
-// "" is the unsorted default (newest first); "oldest" is the Delivery Date option.
-type OrderSort = "" | "oldest";
 
 export default function MyOrdersPage() {
   const router = useRouter();

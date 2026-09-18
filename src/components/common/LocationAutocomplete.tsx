@@ -2,20 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import type { LocationAutocompleteProps, LocationType } from "@/types/ui";
 
-type LocationType = "city" | "state" | "country";
 
-interface LocationAutocompleteProps {
-  id: string;
-  name: string;
-  type: LocationType;
-  label?: string;
-  error?: string | null;
-  placeholder?: string;
-  value: string;
-  labelClassName?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
 
 const PRIMARY_TYPES: Record<LocationType, string[]> = {
   city: ["locality"],

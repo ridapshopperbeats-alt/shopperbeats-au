@@ -6,24 +6,9 @@ import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
+import type { BrandApiItem, BrandCard } from "@/types/homepage";
 
-interface BrandApiItem {
-  id: string;
-  name: string;
-  slug: string;
-  image?: string;
-  cta_link?: string;
-  cta_text?: string;
-  subtitle?: string;
-}
 
-interface BrandCard {
-  id: string | number;
-  title: string;
-  subtitle: string;
-  image: string;
-  href: string;
-}
 
 const FALLBACK_IMAGE = "/images/home/brand-card.svg";
 

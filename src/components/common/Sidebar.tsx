@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { CSSProperties, ComponentType } from "react";
+import type { ComponentType } from "react";
 import {
   User,
   Package,
@@ -13,24 +13,9 @@ import {
   CircleX,
 } from "lucide-react";
 import { Card } from "@/components/common/Card";
+import type { SidebarProps } from "@/types/ui";
 
-interface SidebarLink {
-  href: string;
-  label: string;
-}
 
-interface SidebarProps {
-  links: SidebarLink[];
-  active?: string;
-  extraClass?: string;
-  onChange?: (label: string) => void;
-  style?: CSSProperties;
-  textStyle?: CSSProperties;
-  variant?: "tabs" | "account";
-  title?: string;
-  isOpen?: boolean;
-  onClose?: () => void;
-}
 
 const ACCOUNT_ICONS: Record<
   string,

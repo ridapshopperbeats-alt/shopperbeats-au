@@ -1,3 +1,4 @@
+import type { Product } from "./product";
 export interface BannerItemContent {
   image: string;
   title: string;
@@ -49,4 +50,43 @@ export interface HomepageSection {
   id: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface HomeProps {
+  heroBanner: HomepageSection | null;
+  topCategories: HomepageSection | null;
+  bannerOne: HomepageSection | null;
+  bannerTwo: HomepageSection | null;
+  trendingDeals: Product[];
+  topRated: Product[];
+  bestSellers: Product[];
+  personalized: Product[];
+  customerReviews: unknown[];
+  recentlyViewed: Product[];
+}
+
+/** One hard-coded tile in the homepage "Top Categories" rail. */
+export interface TopCategoryTile {
+  id: number;
+  title: string;
+  imageUrl: string;
+  href: string;
+}
+
+export interface BrandApiItem {
+  id: string;
+  name: string;
+  slug: string;
+  image?: string;
+  cta_link?: string;
+  cta_text?: string;
+  subtitle?: string;
+}
+
+export interface BrandCard {
+  id: string | number;
+  title: string;
+  subtitle: string;
+  image: string;
+  href: string;
 }

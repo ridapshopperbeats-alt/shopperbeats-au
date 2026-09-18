@@ -4,13 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { CircleCheck, CircleX, Headphones, RotateCw } from "lucide-react";
 import Banner from "@/components/common/Banner";
+import type { ReturnStep } from "@/types/cms";
 
-interface ReturnStep {
-  number: string;
-  title: string;
-  description?: string;
-  bullets?: string[];
-}
 
 const returnSteps: ReturnStep[] = [
   {

@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { intellectualPropertySchema } from "@/lib/validations/form-schemas";
 import { TriangleAlert } from "lucide-react";
+import type { IpComplaintForm } from "@/types/cms";
 
 const CARD_CLASS =
   "w-full max-w-[1118px] rounded-2xl border border-[#F3F4F6] shadow-[0px_2px_16px_0px_#0000000D] bg-white box-border";
@@ -47,17 +48,6 @@ const complaintSteps = [
 
 const ipTypeOptions = ["Copyright", "Trademark", "Patent", "Trade Secret", "Other"];
 
-interface IpComplaintForm {
-  fullName: string;
-  email: string;
-  companyName: string;
-  country: string;
-  ipType: string;
-  listingUrls: string;
-  description: string;
-  proofOfOwnership: string;
-  declaration: boolean;
-}
 
 export default function IntellectualPropertyComplaintsPage() {
   const {
@@ -377,7 +367,7 @@ export default function IntellectualPropertyComplaintsPage() {
           </form>
         </div>
 
-        {/* Hidefor future Footer help bar */}
+        {/* Hide for future Footer help bar */}
         {/* <div
           className={`${CARD_CLASS} flex flex-col items-start justify-between gap-4 p-5 md:flex-row md:items-center md:gap-0 md:px-6`}
         >

@@ -11,8 +11,6 @@ const ProductCard = dynamic(() => import("@/components/common/ProductCard"), {
 const EMPTY_VARIANTS: never[] = [];
 
 import Pagination from "@/components/common/Pagination";
-import { Product } from "@/types/product";
-import { WishlistKey } from "@/types/wishlist";
 import {
   getPriceDetails,
   getImageUrl,
@@ -31,29 +29,8 @@ import Image from "next/image";
 import NoProductsFound from "../NoProductFound";
 import Button from "../common/Button";
 import MobileSortSheet from "./MobileSortSheet";
+import type { ProductDisplayProps } from "@/types/product";
 
-export interface ProductDisplayProps {
-  products: Product[];
-  totalItems: number;
-  itemsPerPage: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-  onItemsPerPageChange: (limit: number) => void;
-  sortBy: string;
-  onSortChange: (value: string) => void;
-  categoryName?: string;
-  isLoading?: boolean;
-  infiniteScroll?: boolean;
-  hasMore?: boolean;
-  onLoadMore?: () => void;
-  isFetchingMore?: boolean;
-  hideSortAndPagination?: boolean;
-  wishlistItems?: WishlistKey[];
-  onToggleSidebar: () => void;
-  tags?: { key: string; label: string; onRemove: () => void }[];
-  onClearFilters?: () => void;
-  hideFilterButton?: boolean;
-}
 
 const ProductDisplay: React.FC<ProductDisplayProps> = ({
   products: initialProducts,

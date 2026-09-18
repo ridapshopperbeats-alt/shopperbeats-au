@@ -5,26 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
+import type { CategorySliderProps } from "@/types/product";
 
 const FALLBACK_IMAGE = "/images/image-coming-soon.jpg";
 
-export interface CategorySliderItem {
-  id?: string;
-  slug?: string;
-  title: string;
-  image: string;
-  href?: string;
-}
 
-interface CategorySliderProps {
-  title: string;
-  items: CategorySliderItem[];
-  className?: string;
-  arrows?: boolean;
-  titleClassName?: string;
-  onCategoryClick?: (item: CategorySliderItem) => void;
-  getHref?: (item: CategorySliderItem) => string;
-}
 
 const CategorySlider: React.FC<CategorySliderProps> = ({
   title = "Shop by Category",

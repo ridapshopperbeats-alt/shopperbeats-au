@@ -17,17 +17,6 @@ export const confirmPassword = (fieldName: string) =>
     .oneOf([yup.ref(fieldName)], "Passwords must match")
     .required("Confirm Password is required");
 
-/* ------------------ PHONE ------------------ */
-
-
-export const phoneNumber = yup
-  .string()
-  .required("Phone number is required")
-  .matches(
-    /^(?:\+1\d{10}|\d{10})$/,
-    "Enter a valid USA phone number (e.g. 1234567890 or +11234567890)"
-  );
-
 export const australianPhoneNumber = yup
   .string()
   .required("Phone number is required")
@@ -74,8 +63,6 @@ export const pincode = yup
   .required("Postcode is required")
   .matches(/^\d{4}$/, "Enter a valid Australian postcode");
 
-
-
 /* ------------------ Name  ------------------ */
 
 export const nameField = (label: string) =>
@@ -85,38 +72,6 @@ export const nameField = (label: string) =>
     .required(`${label} is required`)
     .max(50, `${label} must be at most 50 characters`)
     .matches(/^[a-zA-Z\s]+$/, `${label} must contain only letters`);
-
-
-/* ------------------ CURRENCY ------------------ */
-
-export const currency = yup
-  .string()
-  .trim()
-  .uppercase()
-  .required("Currency is required")
-  .matches(
-    /^[A-Z]{3}$/,
-    "Currency must be a valid 3-letter code (e.g. USD, EUR, INR)"
-  );
-
-/* ------------------ CREDIT LIMIT ------------------ */
-
-export const creditLimit = yup
-  .number()
-  .typeError("Credit limit must be a number")
-  .min(0, "Credit limit cannot be negative")
-  .required("Credit limit is required");
-
-/* ------------------ WEBSITE ------------------ */
-
-export const website = yup
-  .string()
-  .trim()
-  .nullable()
-  .transform((value, originalValue) =>
-    originalValue === "" ? null : value
-  )
-  .url("Website must be a valid URL");
 
 /* ------------------ MESSAGE / NOTES ------------------ */
 
@@ -186,11 +141,6 @@ export const changePasswordValidationSchema = yup.object().shape({
   new_password: strongPassword,
   confirm_password: confirmPassword("new_password")
 });
-
-// Wishlist validation schema
-export const wishListValidationSchema = yup.object().shape({
-    pincode: yup.string().required("Pincode is required"),
-  });
 // src/components/ui/ReturnOrderPopup.tsx
 export const returnMessageSchema = yup.object().shape({
   reason: yup.string().required("Return reason is required"),
@@ -201,32 +151,6 @@ export const returnMessageSchema = yup.object().shape({
 export const replaceMessageSchema = yup.object().shape({
   reason: yup.string().required("Replacement reason is required"),
   customer_comment: yup.string(),
-});
-
-// src/components/ui/SellerSignupModal.tsx (step 1: account details)
-export const sellerSignupStep1Schema = yup.object().shape({
-  name: nameField("Name"),
-  email: email,
-  password: strongPassword,
-  confirmPassword: confirmPassword("password"),
-});
-
-// src/components/ui/SellerSignupModal.tsx (step 2: business details)
-export const sellerSignupStep2Schema = yup.object().shape({
-  business_name: requiredString("Business name"),
-  tax_id: requiredString("Tax ID"),
-  taxIdLabel: requiredString("Tax ID label"),
-  business_email: email,
-  phone: phoneNumber,
-  address_line1: requiredString("Address line 1"),
-  address_line2: yup.string(),
-  city: requiredString("City"),
-  state_province: requiredString("State/Province"),
-  postal_code: pincode,
-  currency: currency,
-  credit_limit: creditLimit,
-  website: website,
-  message: message,
 });
 
 // src/components/ui/CancelOrderPopup.tsx

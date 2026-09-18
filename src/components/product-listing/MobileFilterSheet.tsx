@@ -2,16 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import Sidebar, { SidebarProps } from "./Sidebar";
+import Sidebar from "./Sidebar";
+import type { MobileFilterSheetProps } from "@/types/product";
 
-type MobileFilterSheetProps = Omit<
-  SidebarProps,
-  "onClose" | "onClearAllFilters" | "hideHeader"
-> & {
-  open: boolean;
-  onClose: () => void;
-  onClearAll?: () => void;
-};
 
 export default function MobileFilterSheet({
   open,

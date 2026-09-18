@@ -6,12 +6,8 @@ import Button from "@/components/common/Button";
 import { useRetryPaymentMutation } from "@/lib/redux/apis/order-api";
 import { toast } from "react-toastify";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import type { RetryPaymentPopupProps } from "@/types/ui";
 
-interface RetryPaymentPopupProps {
-  isOpen: boolean;
-  onClose: () => void;
-  orderId: string;
-}
 
 const PAYMENT_INPUT_CLASS =
   "!h-auto !w-full !rounded-[14px] !border !border-[#E5E7EB] !bg-white !px-4 !py-3 !text-[0.8125rem] !leading-normal !text-[#211E22] focus:!border-[#FD151B] focus:outline-none focus:ring-1 focus:ring-[#FD151B] placeholder:!font-montserrat placeholder:!text-[14px] placeholder:!font-medium placeholder:!leading-normal placeholder:!capitalize placeholder:!text-black";

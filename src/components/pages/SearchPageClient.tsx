@@ -27,14 +27,9 @@ const ProductDisplay = dynamic(
   { loading: DynamicImportLoader }
 );
 import { buildFilterTags } from "@/lib/utils/filter-tags";
+import type { SearchPageClientProps } from "@/types/product";
 
 
-interface SearchPageClientProps {
-  query: string;
-  products: Product[];
-  filters: Filter[];
-  totalItems: number;
-}
 
 const SearchPageClient = ({
   query,

@@ -5,19 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, Search } from "lucide-react";
 import Banner from "@/components/common/Banner";
+import type { FaqCategory } from "@/types/cms";
 
 const CARD_CLASS =
   "w-full max-w-[1118px] rounded-2xl border border-[#F3F4F6] shadow-[0px_1px_2px_0px_#0000000D] bg-white box-border";
 
-interface FaqEntry {
-  question: string;
-  answer: string;
-}
 
-interface FaqCategory {
-  title: string;
-  items: FaqEntry[];
-}
 
 const faqCategories: FaqCategory[] = [
   {
@@ -141,13 +134,11 @@ export default function FaqPage() {
       />
 
       <div className="mx-auto my-0 md:my-10 box-border flex w-full max-w-full flex-col gap-4 p-4 md:max-w-[1118px] md:gap-5 md:p-0">
-        {/* Top intro card */}
         <div className={`${CARD_CLASS} overflow-hidden p-5 md:p-6`}>
           <div className="font-montserrat fluid-text-xs font-bold leading-[21px] text-[#111827]">
             Frequently Asked Questions
           </div>
           <div className="mb-4 mt-1.5 font-montserrat text-12px font-normal leading-[16.5px] text-[#9CA3AF]">
-            {/* Can&apos;t find your answer?{" "} */}
             <Link
               href="/contact"
               className="font-montserrat text-12px font-semibold leading-[16.5px] text-[#FD151B] no-underline"
@@ -177,7 +168,6 @@ export default function FaqPage() {
           </div>
         )}
 
-        {/* Category cards */}
         {filteredCategories.map((category) => (
           <div key={category.title} className={`${CARD_CLASS} overflow-hidden`}>
             <div className="flex h-[49.5px] items-center border-b border-[#F3F4F6] px-6 font-montserrat text-12px font-bold leading-[16.5px] text-[#FD151B]">

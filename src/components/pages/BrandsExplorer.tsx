@@ -5,15 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card } from "@/components/common/Card";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
+import type { Brand } from "@/types/main";
 
-interface Brand {
-  id: string;
-  name: string;
-  logo_url: string | null;
-  image_url: string | null;
-  image: string | null;
-  slug: string;
-}
 
 const AVATAR_COLORS = [
   "#EF4444",

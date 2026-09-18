@@ -5,12 +5,9 @@ import ProductListingClient from "@/components/pages/ProductListingClient";
 import { cookies } from "next/headers";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
+import type { ProductListingPageProps } from "@/types/product";
 
 
-interface ProductListingPageProps {
-  params: Promise<{ type: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
 
 function getApiCategoryParam(typeSlug: string): string | undefined {
   const typeMap: Record<string, string> = {

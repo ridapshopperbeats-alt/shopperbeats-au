@@ -2,8 +2,9 @@ import ProductsPageClient from "@/components/pages/ProductsPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import { JsonLdProduct, Product } from "@/types/product";
+import { JsonLdProduct } from "@/types/product";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
+import type { ProductsWithAttributesResponse } from "@/types/product";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -31,14 +32,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-interface ProductsResponse {
-  data: (Product & { attributes: { name: string; value: string; }[]; })[];
-  totalItems: number;
-}
 
 async function getProducts(
   searchParams: { [key: string]: string | string[] | undefined }
-): Promise<ProductsResponse> {
+): Promise<ProductsWithAttributesResponse> {
   const queryParams = new URLSearchParams();
 
   for (const key in searchParams) {

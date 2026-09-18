@@ -1,14 +1,8 @@
 "use client";
 
 import { formatPrice } from "@/lib/utils/main-utils";
+import type { DeliveryDetailsPopupProps } from "@/types/product";
 
-interface DeliveryDetailsPopupProps {
-  onClose: () => void;
-  freeShipping: boolean;
-  handlingTimeDays: number;
-  fastDelivery: boolean;
-  shippingCharge?: number;
-}
 
 export default function DeliveryDetailsPopup({
   onClose,

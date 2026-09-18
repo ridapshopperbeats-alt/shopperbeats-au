@@ -1,13 +1,10 @@
 import { cn } from "@/lib/utils";
+import { BadgeColor, type StatusBadgeProps } from "@/types/ui";
 
-export enum BadgeColor {
-  Blue = "blue",
-  Green = "green",
-  Red = "red",
-  Orange = "orange",
-  Gray = "gray",
-  BlueDark = "blue-dark",
-}
+// Re-exported so the existing `import { BadgeColor } from ".../StatusBadge"`
+// call sites keep working now that the enum lives with the types.
+export { BadgeColor };
+export type { StatusBadgeProps };
 
 const BADGE_COLOR_STYLES: Record<BadgeColor, string> = {
   [BadgeColor.Blue]: "bg-[#EFF6FF] text-[#0066CC]",
@@ -17,14 +14,6 @@ const BADGE_COLOR_STYLES: Record<BadgeColor, string> = {
   [BadgeColor.Gray]: "bg-[#F3F4F6] text-[#6A7282]",
   [BadgeColor.BlueDark]: "bg-[#01295F] text-[#FFFFFF]",
 };
-
-export interface StatusBadgeProps {
-  label: string;
-  color: BadgeColor;
-  showDot?: boolean;
-  icon?: React.ReactNode;
-  className?: string;
-}
 
 export function StatusBadge({ label, color, showDot = true, icon, className }: Readonly<StatusBadgeProps>) {
   return (

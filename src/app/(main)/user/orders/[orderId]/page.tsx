@@ -29,6 +29,7 @@ import CancelOrderPopup from "@/components/common/CancelOrderPopup";
 import ReturnOrderPopup from "@/components/common/ReturnOrderPopup";
 import ReplaceOrderPopup from "@/components/ui/ReplaceOrderPopup";
 import RetryPaymentPopup from "@/components/common/RetryPaymentPopup";
+import type { OrderDetailProps } from "@/types/order";
 
 const SUPPORT_PHONE = "+1 (994) 775-8686";
 
@@ -72,9 +73,6 @@ const getStatusBadgeLabel = (order: {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 };
 
-interface OrderDetailProps {
-  params: Promise<{ orderId: string }>;
-}
 
 export default function OrderDetail({ params }: OrderDetailProps) {
   const { orderId } = use(params);

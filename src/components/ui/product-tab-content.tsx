@@ -126,22 +126,3 @@ export const getFeaturesContent = (
   </>
 );
 
-export const getProductDetailsContent = (product: Product) => (
-  <>
-    <div className="py-4">
-      <b>Product Details</b>
-      <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}></ul>
-
-      <div className="mt-4">
-        <Image
-          src={getImageUrl(product)}
-          alt={product.title || "Product image"}
-          width={1300}
-          height={260}
-          className="tab-content-image"
-        />
-      </div>
-    </div>
-  </>
-);
-

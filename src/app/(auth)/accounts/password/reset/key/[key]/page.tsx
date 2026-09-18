@@ -10,12 +10,10 @@ import Button from "@/components/common/Button";
 import { Card } from "@/components/common/Card";
 import { useFormValidation } from "@/lib/hooks/use-form-validation";
 import { resetPasswordSchema } from "@/lib/validations/form-schemas";
+import type { ResetPasswordKeyPageProps } from "@/types/auth";
 
-interface PageProps {
-  params: Promise<{ key: string }>;
-}
 
-export default function ResetPasswordPage({ params }: PageProps) {
+export default function ResetPasswordPage({ params }: ResetPasswordKeyPageProps) {
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);

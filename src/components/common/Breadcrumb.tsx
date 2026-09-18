@@ -3,15 +3,9 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
+import type { BreadcrumbProps, BreadcrumbItem } from "@/types/breadcrumb";
 
-interface BreadcrumbItem {
-  name: string;
-  path: string;
-}
 
-interface BreadcrumbProps {
-  from?: string;
-}
 
 const Breadcrumb = ({ from }: BreadcrumbProps) => {
   interface BreadcrumbState {

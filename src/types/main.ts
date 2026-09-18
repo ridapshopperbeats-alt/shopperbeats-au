@@ -18,7 +18,3 @@ export interface BrandsResponse {
   pages: number;
   data: Brand[];
 }
-
-export interface BrandsByLetter {
-  [key: string]: Brand[];
-}

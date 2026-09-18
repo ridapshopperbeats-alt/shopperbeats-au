@@ -25,17 +25,9 @@ import StatusBanner from "@/components/common/Tooltip";
 import { Card } from "@/components/common/Card";
 import { StatusBadge, BadgeColor } from "@/components/common/StatusBadge";
 import { APIProduct } from "@/types/order";
+import type { ReviewPageProps, ProductReviewState } from "@/types/order";
 
-interface ReviewPageProps {
-  params: Promise<{ orderId: string }>;
-}
 
-interface ProductReviewState {
-  rating: number;
-  headline: string;
-  comments: string;
-  images: File[];
-}
 
 const EMPTY_REVIEW: ProductReviewState = {
   rating: 0,

@@ -10,7 +10,7 @@ import { pushLoader, popLoader } from "@/lib/redux/slices/loader-slice";
 import { useGetWishlistQuery } from "@/lib/redux/apis/cart-api";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
 import { filterProductsByPriceRange, findCategoryPath, getProductPrice, resolvePriceRange } from "@/lib/utils/main-utils";
-import { Category, Filter, Product } from "@/types/product";
+import { Filter, Product } from "@/types/product";
 import dynamic from "next/dynamic";
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
 import { useProductFilters } from "@/lib/hooks/use-product-filters";
@@ -31,15 +31,7 @@ const ProductDisplay = dynamic(
 import NoProductsFound from "../NoProductFound";
 import { buildFilterTags, formatPriceRangeLabel } from "@/lib/utils/filter-tags";
 import "../../styles/Product.css";
-interface ProductListingClientProps {
-  slug: string;
-  category: Category | null;
-  products: Product[];
-  filters: Filter[];
-  totalItems: number;
-  megaMenuData: Category[];
-  bannerImage?: string | null;
-}
+import type { ProductListingClientProps } from "@/types/product";
 
 const ProductListingClient = ({
   slug,

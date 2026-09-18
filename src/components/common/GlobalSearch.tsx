@@ -8,15 +8,8 @@ import { useDebounceValue } from "@/lib/hooks/use-debounce";
 import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 import { formatPrice } from "@/lib/utils/main-utils";
+import type { SuggestionItem } from "@/types/ui";
 
-interface SuggestionItem {
-  id: string;
-  type: "product" | "category" | "brand";
-  displayLabel: string;
-  linkHref: string;
-  thumbnailUrl?: string | null;
-  price?: number;
-}
 
 export default function GlobalSearch() {
   const router = useRouter();

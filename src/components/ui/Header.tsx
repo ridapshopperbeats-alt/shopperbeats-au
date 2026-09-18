@@ -41,31 +41,11 @@ import { addBreadcrumb } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetSearchSuggestionsQuery } from "@/lib/redux/apis/products-api";
 import { useDebounceValue } from "@/lib/hooks/use-debounce";
 import { useIsClient } from "@/lib/hooks/use-is-client";
-import { MegaMenuCategory, MegaMenuSubcategory } from "@/types/megamenu";
 import TopNavbar from "./TopNavbar";
+import type { HeaderProps } from "@/types/ui";
 
-interface HeaderProps {
-  megaMenuData: MegaMenuCategory[];
-}
 
 const resolveCategoryHref = (slugOrId: string) => `/category/${slugOrId}`;
-
-const findTopCategorySlug = (
-  categories: MegaMenuCategory[],
-  targetSlug: string,
-): string | undefined => {
-  const containsSlug = (node: MegaMenuCategory): boolean =>
-    node.slug === targetSlug ||
-    (node.subcategories?.some(containsSlug) ?? false);
-
-  const match = categories.find(
-    (cat) =>
-      cat.slug === targetSlug ||
-      cat.subcategories?.some(containsSlug),
-  );
-
-  return match?.slug;
-};
 
 const getCategoryIcon = (name: string) => {
   const n = name.toLowerCase();
@@ -88,13 +68,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
   const [showPincodeInput, setShowPincodeInput] = useState(false);
   const mounted = useIsClient();
   const pathname = usePathname();
-  const currentCategorySlug = pathname?.match(/^\/category\/([^/]+)/)?.[1];
-  const activeTopCategorySlug = currentCategorySlug
-    ? findTopCategorySlug(megaMenuData, currentCategorySlug)
-    : undefined;
 
-  const isFashionAccessoriesActive =
-    activeTopCategorySlug === "fashion-accessories";
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { postcode, suburb, updatePostcode } = useGlobalPostcode();
@@ -228,7 +202,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
     }));
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery] = useState("");
   const debouncedSearchQuery = useDebounceValue(searchQuery, 1000);
   const { data: searchResults } =
     useGetSearchSuggestionsQuery(debouncedSearchQuery, {

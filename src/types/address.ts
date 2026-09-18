@@ -78,9 +78,3 @@ export interface GooglePlacesInputProps {
   id?: string;
   inputClassName?: string;
 }
-
-export interface AddressPopupProps {
-  show: boolean;
-  onClose: () => void;
-  editingAddress: Address | null;
-}

@@ -1,19 +1,8 @@
 import { X } from "lucide-react";
 import Image from "next/image";
+import type { ColorPopupProps } from "@/types/product";
 
-export interface ColorAttributeOption {
-  value: string;
-  stock?: number;
-  image: string;
-}
 
-interface ColorPopupProps {
-  open: boolean;
-  onClose: () => void;
-  colors: ColorAttributeOption[];
-  selectedColor: string;
-  onSelectColor: (value: string) => void;
-}
 
 const ColorPopup = ({
   open,

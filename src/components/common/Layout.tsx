@@ -1,16 +1,10 @@
-import type { ComponentProps, ReactNode } from "react";
 import TopNavbar from "../ui/TopNavbar";
 import Footer from "../ui/Footer";
 import MobileBottomNav from "../ui/MobileBottomNav";
 import "../../styles/Header.css";
 import "../../styles/Footer.css";
-import { FooterMenuData } from "@/types/menu";
+import type { LayoutProps } from "@/types/ui";
 
-type LayoutProps = {
-  children: ReactNode;
-  megaMenuData: ComponentProps<typeof TopNavbar>["megaMenuData"];
-  footerMenuData: FooterMenuData;
-};
 
 export default function Layout({
   children,

@@ -7,7 +7,6 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/lib/redux/slices/breadcrumb-slice";
 import { useGetProductsQuery } from "@/lib/redux/apis/products-api";
-import { Product } from "@/types/product";
 import dynamic from "next/dynamic";
 import DynamicImportLoader from "@/components/ui/loaders/DynamicImportLoader";
 
@@ -16,11 +15,8 @@ const ProductDisplay = dynamic(
   { loading: DynamicImportLoader }
 );
 import "../../styles/Product.css";
+import type { ProductsPageClientProps } from "@/types/product";
 
-interface ProductsPageClientProps {
-  products: Product[];
-  totalItems: number;
-}
 
 const ProductsPageClient = ({
   products,

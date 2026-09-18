@@ -18,6 +18,7 @@ import { useGetPersonalDataQuery } from "@/lib/redux/apis/auth-api";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 import { RootState } from "@/lib/redux/store";
 import { sidebarLinks } from "@/lib/utils/main-utils";
+import type { MobileAccountSheetProps } from "@/types/ui";
 
 const ACCOUNT_ICONS: Record<
   string,
@@ -31,10 +32,6 @@ const ACCOUNT_ICONS: Record<
   Logout: LogOut,
 };
 
-interface MobileAccountSheetProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
 
 function getInitials(firstName?: string, lastName?: string) {
   const first = firstName?.trim()?.[0] ?? "";

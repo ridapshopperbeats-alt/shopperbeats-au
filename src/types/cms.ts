@@ -1,21 +1,4 @@
-export interface LegalSection {
-  title: string;
-  content: string[];
-}
 
-export interface AboutLink {
-  href: string;
-  label: string;
-}
-
-export interface AboutSection {
-  label: string;
-  imageSrc: string;
-  content: {
-    type: "heading" | "paragraph";
-    text: string;
-  }[];
-}
 
 export interface CmsPage {
   id: number;
@@ -25,14 +8,35 @@ export interface CmsPage {
   is_published: boolean;
 }
 
-export interface ContactInfoItem {
-  icon: string;
-  label: string;
-  value: string | { weekdays: string; weekends: string };
+export interface ShadowDomContentProps {
+  content: string;
 }
 
-export interface ContactContent {
+export interface FaqEntry {
+  question: string;
+  answer: string;
+}
+
+export interface FaqCategory {
   title: string;
-  description: string[];
-  contactBlocks: ContactInfoItem[];
+  items: FaqEntry[];
+}
+
+export interface IpComplaintForm {
+  fullName: string;
+  email: string;
+  companyName: string;
+  country: string;
+  ipType: string;
+  listingUrls: string;
+  description: string;
+  proofOfOwnership: string;
+  declaration: boolean;
+}
+
+export interface ReturnStep {
+  number: string;
+  title: string;
+  description?: string;
+  bullets?: string[];
 }

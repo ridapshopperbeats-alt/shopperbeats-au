@@ -2,15 +2,9 @@
 
 import { useState } from "react";
 import Accordion from "../common/Accordion";
-import { Review } from "@/types/product";
 import CustomerRatingViewPage from "./CustomerRatingViewPage";
+import type { ProductDetailsMobileTabsProps } from "@/types/product";
 
-interface ProductDetailsMobileTabsProps {
-  featuresContent: React.ReactNode;
-  descriptionContent: React.ReactNode;
-  deliveryContent: React.ReactNode;
-  reviews: Review[];
-}
 
 export default function ProductDetailsMobileTabs({
   descriptionContent,

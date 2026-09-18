@@ -291,28 +291,6 @@ export interface CancelOrderPopupProps {
   ) => void;
 }
 
-export type OrderSummaryPopupProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  orderDetails: {
-    orderNumber?: string;
-    orderId?: string;
-    products: Array<{
-      id: string;
-      name: string;
-      image?: string;
-      quantity: number;
-      price: string;
-    }>;
-    deliveryAddress: string;
-    deliveryCost: string;
-    couponCode?: string;
-    totalAmount: string;
-  };
-  isAuthenticated: boolean;
-  from: string;
-};
-
 export type OrderDetailsType = {
   orderNumber?: string;
   orderId?: string;
@@ -340,4 +318,27 @@ export enum OrderStatusCode {
   ReturnRequested = "return requested",
   ReplacementRequested = "replacement_requested",
   Refunded = "refunded",
+}
+/* ------------------------------------------------------------------ *
+ * Orders pages
+ * ------------------------------------------------------------------ */
+
+export type OrderTab = "all" | "transit" | "delivered";
+
+// "" is the unsorted default (newest first); "oldest" is the Delivery Date option.
+export type OrderSort = "" | "oldest";
+
+export interface OrderDetailProps {
+  params: Promise<{ orderId: string }>;
+}
+
+export interface ReviewPageProps {
+  params: Promise<{ orderId: string }>;
+}
+
+export interface ProductReviewState {
+  rating: number;
+  headline: string;
+  comments: string;
+  images: File[];
 }
