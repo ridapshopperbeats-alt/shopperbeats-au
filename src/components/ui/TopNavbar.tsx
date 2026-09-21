@@ -55,6 +55,12 @@ import type { TopNavbarProps } from "@/types/ui";
  */
 const SITE_HEADER_HIDDEN_PATHS = ["/check-out"];
 
+/**
+ * Longest column a mega-menu subcategory may render. Anything past this stays
+ * reachable through the "View All" link that follows the list.
+ */
+const MEGA_MENU_VISIBLE_LINKS = 10;
+
 export type { MegaMenuCategory };
 
 
@@ -155,7 +161,10 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
         }
       },
       (error) => {
-        console.error("Geolocation error:", error);
+        if (error.code === error.PERMISSION_DENIED) return;
+        console.warn(
+          `Geolocation unavailable (code ${error.code}): ${error.message || "no details"}`,
+        );
       },
       {
         enableHighAccuracy: true,
@@ -441,7 +450,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                   src="/images/logo.svg"
                   alt="ShopperBeats Logo"
                   width={300}
-                  height={300}
+                  height={61}
                   priority
                 />
               </Link>
@@ -610,11 +619,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                   }
                 }}
                 onClick={() => {
-                  if (!isAuthenticated) {
-                    setShowPincodeInput(!showPincodeInput);
-                  } else {
-                    router.push("/user/addresses");
-                  }
+                  setShowPincodeInput(!showPincodeInput);
                 }}
                 style={{
                   cursor: "pointer",
@@ -626,8 +631,8 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                 <Image
                   src="/images/deliver-location.svg"
                   alt="Deliver"
-                  width={15}
-                  height={15}
+                  width={13}
+                  height={17}
                 />
                 <div className="deliver-location">
                   <span>Deliver to</span>
@@ -802,7 +807,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                                 <h5>{subCat.name}</h5>
                               </Link>
                               <ul>
-                                {subCat.links.map((link) => (
+                                {subCat.links.slice(0, MEGA_MENU_VISIBLE_LINKS).map((link) => (
                                   <li
                                     key={link.name}
                                     style={{ lineHeight: "28px" }}

@@ -24,6 +24,7 @@ function limitWords(text: string | undefined, limit = 6) {
 
 const ProductCard: React.FC<ProductCardProps> = ({
   image,
+  priority = false,
   brand_name,
   title,
   mainPrice,
@@ -173,7 +174,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
               alt={title || "Product Image"}
               fill
               sizes="(max-width: 768px) 180px, 270px"
-              loading="lazy"
+              {...(priority
+                ? { priority: true, fetchPriority: "high" as const }
+                : { loading: "lazy" as const })}
               className="object-cover"
             />
             {/* <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" /> */}

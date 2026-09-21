@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Montserrat } from "next/font/google";
-import Script from "next/script";
 import { headers } from "next/headers";
 import "./globals.css";
 import StoreProvider from "../lib/redux/store-provider";
@@ -70,6 +69,15 @@ export const metadata: Metadata = {
   },
 };
 
+function originOf(url: string | undefined): string | null {
+  if (!url) return null;
+  try {
+    return new URL(url).origin;
+  } catch {
+    return null;
+  }
+}
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -84,20 +92,21 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const apiOrigin = originOf(process.env.NEXT_PUBLIC_API_URL);
 
   return (
     <html lang="en">
       <head>
         {nonce && <meta name="csp-nonce" content={nonce} />}
+        {/* Non-anonymous: the API is fetched credentialed, and an anonymous
+            preconnect opens a socket those requests cannot reuse. Maps is not
+            listed — it now loads only where an address field is mounted, so a
+            site-wide hint would open a connection most pages never use. */}
+        {apiOrigin && <link rel="preconnect" href={apiOrigin} />}
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} font-sans antialiased`}
       >
-        <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&libraries=places&v=beta&loading=async`}
-          strategy="afterInteractive"
-          nonce={nonce}
-        />
         <StoreProvider>
           <SEOProvider>{children}</SEOProvider>
           <RouteChangeLoader />

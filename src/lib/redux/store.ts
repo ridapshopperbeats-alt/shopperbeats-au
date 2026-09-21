@@ -48,6 +48,10 @@ export const makeStore = () => {
         serializableCheck: {
           ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
         },
+        // Thirteen RTK Query caches make a deep scan routinely exceed the 32ms
+        // default, and the check is a dev-only tool that is stripped from
+        // production — so raise the bar rather than trade away the safety net.
+        immutableCheck: { warnAfter: 256 },
       }).concat(
         productsApi.middleware,
         authApi.middleware,

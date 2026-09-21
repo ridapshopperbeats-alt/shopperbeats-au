@@ -1,4 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 import { API_ENDPOINTS } from "../../constants/api";
 import { Cart, PromoValidationResponse } from "@/types/cart";
 import { WishlistItem, Wishlist, WishlistProductSnapshot } from "@/types/wishlist";
@@ -108,6 +109,113 @@ function guestWishlistToWishlist(items: GuestWishlistEntry[]): Wishlist {
     total_items: items.length,
   };
 }
+type MoveToCartItem = { product_id: string; variant_id?: string | null };
+
+type MoveToCartPayload = {
+  items?: MoveToCartItem[];
+  postcode?: string | null;
+  remove_from_wishlist?: boolean;
+};
+
+// FastAPI answers a path it has no route for with exactly {"detail":"Not Found"},
+// and that is still what /wishlist/move-to-cart returns on preprod. A real 404
+// from the shipped handler carries a descriptive detail, so it will not match.
+function isMissingRouteError(error?: FetchBaseQueryError): boolean {
+  if (!error || error.status !== 404) return false;
+  const detail = (error.data as { detail?: unknown } | undefined)?.detail;
+  return typeof detail === "string" && detail.trim().toLowerCase() === "not found";
+}
+
+// The same outcome as move-to-cart, assembled from the endpoints the cart
+// service does expose. Drop this once move-to-cart is deployed.
+async function moveWishlistToCartViaCartEndpoints(
+  payload: MoveToCartPayload,
+  api: Parameters<typeof baseWishlistQuery>[1],
+  extraOptions: Parameters<typeof baseWishlistQuery>[2],
+): Promise<{ data: MoveWishlistToCartResponse } | { error: FetchBaseQueryError }> {
+  let requested: MoveToCartItem[] = payload.items ?? [];
+
+  // "Move everything" arrives without items, so read the wishlist to learn what to move.
+  if (requested.length === 0) {
+    const wishlistResult = await baseWishlistQuery(
+      { url: API_ENDPOINTS.WISHLIST.GET, method: "GET" },
+      api,
+      extraOptions
+    );
+    if (wishlistResult.error) return { error: wishlistResult.error };
+
+    const data = wishlistResult.data as Wishlist | Wishlist[] | null;
+    const items = Array.isArray(data) ? data[0]?.items : data?.items;
+    requested = (items ?? []).map((item) => ({
+      product_id: item.product_id,
+      variant_id: item.variant_id,
+    }));
+  }
+
+  if (requested.length === 0) {
+    return { data: { moved_items: [], failed_items: [] } };
+  }
+
+  const addResult = await baseCartQuery(
+    {
+      url: API_ENDPOINTS.CART.ADD,
+      method: "POST",
+      body: {
+        items: requested.map((item) => ({
+          product_id: item.product_id,
+          quantity: 1,
+          ...(item.variant_id ? { variant_id: item.variant_id } : {}),
+        })),
+        ...(payload.postcode ? { postcode: payload.postcode } : {}),
+      },
+    },
+    api,
+    extraOptions
+  );
+
+  if (addResult.error) return { error: addResult.error };
+
+  // Only rows that actually left the wishlist count as moved, so a failed
+  // delete keeps the item saved rather than dropping it silently.
+  const moved: MoveToCartItem[] = [];
+  const failed: NonNullable<MoveWishlistToCartResponse["failed_items"]> = [];
+
+  if (payload.remove_from_wishlist) {
+    const removals = await Promise.all(
+      requested.map((item) =>
+        baseWishlistQuery(
+          {
+            url: API_ENDPOINTS.WISHLIST.REMOVE,
+            method: "DELETE",
+            params: {
+              product_id: item.product_id,
+              ...(item.variant_id ? { variant_id: item.variant_id } : {}),
+            },
+          },
+          api,
+          extraOptions
+        )
+      )
+    );
+
+    removals.forEach((removal, index) => {
+      const item = requested[index];
+      if (removal.error) {
+        failed.push({
+          ...item,
+          reason: "Added to cart but could not be removed from your wishlist.",
+        });
+      } else {
+        moved.push(item);
+      }
+    });
+  } else {
+    moved.push(...requested);
+  }
+
+  return { data: { moved_items: moved, failed_items: failed } };
+}
+
 export const cartApi = createApi({
   reducerPath: "cartApi",
   baseQuery: baseCartQuery,
@@ -457,6 +565,10 @@ export const cartApi = createApi({
           api,
           extraOptions
         );
+
+        if (isMissingRouteError(result.error)) {
+          return moveWishlistToCartViaCartEndpoints(payload, api, extraOptions);
+        }
 
         if (result.error) return { error: result.error };
         return { data: result.data as MoveWishlistToCartResponse };

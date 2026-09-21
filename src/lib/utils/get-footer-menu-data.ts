@@ -32,10 +32,10 @@ export const FOOTER_LINKS_STATIC = [
     title: "My Account",
     links: [
       { label: "Login", href: "/login" },
-      { label: "Sign up", href: "/sign-up" },
+      { label: "Sign up", href: "/signup" },
       { label: "User Profile", href: "/user/personal-information" },
       { label: "My Cart", href: "/cart" },
-      // { label: "Track My Order", href: "https://www.aramex.com.au/tools/track/" },
+      { label: "Track My Order", href: "/cms/track" },
     ],
   },
   {
@@ -75,8 +75,11 @@ export const footerHighlights = [
 
 
 export const STATIC_SOCIAL_LINKS = [
-  { id: "static-facebook", url: "https://www.facebook.com/login", icon_class: "facebook" },
-  { id: "static-linkedin", url: "https://in.linkedin.com/", icon_class: "linkedin" },
-  { id: "static-tiktok", url: "https://www.tiktok.com/", icon_class: "tiktok" },
-  { id: "static-x", url: "https://x.com/", icon_class: "x" },
+  { id: "static-facebook", url: "https://www.facebook.com/Shopperbeats/", icon_class: "facebook" },
+  // Hidden until the remaining accounts go live. Restoring one of these also
+  // needs the Facebook-only filter in Footer.tsx relaxed, otherwise it stays
+  // invisible.
+  // { id: "static-linkedin", url: "https://in.linkedin.com/", icon_class: "linkedin" },
+  // { id: "static-tiktok", url: "https://www.tiktok.com/", icon_class: "tiktok" },
+  // { id: "static-x", url: "https://x.com/", icon_class: "x" },
 ];

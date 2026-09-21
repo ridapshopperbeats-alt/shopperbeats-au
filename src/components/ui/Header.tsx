@@ -353,7 +353,7 @@ export default function Header({ megaMenuData }: HeaderProps) {
                   src="/images/logo.svg"
                   alt="ShopperBeats Logo"
                   width={300}
-                  height={300}
+                  height={61}
                   priority
                 />
               </Link>
@@ -391,8 +391,8 @@ export default function Header({ megaMenuData }: HeaderProps) {
                 <Image
                   src="/images/deliver-location.svg"
                   alt="Deliver"
-                  width={15}
-                  height={15}
+                  width={13}
+                  height={17}
                 />
                 <div className="deliver-location">
                   <span>Deliver to</span>

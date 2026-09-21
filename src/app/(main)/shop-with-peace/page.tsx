@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const shopWithPeace = () => {
     return (
@@ -129,9 +130,12 @@ const shopWithPeace = () => {
                                         Most eligible items can be returned within the specified return period shown on the product page.
                                     </p>
 
-                                    <button className="mt-4 text-[clamp(1rem,1.5vw,1.125rem)] font-bold leading-[32px] tracking-[-0.2px] text-[#FD151B] underline">
+                                    <Link
+                                        href="/cms/return-refunds"
+                                        className="mt-4 inline-block text-[clamp(1rem,1.5vw,1.125rem)] font-bold leading-[32px] tracking-[-0.2px] text-[#FD151B] underline"
+                                    >
                                         Return &amp; Warranty
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

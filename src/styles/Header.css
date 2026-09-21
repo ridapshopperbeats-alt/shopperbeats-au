@@ -580,7 +580,7 @@ span.wishlist-num {
   line-height: 100%;
   letter-spacing: 0%;
   color: #666666;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .mega-column ul li a:hover {

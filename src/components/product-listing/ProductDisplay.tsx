@@ -184,12 +184,15 @@ const ProductDisplay: React.FC<ProductDisplayProps> = ({
       ) : (
         <>
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-5  ">
-            {products.map((product) => {
+            {products.map((product, index) => {
               const priceInfo = getPriceDetails(product);
 
               return (
                 <ProductCard
                   key={product.id}
+                  // The first tile is the LCP candidate at every breakpoint;
+                  // leaving it lazy made Chrome deprioritise the LCP fetch.
+                  priority={index === 0}
                   wishlistItems={wishlistItems}
                   image={getImageUrl(product, "plpcard")}
                   title={product.title}

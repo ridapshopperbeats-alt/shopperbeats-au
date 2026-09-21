@@ -48,6 +48,14 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
   threads: FaThreads,
 };
 
+type FooterSocialItem = {
+  id: string | number;
+  url: string;
+  icon_class: string;
+};
+
+const FACEBOOK_ICON_CLASSES = ["facebook", "facebook_f", "facebook-f"];
+
 export default function Footer({
   footerMenuData,
 }: {
@@ -66,8 +74,15 @@ export default function Footer({
     setOpenSections((prev) => ({ ...prev, [title]: !prev[title] }));
   };
 
-  const socialItems =
+  const allSocialItems: FooterSocialItem[] =
     socialLinks && socialLinks.length > 0 ? socialLinks : STATIC_SOCIAL_LINKS;
+
+  // Facebook is the only live account, so every other platform stays hidden.
+  // Filtering here rather than only in STATIC_SOCIAL_LINKS keeps them hidden if
+  // the social-media API starts returning them before those accounts exist.
+  const socialItems = allSocialItems.filter((item) =>
+    FACEBOOK_ICON_CLASSES.includes(item.icon_class.toLowerCase())
+  );
 
   const renderSocialIcons = () => (
     <ul className="social">
@@ -294,7 +309,7 @@ export default function Footer({
           {/* Bottom bar */}
           <div className="footer-bottom-bar">
             <p className="footer-copyright-desktop uppercase">
-              © 2026 ShopperBeats Technologies LLC. All Rights
+              © 2026 Shopperbeats Pty Ltd (ABN 32 637 549 770). All Rights
               Reserved
             </p>
 
@@ -310,7 +325,7 @@ export default function Footer({
               ))}
             </div>
             <p className="footer-copyright-mobile uppercase">
-               © 2026 ShopperBeats Technologies LLC. All Rights
+              © 2026 Shopperbeats Pty Ltd (ABN 32 637 549 770). All Rights
               Reserved
             </p>
           </div>

@@ -240,6 +240,8 @@ export interface ProductApiResponse {
 
 export interface ProductCardProps {
   image: string;
+  /** Set on the cards above the fold so the LCP image is not lazy-loaded. */
+  priority?: boolean;
   brand_name?: string;
   title?: string;
   mainPrice?: number;

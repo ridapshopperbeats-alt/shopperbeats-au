@@ -1,6 +1,7 @@
 "use client";
 
 import { GooglePlacesInputProps } from "@/types/address";
+import GoogleMapsScript from "./GoogleMapsScript";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -217,6 +218,7 @@ export default function GooglePlacesInput({
 
   return (
     <div className="relative">
+      <GoogleMapsScript />
       <input
         type="text"
         inputMode="text"

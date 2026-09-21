@@ -5,11 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
 import { triggerSilentRefresh } from "@/lib/redux/apis/base-query";
 import { getMsUntilExpiry } from "@/lib/utils/jwt";
+import { getRefreshToken } from "@/lib/utils/refresh-token-store";
 
 
 const FALLBACK_INTERVAL_MS = 10 * 60 * 1000;
 const REFRESH_MARGIN_MS = 60 * 1000;
 const MIN_REMAINING_MS_TO_SKIP = 2 * 60 * 1000;
+const RETRY_BACKOFF_MS = 60 * 1000;
 
 export default function TokenRefreshManager() {
   const dispatch = useDispatch();
@@ -23,19 +25,22 @@ export default function TokenRefreshManager() {
   }, [accessToken]);
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    // A session resumed from the access-token cookie alone has no refresh
+    // token to spend, and every attempt to rotate one would just end it.
+    if (!isAuthenticated || !getRefreshToken()) return;
 
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
     let cancelled = false;
 
-    const scheduleNextRefresh = (token: string | null) => {
+    const scheduleNextRefresh = (token: string | null, retryDelay?: number) => {
       if (cancelled) return;
       const msUntilExpiry = token ? getMsUntilExpiry(token) : null;
 
       const delay =
-        msUntilExpiry === null
+        retryDelay ??
+        (msUntilExpiry === null
           ? FALLBACK_INTERVAL_MS
-          : Math.max(msUntilExpiry - REFRESH_MARGIN_MS, 0);
+          : Math.max(msUntilExpiry - REFRESH_MARGIN_MS, 0));
 
       timeoutId = setTimeout(async () => {
         // Wait for the refresh to actually land before scheduling the next
@@ -45,7 +50,13 @@ export default function TokenRefreshManager() {
         // the backend with an already-rotated/invalidated refresh token.
         const result = await triggerSilentRefresh(dispatch);
         if (cancelled) return;
-        scheduleNextRefresh(result.accessToken ?? accessTokenRef.current);
+        // A refresh that did not land leaves the expiry it was scheduled
+        // against in the past, so rescheduling off that token computes a zero
+        // delay and hammers the endpoint for as long as the fault lasts.
+        scheduleNextRefresh(
+          result.accessToken ?? accessTokenRef.current,
+          result.accessToken ? undefined : RETRY_BACKOFF_MS,
+        );
       }, delay);
     };
 

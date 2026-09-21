@@ -24,9 +24,18 @@ const MobileFilterSheet = dynamic(
   { loading: DynamicImportLoader }
 );
 
+// The placeholder holds a viewport of height on purpose: rendering nothing here
+// let the footer paint near the top of a short page, and landing the grid then
+// shoved it off-screen for a ~0.77 layout shift.
 const ProductDisplay = dynamic(
   () => import("../product-listing/ProductDisplay"),
-  { loading: DynamicImportLoader }
+  {
+    loading: () => (
+      <div className="min-h-screen w-full">
+        <DynamicImportLoader />
+      </div>
+    ),
+  }
 );
 import NoProductsFound from "../NoProductFound";
 import { buildFilterTags, formatPriceRangeLabel } from "@/lib/utils/filter-tags";

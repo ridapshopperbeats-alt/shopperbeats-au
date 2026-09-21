@@ -181,6 +181,13 @@ export const contactInfoSchema = yup.object().shape({
   message: requiredMessage("Message", 5),
 });
 
+export const contactFormSchema = yup.object().shape({
+  name: nameField("Name"),
+  email: email,
+  phone: australianPhoneNumber,
+  message: requiredMessage("Message", 5),
+});
+
 export const intellectualPropertySchema = yup.object().shape({
   fullName: nameField("Full name"),
   email: email,

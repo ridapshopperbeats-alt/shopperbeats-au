@@ -14,7 +14,7 @@ export default function CheckoutHeader() {
                   src="/images/logo.svg"
                   alt="ShopperBeats Logo"
                   width={300}
-                  height={300}
+                  height={61}
                   priority
                 />
               </Link>
