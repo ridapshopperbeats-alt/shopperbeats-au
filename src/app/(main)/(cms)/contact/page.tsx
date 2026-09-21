@@ -54,6 +54,7 @@ export default function ContactPage() {
     formData,
     setFormData,
     formErrors,
+    setFormErrors,
     handleChange,
     handleSubmit,
     resetForm,
@@ -101,7 +102,7 @@ export default function ContactPage() {
       phone: value,
     }));
 
-    formErrors.phone = error;
+    setFormErrors((prev) => ({ ...prev, phone: error }));
   };
 
   return (

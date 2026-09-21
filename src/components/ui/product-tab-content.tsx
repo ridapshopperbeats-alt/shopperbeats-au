@@ -118,6 +118,8 @@ export const getFeaturesContent = (
           alt={product.title || "Product image"}
           width={1300}
           height={400}
+          // Caps at max-w-[1300px], full-bleed below that.
+          sizes="(max-width: 1300px) 100vw, 1300px"
           className="w-full max-w-[1300px] h-[400px] object-cover"
         />
 

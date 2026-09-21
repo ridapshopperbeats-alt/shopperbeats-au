@@ -576,6 +576,8 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                                           src={item.thumbnailUrl}
                                           alt={item.displayLabel}
                                           fill
+                                          // 32px thumb (w-8 container); `fill` alone requests 100vw.
+                                          sizes="32px"
                                           className="object-cover"
                                         />
                                       )}
@@ -725,6 +727,8 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                       alt="account"
                       className="rounded-full object-cover"
                       fill
+                      // 44px avatar; `fill` alone would request a 100vw render.
+                      sizes="44px"
                     />
 
                     <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />

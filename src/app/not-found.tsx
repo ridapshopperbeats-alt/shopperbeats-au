@@ -2,20 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 /**
  * Replaces Next's default black 404 screen.
  *
- * A client component on purpose: the page names the URL the visitor actually
- * tried, and `usePathname()` is the only way to read it here. It deliberately
- * fetches nothing — an error page that depends on the API can fail for the same
- * reason the visitor is already stuck, so the header is just the static logo
- * rather than the full nav.
+ * It deliberately fetches nothing — an error page that depends on the API can
+ * fail for the same reason the visitor is already stuck, so the header is just
+ * the static logo rather than the full nav.
+ *
+ * The block below that echoed the attempted route is commented out; re-enabling
+ * it needs `usePathname()` back, which is why this stays a client component.
  */
 export default function NotFound() {
-  const pathname = usePathname();
-
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <header className="w-full border-b border-[#ECECEC]">

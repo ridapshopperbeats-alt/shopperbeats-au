@@ -4,6 +4,16 @@ import Layout from "@/components/common/Layout";
 import { getHomepageData } from "@/lib/utils/get-homepage-data";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { getFooterMenuData } from "@/lib/utils/get-footer-menu-data";
+import type { Metadata } from "next";
+
+// Carried over from the duplicate (main)/page.tsx that also resolved to "/".
+// Whichever of the two Next picked varied between builds, and only that one
+// carried these tags, so the homepage kept losing its title/description.
+export const metadata: Metadata = {
+  title: "Shopperbeats - Your One-Stop Online Shop",
+  description:
+    "Discover amazing deals on electronics, home goods, fashion, and more at Shopperbeats. Shop smart, live happy!",
+};
 
 // getHomepageData() reads cookies and hits the product APIs on every request,
 // so awaiting it before returning would hold back the whole document. Kept in

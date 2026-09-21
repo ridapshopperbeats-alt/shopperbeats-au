@@ -471,6 +471,9 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                 alt={product.title || "Product Image"}
                 width={700}
                 height={700}
+                // Headroom for the 1.5x hover zoom: this picks the same or a
+                // larger candidate than before on desktop, only smaller on phones.
+                sizes="(max-width: 1024px) 100vw, 800px"
                 onLoad={() => markLoaded(mainImage)}
                 onClick={() => openPreview(mainImage)}
                 className="absolute inset-0 w-full h-full min-[1366px]:max-[1500px]:h-[600px] rounded-[15px] object-cover"
@@ -568,6 +571,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                       alt={`slide-${index}`}
                       width={400}
                       height={360}
+                      sizes="(max-width: 1024px) 100vw, 400px"
                       draggable={false}
                       onLoad={() => markLoaded(safeUrl(item.image_url))}
                       onClick={() => openPreview(safeUrl(item.image_url))}

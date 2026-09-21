@@ -1,3 +1,7 @@
+// Component suites assert with jest-dom matchers (toBeInTheDocument, etc.).
+// Importing here keeps every *.test.tsx from repeating it.
+import "@testing-library/jest-dom/vitest";
+
 /**
  * The jsdom environment here exposes window.localStorage as a bare object with
  * no Storage methods, so anything reading it throws. Install a minimal
