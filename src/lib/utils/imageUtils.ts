@@ -20,6 +20,38 @@ export function applyImageVariant(url: string, variant?: string): string {
   }
 }
 
+type ImageLike = { image_url?: string; image_order?: number };
+
+function pickBestImageUrl(images: ImageLike[]): string | undefined {
+  return [...images]
+    .filter((img) => !!img.image_url)
+    .sort((a, b) => (a.image_order ?? 9999) - (b.image_order ?? 9999))[0]
+    ?.image_url;
+}
+
+/**
+ * Products that keep their photos on variants come back with an empty
+ * product-level `images`, which used to drop straight to the placeholder here
+ * while the detail page — reading the selected variant — showed the real photo.
+ *
+ * Checked only after the product's own images, unlike ProductGallery, which
+ * starts from the variant the shopper picked. A listing card has no such
+ * selection, so the product image stays the first choice wherever one exists.
+ */
+function pickVariantImageUrl(product: Product): string | undefined {
+  for (const variant of product.variants ?? []) {
+    const images = variant.images;
+
+    if (typeof images === "string" && images) return images;
+    if (Array.isArray(images)) {
+      const found = pickBestImageUrl(images);
+      if (found) return found;
+    }
+  }
+
+  return undefined;
+}
+
 export function getImageUrl(product: Product, variant?: string): string {
   const fallback = "/images/image-coming-soon.jpg";
 
@@ -31,17 +63,13 @@ export function getImageUrl(product: Product, variant?: string): string {
     return applyImageVariant(product.thumbnail, variant);
   }
 
-  if (Array.isArray(product.images) && product.images.length > 0) {
-    const sortedImages = [...product.images]
-      .filter(img => !!img.image_url)
-      .sort((a, b) => (a.image_order ?? 9999) - (b.image_order ?? 9999));
-
-    if (sortedImages.length > 0) {
-      return applyImageVariant(sortedImages[0].image_url, variant);
-    }
-
-    return fallback;
+  if (Array.isArray(product.images)) {
+    const productImage = pickBestImageUrl(product.images);
+    if (productImage) return applyImageVariant(productImage, variant);
   }
+
+  const variantImage = pickVariantImageUrl(product);
+  if (variantImage) return applyImageVariant(variantImage, variant);
 
   return fallback;
 }

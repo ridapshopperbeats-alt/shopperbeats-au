@@ -979,3 +979,25 @@ nav.navbar {
     margin-bottom: 2px;
   }
 }
+/* Below lg the header shows only the location icon, plus the cart on listing
+   pages where the Sort/Filter bar covers the bottom nav. Cart sits on the left
+   and location on the right, which is the reverse of the desktop order, so the
+   gutter that separated them moves to the other side too. Declared last so
+   these win over the 480px overrides above. */
+@media screen and (max-width: 1023px) {
+  .header-link.cart {
+    order: -1;
+    margin-left: 0;
+    margin-right: 20px;
+  }
+
+  .delivery-block {
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .header-link.cart {
+    margin-right: 5px;
+  }
+}

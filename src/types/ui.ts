@@ -220,6 +220,7 @@ export interface LocationPopupProps {
 
 export interface CartPopupProps {
   isVisible: boolean;
+  className?: string;
 }
 
 export interface HeaderIconProps {

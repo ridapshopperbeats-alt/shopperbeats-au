@@ -8,7 +8,7 @@ import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
 import type { CartPopupProps } from "@/types/ui";
 
 
-const CartPopup = ({ isVisible }: CartPopupProps) => {
+const CartPopup = ({ isVisible, className = "" }: CartPopupProps) => {
   const { postcode } = useGlobalPostcode();
   const { data: cartData } = useGetCartQuery(
     postcode ? { postcode } : undefined,
@@ -21,7 +21,7 @@ const CartPopup = ({ isVisible }: CartPopupProps) => {
   const totalCartCount = cartItems.length;
 
   return (
-    <div className={`header-link cart ${isVisible ? "is-visible" : ""}`}>
+    <div className={`header-link cart ${isVisible ? "is-visible" : ""} ${className}`}>
       <Link href="/cart">
         <Image src="/images/cart.svg" alt="cart" width={24} height={24} />
       </Link>

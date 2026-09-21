@@ -460,7 +460,7 @@ console.log("sliderCategories", sliderCategories);
             category={category}
           />
 
-          <div className="flex w-full">
+          <div className="flex w-full mb-6 lg:mb-0">
             <ProductDisplay
               products={priceFilteredProducts}
               onToggleSidebar={toggleSidebar}

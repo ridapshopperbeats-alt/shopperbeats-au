@@ -166,7 +166,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         <Link
           href={`/product/${unique_code || id}`}
-          className="flex min-h-[300px] md:min-h-[410px] flex-col no-underline text-inherit"
+          className="flex min-h-[280px] md:min-h-[390px] flex-col no-underline text-inherit"
         >
           <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden rounded-t-[8px] bg-[rgba(233,233,233,0.60)]">
             <Image
@@ -189,9 +189,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
             )}
           </div>
 
-          <div className="flex flex-1 flex-col justify-between w-full">
+          <div className="flex flex-1 flex-col justify-between w-full mb-1">
             <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
-              <h4 className="text-[12px] md:text-[14px] font-bold text-black">
+              <h4 className="min-h-[17px] md:min-h-[21px] text-[12px] md:text-[14px] font-bold text-black">
                 {brand_name || ""}
               </h4>
 
@@ -248,7 +248,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               )} */}
             </div>
 
-            <div className="w-full px-2 lg:px-3 flex justify-center">
+            <div className="w-full px-1 lg:px-1.5 flex justify-center">
               <button
                 onClick={handleAddToCartClick}
                 disabled={isAddingToCart || isOutOfStock}

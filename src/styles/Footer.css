@@ -128,15 +128,15 @@ ul.social {
 }
 
 .footer-copyright-mobile {
-  @apply pt-4  block sm:hidden w-full ;
+  @apply pt-4 pb-2 block sm:hidden w-full;
   color: #FFF;
   text-align: center;
   font-family: Montserrat, sans-serif;
-  font-size: clamp(0.65625rem, 1vw, 0.75rem);
+  font-size: clamp(0.6875rem, 3vw, 0.75rem);
   font-style: normal;
   font-weight: 400;
   line-height: 1.4;
-  opacity: 0.5;
+  opacity: 0.85;
 }
 
 @media screen and (max-width: 360px) {

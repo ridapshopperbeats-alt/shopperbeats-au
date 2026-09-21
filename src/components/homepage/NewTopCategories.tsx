@@ -34,7 +34,7 @@ export const NewTopCategories = () => {
   };
 
   return (
-    <section className="w-full bg-transparent mb-8">
+    <section className="w-full bg-transparent mb-4 md:mb-8">
       <div className="container mx-auto px-4 md:px-8 max-w-[1750px]">
 
         <h3 className="font-bold text-gray-900 tracking-tight text-[35px]" style={{ marginTop: "10px", marginBottom: "20px" }} >

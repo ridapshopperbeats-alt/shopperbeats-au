@@ -4,7 +4,6 @@ import Image from "next/image";
 import "../../../../styles/contact.css";
 
 
-
 import { toast } from "react-toastify";
 
 import { contactFormSchema } from "@/lib/validations/form-schemas";
@@ -13,7 +12,6 @@ import { handleAustralianPhoneNumberChange } from "@/lib/utils/main-utils";
 import Banner from "@/components/common/Banner";
 import Button from "@/components/common/Button";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key } from "react";
 
 type ContactContent = {
   title: string;
@@ -50,6 +48,7 @@ const contactData: ContactContent = {
     },
   ],
 };
+
 export default function ContactPage() {
   const {
     formData,
@@ -129,7 +128,7 @@ export default function ContactPage() {
                 {contactData.title}
               </h6>
 
-              {contactData.description.map((desc: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined, idx: Key | null | undefined) => (
+              {contactData.description.map((desc, idx) => (
                 <p key={idx}>{desc}</p>
               ))}
 
@@ -146,7 +145,7 @@ export default function ContactPage() {
                   </span>
                 </h6>
 
-                {contactData.contactBlocks.map((block: { icon: string | StaticImport; label: string; value: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }, idx: Key | null | undefined) => (
+                {contactData.contactBlocks.map((block, idx) => (
                   <div key={idx} className="contact-info">
                     <Image
                       src={block.icon}

@@ -56,6 +56,20 @@ import type { TopNavbarProps } from "@/types/ui";
 const SITE_HEADER_HIDDEN_PATHS = ["/check-out"];
 
 /**
+ * Product-listing routes. These render ProductDisplay, whose mobile Sort/Filter
+ * bar sits at z-50 over MobileBottomNav (z-40), hiding the bottom nav entirely.
+ * The Cart tab goes with it, so the header keeps its own cart icon on mobile
+ * here. Keep in sync with the pages that render ProductDisplay.
+ */
+const MOBILE_CART_IN_HEADER_PATHS = [
+  "/category",
+  "/brand",
+  "/product-listing",
+  "/products",
+  "/search",
+];
+
+/**
  * Longest column a mega-menu subcategory may render. Anything past this stays
  * reachable through the "View All" link that follows the list.
  */
@@ -73,6 +87,12 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
   const [mounted, setMounted] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const pathname = usePathname();
+
+  // Listing pages lose the bottom nav behind the Sort/Filter bar, so surface
+  // the cart in the header there instead.
+  const showMobileCart = MOBILE_CART_IN_HEADER_PATHS.some(
+    (route) => pathname === route || !!pathname?.startsWith(`${route}/`),
+  );
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -680,7 +700,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
               href="/user/wishlist"
               iconSrc="/images/wishlist.svg"
               alt="wishlist"
-              className="wishlist"
+              className="wishlist hidden lg:block"
               count={
                 authChecked && wishlistCount !== undefined
                   ? wishlistCount
@@ -688,9 +708,12 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
               }
             />
 
-            <CartPopup isVisible={showCartCard} />
+            <CartPopup
+              isVisible={showCartCard}
+              className={showMobileCart ? "block" : "hidden lg:block"}
+            />
 
-            <div className={`header-link account`}>
+            <div className={`header-link account hidden lg:block`}>
               {isAuthenticated ? (
                 hasProfileImage ? (
                   <Link

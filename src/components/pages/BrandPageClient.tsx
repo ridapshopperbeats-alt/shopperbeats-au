@@ -190,7 +190,7 @@ const BrandPageClient = ({
             wrapNavigation={startTransition}
           />
 
-          <div className="flex w-full">
+          <div className="flex w-full mb-6 lg:mb-0">
             <ProductDisplay
               products={products}
               totalItems={totalItems}
