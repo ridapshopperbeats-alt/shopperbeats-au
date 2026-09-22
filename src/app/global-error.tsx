@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import "./globals.css";
 
 export default function GlobalError({
   error,
@@ -16,7 +17,7 @@ export default function GlobalError({
   return (
     <html lang="en">
       <body>
-        <div style={{ padding: "80px 20px", textAlign: "center", fontFamily: "sans-serif" }}>
+        <div className="py-20 px-5 text-center" style={{ fontFamily: "sans-serif" }}>
           <h2>Something went wrong</h2>
           <p style={{ margin: "12px 0 28px" }}>
             We hit an unexpected error loading the site. Please try again.

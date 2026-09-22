@@ -7,7 +7,10 @@ import {
 import type { UnknownAction } from "@reduxjs/toolkit";
 import { API_ENDPOINTS } from "../../constants/api";
 import { prepareAuthHeaders } from "./prepare-auth-headers";
-import { clearAccessTokenCookie, setAccessTokenCookie } from "@/lib/utils/access-token";
+import {
+  clearAccessTokenCookie,
+  setAccessTokenCookie,
+} from "@/lib/utils/access-token";
 import { logout, setAccessToken } from "../slices/auth-slice";
 import {
   clearRefreshToken,
@@ -18,13 +21,11 @@ import {
   setRefreshToken,
 } from "@/lib/utils/refresh-token-store";
 
-
 const refreshBaseQuery = fetchBaseQuery({
   baseUrl: API_ENDPOINTS.AUTH.BASE_URL_CLIENT,
   credentials: "include",
   prepareHeaders: prepareAuthHeaders,
 });
-
 
 type RefreshOutcome = "refreshed" | "invalid" | "transient";
 type RefreshResult = { outcome: RefreshOutcome; accessToken?: string };
@@ -33,10 +34,9 @@ let pendingRefresh: Promise<RefreshResult> | null = null;
 
 const REFRESH_COOLDOWN_MS = 5000;
 
-// Only a network blip or a server fault is worth a second attempt. Any other
-// rejection means this refresh can never succeed, and retrying it spins the
-// endpoint until the tab is closed.
-function isRetryableRefreshError(status: FetchBaseQueryError["status"]): boolean {
+function isRetryableRefreshError(
+  status: FetchBaseQueryError["status"],
+): boolean {
   if (typeof status !== "number") return true;
   return status >= 500 || status === 408 || status === 429;
 }
@@ -49,7 +49,9 @@ function endSession(api: Parameters<BaseQueryFn>[1]): void {
 
 function withCrossTabLock<T>(fn: () => Promise<T>): Promise<T> {
   if (typeof navigator !== "undefined" && "locks" in navigator) {
-    return navigator.locks.request("sb-refresh-token", () => fn()) as Promise<T>;
+    return navigator.locks.request("sb-refresh-token", () =>
+      fn(),
+    ) as Promise<T>;
   }
   return fn();
 }
@@ -58,21 +60,24 @@ function refreshAccessTokenDetailed(
   api: Parameters<BaseQueryFn>[1],
   extraOptions: Parameters<BaseQueryFn>[2],
 ): Promise<RefreshResult> {
-
   if (Date.now() - getLastRefreshAt() < REFRESH_COOLDOWN_MS) {
-    return Promise.resolve({ outcome: "refreshed", accessToken: getLastAccessToken() ?? undefined });
+    return Promise.resolve({
+      outcome: "refreshed",
+      accessToken: getLastAccessToken() ?? undefined,
+    });
   }
 
   if (!pendingRefresh) {
     pendingRefresh = withCrossTabLock(async (): Promise<RefreshResult> => {
       if (Date.now() - getLastRefreshAt() < REFRESH_COOLDOWN_MS) {
-        return { outcome: "refreshed", accessToken: getLastAccessToken() ?? undefined };
+        return {
+          outcome: "refreshed",
+          accessToken: getLastAccessToken() ?? undefined,
+        };
       }
 
       const storedRefreshToken = getRefreshToken();
 
-      // The endpoint 422s when the body carries no refresh_token, so posting
-      // without one buys nothing but a rejection the caller then retries.
       if (!storedRefreshToken) {
         endSession(api);
         return { outcome: "invalid" };
@@ -94,7 +99,10 @@ function refreshAccessTokenDetailed(
           endSession(api);
           return { outcome: "invalid" };
         }
-        console.warn("Refresh token request failed (transient, session kept):", result.error);
+        console.warn(
+          "Refresh token request failed (transient, session kept):",
+          result.error,
+        );
         return { outcome: "transient" };
       }
 
@@ -102,16 +110,22 @@ function refreshAccessTokenDetailed(
         | {
             access_token?: string;
             refresh_token?: string;
-            response?: string | { access_token?: string; refresh_token?: string };
+            response?:
+              | string
+              | { access_token?: string; refresh_token?: string };
           }
         | undefined;
       const responseField = data?.response;
       const newAccessToken =
         data?.access_token ||
-        (typeof responseField === "string" ? responseField : responseField?.access_token);
+        (typeof responseField === "string"
+          ? responseField
+          : responseField?.access_token);
       const newRefreshToken =
         data?.refresh_token ||
-        (typeof responseField === "string" ? undefined : responseField?.refresh_token);
+        (typeof responseField === "string"
+          ? undefined
+          : responseField?.refresh_token);
 
       if (newAccessToken) {
         api.dispatch(setAccessToken(newAccessToken));
@@ -186,5 +200,3 @@ export const createBaseQuery = (
     return result;
   };
 };
-
-

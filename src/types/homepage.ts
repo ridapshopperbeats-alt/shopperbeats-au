@@ -65,7 +65,6 @@ export interface HomeProps {
   recentlyViewed: Product[];
 }
 
-/** One hard-coded tile in the homepage "Top Categories" rail. */
 export interface TopCategoryTile {
   id: number;
   title: string;

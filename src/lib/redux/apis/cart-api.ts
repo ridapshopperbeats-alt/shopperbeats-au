@@ -37,7 +37,6 @@ interface MoveWishlistToCartResponse {
 const baseCartQuery = createBaseQuery(API_ENDPOINTS.CART.BASE_URL_CLIENT);
 const baseWishlistQuery = createBaseQuery(API_ENDPOINTS.WISHLIST.BASE_URL_CLIENT);
 
-// --- GUEST WISHLIST (localStorage-backed, used when the user isn't logged in) ---
 const GUEST_WISHLIST_STORAGE_KEY = "guest_wishlist";
 
 export interface GuestWishlistEntry {
@@ -117,17 +116,13 @@ type MoveToCartPayload = {
   remove_from_wishlist?: boolean;
 };
 
-// FastAPI answers a path it has no route for with exactly {"detail":"Not Found"},
-// and that is still what /wishlist/move-to-cart returns on preprod. A real 404
-// from the shipped handler carries a descriptive detail, so it will not match.
+
 function isMissingRouteError(error?: FetchBaseQueryError): boolean {
   if (!error || error.status !== 404) return false;
   const detail = (error.data as { detail?: unknown } | undefined)?.detail;
   return typeof detail === "string" && detail.trim().toLowerCase() === "not found";
 }
 
-// The same outcome as move-to-cart, assembled from the endpoints the cart
-// service does expose. Drop this once move-to-cart is deployed.
 async function moveWishlistToCartViaCartEndpoints(
   payload: MoveToCartPayload,
   api: Parameters<typeof baseWishlistQuery>[1],
@@ -135,7 +130,6 @@ async function moveWishlistToCartViaCartEndpoints(
 ): Promise<{ data: MoveWishlistToCartResponse } | { error: FetchBaseQueryError }> {
   let requested: MoveToCartItem[] = payload.items ?? [];
 
-  // "Move everything" arrives without items, so read the wishlist to learn what to move.
   if (requested.length === 0) {
     const wishlistResult = await baseWishlistQuery(
       { url: API_ENDPOINTS.WISHLIST.GET, method: "GET" },
@@ -175,8 +169,6 @@ async function moveWishlistToCartViaCartEndpoints(
 
   if (addResult.error) return { error: addResult.error };
 
-  // Only rows that actually left the wishlist count as moved, so a failed
-  // delete keeps the item saved rather than dropping it silently.
   const moved: MoveToCartItem[] = [];
   const failed: NonNullable<MoveWishlistToCartResponse["failed_items"]> = [];
 
@@ -330,7 +322,6 @@ export const cartApi = createApi({
       invalidatesTags: ["Cart"],
     }),
 
-    // --- WISHLIST ENDPOINTS USING baseWishlistQuery ---
     createWishlist: builder.mutation<
       Wishlist,
       { product_id: string; variant_id?: string; snapshot?: WishlistProductSnapshot }
@@ -408,12 +399,10 @@ export const cartApi = createApi({
          if (result.error) return { error: result.error };
          const data = result.data as Wishlist | Wishlist[];
 
-         // Handle case where API returns empty array or null
          if (!data || (Array.isArray(data) && data.length === 0)) {
            return { data: { items: [], total_items: 0 } };
          }
 
-         // If the data is already the Wishlist object (with items), return it
          if (!Array.isArray(data) && data.items) {
            return { data };
          }
@@ -494,10 +483,7 @@ export const cartApi = createApi({
           postcode?: string | null;
           remove_from_wishlist?: boolean;
         };
-
-        // Guests have no server-side wishlist, so the move-to-cart endpoint
-        // has nothing to read. Add their local entries to the cart directly,
-        // exactly the way a single "Add To Cart" does.
+     
         if (!isUserAuthenticated(api)) {
           const guestEntries = readGuestWishlist();
 

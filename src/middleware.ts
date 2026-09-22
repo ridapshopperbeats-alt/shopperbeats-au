@@ -16,11 +16,6 @@ const SITE_LOCK_BYPASS_PATHS = [SITE_LOCK_PATH, SITE_LOCK_API_PATH];
 const STATIC_ASSET_PATTERN =
   /\.(?:svg|png|jpe?g|gif|webp|avif|ico|css|js|map|woff2?|ttf|otf|eot|txt|xml|json|pdf|mp4|webm)$/i;
 
-/**
- * Browser-side fetches are blocked unless the host is listed in connect-src,
- * so derive the allowed API origins from the configured base URLs rather than
- * hard-coding them — they differ per region and environment.
- */
 const API_ORIGINS = Array.from(
   new Set(
     [
@@ -60,7 +55,9 @@ function buildCsp(nonce: string): string {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data: https://fonts.gstatic.com",
-    ["connect-src 'self'", ...API_ORIGINS, ...THIRD_PARTY_CONNECT_SRC].join(" "),
+    ["connect-src 'self'", ...API_ORIGINS, ...THIRD_PARTY_CONNECT_SRC].join(
+      " ",
+    ),
     "frame-src https://js.stripe.com https://hooks.stripe.com https://www.google.com",
     "object-src 'none'",
     "base-uri 'self'",
@@ -131,7 +128,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

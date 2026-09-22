@@ -22,10 +22,6 @@ afterEach(() => {
   window.localStorage.clear();
 });
 
-/**
- * The middleware guards /user/* on this cookie. If it stops being written, a
- * signed-in visitor is redirected to /login and the orders API is never called.
- */
 describe("refresh_token cookie", () => {
   it("is written whenever the refresh token is stored", () => {
     setRefreshToken("refresh-abc");

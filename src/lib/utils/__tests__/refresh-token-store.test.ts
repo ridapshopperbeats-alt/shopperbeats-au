@@ -40,8 +40,7 @@ describe("refresh token store", () => {
     expect(getLastRefreshAt()).toBeGreaterThanOrEqual(before);
   });
 
-  // Sign-out has to drop all three keys, or the cooldown in base-query will
-  // hand a stale token back to the next request.
+  
   it("clears the refresh token, the timestamp and the cached access token", () => {
     setRefreshToken("refresh-abc");
     setLastRefreshResult("access-xyz");

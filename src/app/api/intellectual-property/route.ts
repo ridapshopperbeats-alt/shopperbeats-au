@@ -2,20 +2,9 @@
 import sgMail from "@sendgrid/mail";
 import * as yup from "yup";
 import { getClientIp, isRateLimited } from "@/lib/utils/rate-limit";
-import { nameField, requiredString, requiredMessage, email } from "@/lib/validations/form-schemas";
+import { ipComplaintSchema } from "@/lib/validations/form-schemas";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
-
-const ipComplaintSchema = yup.object().shape({
-  fullName: nameField("Full name"),
-  email: email,
-  companyName: requiredString("Company / brand name"),
-  country: requiredString("Country"),
-  ipType: requiredString("Type of IP right"),
-  listingUrls: requiredString("Infringing listing URL(s)"),
-  description: requiredMessage("Description of infringement", 10),
-  proofOfOwnership: yup.string(),
-});
 
 const escapeHtml = (value: string) =>
   value

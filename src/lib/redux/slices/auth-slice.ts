@@ -16,10 +16,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.accessToken = null;
       state.authChecked = true;
-      // Only ping other tabs when this actually changes something — otherwise
-      // an already-logged-out tab re-checking its session keeps re-writing
-      // this key, which triggers other tabs' storage listener to re-check
-      // theirs, which writes it again, looping forever between tabs.
+    
       if (wasAuthenticated && typeof window !== "undefined") {
         localStorage.setItem("auth-sync", Date.now().toString());
       }

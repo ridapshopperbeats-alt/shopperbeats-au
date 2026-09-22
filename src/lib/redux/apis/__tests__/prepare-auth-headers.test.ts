@@ -47,8 +47,6 @@ describe("prepareAuthHeaders", () => {
     );
   });
 
-  // The API answers an absent header with "Not Token to verify user", so an
-  // unshaped state must not turn into a literal "Bearer undefined".
   it("sends no header for a state without an auth slice", () => {
     expect(headersFor({}).has("authorization")).toBe(false);
     expect(headersFor(undefined).has("authorization")).toBe(false);

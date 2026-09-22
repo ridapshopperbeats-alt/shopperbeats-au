@@ -1,5 +1,3 @@
-
-
 export interface CmsPage {
   id: number;
   title: string;
@@ -10,6 +8,7 @@ export interface CmsPage {
 
 export interface ShadowDomContentProps {
   content: string;
+  nonce?: string;
 }
 
 export interface FaqEntry {

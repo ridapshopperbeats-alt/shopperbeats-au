@@ -104,7 +104,6 @@ export const useProductFilters = (
     if (!isNavigationPending) return;
     dispatch(pushLoader());
 
-    // A navigation that never commits must not pin the overlay open forever.
     const safety = setTimeout(() => setIsNavigationPending(false), 15000);
 
     return () => {
@@ -147,86 +146,82 @@ export const useProductFilters = (
   const categoryId = searchParams.get("category_id");
   const currentLimit = searchParams.get("limit");
 
-  const handleApplyFilters = useCallback((overrides?: { minPrice?: string; maxPrice?: string }) => {
-    // Overrides let a caller (e.g. the price slider's onValueCommit) pass the
-    // value it just set directly, instead of reading minPrice/maxPrice off
-    // this closure — setMinPrice/setMaxPrice are async, so calling this
-    // function in the same handler right after them would otherwise still
-    // see the *previous* render's values.
-    const effectiveMinPrice = overrides?.minPrice ?? minPrice;
-    const effectiveMaxPrice = overrides?.maxPrice ?? maxPrice;
+  const handleApplyFilters = useCallback(
+    (overrides?: { minPrice?: string; maxPrice?: string }) => {
+      const effectiveMinPrice = overrides?.minPrice ?? minPrice;
+      const effectiveMaxPrice = overrides?.maxPrice ?? maxPrice;
 
-    const params = new URLSearchParams();
-    searchParams.forEach((value, key) => {
-      const lowerKey = key.toLowerCase();
-      if (['q', 'category_slug', 'category_id'].includes(lowerKey)) {
-        params.set(key, value);
-      }
-    });
-
-    if (sortBy) params.set("sort_by", sortBy);
-
-    if (selectedCategories.length > 0) {
-      params.set("categories", selectedCategories.join(","));
-    }
-
-    // Set price range filters. A custom slider/input range is sent as
-    // "min-max" — the same format the predefined price_ranges checkboxes
-    // use — instead of separate min_price/max_price params, so it takes
-    // over the price_ranges slot rather than adding a second, differently
-    // shaped price param.
-    const customPriceRange = effectiveMinPrice && effectiveMaxPrice
-      ? `${effectiveMinPrice}-${effectiveMaxPrice}`
-      : effectiveMinPrice
-        ? `${effectiveMinPrice}+`
-        : effectiveMaxPrice
-          ? `0-${effectiveMaxPrice}`
-          : null;
-
-    const priceRanges = customPriceRange ? [customPriceRange] : selectedPrices;
-
-    if (priceRanges.length > 0) {
-      params.set("price_ranges", priceRanges.join(","));
-    }
-
-    // Set all other filters
-    for (const attribute in selectedFilters) {
-      const attrKey = attribute.toLowerCase();
-      if (attrKey === "shipping") {
-        const values = selectedFilters[attribute];
-        if (values.includes("Fast Dispatch")) {
-          params.set("fast_dispatch", "true");
+      const params = new URLSearchParams();
+      searchParams.forEach((value, key) => {
+        const lowerKey = key.toLowerCase();
+        if (["q", "category_slug", "category_id"].includes(lowerKey)) {
+          params.set(key, value);
         }
-        if (values.includes("Free Shipping")) {
-          params.set("free_shipping", "true");
-        }
-      } else if (selectedFilters[attribute].length > 0) {
-        params.set(attrKey, selectedFilters[attribute].join(","));
+      });
+
+      if (sortBy) params.set("sort_by", sortBy);
+
+      if (selectedCategories.length > 0) {
+        params.set("categories", selectedCategories.join(","));
       }
-    }
 
-    const currentLimit = searchParams.get('limit');
-    if (currentLimit) {
-      params.set('limit', currentLimit);
-    }
+      const customPriceRange =
+        effectiveMinPrice && effectiveMaxPrice
+          ? `${effectiveMinPrice}-${effectiveMaxPrice}`
+          : effectiveMinPrice
+            ? `${effectiveMinPrice}+`
+            : effectiveMaxPrice
+              ? `0-${effectiveMaxPrice}`
+              : null;
 
-    params.set("page", "1");
+      const priceRanges = customPriceRange
+        ? [customPriceRange]
+        : selectedPrices;
 
-    wrapNavigation(() => {
-      router.push(`${pathname}?${params.toString()}`, { scroll: false });
-    });
-  }, [
-    wrapNavigation,
-    router,
-    pathname,
-    searchParams,
-    sortBy,
-    minPrice,
-    maxPrice,
-    selectedCategories,
-    selectedPrices,
-    selectedFilters,
-  ]);
+      if (priceRanges.length > 0) {
+        params.set("price_ranges", priceRanges.join(","));
+      }
+
+      // Set all other filters
+      for (const attribute in selectedFilters) {
+        const attrKey = attribute.toLowerCase();
+        if (attrKey === "shipping") {
+          const values = selectedFilters[attribute];
+          if (values.includes("Fast Dispatch")) {
+            params.set("fast_dispatch", "true");
+          }
+          if (values.includes("Free Shipping")) {
+            params.set("free_shipping", "true");
+          }
+        } else if (selectedFilters[attribute].length > 0) {
+          params.set(attrKey, selectedFilters[attribute].join(","));
+        }
+      }
+
+      const currentLimit = searchParams.get("limit");
+      if (currentLimit) {
+        params.set("limit", currentLimit);
+      }
+
+      params.set("page", "1");
+
+      wrapNavigation(() => {
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      });
+    },
+    [
+      wrapNavigation,
+      router,
+      pathname,
+      searchParams,
+      sortBy,
+      minPrice,
+      maxPrice,
+      selectedCategories,
+      selectedPrices,
+      selectedFilters,
+    ],
+  );
 
   useEffect(() => {
     if (
@@ -338,7 +333,15 @@ export const useProductFilters = (
         { scroll: false },
       );
     });
-  }, [wrapNavigation, q, categorySlug, categoryId, currentLimit, router, pathname]);
+  }, [
+    wrapNavigation,
+    q,
+    categorySlug,
+    categoryId,
+    currentLimit,
+    router,
+    pathname,
+  ]);
 
   const brandFilter = filters.find(
     (f) => f.attribute.toLowerCase() === "brand",
@@ -346,7 +349,6 @@ export const useProductFilters = (
   const priceFilter = filters.find(
     (f) => f.attribute.toLowerCase() === "price",
   );
-  // Backend sends the category's actual bounds as PriceRange: ["35", "787"]
   const priceRangeFilter = filters.find(
     (f) => f.attribute.toLowerCase() === "pricerange",
   );
@@ -356,8 +358,7 @@ export const useProductFilters = (
   const specialOffersFilter = filters.find(
     (f) => f.attribute.toLowerCase() === "special offers",
   );
-  // Prefer the curated "Color Family" list (15 values) over the raw "Color"
-  // attribute, which the backend returns with well over a thousand values.
+
   const colorFilter =
     filters.find((f) => f.attribute.toLowerCase() === "color family") ??
     filters.find(

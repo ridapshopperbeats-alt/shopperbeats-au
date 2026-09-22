@@ -3,12 +3,10 @@ import type { ChangeEvent } from "react";
 
 import { handleAustralianPhoneNumberChange, toSafeJsonLd } from "../main-utils";
 
-/** The helper only ever reads event.target.value. */
 function change(value: string) {
   return { target: { value } } as ChangeEvent<HTMLInputElement>;
 }
 
-/** The six characters a backslash-u escape is made of, written without one. */
 const ESCAPED_LT = String.fromCharCode(92) + "u003c";
 
 describe("toSafeJsonLd", () => {

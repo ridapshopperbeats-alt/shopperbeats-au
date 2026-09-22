@@ -29,15 +29,6 @@ function pickBestImageUrl(images: ImageLike[]): string | undefined {
     ?.image_url;
 }
 
-/**
- * Products that keep their photos on variants come back with an empty
- * product-level `images`, which used to drop straight to the placeholder here
- * while the detail page — reading the selected variant — showed the real photo.
- *
- * Checked only after the product's own images, unlike ProductGallery, which
- * starts from the variant the shopper picked. A listing card has no such
- * selection, so the product image stays the first choice wherever one exists.
- */
 function pickVariantImageUrl(product: Product): string | undefined {
   for (const variant of product.variants ?? []) {
     const images = variant.images;
@@ -73,8 +64,6 @@ export function getImageUrl(product: Product, variant?: string): string {
 
   return fallback;
 }
-
-
 
 export function getVariantImage(variant: Variant, variantName?: string): string {
   const fallback = "/images/image-coming-soon.jpg";

@@ -15,7 +15,7 @@ export default function ErrorBoundary({
   }, [error]);
 
   return (
-    <div className="container" style={{ padding: "80px 20px", textAlign: "center" }}>
+    <div className="container !px-5 min-[1440px]:!px-10 py-20 text-center">
       <h2>Something went wrong</h2>
       <p style={{ margin: "12px 0 28px" }}>
         We hit an unexpected error loading this page. Please try again.

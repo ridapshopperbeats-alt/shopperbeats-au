@@ -1,6 +1,5 @@
 import { API_ENDPOINTS } from "@/lib/constants/api";
 
-// Get footer menu data from the API
 export async function getFooterMenuData() {
   const results = await Promise.allSettled([
     fetch(`${API_ENDPOINTS.MENU.BASE_URL}/company`, { next: { revalidate: 3600 } }),
@@ -19,7 +18,6 @@ export async function getFooterMenuData() {
   return { company, myAccount, helpSupport, legal };
 }
 
-// Static fallback footer menu data
 export const FOOTER_LINKS_STATIC = [
   {
     title: "Company",

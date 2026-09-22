@@ -201,3 +201,15 @@ export const intellectualPropertySchema = yup.object().shape({
     .boolean()
     .oneOf([true], "Please confirm the declaration before submitting"),
 });
+
+// src/app/api/intellectual-property/route.ts
+export const ipComplaintSchema = yup.object().shape({
+  fullName: nameField("Full name"),
+  email: email,
+  companyName: requiredString("Company / brand name"),
+  country: requiredString("Country"),
+  ipType: requiredString("Type of IP right"),
+  listingUrls: requiredString("Infringing listing URL(s)"),
+  description: requiredMessage("Description of infringement", 10),
+  proofOfOwnership: yup.string(),
+});

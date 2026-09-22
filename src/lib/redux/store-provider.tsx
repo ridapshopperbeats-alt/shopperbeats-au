@@ -11,8 +11,7 @@ import { syncRefreshTokenCookie } from '@/lib/utils/refresh-token-store';
 
 export default function StoreProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Sessions that signed in before the refresh_token cookie existed only have
-    // the token in localStorage, and the /user/* guard cannot see that.
+
     syncRefreshTokenCookie();
 
     store.dispatch(authApi.endpoints.getUserDetails.initiate());

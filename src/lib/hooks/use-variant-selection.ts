@@ -5,8 +5,8 @@ type SelectedAttributes = Record<string, string>;
 
 const getAllAttributeNames = (variants: Variant[]) => {
   const set = new Set<string>();
-  variants.forEach(v =>
-    v.attributes.forEach(a => set.add(a.name.toLowerCase()))
+  variants.forEach((v) =>
+    v.attributes.forEach((a) => set.add(a.name.toLowerCase())),
   );
   return Array.from(set);
 };
@@ -14,31 +14,31 @@ const getAllAttributeNames = (variants: Variant[]) => {
 export function useVariantSelection(variants: Variant[] = []) {
   const attributeNames = useMemo(
     () => getAllAttributeNames(variants),
-    [variants]
+    [variants],
   );
 
-  const [selectedAttributes, setSelectedAttributes] = useState<SelectedAttributes>(() => {
-    const attrs: SelectedAttributes = {};
-    attributeNames.forEach(name => {
-      const firstValue = variants
-        .map(v => v.attributes.find(a => a.name.toLowerCase() === name)?.value)
-        .filter(Boolean)[0];
-      if (firstValue) attrs[name] = firstValue;
+  const [selectedAttributes, setSelectedAttributes] =
+    useState<SelectedAttributes>(() => {
+      const attrs: SelectedAttributes = {};
+      attributeNames.forEach((name) => {
+        const firstValue = variants
+          .map(
+            (v) =>
+              v.attributes.find((a) => a.name.toLowerCase() === name)?.value,
+          )
+          .filter(Boolean)[0];
+        if (firstValue) attrs[name] = firstValue;
+      });
+      return attrs;
     });
-    return attrs;
-  });
 
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
 
-  // Sentinel (not the initial selectedAttributes/variants reference) so the
-  // derive-selectedVariant block below runs once on mount too — otherwise the
-  // guard's reference check is trivially false on the first render (both
-  // sides point at the same object) and the default variant never gets
-  // derived until a manual attribute change creates a new reference.
   const [lastDerivedAttributes, setLastDerivedAttributes] =
     useState<SelectedAttributes | null>(null);
-  const [lastDerivedVariants, setLastDerivedVariants] =
-    useState<Variant[] | null>(null);
+  const [lastDerivedVariants, setLastDerivedVariants] = useState<
+    Variant[] | null
+  >(null);
 
   if (
     variants.length > 0 &&
@@ -50,10 +50,11 @@ export function useVariantSelection(variants: Variant[] = []) {
 
     const allSelected = Object.values(selectedAttributes).every(Boolean);
     const nextVariant = allSelected
-      ? variants.find(variant =>
+      ? variants.find((variant) =>
           variant.attributes.every(
-            attr => selectedAttributes[attr.name.toLowerCase()] === attr.value
-          )
+            (attr) =>
+              selectedAttributes[attr.name.toLowerCase()] === attr.value,
+          ),
         ) || null
       : null;
 
@@ -63,26 +64,31 @@ export function useVariantSelection(variants: Variant[] = []) {
   }
 
   const filteredAttributes = useMemo(() => {
-    const options: Record<string, Array<{ value: string; stock: number | undefined }>> = {};
+    const options: Record<
+      string,
+      Array<{ value: string; stock: number | undefined }>
+    > = {};
 
-    attributeNames.forEach(attrName => {
+    attributeNames.forEach((attrName) => {
       options[attrName] = [];
 
-      const processedValues = new Set<string>(); 
+      const processedValues = new Set<string>();
 
-      variants.forEach(variant => {
+      variants.forEach((variant) => {
         const matchesOtherAttributes = Object.entries(selectedAttributes).every(
           ([key, value]) => {
             if (!value) return true;
-            if (key === attrName) return true; 
+            if (key === attrName) return true;
             return variant.attributes.some(
-              a => a.name.toLowerCase() === key && a.value === value
+              (a) => a.name.toLowerCase() === key && a.value === value,
             );
-          }
+          },
         );
 
         if (matchesOtherAttributes) {
-          const attr = variant.attributes.find(a => a.name.toLowerCase() === attrName);
+          const attr = variant.attributes.find(
+            (a) => a.name.toLowerCase() === attrName,
+          );
           if (attr && !processedValues.has(attr.value)) {
             options[attrName].push({ value: attr.value, stock: variant.stock });
             processedValues.add(attr.value);
@@ -98,16 +104,23 @@ export function useVariantSelection(variants: Variant[] = []) {
     (attrName: string, attrValue: string) => {
       const next = { ...selectedAttributes, [attrName]: attrValue };
 
-      attributeNames.forEach(name => {
+      attributeNames.forEach((name) => {
         if (name === attrName) return;
 
         const validValues = variants
-          .filter(v =>
-            Object.entries(next).every(([k, v2]) =>
-              !v2 || v.attributes.some(a => a.name.toLowerCase() === k && a.value === v2)
-            )
+          .filter((v) =>
+            Object.entries(next).every(
+              ([k, v2]) =>
+                !v2 ||
+                v.attributes.some(
+                  (a) => a.name.toLowerCase() === k && a.value === v2,
+                ),
+            ),
           )
-          .map(v => v.attributes.find(a => a.name.toLowerCase() === name)?.value)
+          .map(
+            (v) =>
+              v.attributes.find((a) => a.name.toLowerCase() === name)?.value,
+          )
           .filter(Boolean) as string[];
 
         if (!validValues.includes(next[name])) {
@@ -117,12 +130,12 @@ export function useVariantSelection(variants: Variant[] = []) {
 
       setSelectedAttributes(next);
     },
-    [selectedAttributes, variants, attributeNames]
+    [selectedAttributes, variants, attributeNames],
   );
 
   const resetAttributes = useCallback(() => {
     const reset: SelectedAttributes = {};
-    attributeNames.forEach(name => (reset[name] = ""));
+    attributeNames.forEach((name) => (reset[name] = ""));
     setSelectedAttributes(reset);
   }, [attributeNames]);
 
@@ -134,6 +147,6 @@ export function useVariantSelection(variants: Variant[] = []) {
     handleAttributeChange,
     resetAttributes,
     setSelectedVariant,
-    setSelectedAttributes
+    setSelectedAttributes,
   };
 }

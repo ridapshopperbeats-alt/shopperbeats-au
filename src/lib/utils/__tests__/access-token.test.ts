@@ -45,8 +45,7 @@ describe("access token cookie", () => {
     expect(getAccessTokenCookie()).toBeNull();
   });
 
-  // The middleware guards /user/* on the presence of this cookie, so it must
-  // not be confused by another cookie whose name merely ends the same way.
+  
   it("does not read a different cookie with a similar name", () => {
     document.cookie = "my_access_token=someone-elses-value; Path=/";
 

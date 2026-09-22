@@ -147,7 +147,6 @@ export interface Category {
   icon_url?: string;
 }
 
-/** The only fields the schema.org ItemList entries read off a product. */
 export interface JsonLdProduct {
   title?: string;
   unique_code?: string;
@@ -240,7 +239,6 @@ export interface ProductApiResponse {
 
 export interface ProductCardProps {
   image: string;
-  /** Set on the cards above the fold so the LCP image is not lazy-loaded. */
   priority?: boolean;
   brand_name?: string;
   title?: string;
@@ -279,7 +277,6 @@ export interface ProductCarouselProps {
   withoutContainer?: boolean;
 }
 
-
 type AttributeOption = { value: string; stock: number | undefined };
 
 export type ProductDetailContentProps = {
@@ -312,7 +309,6 @@ export type ProductDetailContentProps = {
   realStyleOptions: AttributeOption[];
   showPopup: boolean;
   setShowPopup: Dispatch<SetStateAction<boolean>>;
-  /** Attribute selectors other than colour/style, rendered by the page. */
   remainingAttributeFields: ReactNode;
 
   shippingCharge: number | null;
@@ -349,7 +345,8 @@ export type ProductDetailContentProps = {
   tabRefs: RefObject<(HTMLLIElement | null)[]>;
   firstHalf: AccordionItem[];
   secondHalf: AccordionItem[];
-};export type ProductDetailSidebarProps = {
+};
+export type ProductDetailSidebarProps = {
   product: Product;
   selectedVariant: Variant | null;
 
@@ -377,10 +374,6 @@ export type ProductDetailContentProps = {
   handleDisabledAddToCart: () => void;
   handleBuyNow: () => void;
 };
-
-/* ------------------------------------------------------------------ *
- * PDP sub-components
- * ------------------------------------------------------------------ */
 
 export interface ProductDetailsMobileTabsProps {
   featuresContent: React.ReactNode;
@@ -417,10 +410,6 @@ export interface DisplayReview {
 export interface CustomerRatingViewPageProps {
   reviews?: Review[];
 }
-
-/* ------------------------------------------------------------------ *
- * Category / brand / listing pages
- * ------------------------------------------------------------------ */
 
 export interface CategorySliderItem {
   id?: string;
@@ -470,10 +459,6 @@ export interface SearchPageClientProps {
   totalItems: number;
 }
 
-/* ------------------------------------------------------------------ *
- * Product listing (gallery, filter rail, grid)
- * ------------------------------------------------------------------ */
-
 export interface ProductGalleryProps {
   product: Product;
   selectedVariant: Variant | null;
@@ -490,7 +475,6 @@ export interface ImagePreviewModalProps {
   title: string;
 }
 
-/** The filter rail on category/search/brand pages. */
 export interface SidebarProps {
   filters: Filter[];
   category?: Category | null;
@@ -508,7 +492,6 @@ export interface SidebarProps {
     count: number;
   }[];
   selectedCategorySlugs?: string[];
-  // A slug toggles that category; null clears them all ("All Categories").
   onCategorySelect?: (categorySlug: string | null) => void;
   selectedPriceRange?: string | null;
   onPriceSelect?: (priceRange: string | null) => void;
@@ -578,18 +561,12 @@ export interface DeliveryDetailsPopupProps {
   shippingCharge?: number;
 }
 
-/* ------------------------------------------------------------------ *
- * Category page
- * ------------------------------------------------------------------ */
-
 export interface FilterComponentProps {
   filters: Filter[];
   category: Category;
   onClose: () => void;
 }
 
-/** Distinct from the product-listing MobileFilterSheetProps above: this is the
- *  shape the category page's dynamically imported sheet is typed against. */
 export interface CategoryMobileFilterSheetProps extends FilterComponentProps {
   open: boolean;
   onClearAll: () => void;
@@ -604,10 +581,6 @@ export interface CategoryPageClientProps {
   megaMenuData: Category[];
 }
 
-/* ------------------------------------------------------------------ *
- * Route-level props
- * ------------------------------------------------------------------ */
-
 export interface ProductListingPageProps {
   params: Promise<{ type: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -617,16 +590,10 @@ export interface AllCategoriesPageProps {
   searchParams: { parent?: string };
 }
 
-/** Distinct from ProductsResponse above: the /products route asks for the
- *  flattened attribute list alongside each product. */
 export interface ProductsWithAttributesResponse {
   data: (Product & { attributes: { name: string; value: string }[] })[];
   totalItems: number;
 }
-
-/* ------------------------------------------------------------------ *
- * Rendered product HTML
- * ------------------------------------------------------------------ */
 
 export type ParseProps = {
   htmlString: string;
@@ -639,10 +606,5 @@ export type ProductData = {
   packageContents: string[];
 };
 
-/**
- * The PDP content column already needs every value the sidebar does, so this
- * intersection is just the content column's props — written as an intersection
- * anyway so each child component stays the source of truth for what it takes.
- */
 export type ProductDetailMainProps = ProductDetailContentProps &
   ProductDetailSidebarProps;

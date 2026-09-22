@@ -50,7 +50,6 @@ function transformCategory(category: Category, level = 1): MegaMenuCategory {
   };
 }
 
-
 export async function getMegaMenuData() {
   const data: Category[] = await getRawCategories();
 
