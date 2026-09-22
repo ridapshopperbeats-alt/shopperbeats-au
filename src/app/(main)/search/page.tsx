@@ -2,6 +2,7 @@
 import SearchPageClient from "@/components/pages/SearchPageClient";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import { API_ENDPOINTS } from "@/lib/constants/api";
+import { withUnfilteredPriceBounds } from "@/lib/utils/price-bounds";
 import { JsonLdProduct, Product, ProductsResponse } from "@/types/product";
 import type { Metadata } from "next";
 import "../../../styles/Product.css";
@@ -75,7 +76,13 @@ async function getProducts(
     }
 
     const data = await res.json();
-    return { data: data.data, filters: data.filters, totalItems: data.total };
+    const filters = await withUnfilteredPriceBounds(
+      data.filters || [],
+      `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}`,
+      queryParams
+    );
+
+    return { data: data.data, filters, totalItems: data.total };
   } catch (error) {
     console.error(error);
     return { data: [] as (Product & { attributes: { name: string; value: string; }[]; })[], filters: [], totalItems: 0 };

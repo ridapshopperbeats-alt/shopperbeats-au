@@ -5,6 +5,7 @@ import ProductListingClient from "@/components/pages/ProductListingClient";
 import { cookies } from "next/headers";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
+import { withUnfilteredPriceBounds } from "@/lib/utils/price-bounds";
 import type { ProductListingPageProps } from "@/types/product";
 
 
@@ -191,6 +192,7 @@ async function fetchProductData(
       : productsData;
 
     let filters: Filter[] = resolvedData?.filters || [];
+    const hasFilteredFilters = filters.length > 0;
 
     if (filters.length === 0) {
       try {
@@ -204,6 +206,23 @@ async function fetchProductData(
       } catch (error) {
         console.error("Failed to fetch fallback filters:", error);
       }
+    }
+
+   
+    if (hasFilteredFilters) {
+      filters = await withUnfilteredPriceBounds(
+        filters,
+        productApiUrl.split("?")[0],
+        queryParams,
+        {
+          fetcher: fetchWithOptionalCookie,
+          selectFilters: (payload) =>
+            (isHighlight
+              ? (payload as { products?: { filters?: Filter[] } })?.products
+                  ?.filters
+              : (payload as { filters?: Filter[] })?.filters) || [],
+        }
+      );
     }
 
     const megaMenuData: Category[] = [];
