@@ -482,7 +482,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
               Search products
             </label>
             <input
-              style={{ background: "#fff", borderRadius: "5px" }}
+              className="bg-white rounded-[5px]"
               id="headerSearch"
               type="text"
               placeholder="Explore amazing products you'll love"
@@ -630,7 +630,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
           </div>
 
           <div className="login-block">
-            <div className="delivery-block" style={{ position: "relative" }}>
+            <div className="delivery-block relative">
               <div
                 role="button"
                 tabIndex={0}
@@ -643,12 +643,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                 onClick={() => {
                   setShowPincodeInput(!showPincodeInput);
                 }}
-                style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
+                className="cursor-pointer flex items-center gap-2"
               >
                 <Image
                   src="/images/deliver-location.svg"
@@ -837,7 +832,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                                 {subCat.links.slice(0, MEGA_MENU_VISIBLE_LINKS).map((link) => (
                                   <li
                                     key={link.name}
-                                    style={{ lineHeight: "28px" }}
+                                    className="leading-[28px]"
                                   >
                                     <Link
                                       prefetch={false}
@@ -1010,12 +1005,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                         height="14"
                         viewBox="0 0 24 24"
                         fill="none"
-                        style={{
-                          transform: isMainOpen
-                            ? "rotate(180deg)"
-                            : "rotate(0deg)",
-                          transition: "0.3s",
-                        }}
+                        className={`[transition:0.3s] ${isMainOpen ? "rotate-180" : "rotate-0"}`}
                       >
                         <path
                           d="M6 9L12 15L18 9"
@@ -1049,12 +1039,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                                   height="12"
                                   viewBox="0 0 24 24"
                                   fill="none"
-                                  style={{
-                                    transform: isSubOpen
-                                      ? "rotate(180deg)"
-                                      : "rotate(0deg)",
-                                    transition: "0.3s",
-                                  }}
+                                  className={`[transition:0.3s] ${isSubOpen ? "rotate-180" : "rotate-0"}`}
                                 >
                                   <path
                                     d="M6 9L12 15L18 9"

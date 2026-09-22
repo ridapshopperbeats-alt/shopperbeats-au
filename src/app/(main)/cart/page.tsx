@@ -180,7 +180,7 @@ const Cart = () => {
       setDiscountAmount(discount);
       setNewTotalPrice(newTotal);
       toast.success(
-        <span style={{ color: "#16a249" }}>
+        <span className="text-[#16a249]">
           {result.message}
         </span>,
       );

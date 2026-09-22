@@ -339,8 +339,7 @@ export default async function ProductListingPage({
       )}
 
       <div
-        className="container"
-        style={{ marginTop: "20px" }}
+        className="container mt-5"
       >
         <ProductListingClient
           slug={type}

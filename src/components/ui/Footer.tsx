@@ -180,10 +180,8 @@ export default function Footer({
                 items = items.filter((link) => {
                   const href = link.href.toLowerCase();
                   if (isAuthenticated) {
-                    // Hide Login and Sign up when authenticated
-                    return (
-                      !href.includes("/login") && !href.includes("/sign-up")
-                    );
+                    // Hide Login when authenticated; Sign up stays visible
+                    return !href.includes("/login");
                   } else {
                     // Hide User Profile when not authenticated
                     return !href.includes("/user/personal-information");

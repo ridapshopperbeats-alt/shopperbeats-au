@@ -4,7 +4,7 @@ import CartPopup from "@/components/ui/CartPopup";
 
 export default function CheckoutHeader() {
   return (
-    <div className="header-fixed" style={{ boxShadow: "none" }}>
+    <div className="header-fixed !shadow-none">
       <div className="container flex flex-col">
         <div className="top-head no-search">
           <div className="logo-block">

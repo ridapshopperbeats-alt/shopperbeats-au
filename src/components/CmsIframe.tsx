@@ -110,8 +110,7 @@ export default function ShadowDomContent({
       ref={iframeRef}
       sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-forms allow-top-navigation-by-user-activation"
       scrolling="no"
-      className="w-full border-0"
-      style={{ minHeight: "300px" }}
+      className="w-full border-0 min-h-[300px]"
       srcDoc={`<!doctype html>${safeContent}`}
     />
   );

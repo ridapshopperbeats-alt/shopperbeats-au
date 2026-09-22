@@ -125,7 +125,7 @@ export default function ContactPage() {
           <div className="flex dflex">
 
             <div className="contact-wrapper">
-              <h6 style={{ fontSize: "20px", fontWeight: "700" }}>
+              <h6 className="text-[20px] font-bold">
                 {contactData.title}
               </h6>
 
@@ -134,14 +134,9 @@ export default function ContactPage() {
               ))}
 
               <div className="contact-block">
-                <h6 style={{ fontSize: "20px", fontWeight: "700" }}>
+                <h6 className="text-[20px] font-bold">
                   Headquarters{" "}
-                  <span
-                    style={{
-                      fontSize: "20px",
-                      fontWeight: "500",
-                    }}
-                  >
+                  <span className="text-[20px] font-medium">
                     (No Showroom)
                   </span>
                 </h6>

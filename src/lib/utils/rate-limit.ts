@@ -43,7 +43,6 @@ export function isRateLimited(
 export function getClientIp(headers: Headers): string {
   const forwardedFor = headers.get("x-forwarded-for");
   if (forwardedFor) {
-    // Take the left-most (first) IP — the real client behind Google LB.
     const ip = forwardedFor.split(",")[0]?.trim();
     if (ip && isPlausibleIp(ip)) return ip;
   }

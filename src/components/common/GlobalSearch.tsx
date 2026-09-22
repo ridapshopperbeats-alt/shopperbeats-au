@@ -131,7 +131,7 @@ export default function GlobalSearch() {
         Search products
       </label>
       <input
-        style={{ background: "#fff", borderRadius: "5px" }}
+        className="bg-white rounded-[5px]"
         id="headerSearch"
         type="text"
         placeholder="Explore amazing products you'll love"

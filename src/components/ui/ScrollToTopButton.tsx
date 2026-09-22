@@ -36,23 +36,7 @@ export default function ScrollToTopButton() {
   return (
 <button
   onClick={scrollToTop}
-  style={{
-    position: "fixed",
-    bottom: "8rem",
-    right: "1rem",
-    width: "56px",
-    height: "56px",
-    backgroundColor: "#000",
-    color: "#fff",
-    border: "none",
-    borderRadius: "50%",
-    cursor: "pointer",
-    zIndex: 1000,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "20px",
-  }}
+  className="fixed bottom-32 right-4 w-14 h-14 bg-black text-white border-none rounded-full cursor-pointer z-[1000] flex items-center justify-center text-[20px]"
 >
   ↑
 </button>

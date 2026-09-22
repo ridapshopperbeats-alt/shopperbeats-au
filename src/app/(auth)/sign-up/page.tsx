@@ -277,7 +277,7 @@ export default function SignupPage() {
               onChange={(e) => setTermsAccepted(e.target.checked)}
               disabled={isLoading}
             />
-            <label htmlFor="terms" style={{ fontSize: "14px " }}>
+            <label htmlFor="terms" className="text-[14px]">
               I Agree to all the
               <Link href="/cms/terms-condition" target="_blank">
                 {" "}
@@ -295,7 +295,7 @@ export default function SignupPage() {
               onChange={(e) => setMailing_list(e.target.checked)}
               disabled={isLoading}
             />
-            <label htmlFor="mailing_list" style={{ fontSize: "14px " }}>
+            <label htmlFor="mailing_list" className="text-[14px]">
               Add me to the mailing list
             </label>
           </div>

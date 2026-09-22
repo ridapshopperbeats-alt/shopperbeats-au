@@ -23,10 +23,7 @@ export default function ReturnForm() {
                 <div className="card w-[70%]"><table className="cart-table">
                     <tbody>
                         <tr>
-                            <td className="item-info" style={{
-                                borderBottom: "none",
-                                padding: "20px 0px"
-                            }}>
+                            <td className="item-info !border-b-0 !px-0 !py-5">
                                 <Image src={product.image} alt={product.name} width={150} height={200} loading="lazy" />
                                 <div>
                                     <h3>{product.title}</h3>

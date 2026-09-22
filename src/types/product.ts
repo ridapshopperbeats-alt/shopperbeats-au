@@ -158,6 +158,26 @@ export interface Filter {
   values: string[];
 }
 
+// src/lib/utils/filter-tags.ts
+export interface FilterTag {
+  key: string;
+  label: string;
+  onRemove: () => void;
+}
+
+export interface BuildFilterTagsParams {
+  selectedCategories: string[];
+  toggleSelectedCategory: (category: string) => void;
+  selectedPrices: string[];
+  handlePriceChange: (price: string) => void;
+  minPrice: string;
+  maxPrice: string;
+  setMinPrice: (value: string) => void;
+  setMaxPrice: (value: string) => void;
+  selectedFilters: Record<string, string[]>;
+  handleFilterChange: (attribute: string, value: string) => void;
+}
+
 export interface ProductImage {
   id?: string;
   image_url: string;

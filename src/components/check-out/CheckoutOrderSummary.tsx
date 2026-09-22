@@ -26,11 +26,7 @@ export default function CheckoutOrderSummary({
     <div className="w-full xl:!w-[570px] xl:shrink-0 order-2 flex flex-col gap-4 xl:sticky xl:top-32 h-auto">
       <div className="w-full xl:!w-full h-auto bg-white opacity-100 rounded-[7px] border border-[#F8F8F8] shadow-[0_0_4px_0_rgba(0,0,0,0.10)]">
         {isLoading ? (
-          <div
-            style={{
-              minHeight: "400px",
-            }}
-          />
+          <div className="min-h-[400px]" />
         ) : (
           <>
             <div className="hidden lg:flex lg:flex-col lg:h-full">

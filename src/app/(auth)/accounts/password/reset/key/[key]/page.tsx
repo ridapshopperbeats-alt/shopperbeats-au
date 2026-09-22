@@ -78,8 +78,7 @@ export default function ResetPasswordPage({ params }: ResetPasswordKeyPageProps)
                 value={formData.password1}
                 onChange={handleChange}
                 disabled={isLoading}
-                style={{ borderRadius: "30px" }}
-                className="!rounded-[10px] border border-[#E5E7EB] flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
+                className="rounded-[30px] !rounded-[10px] border border-[#E5E7EB] flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
               />
               <button
                 type="button"
@@ -105,8 +104,7 @@ export default function ResetPasswordPage({ params }: ResetPasswordKeyPageProps)
                 value={formData.password2}
                 onChange={handleChange}
                 disabled={isLoading}
-                style={{ borderRadius: "30px" }}
-                className="!rounded-[10px] border border-[#E5E7EB] w-full flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
+                className="rounded-[30px] !rounded-[10px] border border-[#E5E7EB] w-full flex h-[46px] items-center gap-[10px] px-[17px] py-[10px] flex-[1_0_0] placeholder:text-[#000] placeholder:font-montserrat placeholder:text-[16px] placeholder:not-italic placeholder:font-medium placeholder:leading-normal"
               />
               <button
                 type="button"

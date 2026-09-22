@@ -34,7 +34,7 @@ export const getDeliveryTabContent = (product: Product) => {
       {estimatedDelivery}
       <br />
       <h6>Important Information</h6>
-      <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}>
+      <ul className="list-disc pl-5">
         <li className={TEXT_CLASS}>
           Order processing time and the most accurate delivery estimates are
           displayed at checkout before you place your order.

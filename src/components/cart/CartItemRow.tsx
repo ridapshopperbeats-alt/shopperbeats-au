@@ -53,8 +53,7 @@ export default function CartItemRow({
                 width={84}
                 height={84}
                 loading="lazy"
-                style={{ cursor: "not-allowed", opacity: 0.6 }}
-                className="w-[84px] h-[84px] object-cover rounded-md border border-[#e4e3e3]"
+                className="w-[84px] h-[84px] object-cover rounded-md border border-[#e4e3e3] cursor-not-allowed opacity-60"
               />
             )}
           </div>
@@ -105,8 +104,7 @@ export default function CartItemRow({
                 width={137}
                 height={136}
                 loading="lazy"
-                style={{ cursor: "not-allowed", opacity: 0.6 }}
-                className="w-[137px] h-[136px] object-cover rounded-md border border-[#e4e3e3]"
+                className="w-[137px] h-[136px] object-cover rounded-md border border-[#e4e3e3] cursor-not-allowed opacity-60"
               />
             )}
           </div>

@@ -216,17 +216,15 @@ export default function ChangePasswordPage() {
                     />
                   ))}
                   <span
-                    className="ml-2 text-[12px] font-bold"
-                    style={{
-                      color:
-                        passwordScore === 4
-                          ? "#22C55E"
-                          : passwordScore === 3
-                            ? "#3B82F6"
-                            : passwordScore === 2
-                              ? "#F59E0B"
-                              : "#EF4444",
-                    }}
+                    className={`ml-2 text-[12px] font-bold ${
+                      passwordScore === 4
+                        ? "text-[#22C55E]"
+                        : passwordScore === 3
+                          ? "text-[#3B82F6]"
+                          : passwordScore === 2
+                            ? "text-[#F59E0B]"
+                            : "text-[#EF4444]"
+                      }`}
                   >
                     {strength.label}
                   </span>

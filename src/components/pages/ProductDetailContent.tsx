@@ -554,16 +554,11 @@ export default function ProductDetailContent({
             hideHeading: true,
           })}
           descriptionContent={
-            <div style={{ textAlign: "left" }}>
-              {/* <h6
-                className="descrpt-title px-[10px] lg:px-0 text-left"
-              >
-                Product Description
-              </h6> */}
+            <div className="text-left">
+            
               <div className="product-content">
                 <div
-                  className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black px-[10px] lg:px-0"
-                  style={{ textAlign: "left", marginTop: "15px" }}
+                  className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black px-[10px] lg:px-0 text-left mt-[15px]"
                 >
                   {renderContent(product.description) ||
                     "ShopperBeats continues to stand as the planet premier shopping destination..."}
@@ -606,17 +601,11 @@ export default function ProductDetailContent({
             {activeTab === "description" && (
               <>
                 <div className="tab-pane product-description">
-                  <div style={{ textAlign: "left" }}>
-                    {/* <h6
-                      className="descrpt-title"
-                      style={{ textAlign: "left", marginTop: "10px" }}
-                    >
-                      Product Description
-                    </h6> */}
+                  <div className="text-left">
+                   
                     <div className="product-content">
                       <div
-                        className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black"
-                        style={{ textAlign: "left", marginTop: "15px" }}
+                        className="product-description-content font-normal text-[14px] leading-[30px] tracking-[0px] align-middle text-black text-left mt-[15px]"
                       >
                         {renderContent(product.description) ||
                           "ShopperBeats continues to stand as the planet premier shopping destination..."}

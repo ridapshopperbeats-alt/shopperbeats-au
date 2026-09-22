@@ -396,7 +396,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               title: "Brand",
               content: (
                 <div className="flex flex-col gap-4">
-                  <div style={{ position: "relative", width: "238px" }}>
+                  <div className="relative w-[238px]">
                     <Search
                       size={16}
                       className="absolute right-0 top-[20%] text-[#A7A7A7]"

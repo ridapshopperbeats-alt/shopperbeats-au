@@ -383,9 +383,8 @@ function SliderComponent<T>(
       onMouseLeave={handleMouseLeave}
     >
       <div
-        className="overflow-hidden select-none"
+        className="overflow-hidden select-none h-full"
         style={{
-          height: "100%",
           position: isFade ? "relative" : undefined,
           touchAction: isFade ? undefined : isVertical ? "pan-x" : "pan-y",
         }}
@@ -397,9 +396,8 @@ function SliderComponent<T>(
         onDragStart={(e) => e.preventDefault()}
       >
         <div
-          className="flex slider-track"
+          className="flex slider-track h-full"
           style={{
-            height: "100%",
             flexDirection: isVertical ? "column" : "row",
             gap: isFade ? undefined : `${spaceBetween}px`,
             transform: isFade
@@ -447,7 +445,7 @@ function SliderComponent<T>(
                         }
                 }
               >
-                <div className="w-full h-full" style={{ height: "100%" }}>
+                <div className="w-full h-full">
                   {renderItem(item, index)}
                 </div>
               </div>
