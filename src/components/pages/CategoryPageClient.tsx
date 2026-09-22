@@ -395,7 +395,6 @@ const CategoryClient = ({
       })) || [],
     [category?.subcategories],
   );
-console.log("sliderCategories", sliderCategories);
   return (
     <>
       <script

@@ -15,7 +15,7 @@ function base64UrlDecode(segment: string): string {
   );
 }
 
-export function getJwtExpiryMs(token: string): number | null {
+function getJwtExpiryMs(token: string): number | null {
   try {
     const payloadSegment = token.split(".")[1];
     if (!payloadSegment) return null;

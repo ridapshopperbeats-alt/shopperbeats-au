@@ -21,18 +21,6 @@ export interface FaqCategory {
   items: FaqEntry[];
 }
 
-export interface IpComplaintForm {
-  fullName: string;
-  email: string;
-  companyName: string;
-  country: string;
-  ipType: string;
-  listingUrls: string;
-  description: string;
-  proofOfOwnership: string;
-  declaration: boolean;
-}
-
 export interface ReturnStep {
   number: string;
   title: string;

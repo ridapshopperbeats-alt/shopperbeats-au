@@ -322,9 +322,6 @@ const DeliveryDetailsForm: React.FC<DeliveryDetailsFormProps> = ({
               error={formErrors.phone}
             />
 
-            {/* <label className="delivery-checkbox-label">
-              <input type="checkbox" /> Keep me up to date on news and exclusive offers via email and text messages
-            </label> */}
           </div>
         </div>
       </div>

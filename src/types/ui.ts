@@ -249,10 +249,6 @@ export interface TopNavbarProps {
   initialCartCount?: number;
 }
 
-export interface HeaderProps {
-  megaMenuData: MegaMenuCategory[];
-}
-
 export interface SuggestionItem {
   id: string;
   type: "product" | "category" | "brand";
