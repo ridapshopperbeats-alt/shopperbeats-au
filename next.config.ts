@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
   output: "standalone",
   devIndicators: false,
 
+  // Next wraps every response in a Gzip stream when compression is on, and its
+  // writer attaches a `drain` listener per write instead of a one-shot one, so
+  // streamed responses stack them up until Node warns at 10 (vercel/next.js#96973).
+  // Compression is pointless over localhost, so keep it for production only.
+  compress: process.env.NODE_ENV === "production",
+
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },

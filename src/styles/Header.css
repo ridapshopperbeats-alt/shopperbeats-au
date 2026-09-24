@@ -13,7 +13,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0 5px;
+  padding: 5px 0;
 }
 
 .logo-block {
@@ -911,7 +911,7 @@ nav.navbar {
 
 @media screen and (max-width: 767px) {
   .login-block {
-    right: 16px;
+    right: 5px;
     top: 5px;
   }
 
