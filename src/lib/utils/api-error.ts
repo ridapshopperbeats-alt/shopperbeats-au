@@ -1,13 +1,3 @@
-/**
- * Pulls a human-readable message out of an RTK Query error.
- *
- * Gateway services sometimes wrap the upstream response inside their own
- * message, e.g.
- *   { detail: 'Product service failed to create review: {"detail":"Review already submitted for this order"}' }
- * so the embedded JSON is unwrapped to surface the innermost detail
- * ("Review already submitted for this order") instead of the whole chain.
- */
-
 type ErrorPayload = {
   detail?: unknown;
   message?: unknown;
@@ -68,7 +58,6 @@ function unwrapNestedDetail(message: string): string {
 }
 
 export function getApiErrorMessage(err: unknown, fallback: string): string {
-
   const message = readMessage((err as { data?: unknown } | undefined)?.data);
 
   if (!message) return fallback;

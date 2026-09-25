@@ -225,7 +225,7 @@ const SearchPageClient = ({
 
   return (
     <>
-      <div className="container" style={{ marginTop: "30px" }}>
+      <div className="container mt-[30px]">
         <div className="flex flex-col  relative lg:gap-6 lg:flex-row lg:items-start">
 
           <div className="hidden lg:block w-full lg:w-[280px] xl:w-[320px] shrink-0">
@@ -246,7 +246,7 @@ const SearchPageClient = ({
             wrapNavigation={startTransition}
           />
 
-          <div className="flex  w-full">
+          <div className="flex  w-full mb-6 lg:mb-0">
             <ProductDisplay
               products={allProducts}
               onToggleSidebar={toggleSidebar}

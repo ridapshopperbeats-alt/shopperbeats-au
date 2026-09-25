@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Category, JsonLdProduct, ProductsResponse } from "@/types/product";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
+import { withUnfilteredPriceBounds } from "@/lib/utils/price-bounds";
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
@@ -137,7 +138,14 @@ async function getProducts(
     }
 
     const data = await res.json();
-    return { data: data.data, filters: data.filters, totalItems: data.total };
+    const filters = await withUnfilteredPriceBounds(
+      data.filters || [],
+      `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}`,
+      queryParams,
+      { fetcher: (url) => fetch(url, { next: { revalidate: 60 } }) }
+    );
+
+    return { data: data.data, filters, totalItems: data.total };
   } catch (error) {
     console.warn(error);
     return { data: [], filters: [], totalItems: 0 };

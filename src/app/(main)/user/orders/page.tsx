@@ -325,7 +325,6 @@ export default function MyOrdersPage() {
                   <SelectValue
                     placeholder="Delivery Date"
                     className="!text-[#99A1AF] font-medium leading-[16px] text-12px!"
-                    style={{ color: "#99A1AF" }}
                   />
                 </SelectTrigger>
 

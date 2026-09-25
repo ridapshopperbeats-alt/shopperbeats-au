@@ -20,6 +20,29 @@ export function applyImageVariant(url: string, variant?: string): string {
   }
 }
 
+type ImageLike = { image_url?: string; image_order?: number };
+
+function pickBestImageUrl(images: ImageLike[]): string | undefined {
+  return [...images]
+    .filter((img) => !!img.image_url)
+    .sort((a, b) => (a.image_order ?? 9999) - (b.image_order ?? 9999))[0]
+    ?.image_url;
+}
+
+function pickVariantImageUrl(product: Product): string | undefined {
+  for (const variant of product.variants ?? []) {
+    const images = variant.images;
+
+    if (typeof images === "string" && images) return images;
+    if (Array.isArray(images)) {
+      const found = pickBestImageUrl(images);
+      if (found) return found;
+    }
+  }
+
+  return undefined;
+}
+
 export function getImageUrl(product: Product, variant?: string): string {
   const fallback = "/images/image-coming-soon.jpg";
 
@@ -31,22 +54,16 @@ export function getImageUrl(product: Product, variant?: string): string {
     return applyImageVariant(product.thumbnail, variant);
   }
 
-  if (Array.isArray(product.images) && product.images.length > 0) {
-    const sortedImages = [...product.images]
-      .filter(img => !!img.image_url)
-      .sort((a, b) => (a.image_order ?? 9999) - (b.image_order ?? 9999));
-
-    if (sortedImages.length > 0) {
-      return applyImageVariant(sortedImages[0].image_url, variant);
-    }
-
-    return fallback;
+  if (Array.isArray(product.images)) {
+    const productImage = pickBestImageUrl(product.images);
+    if (productImage) return applyImageVariant(productImage, variant);
   }
+
+  const variantImage = pickVariantImageUrl(product);
+  if (variantImage) return applyImageVariant(variantImage, variant);
 
   return fallback;
 }
-
-
 
 export function getVariantImage(variant: Variant, variantName?: string): string {
   const fallback = "/images/image-coming-soon.jpg";

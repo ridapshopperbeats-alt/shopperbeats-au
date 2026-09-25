@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { LocationAutocompleteProps, LocationType } from "@/types/ui";
+import GoogleMapsScript from "./GoogleMapsScript";
 
 
 
@@ -159,6 +160,7 @@ export default function LocationAutocomplete({
 
   return (
     <div className="relative" ref={wrapperRef}>
+      <GoogleMapsScript />
       {label && (
         <label
           htmlFor={id}

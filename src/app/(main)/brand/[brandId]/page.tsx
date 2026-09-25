@@ -1,5 +1,6 @@
 import BrandPageClient from "@/components/pages/BrandPageClient";
 import { API_ENDPOINTS } from "@/lib/constants/api";
+import { withUnfilteredPriceBounds } from "@/lib/utils/price-bounds";
 import type { Metadata } from "next";
 import { JsonLdProduct, ProductsResponse } from "@/types/product";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
@@ -103,7 +104,13 @@ async function getProducts(
       throw new Error("Failed to fetch products");
     }
     const data = await res.json();
-    return { data: data.data, filters: data.filters, totalItems: data.total };
+    const filters = await withUnfilteredPriceBounds(
+      data.filters || [],
+      `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}`,
+      queryParams
+    );
+
+    return { data: data.data, filters, totalItems: data.total };
   } catch (error) {
     console.error(error);
     return { data: [], filters: [], totalItems: 0 };

@@ -1,21 +1,14 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 /**
  * Replaces Next's default black 404 screen.
  *
- * A client component on purpose: the page names the URL the visitor actually
- * tried, and `usePathname()` is the only way to read it here. It deliberately
- * fetches nothing — an error page that depends on the API can fail for the same
- * reason the visitor is already stuck, so the header is just the static logo
- * rather than the full nav.
+ * It deliberately fetches nothing — an error page that depends on the API can
+ * fail for the same reason the visitor is already stuck, so the header is just
+ * the static logo rather than the full nav.
  */
 export default function NotFound() {
-  const pathname = usePathname();
-
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <header className="w-full border-b border-[#ECECEC]">
@@ -47,17 +40,6 @@ export default function NotFound() {
             We couldn&apos;t find anything at this address. It may have been
             moved or renamed, or the link you followed might be wrong.
           </p>
-
-          {/* {pathname && (
-            <p className="mt-5 inline-flex max-w-full items-center gap-2 rounded-[8px] border border-[#ECECEC] bg-[#FAFAFA] px-4 py-2.5">
-              <span className="shrink-0 text-[12px] font-semibold uppercase tracking-wide text-[#A0A0A0]">
-                Route
-              </span>
-              <code className="truncate text-[13px] font-semibold text-[#01295F]">
-                {pathname}
-              </code>
-            </p>
-          )} */}
 
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <Link href="/" className="btn btn-red btn-filled btn-sharp">

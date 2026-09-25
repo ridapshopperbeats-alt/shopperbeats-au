@@ -34,10 +34,10 @@ export const NewTopCategories = () => {
   };
 
   return (
-    <section className="w-full bg-transparent mb-8">
+    <section className="w-full bg-transparent mb-4 md:mb-4">
       <div className="container mx-auto px-4 md:px-8 max-w-[1750px]">
 
-        <h3 className="font-bold text-gray-900 tracking-tight text-[35px]" style={{ marginTop: "10px", marginBottom: "20px" }} >
+        <h3 className="font-bold text-gray-900 tracking-tight text-[35px] mt-2.5 mb-5">
           Top Categories
         </h3>
 
@@ -53,12 +53,7 @@ export const NewTopCategories = () => {
 
           <div
             ref={scrollRef}
-            className="container flex gap-4 sm:gap-5 md:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 mask-edge-fade"
-            style={{
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-              WebkitOverflowScrolling: 'touch'
-            }}
+            className="container flex gap-4 sm:gap-5 md:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 mask-edge-fade [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
           >
             <style jsx global>{`
               .mask-edge-fade::-webkit-scrollbar {

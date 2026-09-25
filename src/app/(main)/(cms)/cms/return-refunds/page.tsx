@@ -59,42 +59,12 @@ export default function ReturnRefundsPage() {
   return (
     <>
       <div
-        className="page-hero-mobile"
-        style={{
-          width: "100%",
-          boxSizing: "border-box",
-          background: "linear-gradient(180deg, #FFF7F3 0%, #FFFDFC 100%)",
-          border: "1px solid #E5E7EB",
-          padding: "36px 20px",
-          textAlign: "left",
-        }}
+        className="page-hero-mobile w-full box-border bg-[linear-gradient(180deg,#FFF7F3_0%,#FFFDFC_100%)] border border-[#E5E7EB] px-5 py-9 text-left"
       >
-        <h1
-          style={{
-            margin: 0,
-            fontFamily: "'Montserrat', sans-serif",
-            fontWeight: 600,
-            fontStyle: "normal",
-            fontSize: "24px",
-            lineHeight: "32px",
-            letterSpacing: "0px",
-            color: "#01295F",
-          }}
-        >
+        <h1 className="m-0 font-[family-name:Montserrat,sans-serif] font-semibold not-italic text-[24px] leading-[32px] tracking-[0px] text-[#01295F]">
           Returns &amp; Warranty
         </h1>
-        <p
-          style={{
-            margin: "10px 0 0",
-            fontFamily: "'Montserrat', sans-serif",
-            fontWeight: 600,
-            fontStyle: "normal",
-            fontSize: "16px",
-            lineHeight: "19.5px",
-            letterSpacing: "0px",
-            color: "#6A7282",
-          }}
-        >
+        <p className="mt-2.5 mx-0 mb-0 font-[family-name:Montserrat,sans-serif] font-semibold not-italic text-[16px] leading-[19.5px] tracking-[0px] text-[#6A7282]">
           Our hassle-free return and warranty guidelines.
         </p>
       </div>
@@ -117,203 +87,62 @@ export default function ReturnRefundsPage() {
       />
 
       <div
-        className="rw-wrapper"
-        style={{
-          maxWidth: "1118px",
-          margin: "40px auto",
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-          boxSizing: "border-box",
-        }}
+        className="rw-wrapper max-w-[1118px] my-10 mx-auto flex flex-col gap-5 box-border"
       >
         <div
-          className="rw-hero"
-          style={{
-            width: "100%",
-            maxWidth: "1118px",
-            minHeight: "104px",
-            gap: "20px",
-            padding: "24px 28px",
-            borderRadius: "16px",
-            background: "linear-gradient(135deg, #FD151B 0%, #C50F14 100%)",
-            display: "flex",
-            alignItems: "center",
-            boxSizing: "border-box",
-          }}
+          className="rw-hero w-full max-w-[1118px] min-h-[104px] gap-5 px-7 py-6 rounded-[16px] bg-[linear-gradient(135deg,#FD151B_0%,#C50F14_100%)] flex items-center box-border"
         >
-          <div
-            style={{
-              flexShrink: 0,
-              width: "48px",
-              height: "48px",
-              borderRadius: "9999px",
-              backgroundColor: "#FFFFFF33",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <div className="shrink-0 w-12 h-12 rounded-[9999px] bg-[#FFFFFF33] flex items-center justify-center">
             <RotateCw size={24} color="#FFFFFF" strokeWidth={2} />
           </div>
           <div>
-            <div
-              style={{
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: 700,
-                fontStyle: "normal",
-                fontSize: "16px",
-                lineHeight: "30px",
-                letterSpacing: "0px",
-                color: "#FFFFFF",
-              }}
-            >
+            <div className="font-[family-name:Montserrat,sans-serif] font-bold not-italic text-[16px] leading-[30px] tracking-[0px] text-[#FFFFFF]">
               30-Day Hassle-Free Returns
             </div>
-            <div
-              style={{
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: 400,
-                fontSize: "14px",
-                lineHeight: "20px",
-                letterSpacing: "0px",
-                color: "#FFFFFFCC",
-              }}
-            >
+            <div className="font-[family-name:Montserrat,sans-serif] font-normal text-[14px] leading-[20px] tracking-[0px] text-[#FFFFFFCC]">
               Easy Return process · Fast Approvals · Quick refund settlements
             </div>
           </div>
         </div>
 
         <div
-          className="rw-return-card"
-          style={{
-            width: "100%",
-            maxWidth: "1118px",
-            borderRadius: "16px",
-            border: "1px solid #F3F4F6",
-            boxShadow: "0px 1px 2px 0px #0000000D",
-            backgroundColor: "#FFFFFF",
-            overflow: "hidden",
-            boxSizing: "border-box",
-            height: "320px",
-          }}
+          className="rw-return-card w-full max-w-[1118px] rounded-[16px] border border-[#F3F4F6] shadow-[0px_1px_2px_0px_#0000000D] bg-[#FFFFFF] overflow-hidden box-border h-[320px]"
         >
-          <div
-            style={{
-              width: "100%",
-              height: "82px",
-              padding: "20px 24px",
-              borderBottom: "1px solid #F3F4F6",
-              boxSizing: "border-box",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: 700,
-                fontStyle: "normal",
-                fontSize: "14px",
-                lineHeight: "21px",
-                letterSpacing: "0px",
-                color: "#211E22",
-              }}
-            >
+          <div className="w-full h-[82px] px-6 py-5 border-b border-b-[#F3F4F6] box-border">
+            <div className="font-[family-name:Montserrat,sans-serif] font-bold not-italic text-[14px] leading-[21px] tracking-[0px] text-[#211E22]">
               How to Return
             </div>
-            <div
-              style={{
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: 400,
-                fontSize: "12px",
-                lineHeight: "18px",
-                color: "#99A1AF",
-                marginTop: "2px",
-              }}
-            >
+            <div className="font-[family-name:Montserrat,sans-serif] font-normal text-[12px] leading-[18px] text-[#99A1AF] mt-0.5">
               Simple step process — takes less than 2 minutes.
             </div>
           </div>
 
-          <div className="rw-steps" style={{ display: "flex", padding: "24px", gap: "20px", boxSizing: "border-box" }}>
+          <div className="rw-steps flex p-6 gap-5 box-border">
             {returnSteps.map((step, index) => (
               <div
                 key={step.number}
-                className="rw-step"
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                  width: index === 3 ? "300px" : "252px",
-                  height: index === 3 ? undefined : "130px",
-                }}
+                className={`rw-step flex-1 flex flex-col gap-2.5 ${index === 3 ? "w-[300px]" : "w-[252px] h-[130px]"
+                  }`}
               >
                 <div
-                  className="rw-badge"
-                  style={{
-                    width: "36px",
-                    height: "36px",
-                    backgroundColor: "#FD151B",
-                    borderRadius: "30px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxSizing: "border-box",
-                  }}
+                  className="rw-badge w-9 h-9 bg-[#FD151B] rounded-[30px] flex items-center justify-center box-border"
                 >
-                  <span
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontWeight: 800,
-                      fontStyle: "normal",
-                      fontSize: "12px",
-                      lineHeight: "18px",
-                      letterSpacing: "0px",
-                      color: "#FFFFFF",
-                    }}
-                  >
+                  <span className="font-[family-name:Montserrat,sans-serif] font-extrabold not-italic text-[12px] leading-[18px] tracking-[0px] text-[#FFFFFF]">
                     {step.number}
                   </span>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                  <div
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontWeight: 700,
-                      fontSize: "14px",
-                      lineHeight: "21px",
-                      color: "#211E22",
-                    }}
-                  >
+                <div className="flex flex-col gap-0.5">
+                  <div className="font-[family-name:Montserrat,sans-serif] font-bold text-[14px] leading-[21px] text-[#211E22]">
                     {step.title}
                   </div>
                   {step.bullets ? (
-                    <ul
-                      style={{
-                        margin: 0,
-                        paddingLeft: "18px",
-                        fontFamily: "'Montserrat', sans-serif",
-                        fontWeight: 400,
-                        fontSize: "12px",
-                        lineHeight: "18px",
-                        color: "#6A7282",
-                      }}
-                    >
+                    <ul className="m-0 pl-[18px] font-[family-name:Montserrat,sans-serif] font-normal text-[12px] leading-[18px] text-[#6A7282]">
                       {step.bullets.map((bullet) => (
                         <li key={bullet}>{bullet}</li>
                       ))}
                     </ul>
                   ) : (
-                    <div
-                      style={{
-                        fontFamily: "'Montserrat', sans-serif",
-                        fontWeight: 400,
-                        fontSize: "12px",
-                        lineHeight: "18px",
-                        color: "#6A7282",
-                      }}
-                    >
+                    <div className="font-[family-name:Montserrat,sans-serif] font-normal text-[12px] leading-[18px] text-[#6A7282]">
                       {step.description}
                     </div>
                   )}
@@ -324,114 +153,40 @@ export default function ReturnRefundsPage() {
         </div>
 
         <div
-          className="rw-eligibility"
-          style={{ display: "flex", gap: "20px", width: "100%", maxWidth: "1118px", boxSizing: "border-box" }}
+          className="rw-eligibility flex gap-5 w-full max-w-[1118px] box-border"
         >
           <div
-            className="rw-eligibility-title"
-            style={{
-              display: "none",
-              fontFamily: "'Montserrat', sans-serif",
-              fontWeight: 700,
-              fontStyle: "normal",
-              fontSize: "14px",
-              lineHeight: "21px",
-              letterSpacing: "0px",
-              color: "#211E22",
-            }}
+            className="rw-eligibility-title hidden font-[family-name:Montserrat,sans-serif] font-bold not-italic text-[14px] leading-[21px] tracking-[0px] text-[#211E22]"
           >
             Eligibility
           </div>
 
           <div
-            className="rw-elig-card"
-            style={{
-              flex: 1,
-              borderRadius: "16px",
-              border: "1px solid #F3F4F6",
-              boxShadow: "0px 1px 2px 0px #0000000D",
-              backgroundColor: "#FFFFFF",
-              overflow: "hidden",
-              boxSizing: "border-box",
-            }}
+            className="rw-elig-card flex-1 rounded-[16px] border border-[#F3F4F6] shadow-[0px_1px_2px_0px_#0000000D] bg-[#FFFFFF] overflow-hidden box-border"
           >
             <div
-              className="rw-elig-header"
-              style={{
-                width: "100%",
-                height: "52px",
-                padding: "16px 20px",
-                borderBottom: "1px solid #F3F4F6",
-                boxSizing: "border-box",
-                display: "flex",
-                alignItems: "center",
-              }}
+              className="rw-elig-header w-full h-[52px] px-5 py-4 border-b border-b-[#F3F4F6] box-border flex items-center"
             >
               <span
-                className="rw-elig-title-desktop"
-                style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontWeight: 700,
-                  fontStyle: "normal",
-                  fontSize: "14px",
-                  lineHeight: "21px",
-                  letterSpacing: "0px",
-                  color: "#211E22",
-                }}
+                className="rw-elig-title-desktop font-[family-name:Montserrat,sans-serif] font-bold not-italic text-[14px] leading-[21px] tracking-[0px] text-[#211E22]"
               >
                 Return Conditions
               </span>
               <span
-                className="rw-elig-title-mobile"
-                style={{
-                  display: "none",
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontWeight: 700,
-                  fontStyle: "normal",
-                  fontSize: "14px",
-                  lineHeight: "21px",
-                  letterSpacing: "0px",
-                  color: "#16A34A",
-                }}
+                className="rw-elig-title-mobile hidden font-[family-name:Montserrat,sans-serif] font-bold not-italic text-[14px] leading-[21px] tracking-[0px] text-[#16A34A]"
               >
                 Items Eligible for Return
               </span>
             </div>
             <div
-              className="rw-elig-body"
-              style={{
-                padding: "16px 20px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
-                boxSizing: "border-box",
-              }}
+              className="rw-elig-body px-5 py-4 flex flex-col gap-3 box-border"
             >
               {eligibleConditions.map((condition) => (
-                <div key={condition} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                  <span
-                    style={{
-                      flexShrink: 0,
-                      width: "16px",
-                      height: "16px",
-                      borderRadius: "9999px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: "1px",
-                    }}
-                  >
+                <div key={condition} className="flex items-start gap-2.5">
+                  <span className="shrink-0 w-4 h-4 rounded-[9999px] flex items-center justify-center mt-px">
                     <CircleCheck size={24} color="#16A34A" strokeWidth={2} />
                   </span>
-                  <span
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontWeight: 400,
-                      fontSize: "13px",
-                      lineHeight: "19px",
-                      color: "#4A5565",
-                    }}
-                  >
+                  <span className="font-[family-name:Montserrat,sans-serif] font-normal text-[13px] leading-[19px] text-[#4A5565]">
                     {condition}
                   </span>
                 </div>
@@ -440,78 +195,24 @@ export default function ReturnRefundsPage() {
           </div>
 
           <div
-            className="rw-elig-card"
-            style={{
-              flex: 1,
-              borderRadius: "16px",
-              border: "1px solid #F3F4F6",
-              boxShadow: "0px 1px 2px 0px #0000000D",
-              backgroundColor: "#FFFFFF",
-              overflow: "hidden",
-              boxSizing: "border-box",
-            }}
+            className="rw-elig-card flex-1 rounded-[16px] border border-[#F3F4F6] shadow-[0px_1px_2px_0px_#0000000D] bg-[#FFFFFF] overflow-hidden box-border"
           >
             <div
-              className="rw-elig-header"
-              style={{
-                width: "100%",
-                height: "52px",
-                padding: "16px 20px",
-                borderBottom: "1px solid #F3F4F6",
-                boxSizing: "border-box",
-                display: "flex",
-                alignItems: "center",
-              }}
+              className="rw-elig-header w-full h-[52px] px-5 py-4 border-b border-b-[#F3F4F6] box-border flex items-center"
             >
-              <span
-                style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontWeight: 700,
-                  fontStyle: "normal",
-                  fontSize: "14px",
-                  lineHeight: "21px",
-                  letterSpacing: "0px",
-                  color: "#211E22",
-                }}
-              >
+              <span className="font-[family-name:Montserrat,sans-serif] font-bold not-italic text-[14px] leading-[21px] tracking-[0px] text-[#211E22]">
                 Not Eligible for Return
               </span>
             </div>
             <div
-              className="rw-elig-body"
-              style={{
-                padding: "16px 20px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
-                boxSizing: "border-box",
-              }}
+              className="rw-elig-body px-5 py-4 flex flex-col gap-3 box-border"
             >
               {notEligibleConditions.map((condition) => (
-                <div key={condition} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                  <span
-                    style={{
-                      flexShrink: 0,
-                      width: "16px",
-                      height: "16px",
-                      borderRadius: "9999px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: "1px",
-                    }}
-                  >
+                <div key={condition} className="flex items-start gap-2.5">
+                  <span className="shrink-0 w-4 h-4 rounded-[9999px] flex items-center justify-center mt-px">
                     <CircleX size={24} color="#DC2626" strokeWidth={2} />
                   </span>
-                  <span
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontWeight: 400,
-                      fontSize: "13px",
-                      lineHeight: "19px",
-                      color: "#4A5565",
-                    }}
-                  >
+                  <span className="font-[family-name:Montserrat,sans-serif] font-normal text-[13px] leading-[19px] text-[#4A5565]">
                     {condition}
                   </span>
                 </div>
@@ -520,33 +221,12 @@ export default function ReturnRefundsPage() {
           </div>
         </div>
 
-        <div
-          style={{
-            width: "100%",
-            maxWidth: "1118px",
-            borderRadius: "16px",
-            border: "1px solid #F3F4F6",
-            boxShadow: "0px 1px 2px 0px #0000000D",
-            backgroundColor: "#FFFFFF",
-            overflow: "hidden",
-            boxSizing: "border-box",
-          }}
-        >
-          <div style={{ width: "100%", height: "82px", padding: "20px 24px", borderBottom: "1px solid #F3F4F6", boxSizing: "border-box" }}>
-            <div
-              style={{
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: 700,
-                fontStyle: "normal",
-                fontSize: "14px",
-                lineHeight: "21px",
-                letterSpacing: "0px",
-                color: "#211E22",
-              }}
-            >
+        <div className="w-full max-w-[1118px] rounded-[16px] border border-[#F3F4F6] shadow-[0px_1px_2px_0px_#0000000D] bg-[#FFFFFF] overflow-hidden box-border">
+          <div className="w-full h-[82px] px-6 py-5 border-b border-b-[#F3F4F6] box-border">
+            <div className="font-[family-name:Montserrat,sans-serif] font-bold not-italic text-[14px] leading-[21px] tracking-[0px] text-[#211E22]">
               Warranty Coverage
             </div>
-            <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 400, fontSize: "12px", lineHeight: "18px", color: "#99A1AF" }}>
+            <div className="font-[family-name:Montserrat,sans-serif] font-normal text-[12px] leading-[18px] text-[#99A1AF]">
               We only have 30 days return and refund policy.
             </div>
           </div>
@@ -554,72 +234,24 @@ export default function ReturnRefundsPage() {
         </div>
 
         <div
-          className="rw-footer"
-          style={{
-            width: "100%",
-            maxWidth: "1118px",
-            borderRadius: "16px",
-            border: "1px solid #F3F4F6",
-            boxShadow: "0px 1px 2px 0px #0000000D",
-            backgroundColor: "#FFFFFF",
-            padding: "20px 24px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            boxSizing: "border-box",
-          }}
+          className="rw-footer w-full max-w-[1118px] rounded-[16px] border border-[#F3F4F6] shadow-[0px_1px_2px_0px_#0000000D] bg-[#FFFFFF] px-6 py-5 flex items-center justify-between box-border"
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-            <div
-              style={{
-                flexShrink: 0,
-                width: "40px",
-                height: "40px",
-                borderRadius: "14px",
-                backgroundColor: "#FFF0F0",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+          <div className="flex items-center gap-3.5">
+            <div className="shrink-0 w-10 h-10 rounded-[14px] bg-[#FFF0F0] flex items-center justify-center">
               <Headphones size={18} color="#FD151B" strokeWidth={2} />
             </div>
             <div>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: "14px", lineHeight: "21px", color: "#211E22" }}>
+              <div className="font-[family-name:Montserrat,sans-serif] font-bold text-[14px] leading-[21px] text-[#211E22]">
                 Need help with a return?
               </div>
-              <div
-                style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontWeight: 400,
-                  fontSize: "12px",
-                  lineHeight: "18px",
-                  color: "#99A1AF",
-                  marginTop: "2px",
-                }}
-              >
+              <div className="font-[family-name:Montserrat,sans-serif] font-normal text-[12px] leading-[18px] text-[#99A1AF] mt-0.5">
                 Our team is available Mon–Sat, 9 AM – 7 PM IST.
               </div>
             </div>
           </div>
           <Link
             href="/contact"
-            className="rw-footer-btn"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              backgroundColor: "#FD151B",
-              color: "#FFFFFF",
-              borderRadius: "30px",
-              padding: "10px 20px",
-              fontFamily: "'Montserrat', sans-serif",
-              fontWeight: 600,
-              fontSize: "13px",
-              lineHeight: "19px",
-              textDecoration: "none",
-              boxSizing: "border-box",
-            }}
+            className="rw-footer-btn flex items-center gap-2 bg-[#FD151B] text-[#FFFFFF] rounded-[30px] px-5 py-2.5 font-[family-name:Montserrat,sans-serif] font-semibold text-[13px] leading-[19px] no-underline box-border"
           >
             <Headphones size={14} color="#FFFFFF" strokeWidth={2} />
             Contact Support

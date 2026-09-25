@@ -1,9 +1,15 @@
 import type * as React from "react";
-import type { Dispatch, ReactNode, Ref, RefObject, SetStateAction } from "react";
+import type {
+  Dispatch,
+  ReactNode,
+  Ref,
+  RefObject,
+  SetStateAction,
+} from "react";
 import { Product, VariantAttribute } from "./product";
 
 export interface CartItem extends Product {
-  id: string; 
+  id: string;
   quantity: number;
   variant_id: string;
   variant_attributes: VariantAttribute[];
@@ -135,22 +141,13 @@ export interface CartCheckoutDrawerProps {
   onCheckout: () => void;
 }
 
-/* ------------------------------------------------------------------ *
- * Cart page components
- * ------------------------------------------------------------------ */
-
 export type CartItemRowProps = {
   item: CartItem;
-  /** Unit price after any promotion, from getPriceDetails(). */
   mainPrice: number;
   wasPrice: number;
   showWasPrice: boolean;
   itemSubtotal: number;
-  /**
-   * Rendered by the page rather than built here: the name, stock state,
-   * delivery estimate and variant list are the same markup in both layouts, and
-   * the quantity control needs the page's per-item mutation state.
-   */
+
   itemInfo: ReactNode;
   qtySelector: ReactNode;
   removeLink: ReactNode;
@@ -158,20 +155,14 @@ export type CartItemRowProps = {
 
 export type CartItemsListProps = {
   items: CartItem[];
-  /** Above xl the list is height-matched to the order summary beside it. */
   isXlUp: boolean;
   matchedHeight: number | null;
 
-  /** Id of the row whose quantity is mid-flight, or null. */
   updatingItemId: string | null;
   isRemoving: boolean;
-  /**
-   * Shared with the page so a second click during an in-flight remove is
-   * dropped rather than queued.
-   */
+
   clickLockRef: RefObject<boolean>;
 
-  /** Quantity shown while the debounced update is still pending. */
   localQtyMap: Record<string, string>;
   setLocalQtyMap: Dispatch<SetStateAction<Record<string, string>>>;
 
@@ -185,10 +176,6 @@ export type CartItemsListProps = {
 };
 
 export type CartOrderSummaryProps = {
-  /**
-   * The page measures this element to match the item list's height, so the ref
-   * has to reach the outer wrapper rather than anything inside it.
-   */
   summaryRef: Ref<HTMLDivElement>;
   cart: Cart;
   authChecked: boolean;

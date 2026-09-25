@@ -1,21 +1,4 @@
-export interface FilterTag {
-  key: string;
-  label: string;
-  onRemove: () => void;
-}
-
-export interface BuildFilterTagsParams {
-  selectedCategories: string[];
-  toggleSelectedCategory: (category: string) => void;
-  selectedPrices: string[];
-  handlePriceChange: (price: string) => void;
-  minPrice: string;
-  maxPrice: string;
-  setMinPrice: (value: string) => void;
-  setMaxPrice: (value: string) => void;
-  selectedFilters: Record<string, string[]>;
-  handleFilterChange: (attribute: string, value: string) => void;
-}
+import type { BuildFilterTagsParams, FilterTag } from "@/types/product";
 
 export function formatPriceRangeLabel(value: string): string {
   if (value === "200+") return "$200 and Above";

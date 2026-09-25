@@ -15,12 +15,12 @@ export default function ErrorBoundary({
   }, [error]);
 
   return (
-    <div className="container" style={{ padding: "80px 20px", textAlign: "center" }}>
+    <div className="container !px-5 min-[1440px]:!px-10 py-20 text-center">
       <h2>Something went wrong</h2>
-      <p style={{ margin: "12px 0 28px" }}>
+      <p className="mt-3 mx-0 mb-7">
         We hit an unexpected error loading this page. Please try again.
       </p>
-      <div style={{ display: "flex", gap: "16px", justifyContent: "center" }}>
+      <div className="flex gap-4 justify-center">
         <button type="button" className="btn btn-red btn-filled btn-sharp" onClick={() => reset()}>
           Try again
         </button>

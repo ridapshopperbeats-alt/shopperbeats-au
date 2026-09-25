@@ -55,6 +55,26 @@ import type { TopNavbarProps } from "@/types/ui";
  */
 const SITE_HEADER_HIDDEN_PATHS = ["/check-out"];
 
+/**
+ * Product-listing routes. These render ProductDisplay, whose mobile Sort/Filter
+ * bar sits at z-50 over MobileBottomNav (z-40), hiding the bottom nav entirely.
+ * The Cart tab goes with it, so the header keeps its own cart icon on mobile
+ * here. Keep in sync with the pages that render ProductDisplay.
+ */
+const MOBILE_CART_IN_HEADER_PATHS = [
+  "/category",
+  "/brand",
+  "/product-listing",
+  "/products",
+  "/search",
+];
+
+/**
+ * Longest column a mega-menu subcategory may render. Anything past this stays
+ * reachable through the "View All" link that follows the list.
+ */
+const MEGA_MENU_VISIBLE_LINKS = 10;
+
 export type { MegaMenuCategory };
 
 
@@ -67,6 +87,12 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
   const [mounted, setMounted] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const pathname = usePathname();
+
+  // Listing pages lose the bottom nav behind the Sort/Filter bar, so surface
+  // the cart in the header there instead.
+  const showMobileCart = MOBILE_CART_IN_HEADER_PATHS.some(
+    (route) => pathname === route || !!pathname?.startsWith(`${route}/`),
+  );
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -155,7 +181,10 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
         }
       },
       (error) => {
-        console.error("Geolocation error:", error);
+        if (error.code === error.PERMISSION_DENIED) return;
+        console.warn(
+          `Geolocation unavailable (code ${error.code}): ${error.message || "no details"}`,
+        );
       },
       {
         enableHighAccuracy: true,
@@ -441,7 +470,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                   src="/images/logo.svg"
                   alt="ShopperBeats Logo"
                   width={300}
-                  height={300}
+                  height={61}
                   priority
                 />
               </Link>
@@ -453,7 +482,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
               Search products
             </label>
             <input
-              style={{ background: "#fff", borderRadius: "5px" }}
+              className="bg-white rounded-[5px]"
               id="headerSearch"
               type="text"
               placeholder="Explore amazing products you'll love"
@@ -547,6 +576,8 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                                           src={item.thumbnailUrl}
                                           alt={item.displayLabel}
                                           fill
+                                          // 32px thumb (w-8 container); `fill` alone requests 100vw.
+                                          sizes="32px"
                                           className="object-cover"
                                         />
                                       )}
@@ -599,7 +630,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
           </div>
 
           <div className="login-block">
-            <div className="delivery-block" style={{ position: "relative" }}>
+            <div className="delivery-block relative">
               <div
                 role="button"
                 tabIndex={0}
@@ -610,24 +641,15 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                   }
                 }}
                 onClick={() => {
-                  if (!isAuthenticated) {
-                    setShowPincodeInput(!showPincodeInput);
-                  } else {
-                    router.push("/user/addresses");
-                  }
+                  setShowPincodeInput(!showPincodeInput);
                 }}
-                style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
+                className="cursor-pointer flex items-center gap-2"
               >
                 <Image
                   src="/images/deliver-location.svg"
                   alt="Deliver"
-                  width={15}
-                  height={15}
+                  width={13}
+                  height={17}
                 />
                 <div className="deliver-location">
                   <span>Deliver to</span>
@@ -675,7 +697,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
               href="/user/wishlist"
               iconSrc="/images/wishlist.svg"
               alt="wishlist"
-              className="wishlist"
+              className="wishlist hidden lg:block"
               count={
                 authChecked && wishlistCount !== undefined
                   ? wishlistCount
@@ -683,9 +705,12 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
               }
             />
 
-            <CartPopup isVisible={showCartCard} />
+            <CartPopup
+              isVisible={showCartCard}
+              className={showMobileCart ? "block" : "hidden lg:block"}
+            />
 
-            <div className={`header-link account`}>
+            <div className={`header-link account hidden lg:block`}>
               {isAuthenticated ? (
                 hasProfileImage ? (
                   <Link
@@ -697,6 +722,8 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                       alt="account"
                       className="rounded-full object-cover"
                       fill
+                      // 44px avatar; `fill` alone would request a 100vw render.
+                      sizes="44px"
                     />
 
                     <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
@@ -802,10 +829,10 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                                 <h5>{subCat.name}</h5>
                               </Link>
                               <ul>
-                                {subCat.links.map((link) => (
+                                {subCat.links.slice(0, MEGA_MENU_VISIBLE_LINKS).map((link) => (
                                   <li
                                     key={link.name}
-                                    style={{ lineHeight: "28px" }}
+                                    className="leading-[28px]"
                                   >
                                     <Link
                                       prefetch={false}
@@ -978,12 +1005,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                         height="14"
                         viewBox="0 0 24 24"
                         fill="none"
-                        style={{
-                          transform: isMainOpen
-                            ? "rotate(180deg)"
-                            : "rotate(0deg)",
-                          transition: "0.3s",
-                        }}
+                        className={`[transition:0.3s] ${isMainOpen ? "rotate-180" : "rotate-0"}`}
                       >
                         <path
                           d="M6 9L12 15L18 9"
@@ -1017,12 +1039,7 @@ export default function TopNavbar({ megaMenuData, initialWishlistCount = 0 }: To
                                   height="12"
                                   viewBox="0 0 24 24"
                                   fill="none"
-                                  style={{
-                                    transform: isSubOpen
-                                      ? "rotate(180deg)"
-                                      : "rotate(0deg)",
-                                    transition: "0.3s",
-                                  }}
+                                  className={`[transition:0.3s] ${isSubOpen ? "rotate-180" : "rotate-0"}`}
                                 >
                                   <path
                                     d="M6 9L12 15L18 9"

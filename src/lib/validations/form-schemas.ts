@@ -173,15 +173,15 @@ export const personalInfoSchema = yup.object().shape({
 });
 
 
-// Validation schema
-export const contactInfoSchema = yup.object().shape({
+export const contactFormSchema = yup.object().shape({
   name: nameField("Name"),
   email: email,
-  subject: requiredString("Subject"),
+  phone: australianPhoneNumber,
   message: requiredMessage("Message", 5),
 });
 
-export const intellectualPropertySchema = yup.object().shape({
+// src/app/api/intellectual-property/route.ts
+export const ipComplaintSchema = yup.object().shape({
   fullName: nameField("Full name"),
   email: email,
   companyName: requiredString("Company / brand name"),
@@ -190,7 +190,4 @@ export const intellectualPropertySchema = yup.object().shape({
   listingUrls: requiredString("Infringing listing URL(s)"),
   description: requiredMessage("Description of infringement", 10),
   proofOfOwnership: yup.string(),
-  declaration: yup
-    .boolean()
-    .oneOf([true], "Please confirm the declaration before submitting"),
 });

@@ -210,16 +210,8 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
     [],
   );
 
-  const shimmerStyle: React.CSSProperties = {
-    position: "absolute",
-    inset: 0,
-    background: "linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%)",
-    backgroundSize: "200% 100%",
-    animation: "shimmer 1.4s infinite, fadeIn 0.4s 0.2s forwards",
-    borderRadius: 4,
-    zIndex: 1,
-    opacity: 0,
-  };
+  const shimmerClass =
+    "absolute inset-0 bg-[linear-gradient(90deg,#f0f0f0_25%,#e0e0e0_50%,#f0f0f0_75%)] bg-[length:200%_100%] [animation:shimmer_1.4s_infinite,fadeIn_0.4s_0.2s_forwards] rounded-[4px] z-[1] opacity-0";
 
   return (
     <>
@@ -325,18 +317,17 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                         )
                       ) : (
                         <>
-                          {!isLoaded(mediaUrl) && <div style={shimmerStyle} />}
+                          {!isLoaded(mediaUrl) && <div className={shimmerClass} />}
 
                           <Image
                             src={applyImageVariant(mediaUrl, "pdptmb")}
                             alt={`thumbnail-${originalIndex}`}
                             width={100}
                             height={100}
-                            className="object-cover w-full h-full"
+                            className="object-cover w-full h-full [transition:opacity_0.3s_ease]"
                             onLoad={() => markLoaded(mediaUrl)}
                             style={{
                               opacity: isLoaded(mediaUrl) ? 1 : 0,
-                              transition: "opacity 0.3s ease",
                             }}
                           />
                         </>
@@ -454,33 +445,34 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                 muted
                 loop
                 playsInline
-                className="w-full h-full object-cover absolute inset-0 rounded-[15px]"
+                className="w-full h-full object-cover absolute inset-0 rounded-[15px] [transition:transform_0.2s_ease-out]"
                 style={{
                   transform: isHovered ? "scale(1.1)" : "scale(1)",
                   transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,
-                  transition: "transform 0.2s ease-out",
                 }}
               />
             )
           ) : (
             <>
-              {!isLoaded(mainImage) && <div style={shimmerStyle} />}
+              {!isLoaded(mainImage) && <div className={shimmerClass} />}
 
               <Image
                 src={applyImageVariant(safeUrl(mainImage), "pdpmain")}
                 alt={product.title || "Product Image"}
                 width={700}
                 height={700}
+                // Headroom for the 1.5x hover zoom: this picks the same or a
+                // larger candidate than before on desktop, only smaller on phones.
+                sizes="(max-width: 1024px) 100vw, 800px"
                 onLoad={() => markLoaded(mainImage)}
                 onClick={() => openPreview(mainImage)}
-                className="absolute inset-0 w-full h-full min-[1366px]:max-[1500px]:h-[600px] rounded-[15px] object-cover"
+                className={`absolute inset-0 w-full h-full min-[1366px]:max-[1500px]:h-[600px] rounded-[15px] object-cover cursor-zoom-in ${isLoaded(mainImage)
+                  ? "[transition:transform_0.2s_ease-out]"
+                  : "[transition:none]"
+                  }`}
                 style={{
                   transform: isHovered ? "scale(1.5)" : "scale(1)",
                   transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,
-                  transition: isLoaded(mainImage)
-                    ? "transform 0.2s ease-out"
-                    : "none",
-                  cursor: "zoom-in",
                   opacity: isLoaded(mainImage) ? 1 : 0,
                 }}
               />
@@ -557,7 +549,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                 ) : (
                   <>
                     {!isLoaded(safeUrl(item.image_url)) && (
-                      <div style={shimmerStyle} />
+                      <div className={shimmerClass} />
                     )}
 
                     <Image
@@ -568,13 +560,13 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
                       alt={`slide-${index}`}
                       width={400}
                       height={360}
+                      sizes="(max-width: 1024px) 100vw, 400px"
                       draggable={false}
                       onLoad={() => markLoaded(safeUrl(item.image_url))}
                       onClick={() => openPreview(safeUrl(item.image_url))}
-                      className="w-full h-full object-cover lg:object-contain rounded-[15px]  "
+                      className="w-full h-full object-cover lg:object-contain rounded-[15px] [transition:opacity_0.3s_ease]"
                       style={{
                         opacity: isLoaded(safeUrl(item.image_url)) ? 1 : 0,
-                        transition: "opacity 0.3s ease",
                       }}
                     />
                   </>

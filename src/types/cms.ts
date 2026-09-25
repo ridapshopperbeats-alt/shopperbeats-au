@@ -1,5 +1,3 @@
-
-
 export interface CmsPage {
   id: number;
   title: string;
@@ -10,6 +8,7 @@ export interface CmsPage {
 
 export interface ShadowDomContentProps {
   content: string;
+  nonce?: string;
 }
 
 export interface FaqEntry {
@@ -20,18 +19,6 @@ export interface FaqEntry {
 export interface FaqCategory {
   title: string;
   items: FaqEntry[];
-}
-
-export interface IpComplaintForm {
-  fullName: string;
-  email: string;
-  companyName: string;
-  country: string;
-  ipType: string;
-  listingUrls: string;
-  description: string;
-  proofOfOwnership: string;
-  declaration: boolean;
 }
 
 export interface ReturnStep {

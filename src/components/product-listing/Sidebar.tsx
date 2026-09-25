@@ -22,10 +22,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   selectedCategorySlugs = [],
   onCategorySelect,
   selectedPriceRange,
-  isHighlightPage,
   onExpandedChange,
   hideHeader,
-  slug,
   wrapNavigation,
 }) => {
   const {
@@ -289,54 +287,51 @@ const Sidebar: React.FC<SidebarProps> = ({
                   }}
                   className="w-full [&_[data-slot=slider-range]]:bg-red-500 [&_[data-slot=slider-thumb]]:border-red-500 [&_[data-slot=slider-thumb]]:bg-red-500"
                 />
-                {(!isHighlightPage ||
-                  ["clearance", "whats-on-sale"].includes(String(slug))) && (
-                  <div className="flex items-center align-center !gap-2 pt-5">
-                    <span className="text-[16px] text-[#000000]">$</span>
-                    <Input
-                      type="number"
-                      placeholder="0"
-                      value={priceRange[0]}
-                      onChange={(e) => {
-                        const newMin = e.target.value;
+                <div className="flex items-center align-center !gap-2 pt-5">
+                  <span className="text-[16px] text-[#000000]">$</span>
+                  <Input
+                    type="number"
+                    placeholder="0"
+                    value={priceRange[0]}
+                    onChange={(e) => {
+                      const newMin = e.target.value;
 
-                        setMinPrice(newMin);
+                      setMinPrice(newMin);
 
-                        setPriceRange([
-                          Number(newMin) || MIN_PRICE,
-                          priceRange[1],
-                        ]);
-                      }}
-                      className="h-full flex-1 min-w-0 max-w-[70px] max-h-[30px] border-[#676767] !rounded-[53px]"
-                    />
+                      setPriceRange([
+                        Number(newMin) || MIN_PRICE,
+                        priceRange[1],
+                      ]);
+                    }}
+                    className="h-full flex-1 min-w-0 max-w-[70px] max-h-[30px] border-[#676767] !rounded-[53px]"
+                  />
 
-                    <span className="shrink-0 px-1 text-[16px] text-[#000000]">to</span>
+                  <span className="shrink-0 px-1 text-[16px] text-[#000000]">to</span>
 
-                    <Input
-                      type="number"
-                      placeholder="Max"
-                      value={priceRange[1]}
-                      onChange={(e) => {
-                        const newMax = e.target.value;
+                  <Input
+                    type="number"
+                    placeholder="Max"
+                    value={priceRange[1]}
+                    onChange={(e) => {
+                      const newMax = e.target.value;
 
-                        setMaxPrice(e.target.value);
+                      setMaxPrice(e.target.value);
 
-                        setPriceRange([
-                          priceRange[0],
-                          Number(newMax) || MAX_PRICE,
-                        ]);
-                      }}
-                      className="h-full flex-1 min-w-0 max-w-[70px] max-h-[30px] border-[#676767] !rounded-[53px]"
-                    />
+                      setPriceRange([
+                        priceRange[0],
+                        Number(newMax) || MAX_PRICE,
+                      ]);
+                    }}
+                    className="h-full flex-1 min-w-0 max-w-[70px] max-h-[30px] border-[#676767] !rounded-[53px]"
+                  />
 
-                    <Button
-                      onClick={() => handleApplyFilters()}
-                      className="text-[14px] border border-[#fd151b] text-[#fd151b] cursor-pointer h-full  w-full max-w-[63px] shrink-0 rounded-[53px]"
-                    >
-                      Apply
-                    </Button>
-                  </div>
-                )}
+                  <Button
+                    onClick={() => handleApplyFilters()}
+                    className="text-[14px] border border-[#fd151b] text-[#fd151b] cursor-pointer h-full  w-full max-w-[63px] shrink-0 rounded-[53px]"
+                  >
+                    Apply
+                  </Button>
+                </div>
               </div>
             ),
             defaultOpen:
@@ -396,7 +391,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               title: "Brand",
               content: (
                 <div className="flex flex-col gap-4">
-                  <div style={{ position: "relative", width: "238px" }}>
+                  <div className="relative w-[238px]">
                     <Search
                       size={16}
                       className="absolute right-0 top-[20%] text-[#A7A7A7]"

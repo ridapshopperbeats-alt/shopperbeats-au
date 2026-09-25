@@ -1,4 +1,3 @@
-/* header  */
 .header-fixed {
   position: sticky;
   top: 0;
@@ -14,7 +13,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0 5px;
+  padding: 5px 0;
 }
 
 .logo-block {
@@ -471,14 +470,6 @@ span.wishlist-num {
   color: var(--white);
 }
 
-/*.header-link.cart:hover .cart-popup,
-.header-link.cart.is-visible .cart-popup,
-.cart-popup:hover {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  }*/
-
 /* css 03-11-25 */
 
 /* Left category list */
@@ -548,11 +539,6 @@ span.wishlist-num {
   display: block;
 }
 
-/* .mega-cat {
-  column-count: 4;
-  column-gap: 40px;
-} */
-
 .mega-column {
   break-inside: avoid;
   -webkit-column-break-inside: avoid;
@@ -580,7 +566,7 @@ span.wishlist-num {
   line-height: 100%;
   letter-spacing: 0%;
   color: #666666;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .mega-column ul li a:hover {
@@ -641,9 +627,6 @@ nav.navbar {
   border-bottom: 1px solid #eee;
 }
 
-/* .mobile-main-category{
-} */
-
 .mobile-main-category h5,
 .mobile-subcategory-title h6 {
   margin: 0;
@@ -700,13 +683,6 @@ nav.navbar {
 }
 
 /* header  */
-
-/* 
-@media screen and (min-width: 992px) {
-  .megamenuBtn:hover .mega-menu-wrapper {
-    display: block;
-  }
-} */
 
 .mega-menu-wrapper.active {
   display: block;
@@ -935,7 +911,7 @@ nav.navbar {
 
 @media screen and (max-width: 767px) {
   .login-block {
-    right: 16px;
+    right: 5px;
     top: 5px;
   }
 
@@ -977,5 +953,27 @@ nav.navbar {
 
   .new-mega-column {
     margin-bottom: 2px;
+  }
+}
+/* Below lg the header shows only the location icon, plus the cart on listing
+   pages where the Sort/Filter bar covers the bottom nav. Cart sits on the left
+   and location on the right, which is the reverse of the desktop order, so the
+   gutter that separated them moves to the other side too. Declared last so
+   these win over the 480px overrides above. */
+@media screen and (max-width: 1023px) {
+  .header-link.cart {
+    order: -1;
+    margin-left: 0;
+    margin-right: 20px;
+  }
+
+  .delivery-block {
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .header-link.cart {
+    margin-right: 5px;
   }
 }

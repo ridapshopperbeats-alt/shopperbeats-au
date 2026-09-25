@@ -319,13 +319,9 @@ export enum OrderStatusCode {
   ReplacementRequested = "replacement_requested",
   Refunded = "refunded",
 }
-/* ------------------------------------------------------------------ *
- * Orders pages
- * ------------------------------------------------------------------ */
 
 export type OrderTab = "all" | "transit" | "delivered";
 
-// "" is the unsorted default (newest first); "oldest" is the Delivery Date option.
 export type OrderSort = "" | "oldest";
 
 export interface OrderDetailProps {

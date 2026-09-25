@@ -220,6 +220,7 @@ export interface LocationPopupProps {
 
 export interface CartPopupProps {
   isVisible: boolean;
+  className?: string;
 }
 
 export interface HeaderIconProps {
@@ -246,10 +247,6 @@ export interface TopNavbarProps {
   megaMenuData: MegaMenuCategory[];
   initialWishlistCount?: number;
   initialCartCount?: number;
-}
-
-export interface HeaderProps {
-  megaMenuData: MegaMenuCategory[];
 }
 
 export interface SuggestionItem {

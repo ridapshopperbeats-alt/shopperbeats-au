@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 
 const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
 
-// Static data — safe to cache with ISR (60s revalidate)
 async function getStaticHomepageData() {
   const results = await Promise.allSettled([
     fetch(`${baseUrl}${API_ENDPOINTS.PRODUCTS.HOMEPAGE_SECTION_BY_ID(API_ENDPOINTS.PRODUCTS.HERO_BANNER)}`, { next: { revalidate: 60 } }),
@@ -28,9 +27,8 @@ async function getStaticHomepageData() {
   return { heroBanner, topCategories, bannerOne, bannerTwo, trending, brands, topRated, bestSellers, customerReviews };
 }
 
-// Per-user data — must be no-store (session-dependent)
 async function getUserHomepageData(allCookies: string) {
-  const [personalized /*, recentlyViewed */] = await Promise.allSettled([
+  const [personalized] = await Promise.allSettled([
     fetch(`${baseUrl}${API_ENDPOINTS.PRODUCTS.PERSONALIZED}`, {
       headers: { Cookie: allCookies },
       cache: "no-store",

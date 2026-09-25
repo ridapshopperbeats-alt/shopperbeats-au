@@ -32,7 +32,6 @@ export const productsApi = createApi({
       query: () => API_ENDPOINTS.PRODUCTS.TRENDING_PRODUCTS,
     }),
 
-    // Returns the array directly, not wrapped in { data }
     getRecentlyViewed: builder.query<Product[], void>({
       query: () => API_ENDPOINTS.PRODUCTS.RECENTLY_VIEWED,
     }),

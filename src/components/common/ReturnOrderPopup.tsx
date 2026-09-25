@@ -137,9 +137,6 @@ if (prevOrderForAddress !== order) {
                   ? `Return Item: ${product.name}`
                   : "Return Order"}
             </h2>
-            {/* <p className="text-[0.8125rem] text-[#99A1AF]">
-              Please provide a reason for returning {itemId ? "this item" : "this order"}.
-            </p> */}
           </div>
           <button
             onClick={onClose}

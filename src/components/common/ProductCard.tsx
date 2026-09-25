@@ -4,17 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { memo } from "react";
 import { toast } from "react-toastify";
-
-import { useAddToCartMutation } from "@/lib/redux/apis/cart-api";
-import { useWishlistToggle } from "@/lib/hooks/use-wishlist-toggle";
-
-import { formatPrice } from "@/lib/utils/main-utils";
-import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
-
+import { useRouter } from "next/navigation";
 import { ProductCardProps } from "@/types/product";
-
 import { Check, Heart } from "lucide-react";
 import StarRating from "./StarRating";
+import { useAddToCartMutation, useGetCartQuery } from "@/lib/redux/apis/cart-api";
+import { useWishlistToggle } from "@/lib/hooks/use-wishlist-toggle";
+import { useGlobalPostcode } from "@/lib/hooks/use-global-postcode";
+import { formatPrice } from "@/lib/utils/main-utils";
+
 
 function limitWords(text: string | undefined, limit = 6) {
   if (!text) return "";
@@ -39,47 +37,35 @@ const ProductCard: React.FC<ProductCardProps> = ({
   wishlistItems = [],
   vendor_id,
   stock,
-  ships_from_location,
-  handling_time_days,
-  handling_time_max_days,
-  promotion_name,
-  tags,
+  shippingCharge,
+  isCheckingShipping = false,
+  priority = false,
+  isInCart: isInCartProp,
+  onImageDone,
 }) => {
   const [addToCart, { isLoading: isAddingToCart }] = useAddToCartMutation();
 
-  const {
-    isWishlisted,
-    isLoading: isWishlistLoading,
-    toggle: handleWishlistButtonClick,
-  } = useWishlistToggle({
-    productId: id,
-    variantId: defaultVariantId ?? null,
-    wishlistItems,
-    productSnapshot: {
-      image,
-      title,
-      brand_name,
-      mainPrice,
-      wasPrice,
-      showWasPrice,
-      discountPercentage,
-      unique_code,
-      promotion_name,
-      tags,
-      stock,
-      vendor_id,
-      ships_from_location,
-      handling_time_days,
-      handling_time_max_days,
-      variants,
-      rating,
-      reviewCount,
-    },
+  const { data: cart } = useGetCartQuery(undefined, {
+    skip: isInCartProp !== undefined,
   });
+  const isInCart =
+    isInCartProp !== undefined
+      ? isInCartProp
+      : cart?.items?.some(
+        (cartItem) =>
+          cartItem.product_id === id &&
+          (defaultVariantId ? cartItem.variant_id === defaultVariantId : true),
+      );
+
+  const { isWishlisted, isLoading: isWishlistLoading, toggle: handleWishlistButtonClick } =
+    useWishlistToggle({
+      productId: id,
+      variantId: defaultVariantId ?? null,
+      wishlistItems,
+    });
 
   const { postcode } = useGlobalPostcode();
-
-  const isInCart = false;
+  const router = useRouter();
 
   const currentVariant = variants.find((v) => v.id === defaultVariantId);
 
@@ -88,17 +74,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
       ? currentVariant !== undefined && Number(currentVariant.stock) <= 0
       : stock !== undefined && stock !== null && Number(stock) <= 0;
 
-  const handleWishlistClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const isNotShippable = !!postcode && shippingCharge === null;
 
-    if (isOutOfStock) {
-      toast.error("This product is out of stock");
-      return;
-    }
-
-    handleWishlistButtonClick(e);
-  };
 
   const handleAddToCartClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -107,6 +84,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
     e.stopPropagation();
 
     if (!id || isAddingToCart || isOutOfStock) return;
+
+    if (isNotShippable) {
+      toast.error("This item can't be shipped to your selected location.");
+      return;
+    }
 
     try {
       await addToCart({
@@ -117,6 +99,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         postcode,
       }).unwrap();
       toast.success("Added to cart successfully!");
+
+      if (isWishlisted) {
+        handleWishlistButtonClick(e);
+      }
     } catch (err) {
       const error = err as {
         data?: { detail?: string; error?: string };
@@ -133,61 +119,44 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <>
-      <div className="group relative w-full h-full max-h-[450px] mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
-        {/* {renderTag} */}
+      <div className="group relative w-full h-full mx-auto flex flex-col justify-start overflow-hidden  rounded-[7px]">
 
         <button
-          onClick={handleWishlistClick}
+          onClick={handleWishlistButtonClick}
           disabled={isWishlistLoading}
-          aria-label={
-            isOutOfStock
-              ? "Out of stock"
-              : isWishlisted
-                ? "Remove from wishlist"
-                : "Add to wishlist"
-          }
-          title={
-            isOutOfStock
-              ? "Out of stock"
-              : isWishlisted
-                ? "Remove from wishlist"
-                : "Add to wishlist"
-          }
-          className="absolute top-3 right-3 sm:top-[9px] sm:right-3 w-4 h-4 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center shadow-md z-20 transition-all hover:scale-105 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed border border-[#E0E0E0] cursor-pointer"
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          className="absolute top-3 right-3 sm:top-[9px] sm:right-[12px] w-4 h-4 md:w-7 md:h-7 bg-white rounded-full flex items-center justify-center shadow-md z-20 transition-all hover:scale-105 active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed border border-[#E0E0E0] cursor-pointer"
         >
           <Heart
             className="h-[9px] w-[9px] md:h-4 md:w-4"
-            fill={!isOutOfStock && isWishlisted ? "#FD151B" : "none"}
-            stroke={!isOutOfStock && isWishlisted ? "#FD151B" : "#012A61"}
+            fill={isWishlisted ? "#FD151B" : "none"}
+            stroke={isWishlisted ? "#FD151B" : "#012A61"}
             strokeWidth={2}
           />
         </button>
 
         <Link
           href={`/product/${unique_code || id}`}
-          className="flex min-h-[300px] md:min-h-[410px] flex-col no-underline text-inherit"
+          className="flex h-full flex-col no-underline text-inherit"
         >
-          <div className="relative w-full h-[150px] md:h-[260px] shrink-0 overflow-hidden rounded-t-[8px] bg-[rgba(233,233,233,0.60)]">
+          <div className="relative w-full aspect-[280/296] overflow-hidden">
             <Image
               src={image}
               alt={title || "Product Image"}
               fill
-              sizes="(max-width: 768px) 180px, 270px"
-              loading="lazy"
+              sizes="(min-width: 1700px) 20vw, (min-width: 1200px) 33vw, (min-width: 1024px) 40vw, 50vw"
+              priority={priority}
+              loading={priority ? "eager" : "lazy"}
               className="object-cover"
+              onLoad={onImageDone}
+              onError={onImageDone}
             />
-            {/* <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" /> */}
-            {isOutOfStock && (
-              <div className="absolute inset-0 flex items-center justify-center bg-[#F5F5F5]/60">
-                <span className="rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-[#211E22] shadow-md">
-                  Out of Stock
-                </span>
-              </div>
-            )}
+            <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/30" />
           </div>
 
           <div className="flex flex-1 flex-col justify-between w-full">
-            <div className="flex flex-col gap-[2px] pt-1 md:pt-2">
+            <div className="flex flex-col gap-[2px] pt-1 md:pt-2 min-h-[50px]">
               <h4 className="text-[12px] md:text-[14px] font-bold text-black">
                 {brand_name || ""}
               </h4>
@@ -206,68 +175,58 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     ${formatPrice(wasPrice)}
                   </span>
                 )}
-                
-                {discountPercentage && (
+
+                {!!discountPercentage && (
                   <span className="text-[9px] md:text-[12px] font-semibold text-[#008F11]">
                     {formatPrice(discountPercentage)}% OFF
                   </span>
                 )}
-
               </div>
 
-              {rating > 0 && (
-                <div className="flex text-[12px] font-medium items-center leading-[18px] gap-1 h-[13px]">
-                  <StarRating rating={rating} size={13} />
-                  <span className="text-[#535766] leading-none">
-                    ({reviewCount})
-                  </span>
-                </div>
-              )}
-
-              {/* {!isOutOfStock && (
-                <div className="text-[12px] md:text-[13px] leading-[18px] text-[#535252]">
-                  <p className="font-normal">
-                    {shippingCharge === 0
-                      ? "Delivery Fee - $0"
-                      : `Delivery Fee - $${formatPrice(shippingCharge)}`}
-                  </p>
-
-                  <p className="font-normal">
-                    Estimated delivery between{" "}
-                    <span className="font-medium">
-                      {getEstimatedDeliveryRange(
-                        handling_time_days || 0,
-                        handling_time_max_days,
-                      )}
+              <div className="flex text-[12px] font-medium items-center leading-[18px] gap-1">
+                {rating > 0 && (
+                  <>
+                    <StarRating rating={rating} size={13} />
+                    <span className="text-[#535766] leading-none">
+                      ({reviewCount})
                     </span>
-                  </p>
-                </div>
-              )} */}
+                  </>
+                )}
+              </div>
+
             </div>
 
-            <div className="w-full px-2 lg:px-3 flex justify-center">
+            <div className="w-full px-2 lg:px-3 flex justify-center mt-2">
               <button
-                onClick={handleAddToCartClick}
-                disabled={isAddingToCart || isOutOfStock}
-                className={
-                  isOutOfStock
-                    ? "w-full h-[30px] !bg-[#F3F4F6] !text-[#9CA3AF] !opacity-100 text-[12px] sm:text-[14px] font-medium rounded-[32px] flex items-center justify-center whitespace-nowrap cursor-not-allowed"
-                    : isInCart
-                      ? "w-full h-[30px] bg-white text-[#FD151B] text-[12px] sm:text-[14px] font-medium rounded-[32px] border border-[#FD151B] flex items-center justify-center gap-1 whitespace-nowrap transition-colors cursor-pointer"
-                      : "w-full h-[30px] bg-[#FD151B] text-white text-[12px] sm:text-[14px] font-medium rounded-[32px] flex items-center justify-center whitespace-nowrap transition-colors cursor-pointer"
-                }
-                style={
-                  isOutOfStock
-                    ? {
-                      backgroundColor: "#F3F4F6",
-                      color: "#9CA3AF",
-                      opacity: 1,
+                onClick={
+                  isInCart
+                    ? (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      router.push("/cart");
                     }
-                    : undefined
+                    : handleAddToCartClick
+                }
+                disabled={
+                  isAddingToCart ||
+                  isOutOfStock ||
+                  isNotShippable ||
+                  isCheckingShipping
+                }
+                className={
+                  isInCart
+                    ? "w-full h-[30px] bg-white text-[#FD151B] text-[14px] font-medium rounded-[32px] border border-[#FD151B] flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                    : "w-full h-[30px] bg-[#FD151B] text-white text-[14px] font-medium rounded-[32px] flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 }
               >
-                {isOutOfStock ? (
-                  "Out Of Stock"
+                {isAddingToCart ? (
+                  "Adding..."
+                ) : isOutOfStock ? (
+                  "Out of Stock"
+                ) : isCheckingShipping ? (
+                  "Checking..."
+                ) : isNotShippable ? (
+                  "Unavailable Here"
                 ) : isInCart ? (
                   <>
                     <Check size={14} />

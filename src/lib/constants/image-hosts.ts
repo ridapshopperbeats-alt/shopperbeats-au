@@ -1,13 +1,3 @@
-/**
- * Single source of truth for the image hosts `next/image` is allowed to load.
- * `next.config.ts` feeds this straight into `images.remotePatterns`.
- *
- * Product images come from whichever CDN a marketplace vendor happens to use,
- * so this list can never be complete. A host that is missing here throws from
- * `defaultLoader` during render and takes the whole page down with it, so a new
- * vendor CDN has to be added below before its products can be shown.
- */
-
 export interface ImageHostPattern {
   protocol: "http" | "https";
   hostname: string;
@@ -42,7 +32,6 @@ export const IMAGE_HOST_PATTERNS: ImageHostPattern[] = [
   { protocol: "http", hostname: "www.fastfurnishings.com" },
   { protocol: "https", hostname: "www.wonatrading.com" },
   { protocol: "https", hostname: "marketplace.sspo.com" },
-  // su-cdn serves the same images from img1..img9, so match the whole CDN.
   { protocol: "https", hostname: "**.su-cdn.com" },
   { protocol: "https", hostname: "www.greenlandhomefashions.com" },
 ];

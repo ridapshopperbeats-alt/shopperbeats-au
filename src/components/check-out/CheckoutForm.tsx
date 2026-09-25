@@ -482,7 +482,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                   >
                     PayPal
                   </label>
-                  <span style={{ marginLeft: "auto" }}>
+                  <span className="ml-auto">
                     <Image
                       src="/images/paypal.svg"
                       alt="Paypal"
@@ -511,7 +511,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                   >
                     Afterpay
                   </label>
-                  <span style={{ marginLeft: "auto" }}>
+                  <span className="ml-auto">
                     <Image
                       src="/images/afterpay.svg"
                       alt="Afterpay"
@@ -540,7 +540,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                   >
                     Zippy
                   </label>
-                  <span style={{ marginLeft: "auto" }}>
+                  <span className="ml-auto">
                     <Image
                       src="/images/zip.svg"
                       alt="Zippay"

@@ -10,7 +10,9 @@ export default function SingleBanner() {
           width={1900}
           height={500}
           priority
-          className="w-full h-full object-cover my-6"
+          fetchPriority="high"
+          sizes="100vw"
+          className="w-full h-full object-cover my-4"
         />
       </div>
     </div>

@@ -63,7 +63,7 @@ export default async function AllCategories({ searchParams }: AllCategoriesPageP
                 </div>
               </div>
 
-              <p style={{ fontSize: "20px", fontWeight: "700", color: "black", marginTop: "10px" }} >
+              <p className="text-[20px] font-bold text-black mt-2.5">
                 {item.name}
               </p>
             </Link>

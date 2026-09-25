@@ -34,7 +34,7 @@ export const getDeliveryTabContent = (product: Product) => {
       {estimatedDelivery}
       <br />
       <h6>Important Information</h6>
-      <ul style={{ listStyleType: "disc", paddingLeft: "20px" }}>
+      <ul className="list-disc pl-5">
         <li className={TEXT_CLASS}>
           Order processing time and the most accurate delivery estimates are
           displayed at checkout before you place your order.
@@ -118,6 +118,8 @@ export const getFeaturesContent = (
           alt={product.title || "Product image"}
           width={1300}
           height={400}
+          // Caps at max-w-[1300px], full-bleed below that.
+          sizes="(max-width: 1300px) 100vw, 1300px"
           className="w-full max-w-[1300px] h-[400px] object-cover"
         />
 

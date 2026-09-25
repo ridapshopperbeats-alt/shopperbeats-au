@@ -11,7 +11,7 @@ export default function Home({
   trendingDeals,
 }: HomeProps) {
   return (
-    <main>
+    <main className="mb-6 lg:mb-0">
       <SingleBanner />
       <NewTopCategories />
       {trendingDeals.length > 0 && <TrendingDeals trendingDeals={trendingDeals} />}

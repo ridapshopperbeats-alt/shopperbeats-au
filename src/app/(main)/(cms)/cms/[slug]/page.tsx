@@ -1,5 +1,6 @@
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import CmsIframe from "@/components/CmsIframe";
 import type { CmsPage } from "@/types/cms";
 import Banner from "@/components/common/Banner";
@@ -50,6 +51,11 @@ export default async function CmsPage({
 
   if (!page || !page.is_published) notFound();
 
+  // Read the CSP nonce here rather than inside CmsIframe: that is a client
+  // component, and reading the nonce off `document` made its server and client
+  // renders produce different srcDoc strings — the hydration mismatch.
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <main>
       <Banner
@@ -68,7 +74,7 @@ export default async function CmsPage({
           />
         }
       />
-      <CmsIframe content={page.content} />
+      <CmsIframe content={page.content} nonce={nonce} />
     </main>
   );
 }

@@ -112,8 +112,7 @@ export default function BrandsExplorer({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search brands..."
-          style={{ fontFamily: "var(--font-montserrat)" }}
-          className="flex h-11 w-full items-center self-stretch rounded-lg border !border-[#E5E7EB] !bg-[#F9FAFB] px-4 py-3 !text-[12.5px] !font-normal leading-[18.75px] !text-[rgba(10,10,10,0.50)] outline-none placeholder:text-[rgba(10,10,10,0.50)] focus:border-[#012961] lg:h-[40.75px] lg:flex-col lg:items-start lg:justify-center lg:!rounded-[14px] lg:py-2.5 lg:pl-9 lg:pr-4"
+          className="font-montserrat flex h-11 w-full items-center self-stretch rounded-lg border !border-[#E5E7EB] !bg-[#F9FAFB] px-4 py-3 !text-[12.5px] !font-normal leading-[18.75px] !text-[rgba(10,10,10,0.50)] outline-none placeholder:text-[rgba(10,10,10,0.50)] focus:border-[#012961] lg:h-[40.75px] lg:flex-col lg:items-start lg:justify-center lg:!rounded-[14px] lg:py-2.5 lg:pl-9 lg:pr-4"
         />
       </div>
 

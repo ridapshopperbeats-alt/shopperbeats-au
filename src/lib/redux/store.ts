@@ -40,7 +40,7 @@ const rootReducer = combineReducers({
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-export const makeStore = () => {
+const makeStore = () => {
   return configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
@@ -48,6 +48,7 @@ export const makeStore = () => {
         serializableCheck: {
           ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
         },
+        immutableCheck: { warnAfter: 256 },
       }).concat(
         productsApi.middleware,
         authApi.middleware,

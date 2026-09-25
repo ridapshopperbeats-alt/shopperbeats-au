@@ -1,6 +1,6 @@
 import { APIProduct, OrderAPIResponse } from "@/types/order";
 
-export function orderHasAction(
+function orderHasAction(
   actions: string[] | undefined,
   ...keys: string[]
 ): boolean {
