@@ -7,7 +7,6 @@ import type { ShadowDomContentProps } from "@/types/cms";
 
 const RESIZE_MESSAGE_TYPE = "cms-iframe-resize";
 
-/** The nonce is interpolated into a raw HTML attribute, so quote it safely. */
 const escapeForAttribute = (value: string) =>
   value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
@@ -43,10 +42,7 @@ export default function ShadowDomContent({
     ADD_ATTR: ["crossorigin"],
   });
 
-  // The nonce arrives as a prop from the server component. It used to be read
-  // off `document` here, which is only available on the client, so the server
-  // rendered srcDoc without the nonce and the client rendered it with one —
-  // React flagged that as a hydration mismatch on every CMS page.
+
   const nonceAttr = nonce ? ` nonce="${escapeForAttribute(nonce)}"` : "";
 
   const injectedHead = `

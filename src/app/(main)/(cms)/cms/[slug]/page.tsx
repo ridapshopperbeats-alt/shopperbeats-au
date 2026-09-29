@@ -18,8 +18,8 @@ async function getCmsPage(slug: string): Promise<CmsPage | null> {
 
 const getPageSubtitle = (slug: string) => {
   switch (slug) {
-    case "faq":
-      return "Find answers to the most commonly asked questions.";
+    // case "faq":
+    //   return "Find answers to the most commonly asked questions.";
     case "contact-us":
       return "We're here to help — reach out any time.";
     case "About-us":
@@ -51,29 +51,30 @@ export default async function CmsPage({
 
   if (!page || !page.is_published) notFound();
 
-  // Read the CSP nonce here rather than inside CmsIframe: that is a client
-  // component, and reading the nonce off `document` made its server and client
-  // renders produce different srcDoc strings — the hydration mismatch.
+
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
     <main>
-      <Banner
-        title={page.title}
-        subtitle={getPageSubtitle(slug)}
-        titleClassName="font-montserrat text-[32px]! font-semibold! leading-[24px]! text-[#01295F]!"
-        subtitleClassName="font-montserrat text-[16px]! font-semibold! leading-[19.5px]! text-[#6A7282]!"
-        image={
-          <Image
-            src="/images/Group 1261155781.png"
-            alt="Profile Banner"
-            width={1920}
-            height={218}
-            priority
-            fetchPriority="high"
-          />
-        }
-      />
+
+      {slug.toLowerCase() !== "faq" && (
+        <Banner
+          title={page.title}
+          subtitle={getPageSubtitle(slug)}
+          titleClassName="font-montserrat text-[32px]! font-semibold! leading-[24px]! text-[#01295F]!"
+          subtitleClassName="font-montserrat text-[16px]! font-semibold! leading-[19.5px]! text-[#6A7282]!"
+          image={
+            <Image
+              src="/images/Group 1261155781.png"
+              alt="Profile Banner"
+              width={1920}
+              height={218}
+              priority
+              fetchPriority="high"
+            />
+          }
+        />
+      )}
       <CmsIframe content={page.content} nonce={nonce} />
     </main>
   );
