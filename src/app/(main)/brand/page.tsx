@@ -5,6 +5,7 @@ import BrandsExplorer from "@/components/pages/BrandsExplorer";
 import Banner from "@/components/common/Banner";
 import { applyImageVariant } from "@/lib/utils/imageUtils";
 import { Brand, BrandsResponse } from "@/types/main";
+import { readJson } from "@/lib/utils/api-json";
 
 
 async function fetchBrands() {
@@ -20,7 +21,7 @@ async function fetchBrands() {
       console.warn("Failed to fetch brands, status:", response.status);
       return [];
     }
-    const data: BrandsResponse = await response.json();
+    const data = await readJson<BrandsResponse>(response);
 
     return data.data || [];
   } catch (error) {
@@ -42,7 +43,7 @@ async function fetchFeaturedBrands() {
       return [];
     }
 
-    const data = await response.json();
+    const data = await readJson(response);
 
     return Array.isArray(data) ? data : data.data || [];
   } catch (error) {

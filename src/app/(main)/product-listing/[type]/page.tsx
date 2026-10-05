@@ -7,6 +7,7 @@ import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 import { withUnfilteredPriceBounds } from "@/lib/utils/price-bounds";
 import type { ProductListingPageProps } from "@/types/product";
+import { readJson } from "@/lib/utils/api-json";
 
 
 
@@ -185,7 +186,7 @@ async function fetchProductData(
       };
     }
 
-    const productsData = await productsRes.json();
+    const productsData = await readJson(productsRes);
 
     const resolvedData = isHighlight
       ? productsData.products
@@ -200,7 +201,7 @@ async function fetchProductData(
           `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}?limit=1`
         );
         if (filterRes.ok) {
-          const filterData = await filterRes.json();
+          const filterData = await readJson(filterRes);
           filters = filterData?.filters || [];
         }
       } catch (error) {

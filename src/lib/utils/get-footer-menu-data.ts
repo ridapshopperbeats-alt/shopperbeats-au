@@ -1,4 +1,5 @@
 import { API_ENDPOINTS } from "@/lib/constants/api";
+import { readJson } from "./api-json";
 
 export async function getFooterMenuData() {
   const results = await Promise.allSettled([
@@ -11,7 +12,7 @@ export async function getFooterMenuData() {
   const [company, myAccount, helpSupport, legal] = await Promise.all(
     results.map(async (r) => {
       if (r.status === "rejected" || !r.value.ok) return null;
-      return r.value.json();
+      return readJson(r.value);
     })
   );
 

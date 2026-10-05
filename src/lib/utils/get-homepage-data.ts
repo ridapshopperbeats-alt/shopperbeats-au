@@ -1,5 +1,6 @@
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import { cookies } from "next/headers";
+import { readJson } from "./api-json";
 
 const baseUrl = API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL;
 
@@ -20,7 +21,7 @@ async function getStaticHomepageData() {
     await Promise.all(
       results.map(async (r) => {
         if (r.status === "rejected" || !r.value.ok) return null;
-        return r.value.json();
+        return readJson(r.value);
       })
     );
 
@@ -39,7 +40,7 @@ async function getUserHomepageData(allCookies: string) {
 
   const personalizedData =
     personalized.status === "fulfilled" && personalized.value.ok
-      ? await personalized.value.json()
+      ? await readJson(personalized.value)
       : null;
 
   const recentlyViewedData = null;

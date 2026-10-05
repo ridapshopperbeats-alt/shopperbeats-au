@@ -1,4 +1,5 @@
 import { Filter } from "@/types/product";
+import { readJson } from "./api-json";
 
 const PRICE_PARAM_KEYS = ["price_ranges", "min_price", "max_price"];
 
@@ -30,7 +31,7 @@ export const withUnfilteredPriceBounds = async (
 
     if (!res.ok) return filters;
 
-    const payload: unknown = await res.json();
+    const payload: unknown = await readJson(res);
     const boundsFilters =
       options?.selectFilters?.(payload) ??
       (payload as { filters?: Filter[] })?.filters ??

@@ -5,6 +5,7 @@ import CmsIframe from "@/components/CmsIframe";
 import type { CmsPage } from "@/types/cms";
 import Banner from "@/components/common/Banner";
 import Image from "next/image";
+import { readJson } from "@/lib/utils/api-json";
 
 async function getCmsPage(slug: string): Promise<CmsPage | null> {
   const res = await fetch(
@@ -13,7 +14,7 @@ async function getCmsPage(slug: string): Promise<CmsPage | null> {
   );
 
   if (!res.ok) return null;
-  return res.json();
+  return readJson(res);
 }
 
 const getPageSubtitle = (slug: string) => {

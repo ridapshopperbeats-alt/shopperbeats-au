@@ -5,6 +5,7 @@ import Breadcrumb from "@/components/common/Breadcrumb";
 import { JsonLdProduct } from "@/types/product";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 import type { ProductsWithAttributesResponse } from "@/types/product";
+import { readJson } from "@/lib/utils/api-json";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -61,7 +62,7 @@ async function getProducts(
       throw new Error("Failed to fetch products");
     }
 
-    const data = await res.json();
+    const data = await readJson(res);
     return { data: data.data, totalItems: data.total };
   } catch (error) {
     console.error(error);
