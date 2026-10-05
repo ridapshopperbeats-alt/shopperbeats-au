@@ -4,6 +4,7 @@ import { withUnfilteredPriceBounds } from "@/lib/utils/price-bounds";
 import type { Metadata } from "next";
 import { JsonLdProduct, ProductsResponse } from "@/types/product";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
+import { readJson } from "@/lib/utils/api-json";
 
 export async function generateMetadata(
   { params }: { params: Promise<{ brandId: string }> }
@@ -66,7 +67,7 @@ async function getBrandDetails(brandId: string) {
       return null;
     }
 
-    const data = await res.json();
+    const data = await readJson(res);
     return data;
   } catch (error) {
     console.error("Error fetching brand details:", error);
@@ -103,7 +104,7 @@ async function getProducts(
     if (!res.ok) {
       throw new Error("Failed to fetch products");
     }
-    const data = await res.json();
+    const data = await readJson(res);
     const filters = await withUnfilteredPriceBounds(
       data.filters || [],
       `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}`,

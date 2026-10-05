@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getClientIp, isRateLimited } from "@/lib/utils/rate-limit";
+import { readJson } from "@/lib/utils/api-json";
 
 const RATE_LIMIT = 20;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const response = await fetch(url);
-    const data = await response.json();
+    const data = await readJson(response);
     if (response.ok) {
       cache.set(cacheKey, { data, expiresAt: Date.now() + CACHE_TTL_MS });
     }

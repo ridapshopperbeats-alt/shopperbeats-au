@@ -5,6 +5,7 @@ import { Category, Product, ProductApiResponse } from "@/types/product";
 import { ProductSEO } from "@/types/seo";
 import NoProductsFound from "@/components/NoProductFound";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
+import { readJson } from "@/lib/utils/api-json";
 
 /**
  * get-product returns price, rrp_price and stock as null for every product,
@@ -22,7 +23,7 @@ async function getPricingFallback(title?: string, uniqueCode?: string) {
     const res = await fetch(url, { next: { revalidate: 300 } });
     if (!res.ok) return null;
 
-    const body = await res.json();
+    const body = await readJson(res);
     const list = body?.data ?? body?.products ?? [];
     if (!Array.isArray(list)) return null;
 
@@ -65,7 +66,7 @@ async function getProduct(
 
     const setCookie = res.headers.get("set-cookie") ?? undefined;
 
-    const data: ProductApiResponse = await res.json();
+    const data = await readJson<ProductApiResponse>(res);
 
     const pricing =
       data.price === null || data.price === undefined
@@ -153,7 +154,7 @@ async function getRecommendations(
     if (!res.ok) {
       return [];
     }
-    const data: ProductApiResponse[] = await res.json();
+    const data = await readJson<ProductApiResponse[]>(res);
 
     return data.map((item) => ({
       id: item.id,
@@ -202,7 +203,7 @@ async function getRecentlyViewed(cookieHeader?: string): Promise<Product[] | nul
       return null;
     }
 
-    const data = await res.json();
+    const data = await readJson(res);
     return data ?? [];
   } catch {
     return null;
@@ -219,7 +220,7 @@ async function getPopularProducts(): Promise<Product[] | null> {
     if (!res.ok) {
       return [];
     }
-    const data = await res.json();
+    const data = await readJson(res);
     const items: ProductApiResponse[] = data?.products?.data || [];
 
     return items.map((item) => ({

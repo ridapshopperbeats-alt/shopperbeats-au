@@ -567,6 +567,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div >
         <Accordion
           items={accordionItems}
+          independent
           forceOpenCount={forceOpenCount}
           onOpenChange={(openItems) =>
             setIsAnyAccordionOpen(openItems.some(Boolean))

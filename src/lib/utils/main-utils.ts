@@ -8,6 +8,7 @@ import { applyImageVariant } from "@/lib/utils/imageUtils";
 import { OrderStatusCode } from "@/types/order";
 import { BadgeColor } from "@/components/common/StatusBadge";
 import { CategoryItem } from "@/types/megamenu";
+import { readJson } from "./api-json";
 
 export function toSafeJsonLd(data: unknown): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");
@@ -343,7 +344,7 @@ export const getRawCategories = cache(async (): Promise<Category[]> => {
 
   if (!res.ok) return [];
 
-  return res.json();
+  return readJson(res);
 });
 
 // Get product details utilities

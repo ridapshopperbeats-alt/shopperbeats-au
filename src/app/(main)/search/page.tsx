@@ -7,6 +7,7 @@ import { JsonLdProduct, Product, ProductsResponse } from "@/types/product";
 import type { Metadata } from "next";
 import "../../../styles/Product.css";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
+import { readJson } from "@/lib/utils/api-json";
 
 export async function generateMetadata(
   { searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }
@@ -75,7 +76,7 @@ async function getProducts(
       throw new Error("Failed to fetch products");
     }
 
-    const data = await res.json();
+    const data = await readJson(res);
     const filters = await withUnfilteredPriceBounds(
       data.filters || [],
       `${API_ENDPOINTS.PRODUCTS.PRODUCTS_API_BASE_URL}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}`,

@@ -6,6 +6,7 @@ import { Category, JsonLdProduct, ProductsResponse } from "@/types/product";
 import { getMegaMenuData } from "@/lib/utils/get-mega-menu-data";
 import { toSafeJsonLd } from "@/lib/utils/main-utils";
 import { withUnfilteredPriceBounds } from "@/lib/utils/price-bounds";
+import { readJson } from "@/lib/utils/api-json";
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
@@ -80,7 +81,7 @@ const getCategoryDetails = cache(async (slug: string) => {
     );
 
     if (res.ok) {
-      return await res.json();
+      return await readJson(res);
     }
 
     console.warn(`Failed to fetch category details directly (${res.status}). Attempting fallback to list...`);
@@ -94,7 +95,7 @@ const getCategoryDetails = cache(async (slug: string) => {
       return null;
     }
 
-    const categories = await listRes.json();
+    const categories = await readJson(listRes);
     return findCategory(categories, slug);
 
   } catch (error) {
@@ -137,7 +138,7 @@ async function getProducts(
       throw new Error("Failed to fetch products");
     }
 
-    const data = await res.json();
+    const data = await readJson(res);
     const filters = await withUnfilteredPriceBounds(
       data.filters || [],
       `${process.env.NEXT_PUBLIC_API_URL_PRODUCTS}${API_ENDPOINTS.PRODUCTS.BASE_URL}/${API_ENDPOINTS.PRODUCTS.LIST_PRODUCTS}`,
@@ -182,7 +183,7 @@ export default async function CategoryPage({
       );
 
       if (fallbackRes.ok) {
-        const fallbackData = await fallbackRes.json();
+        const fallbackData = await readJson(fallbackRes);
         sidebarFilters = fallbackData?.filters || [];
       }
     } catch (error) {

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { API_ENDPOINTS } from "@/lib/constants/api";
 import { Brand, Category, Product } from "@/types/product";
 import { getRawCategories, SITE_URL } from "@/lib/utils/main-utils";
+import { readJson } from "@/lib/utils/api-json";
 
 export const revalidate = 3600;
 
@@ -67,7 +68,7 @@ async function getBrandEntries(): Promise<MetadataRoute.Sitemap> {
     );
     if (!res.ok) return [];
 
-    const json = await res.json();
+    const json = await readJson(res);
     const brands: Brand[] = Array.isArray(json) ? json : (json?.data ?? []);
 
     return brands
@@ -93,7 +94,7 @@ async function getProductEntries(): Promise<MetadataRoute.Sitemap> {
       );
       if (!res.ok) break;
 
-      const json = await res.json();
+      const json = await readJson(res);
       const products: Product[] = json?.data ?? [];
       if (products.length === 0) break;
 
